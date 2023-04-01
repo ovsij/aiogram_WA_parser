@@ -69,7 +69,7 @@ async def get_items(category : str, session, subcategory : str = 'Другое')
             title_el = await session.wait_for_element(10, title_xpath, SelectorType.xpath)
             title = await title_el.get_text()
             #
-            print(title)
+            logging.INFO(title)
             time.sleep(1)
             if subcategory == 'Другое':
                 img_xpath = '//*[@id="app"]/div/div/div[6]/span/div/span/div/div[2]/div/div[2]/div/div[1]/div[1]/div/img'
@@ -107,11 +107,11 @@ async def get_items(category : str, session, subcategory : str = 'Другое')
                 
                 price_el = await session.get_element(price_xpath, SelectorType.xpath)
                 price_text = await price_el.get_text()
-                print(price_text)
+                logging.INFO(price_text)
                 price = int(price_text.strip(' €').strip(',00').replace(' ', ''))
                 #price = float(browser.find_element(By.XPATH, price_xpath).text.strip(' €').replace(',', '.'))
             except:
-                print('no price')
+                logging.INFO('no price')
 
             if subcategory == 'Другое':
                 description_xpath = '//*[@id="app"]/div/div/div[6]/span/div/span/div/div[2]/div/div[3]/div[3]'
@@ -124,14 +124,14 @@ async def get_items(category : str, session, subcategory : str = 'Другое')
                 if description == 'ОТПРАВИТЬ СООБЩЕНИЕ КОМПАНИИ':
                     description = None
             except:
-                print('no description')
+                logging.INFO('no description')
             subcategory_ = None if subcategory == 'Другое' else subcategory
             if subcategory == 'Другое':
                 lst = [title, category, subcategory_, description, price, f"database/images/{category}/{i}_{title.replace(' ', '_').replace('/', '_')}.png"]
             else:
                 lst = [title, category, subcategory_, description, price, f"database/images/{category}/{subcategory}/{i}_{title.replace(' ', '_').replace('/', '_')}.png"]
             items.append(lst)
-            print(lst)
+            logging.INFO(lst)
             # закрываем карточку товара кнопкой "назад"
             if subcategory == 'Другое':
                 btn_back_xpath = '//*[@id="app"]/div/div/div[6]/span/div/span/div/header/div/div[1]/div/span'
@@ -141,8 +141,8 @@ async def get_items(category : str, session, subcategory : str = 'Другое')
             btn_catalog_back = await session.wait_for_element(10, btn_back_xpath, SelectorType.xpath)
             await btn_catalog_back.click()
         except Exception as ex:
-            print(ex)
-            print('cant find item')
+            logging.ERROR(ex)
+            logging.WARNING('cant find item')
             
             #if subcategory == 'Другое':
             #    btn_back_xpath = '//*[@id="app"]/div/div/div[6]/span/div/span/div/header/div/div[1]/div/span'
@@ -160,12 +160,12 @@ async def get_items(category : str, session, subcategory : str = 'Другое')
     #    await btn_catalog_back.click()
 
         await asyncio.sleep(1)
-    print('cancel')
+    logging.INFO('cancel')
     return items
 
 # функция обрабатывает каталог, открывает категории
 async def get_catalog(url):
-    print(f'start parsing {url}')
+    logging.INFO(f'start parsing {url}')
 
     #options = webdriver.ChromeOptions()
     #options.add_argument('--allow-profiles-outside-user-dir')
@@ -220,7 +220,7 @@ async def get_catalog(url):
         try:
             check_xpath = '//*[@id="app"]/div/div/div[6]/span/div/span/div/div[2]/div[2]/div/div/div/div[1]/div/div[2]/div/div/div/span'
             await session.wait_for_element(10, check_xpath, SelectorType.xpath)
-            print('Catalog with categories')  
+            logging.INFO('Catalog with categories')  
             try:
                 categories = {}      
                 for i in range(1, 50):
@@ -230,7 +230,7 @@ async def get_catalog(url):
                         categories[i] = await open_category.get_text()
                     except:
                         continue
-                print(categories)
+                logging.INFO(categories)
                 
                 dct = []
                 for key, value in categories.items():
@@ -248,27 +248,26 @@ async def get_catalog(url):
                     await button.click()
                     await asyncio.sleep(2)
 
-                    print(f'Start parsing {value} subcategory')
+                    logging.INFO(f'Start parsing {value} subcategory')
                     products = await get_items(category=header, subcategory=value, session=session)
                     print(products)
                     dct += products
-                    print(f'Cancel {value} subcategory')
+                    logging.INFO(f'Cancel {value} subcategory')
                     await asyncio.sleep(2)
                     
                     btn_back_xpath = '//*[@id="app"]/div/div/div[6]/span/div/span/span/div/header/div/div[1]/div/span'
                     btn_catalog_back = await session.wait_for_element(10, btn_back_xpath, SelectorType.xpath)
-                    print(btn_catalog_back)
                     await btn_catalog_back.click()
                     await asyncio.sleep(2)
                     
                 return dct
             except Exception as ex:
-                print(ex)
-                print(f'Произошла ошибка во время парсинга субкатегории {value}')
+                logging.ERROR(ex)
+                logging.WARNING(f'Произошла ошибка во время парсинга субкатегории {value}')
                 return 1
         # если категорий нет
         except Exception as ex:
-            print('Catalog without categories')
+            logging.INFO('Catalog without categories')
             items = await get_items(category=header, session=session)
             return items
     '''
@@ -322,10 +321,10 @@ async def get_valentino_catalog(url):
         except:
             pass
         
-        print(f'Start {subcategory} subcategory')
+        logging.INFO(f'Start {subcategory} subcategory')
         
         for i in range(1, num + 1):
-            print(f'{i} {subcategory}')
+            logging.INFO(f'{i} {subcategory}')
             item_xpath = f'//*[@id="main"]/div/div[2]/div[1]/div[{i}]/div[2]/div[1]'
             #item_xpath = f'//*[@id="main"]/div/div[2]/div[1]/div[1]/div[2]/div[1]'
             item_el = await session.wait_for_element(10, item_xpath, SelectorType.xpath)
@@ -337,7 +336,7 @@ async def get_valentino_catalog(url):
             
             name_el = await session.wait_for_element(10, name_xpath, SelectorType.xpath)
             name = await name_el.get_text()
-            print('name: ' + name)
+            logging.INFO('name: ' + name)
 
             if not os.path.exists(f"database/images/VALENTINO"):
                 os.mkdir(f"database/images/VALENTINO")
@@ -353,7 +352,7 @@ async def get_valentino_catalog(url):
                     image_xpath = f'//*[@id="swiper-wrapper-{tag_id}"]/div[{num}]/div/div/div/div'
                     image_el = await session.get_element(image_xpath, SelectorType.xpath)
                     image_link = await image_el.get_css_value('background-image')
-                    print(image_link.strip('url(').strip(')'))
+                    logging.INFO(image_link.strip('url(').strip(')'))
                     img_path = f"database/images/VALENTINO/{subcategory}/{i}_{name.replace(' ', '_').replace('/', '_')}_{num}.png"
                     request = requests.get(image_link.strip('url("').strip('")'))
                     with open(img_path, 'wb') as png:
@@ -401,7 +400,7 @@ async def get_valentino_catalog(url):
 
             item = [name, 'VALENTINO', subcategory, description, price, images]
             items.append(item)
-            print(item)
+            logging.INFO(item)
     return items
 
 async def get_valentino():
@@ -455,7 +454,7 @@ async def get_item(session, url, subcategory, i):
     soup = bs(resp, 'lxml')
 
     name = soup.find('h2', 'MuiTypography-root MuiTypography-h1 e18vcbt23 css-c60yiy').text
-    print(f'Start: {name}')
+    logging.INFO(f'Start: {name}')
     try:
         description = soup.find('div', 'MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-8 Grid-description e14xbgjz2 css-f1obvg').find('p').text
     except:    
@@ -543,6 +542,6 @@ async def get_lesilla():
                     items.append(await get_item(session, prodict_url, name, i))
                 except:
                     pass
-        print(items)
+        logging.INFO(items)
         return items
     
