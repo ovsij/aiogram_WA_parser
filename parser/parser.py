@@ -21,6 +21,7 @@ import sys
 
 
 #https://web.whatsapp.com/catalog/393421807916
+#https://web.whatsapp.com/catalog/390143686270 категории
 #https://web.whatsapp.com/catalog/393402619854
 #https://web.whatsapp.com/catalog/393459256804 категории
 #https://web.whatsapp.com/catalog/393455824868 категории
@@ -28,10 +29,14 @@ import sys
 #https://web.whatsapp.com/catalog/393459782801
 #https://web.whatsapp.com/catalog/393442207025 категории
 #https://web.whatsapp.com/catalog/393346770418
-#https://web.whatsapp.com/catalog/390143686270 категории
 #https://web.whatsapp.com/catalog/393423615253 категории
 #https://web.whatsapp.com/catalog/390143340192 категории
 #https://web.whatsapp.com/catalog/393427688947
+#https://wa.me/c/393408371555
+
+#https://wa.me/c/393357824569
+#https://wa.me/c/393451792120
+#https://wa.me/c/393517727683
 
 
 
@@ -141,8 +146,8 @@ async def get_items(category : str, session, subcategory : str = 'Другое')
             btn_catalog_back = await session.wait_for_element(10, btn_back_xpath, SelectorType.xpath)
             await btn_catalog_back.click()
         except Exception as ex:
-            logging.ERROR(ex)
-            logging.WARNING('cant find item')
+            logging.error(ex)
+            logging.warning('cant find item')
             
             #if subcategory == 'Другое':
             #    btn_back_xpath = '//*[@id="app"]/div/div/div[6]/span/div/span/div/header/div/div[1]/div/span'
@@ -263,8 +268,8 @@ async def get_catalog(url):
                     
                 return dct
             except Exception as ex:
-                logging.ERROR(ex)
-                logging.WARNING(f'Произошла ошибка во время парсинга субкатегории {value}')
+                logging.error(ex)
+                logging.warning(f'Произошла ошибка во время парсинга субкатегории {value}')
                 return 1
         # если категорий нет
         except Exception as ex:
@@ -276,7 +281,7 @@ async def get_catalog(url):
         print('Парсинг завершен с результатом: 0')
         print(ex)
         return 0
-        
+    
     finally:
         browser.quit()
     '''
@@ -510,28 +515,28 @@ async def get_item(session, url, subcategory, i):
 
 async def get_lesilla():
     urls = {
-        'High Heels Pumps': 'https://outlet.lesilla.com/row/pumps/high-heels.html',
-        'Mid Heels Pumps': 'https://outlet.lesilla.com/row/pumps/mid-heels.html',
-        'Flat Pumps': 'https://outlet.lesilla.com/row/pumps/flat.html',
-        'High Heel Sandals': 'https://outlet.lesilla.com/row/sandals/high-heels.html',
-        'Mid Heels Sandals': 'https://outlet.lesilla.com/row/sandals/mid-heels.html',
-        'Flat Sandals': 'https://outlet.lesilla.com/row/sandals/flat.html',
-        'Wedges': 'https://outlet.lesilla.com/row/sandals/wedges.html',
-        'Platform': 'https://outlet.lesilla.com/row/sandals/platform.html',
-        'Slippers': 'https://outlet.lesilla.com/row/sandals/slippers.html',
-        'High Top Sneakers': 'https://outlet.lesilla.com/row/sneaker/high-top.html',
-        'Low Top Sneakers': 'https://outlet.lesilla.com/row/sneaker/low-top.html',
-        'High Heel Ankle Boots': 'https://outlet.lesilla.com/row/ankle-boots/high-heels.html',
-        'Flat Ankle Boots': 'https://outlet.lesilla.com/row/ankle-boots/flat.html',
-        'Ankle Boots Texan': 'https://outlet.lesilla.com/row/ankle-boots/texans.html',
-        'High Heel Boots': 'https://outlet.lesilla.com/row/boots/high-heels.html',
-        'Low Heel Boots': 'https://outlet.lesilla.com/row/boots/low-heels.html',
-        'Flat Ankle Boots': 'https://outlet.lesilla.com/row/flat/ankle-boots.html',
-        'Flat Ballets Shoes': 'https://outlet.lesilla.com/row/flat/ballets.html',
-        'Flat Slippers': 'https://outlet.lesilla.com/row/flat/slippers.html',
-        'Flat Moccasins': 'https://outlet.lesilla.com/row/flat/mocassins.html',
-        'Flat Sandals': 'https://outlet.lesilla.com/row/flat/sandals.html',
-        'Bags': 'https://outlet.lesilla.com/row/bags.html'
+        'Туфли на высоком каблуке': 'https://outlet.lesilla.com/row/pumps/high-heels.html',
+        'Туфли на среднем каблуке': 'https://outlet.lesilla.com/row/pumps/mid-heels.html',
+        'Туфли на плоской подошве': 'https://outlet.lesilla.com/row/pumps/flat.html',
+        'Сандалии на высоком каблуке': 'https://outlet.lesilla.com/row/sandals/high-heels.html',
+        'Сандалии на среднем каблуке': 'https://outlet.lesilla.com/row/sandals/mid-heels.html',
+        'Сандалии на пизкой подошве': 'https://outlet.lesilla.com/row/sandals/flat.html',
+        'Танкетки': 'https://outlet.lesilla.com/row/sandals/wedges.html',
+        'Обувь на платформе': 'https://outlet.lesilla.com/row/sandals/platform.html',
+        'Тапочки сандалии': 'https://outlet.lesilla.com/row/sandals/slippers.html',
+        'Высокие кросовки': 'https://outlet.lesilla.com/row/sneaker/high-top.html',
+        'Низкие кросовки': 'https://outlet.lesilla.com/row/sneaker/low-top.html',
+        'Ботильоны на высоком каблуке': 'https://outlet.lesilla.com/row/ankle-boots/high-heels.html',
+        'Ботильоны на среднем каблуке': 'https://outlet.lesilla.com/row/ankle-boots/flat.html',
+        'Ботильоны техасцы': 'https://outlet.lesilla.com/row/ankle-boots/texans.html',
+        'Сапоги на высоком каблуке': 'https://outlet.lesilla.com/row/boots/high-heels.html',
+        'Сапоги на среднем каблуке': 'https://outlet.lesilla.com/row/boots/low-heels.html',
+        'Сапоги на плоской подошве': 'https://outlet.lesilla.com/row/flat/ankle-boots.html',
+        'Балетки': 'https://outlet.lesilla.com/row/flat/ballets.html',
+        'Тапочки на плоскойподошве': 'https://outlet.lesilla.com/row/flat/slippers.html',
+        'Мокасины': 'https://outlet.lesilla.com/row/flat/mocassins.html',
+        'Сандалии на плоской подошве': 'https://outlet.lesilla.com/row/flat/sandals.html',
+        'Сумки': 'https://outlet.lesilla.com/row/bags.html'
     }
     items = []
     async with aiohttp.ClientSession(trust_env=True) as session:

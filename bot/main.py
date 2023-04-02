@@ -58,8 +58,8 @@ async def send_mes(wait_for):
 
 if __name__ == '__main__':
     from handlers import dp
-    loop = asyncio.get_event_loop()
+    #loop = asyncio.get_event_loop()
     #loop.create_task(parser.get_valentino())
     #loop.create_task(scheduled_catalogs(86400))
-    loop.create_task(send_mes(5))
+    #loop.create_task(send_mes(5))
     executor.start_polling(dp, skip_updates=True)
