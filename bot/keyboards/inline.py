@@ -344,7 +344,7 @@ def inline_kb_editcatalog():
     schema = [1]
     catalogs = get_catalogs()
     for catalog in catalogs:
-        text_and_data.append([emojize(f':recycle: {catalog.phone}', language='alias'), f'btn_editcatalog_{catalog.phone}'])
+        text_and_data.append([emojize(f':recycle: {catalog.phone} | {catalog.margin}%', language='alias'), f'btn_editcatalog_{catalog.phone}'])
         schema.append(1)
     text_and_data.append(btn_back('admin'))
     inline_kb = InlineConstructor.create_kb(text_and_data, schema)
