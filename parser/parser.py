@@ -355,8 +355,7 @@ async def get_valentino_catalog(url, subcategory):
                 try:
                     tag_id = webpage.split('swiper-wrapper-')[-1].split('"')[0]
 
-                    image_xpath = f'//*[@id="swiper-wrapper-{tag_id}"]/div[{num}]/div/div/div/div'
-                    
+                    image_xpath = f'//*[@id="swiper-wrapper-{tag_id}"]/div[{num}]/div/div/div/div'                    
                     image_el = await session.get_element(image_xpath, SelectorType.xpath)
                     image_link = await image_el.get_css_value('background-image')
                     #logging.info(image_link.strip('url(').strip(')'))
@@ -442,7 +441,7 @@ async def get_valentino():
     ]
     
     for category_url in categories:
-        if 'VMA' in url:
+        if 'VMA' in category_url:
             subcategory = 'Man ' + category_url.split('=')[1].replace('%20', ' ')
         else:
             subcategory = 'Woman ' + category_url.split('=')[1].replace('%20', ' ')
