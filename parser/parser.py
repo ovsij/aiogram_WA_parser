@@ -288,7 +288,7 @@ async def get_catalog(url):
         browser.quit()
     '''
     
-async def get_valentino_catalog(url):
+async def get_valentino_catalog(url, subcategory):
     service = services.Chromedriver(binary=ChromeDriverManager().install(), log_file=os.devnull)
     browser = browsers.Chrome()
     browser.capabilities = {
@@ -318,10 +318,7 @@ async def get_valentino_catalog(url):
         name_xpath = '//*[@id="main-wrapper"]/div[1]/div[2]'
         name_el = await session.wait_for_element(10, name_xpath, SelectorType.xpath)
         name = await name_el.get_text()
-        if 'VMA' in url:
-            subcategory = 'Man ' + name
-        else:
-            subcategory = 'Woman ' + name
+        
         
         try:
             cookie_xpath = f'//*[@id="main-wrapper"]/div[4]/div[2]'
@@ -444,9 +441,16 @@ async def get_valentino():
         '/VMA/search?category=SOFT%20ACCESSORIES'
     ]
     
-    items = []
     for category_url in categories:
-        items = await get_valentino_catalog(url + category_url)
+        if 'VMA' in url:
+            subcategory = 'Man ' + category_url.split('=')[1].replace('%20', ' ')
+        else:
+            subcategory = 'Woman ' + category_url.split('=')[1].replace('%20', ' ')
+
+        if not crud.subcategory_exists():
+            crud.create_subcategory(name=subcategory)
+        items = []
+        items = await get_valentino_catalog(url + category_url, subcategory)
         crud.del_products(subcategory=items[0][2])
         for item in items:
             price = int((item[5] * (euro_cost() + 1)) / 100 * get_catalog(phone=item[3]).margin) if item[5] else None
@@ -458,8 +462,6 @@ async def get_valentino():
                 description=item[4],
                 price=price,
                 image=item[6])
-
-        
     return items
 
 
