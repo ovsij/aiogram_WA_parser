@@ -306,12 +306,13 @@ def inline_kb_admin():
         ['Рассылка', 'btn_sendmessage'],
         ['Добавить каталог', 'btn_addcatalog'],
         ['Удалить каталог', 'btn_delcatalog'],
+        ['Редактировать каталог', 'btn_editcatalog'],
         ['Добавить товар', 'btn_additem'],
         ['Удалить товар', 'btn_delitem'],
         ['Запустить обновление каталогов', 'btn_updatecatalog'],
         btn_back('menu')
     ]
-    schema = [1, 1, 1, 1, 1, 1, 1]
+    schema = [1, 1, 1, 1, 1, 1, 1, 1]
     inline_kb = InlineConstructor.create_kb(text_and_data, schema)
     return text, inline_kb
 

@@ -285,6 +285,21 @@ async def btn_callback(callback_query: types.CallbackQuery):
                 text=text,
                 reply_markup=reply_markup
             )
+    
+    if code[1] == 'editcatalog':
+        if code[-1] == 'editcatalog':
+            text, reply_markup = inline_kb_editcatalog()
+            await callback_query.message.edit_text(
+                text=text,
+                reply_markup=reply_markup
+            )
+        else:
+            text = 'Пришлите какой процент наценки будет у этого каталога (двузначное число). Например: 20'
+            await Form.add_margin.set()
+            Form.add_margin = code[-1]
+            await callback_query.message.edit_text(
+                text=text
+            )
 
     if code[1] == 'updatecatalog':
         if code[-1] == 'accept':
