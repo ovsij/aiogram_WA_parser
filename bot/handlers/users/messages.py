@@ -128,7 +128,7 @@ async def add_catalog(message: types.Message, state: FSMContext):
     await message.delete()
 
     #phone = get_catalog(id=max([c.id for c in get_catalogs()])).phone
-    async with Form.add_margin.proxy() as data:
+    async with Form.add_margin as data:
         phone = data['catalog']
     update_catalog(phone=phone, margin=int(message.text))
 
