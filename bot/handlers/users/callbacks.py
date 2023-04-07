@@ -367,8 +367,8 @@ async def btn_callback(callback_query: types.CallbackQuery):
             del_products(category='VALENTINO')
             for item in items:
                 print(item)
-                price = int((item[4] * (euro_cost() + 1)) / 100 * get_catalog(phone='valentino').margin) if item[4] else None
-                create_product(name=item[0], category=item[1], subcategory=item[2], catalog='valentino', description=item[3], price=price, image=item[5])
+                price = int((item[5] * (euro_cost() + 1)) / 100 * get_catalog(phone='valentino').margin) if item[5] else None
+                create_product(name=item[0], category=item[1], subcategory=item[2], catalog='valentino', description=item[4], price=price, image=item[6])
             
             await bot.delete_message(chat_id=callback_query.from_user.id, message_id=mesg.message_id)
             text, reply_markup = inline_kb_updatecatalog()

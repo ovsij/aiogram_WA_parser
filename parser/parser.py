@@ -18,6 +18,8 @@ from bs4 import BeautifulSoup as bs
 import time
 import sys
 
+from database import crud
+
 
 
 #https://web.whatsapp.com/catalog/393421807916
@@ -301,7 +303,8 @@ async def get_valentino_catalog(url):
             '--disable-gpu',
             #'--disable-dev-shm-usage',
             '--profile-directory=Profile 1',
-            'user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36'
+            'user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36',
+            '--lang="ru"'
         ]}}
     items = []
     async with get_session(service, browser) as session:
@@ -319,7 +322,7 @@ async def get_valentino_catalog(url):
             subcategory = 'Man ' + name
         else:
             subcategory = 'Woman ' + name
-        
+        crud.del_products(subcategory=subcategory)
         try:
             cookie_xpath = f'//*[@id="main-wrapper"]/div[4]/div[2]'
             cookie_el = await session.get_element(cookie_xpath, SelectorType.xpath)
@@ -365,22 +368,26 @@ async def get_valentino_catalog(url):
                         png.write(request.content)
                     images += img_path + '\n'
                 except:
-                    break
+                    logging.info('Не получается найти изображение: ' + name)
             
             price = None
             try:
-                price = int(soup.find('p', 'sc-dTjBdT eDOCdB').text.replace('.00', '').strip('€').replace(',', ''))
+                price = int(soup.find('p', 'sc-dQDPHY gwUuKq').text.replace('.00', '').strip('€').replace(',', ''))
             except:
                 try:
-                    price = int(soup.find_all('p', 'sc-dTjBdT eDOCdB')[0].text.replace('.00', '').strip('€').replace(',', ''))
+                    try:
+                        price = int(soup.find_all('p', 'sc-dQDPHY gwUuKq')[1].text.replace('.00', '').strip('€').replace(',', ''))
+                    except:
+                        price = int(soup.find_all('div', 'sc-dQDPHY gwUuKq')[0].text.replace('.00', '').strip('€').replace(',', ''))
                 except IndexError:
                     pass
+                
             #print(f'Цена: {price}')
             
             description = ''
            
             try:
-                description = soup.find('div', 'sc-bQmOxr bDQQdx').text
+                description = soup.find('div', 'sc-bOSxlg eTpxmk').text
             except:
                 pass
             #print(description)
@@ -390,26 +397,45 @@ async def get_valentino_catalog(url):
             #print(sizes_soup)
             try:
                 description += '\n\nРазмеры:\n'
-                sizes = soup.find('div', 'sc-fmZqYP kxBPUA')
+                sizes = soup.find('div', 'sc-GJyyB kXYhul').find_all('p')
                 for size in sizes:
-                    if size.get('class')[1] == 'dRdmBy':
+                    if size.get('class')[1] == 'kAJdQY':
                         description += f'<b>{size.text}</b> '
+                    elif size.text == 'One Size':
+                        description += size.text
                     else:
                         description += f'<s>{size.text}</s> '
             except:
-                pass
+                description += 'One Size'
+            
+            try:
+                name = soup.find('p', 'sc-ialjHA dOuBpq').text
+            except:
+                try:
+                    name = soup.find_all('p', 'sc-ialjHA dOuBpq')[0].text
+                except:
+                    pass
                 
 
             back_xpath = '//*[@id="main-wrapper"]/div[1]/div[1]'
             back_el = await session.wait_for_element(10, back_xpath, SelectorType.xpath)
             await back_el.click()
 
-            item = [name, 'VALENTINO', subcategory, description, price, images]
+            item = [name, 'VALENTINO', subcategory, 'valentino', description, price, images]
             items.append(item)
             logging.info(item)
+    price_ = int((price * (euro_cost() + 1)) / 100 * get_catalog(phone='valentino').margin) if price else None
+    crud.create_product(
+        name=name,
+        category='VALENTINO',
+        subcategory=subcategory,
+        catalog='valentino',
+        description=description,
+        price=price_,
+        image=images)
     return items
 
-async def get_valentino():
+async def get_valentino(loop):
     url = 'https://myv-experience.valentino.com/0040001024/OUTLET%20SERRAVALLE'
     categories = [
         '/VAL/search?category=APPAREL',
@@ -427,9 +453,12 @@ async def get_valentino():
     ]
     
     items = []
+    tasks = []
     for category_url in categories:
-        items += await get_valentino_catalog(url + category_url)
-        
+        task = asyncio.ensure_future(get_valentino_catalog(url + category_url))
+        tasks.append(task)
+    await asyncio.gather_with_concurrency(2, asyncio.wait(tasks))
+        #items = await get_valentino_catalog(url + category_url)            
     return items
 
 
@@ -470,6 +499,7 @@ async def get_item(session, url, subcategory, i):
         price = float(soup.find('span', 'price css-g6gm48 e15t2uci1').text.strip('€ '))
     except:
         price = float(soup.find('span', 'special-price css-mzijty e15t2uci4').text.strip('€ '))
+        
     
     discont = soup.find('div', 'e18vcbt26 css-h9r4rd e15t2uci0').text
     description += f'\n\n{discont}'

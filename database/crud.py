@@ -96,7 +96,8 @@ def create_product(
     description : str = None, 
     price : float = None, 
     image : str = None) -> Product:
-    
+    if Product.exists(name = name, description = description, price = price):
+        Product.get(name = name, description = description, price = price).delete()
     if category_exists(name=category):
         category = Category.get(name=category)
     else:
@@ -117,6 +118,28 @@ def create_product(
         image=image
     )
     return product
+
+@db_session()
+def create_products(items):
+    for item in items:
+        if category_exists(name=category):
+            category = Category.get(name=item[1])
+        else:
+            category = Category(name=item[1], catalog=Catalog.get(phone=item[3]))
+        if subcategory:
+            if subcategory_exists(name=item[2]):
+                subcategory = SubCategory.get(name=item[2])
+            else:
+                subcategory = SubCategory(name=item[2], category=item[1])
+        Product(
+        name=item[0],
+        category=category,
+        subcategory=subcategory,
+        catalog=Catalog.get(phone=item[3]),
+        description=item[4],
+        price=item[5],
+        image=item[6]
+    )
 
 @db_session()
 def get_categories():
@@ -149,7 +172,7 @@ def get_last_id():
         return 0
 
 @db_session()
-def del_products(catalog : str = None, category : str = None):
+def del_products(catalog : str = None, category : str = None, subcategory : str = None):
     if catalog:
         products_to_delete = select(p for p in Product if p.catalog == Catalog.get(phone=catalog))[:]
         for product in  products_to_delete:
@@ -157,6 +180,10 @@ def del_products(catalog : str = None, category : str = None):
             #SubCategory[product.subcategory.id].delete()
     if category:
         products_to_delete = select(p for p in Product if p.category == Category.get(name=category))[:]
+        for product in  products_to_delete:
+            product.delete()
+    if subcategory:
+        products_to_delete = select(p for p in Product if p.subcategory == SubCategory.get(name=subcategory))[:]
         for product in  products_to_delete:
             product.delete()
 
