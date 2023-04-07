@@ -322,7 +322,7 @@ async def get_valentino_catalog(url):
             subcategory = 'Man ' + name
         else:
             subcategory = 'Woman ' + name
-        crud.del_products(subcategory=subcategory)
+        
         try:
             cookie_xpath = f'//*[@id="main-wrapper"]/div[4]/div[2]'
             cookie_el = await session.get_element(cookie_xpath, SelectorType.xpath)
@@ -359,6 +359,7 @@ async def get_valentino_catalog(url):
                     tag_id = webpage.split('swiper-wrapper-')[-1].split('"')[0]
 
                     image_xpath = f'//*[@id="swiper-wrapper-{tag_id}"]/div[{num}]/div/div/div/div'
+                    
                     image_el = await session.get_element(image_xpath, SelectorType.xpath)
                     image_link = await image_el.get_css_value('background-image')
                     logging.info(image_link.strip('url(').strip(')'))
@@ -368,7 +369,7 @@ async def get_valentino_catalog(url):
                         png.write(request.content)
                     images += img_path + '\n'
                 except:
-                    logging.info('Не получается найти изображение: ' + name)
+                    pass
             
             price = None
             try:
@@ -424,18 +425,9 @@ async def get_valentino_catalog(url):
             item = [name, 'VALENTINO', subcategory, 'valentino', description, price, images]
             items.append(item)
             logging.info(item)
-    price_ = int((price * (euro_cost() + 1)) / 100 * get_catalog(phone='valentino').margin) if price else None
-    crud.create_product(
-        name=name,
-        category='VALENTINO',
-        subcategory=subcategory,
-        catalog='valentino',
-        description=description,
-        price=price_,
-        image=images)
     return items
 
-async def get_valentino(loop):
+async def get_valentino():
     url = 'https://myv-experience.valentino.com/0040001024/OUTLET%20SERRAVALLE'
     categories = [
         '/VAL/search?category=APPAREL',
@@ -453,12 +445,21 @@ async def get_valentino(loop):
     ]
     
     items = []
-    tasks = []
     for category_url in categories:
-        task = asyncio.ensure_future(get_valentino_catalog(url + category_url))
-        tasks.append(task)
-    loop.run_until_complete(asyncio.wait(tasks))
-        #items = await get_valentino_catalog(url + category_url)            
+        items = await get_valentino_catalog(url + category_url)
+        crud.del_products(subcategory=items[0][2])
+        for item in items:
+            price = int((item[5] * (euro_cost() + 1)) / 100 * get_catalog(phone=item[3]).margin) if item[5] else None
+            crud.create_product(
+                name=item[0],
+                category=item[1],
+                subcategory=item[2],
+                catalog=item[3],
+                description=item[4],
+                price=price,
+                image=item[6])
+
+        
     return items
 
 
