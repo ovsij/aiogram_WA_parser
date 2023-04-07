@@ -329,7 +329,7 @@ async def get_valentino_catalog(url, subcategory):
         
         logging.info(f'Start {subcategory} subcategory')
         
-        for i in range(1, num + 1):
+        for i in range(1, 5):# num + 1):
             logging.info(f'{i} {subcategory}')
             item_xpath = f'//*[@id="main"]/div/div[2]/div[1]/div[{i}]/div[2]/div[1]'
             #item_xpath = f'//*[@id="main"]/div/div[2]/div[1]/div[1]/div[2]/div[1]'
