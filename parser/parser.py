@@ -359,7 +359,7 @@ async def get_valentino_catalog(url, subcategory):
                     
                     image_el = await session.get_element(image_xpath, SelectorType.xpath)
                     image_link = await image_el.get_css_value('background-image')
-                    logging.info(image_link.strip('url(').strip(')'))
+                    #logging.info(image_link.strip('url(').strip(')'))
                     img_path = f"database/images/VALENTINO/{subcategory}/{i}_{name.replace(' ', '_').replace('/', '_')}_{num}.png"
                     request = requests.get(image_link.strip('url("').strip('")'))
                     with open(img_path, 'wb') as png:
@@ -453,7 +453,7 @@ async def get_valentino():
         items = await get_valentino_catalog(url + category_url, subcategory)
         crud.del_products(subcategory=items[0][2])
         for item in items:
-            price = int((item[5] * (euro_cost() + 1)) / 100 * get_catalog(phone=item[3]).margin) if item[5] else None
+            price = int((item[5] * (euro_cost() + 1)) / 100 * get_catalog(phone='valentino').margin) if item[5] else None
             crud.create_product(
                 name=item[0],
                 category=item[1],
