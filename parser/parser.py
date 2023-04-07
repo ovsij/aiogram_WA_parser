@@ -453,7 +453,7 @@ async def get_valentino():
         items = await get_valentino_catalog(url + category_url, subcategory)
         crud.del_products(subcategory=items[0][2])
         for item in items:
-            price = int((item[5] * (euro_cost() + 1)) / 100 * get_catalog(phone='valentino').margin) if item[5] else None
+            price = int((item[5] * (euro_cost() + 1)) / 100 * crud.get_catalog(phone='valentino').margin) if item[5] else None
             crud.create_product(
                 name=item[0],
                 category=item[1],
