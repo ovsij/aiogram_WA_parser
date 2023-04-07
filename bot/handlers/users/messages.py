@@ -128,10 +128,9 @@ async def add_catalog(message: types.Message, state: FSMContext):
     await message.delete()
 
     #phone = get_catalog(id=max([c.id for c in get_catalogs()])).phone
-    async with Form.add_margin as data:
-        phone = data['catalog']
+    phone = Form.add_margin
     update_catalog(phone=phone, margin=int(message.text))
-
+    await state.clear()
     text, reply_markup = inline_kb_admin()
     text += f'\n\nКаталог добавлен'
     await bot.send_message(
