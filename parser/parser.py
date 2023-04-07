@@ -192,6 +192,7 @@ async def get_catalog(url):
         "goog:chromeOptions": {"args": [
             '--user-data-dir=parser/User', 
             '--headless',
+            'window-size=1280,720',
             '--private',
             '--disable-gpu',
             '--disable-dev-shm-usage',
