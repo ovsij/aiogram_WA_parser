@@ -457,7 +457,7 @@ async def get_valentino(loop):
     for category_url in categories:
         task = asyncio.ensure_future(get_valentino_catalog(url + category_url))
         tasks.append(task)
-    await asyncio.gather_with_concurrency(2, asyncio.wait(tasks))
+    loop.run_until_complete(asyncio.wait(tasks))
         #items = await get_valentino_catalog(url + category_url)            
     return items
 
