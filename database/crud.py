@@ -218,8 +218,8 @@ def category_exists(name : str):
 
 #SubCategory
 @db_session()
-def create_subcategory(name : str):
-    return SubCategory(name=name)
+def create_subcategory(name : str, category : str):
+    return SubCategory(name=name, category=Category.get(name=category))
 
 @db_session()
 def get_subcategory(id : int = None, name : str = None, category_id : int = None):

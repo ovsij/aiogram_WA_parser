@@ -447,8 +447,8 @@ async def get_valentino():
         else:
             subcategory = 'Woman ' + category_url.split('=')[1].replace('%20', ' ')
 
-        if not crud.subcategory_exists('VALENTINO'):
-            crud.create_subcategory(name=subcategory)
+        if not crud.subcategory_exists(subcategory):
+            crud.create_subcategory(name=subcategory, category='VALENTINO')
         items = []
         items = await get_valentino_catalog(url + category_url, subcategory)
         crud.del_products(subcategory=items[0][2])
