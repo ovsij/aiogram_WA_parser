@@ -339,7 +339,7 @@ def inline_kb_delcatalog():
     return text, inline_kb
 
 def inline_kb_editcatalog():
-    text = 'Выберите каталог, который хотите удалить'
+    text = 'Выберите каталог, наценку которого хотите изменить'
     text_and_data = []
     schema = [1]
     catalogs = get_catalogs()

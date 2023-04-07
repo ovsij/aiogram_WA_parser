@@ -297,7 +297,7 @@ async def btn_callback(callback_query: types.CallbackQuery):
             text = 'Пришлите какой процент наценки будет у этого каталога (двузначное число). Например: 20'
             await Form.add_margin.set()
             Form.add_margin = code[-1]
-            await callback_query.message.edit_text(
+            Form.prev_message =  await callback_query.message.edit_text(
                 text=text
             )
 
