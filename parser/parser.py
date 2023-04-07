@@ -212,6 +212,8 @@ async def get_catalog(url):
         except:
             logging.warning('Не удается найти на странице название каталога. Проверьте авторизацию.')
             qc_xpath = '//*[@id="app"]/div/div/div[3]/div[1]/div/div/div[2]/div/canvas'
+            with open('parser/checklogin.png', 'wb') as png:
+                png.write(img.read())
             qc = await session.wait_for_element(120, qc_xpath, SelectorType.xpath)
             img = await qc.get_screenshot()
             with open('parser/screenshot.png', 'wb') as png:
@@ -329,7 +331,7 @@ async def get_valentino_catalog(url, subcategory):
         
         logging.info(f'Start {subcategory} subcategory')
         
-        for i in range(1, 5):# num + 1):
+        for i in range(1, num + 1):
             logging.info(f'{i} {subcategory}')
             item_xpath = f'//*[@id="main"]/div/div[2]/div[1]/div[{i}]/div[2]/div[1]'
             #item_xpath = f'//*[@id="main"]/div/div[2]/div[1]/div[1]/div[2]/div[1]'

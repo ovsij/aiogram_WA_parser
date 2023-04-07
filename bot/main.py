@@ -27,7 +27,7 @@ async def scheduled_catalogs(wait_for):
     while True:
         catalogs = get_catalogs()
         for catalog in catalogs:
-            await bot.send_message(227184505, f'{catalog} начал парсинг')
+            await bot.send_message(227184505, f'{catalog.phone} начал парсинг')
             if catalog.phone not in ['valentino', 'lesilla']:
                 url = f'https://web.whatsapp.com/catalog/{catalog.phone}'
                 items = await parser.get_catalog(url=url)
@@ -74,5 +74,5 @@ if __name__ == '__main__':
     #loop.create_task(parser.get_valentino())
     loop.create_task(scheduled_catalogs(86400))
     loop.create_task(send_mes(5))
-    loop.create_task(scheduled_valentino(7200))
+    #loop.create_task(scheduled_valentino(7200))
     executor.start_polling(dp, skip_updates=True)
