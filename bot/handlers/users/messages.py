@@ -104,7 +104,7 @@ async def add_catalog(message: types.Message, state: FSMContext):
         create_catalog(phone=phone, link=link)
         text = 'Пришлите какой процент наценки будет у этого каталога (двузначное число). Например: 20'
         await Form.add_margin.set()
-        await Form.add_margin.update_data(phone=message.text)
+        Form.cat_phone = message.text
         
     else:
         text = f'\n\nКаталог {message.text} уже существует'
@@ -128,11 +128,11 @@ async def add_catalog(message: types.Message, state: FSMContext):
     await message.delete()
 
     #phone = get_catalog(id=max([c.id for c in get_catalogs()])).phone
-    phone = Form.add_margin
+    phone = Form.cat_phone
     update_catalog(phone=phone, margin=int(message.text))
 
     text, reply_markup = inline_kb_admin()
-    text += f'\n\nКаталог добавлен'
+    text += f'\n\nВнесение изменений произошло успешно'
     await bot.send_message(
                 message.from_user.id,
                 text=text,

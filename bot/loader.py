@@ -21,3 +21,4 @@ class Form(StatesGroup):
     new_message = State()
     add_catalog = State()
     add_margin = State()
+    cat_phone = State()
