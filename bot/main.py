@@ -50,7 +50,7 @@ async def scheduled_catalogs(wait_for):
                         description = None
                     create_product(name=item[0], category=item[1], subcategory=item[2], catalog=catalog.phone, description=description, price=price, image=item[5])
         await parser.get_valentino()
-        
+
         await asyncio.sleep(wait_for)
 
 
@@ -75,7 +75,7 @@ if __name__ == '__main__':
     from handlers import dp
     loop = asyncio.get_event_loop()
     #loop.create_task(parser.get_valentino())
-    loop.create_task(scheduled_catalogs(0))
+    #loop.create_task(scheduled_catalogs(0))
     loop.create_task(send_mes(5))
     #loop.create_task(scheduled_valentino(7200))
     executor.start_polling(dp, skip_updates=True)
