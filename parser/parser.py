@@ -80,7 +80,7 @@ async def get_items(category : str, session, subcategory : str = 'Другое')
             logging.info(title)
             time.sleep(1)
 
-            
+            """
             img = await session.get_screenshot()
             with open('item.png', 'wb') as png:
                 png.write(img.read())
@@ -101,7 +101,7 @@ async def get_items(category : str, session, subcategory : str = 'Другое')
             image_links = soup.find_all('div', '_1Z_Af')
             for im in image_links:
                 print(im.find('img').get('src'))
-            """
+            
             images = ''
             async with aiohttp.ClientSession() as session:
                 for link in image_links:
