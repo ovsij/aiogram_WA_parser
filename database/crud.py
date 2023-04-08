@@ -243,8 +243,8 @@ def subcategory_exists(name : str):
 
 # Catalog
 @db_session()
-def create_catalog(phone : str, link: str):
-    return Catalog(phone=phone, link=link)
+def create_catalog(phone : str, link: str, margin : int):
+    return Catalog(phone=phone, link=link, margon=margin)
 
 @db_session()
 def get_catalog(id : int = None, phone : str = None):
