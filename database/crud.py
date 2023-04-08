@@ -203,7 +203,7 @@ def get_category(id : int = None, name : str = None, catalog_id : Catalog = None
     if name:
         return Category.get(name=name)
     if catalog_id:
-        return Category.get(id=catalog_id)
+        return Category.get(catalog=catalog_id)
 
 @db_session()
 def delete_category(id : int = None, name : str = None):
