@@ -217,7 +217,7 @@ async def get_catalog(url):
             with open('parser/checklogin.png', 'wb') as png:
                 png.write(img.read())
             #qc = await session.wait_for_element(120, qc_xpath, SelectorType.xpath)
-            await asyncio.sleep(30)
+            await asyncio.sleep(60)
             img = await session.get_screenshot()
             with open('parser/screenshot.png', 'wb') as png:
                 png.write(img.read())
