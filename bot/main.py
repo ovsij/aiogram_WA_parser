@@ -34,12 +34,16 @@ async def scheduled_valentino():
 
 async def scheduled_catalogs(wait_for):
     while True:
+        await bot.send_message(227184505, f'LeSILLA начал парсинг')
         await parser.get_lesilla()
+        await asyncio.sleep(10)
+        await bot.send_message(227184505, f'VALENTINO начал парсинг')
+        await parser.get_valentino()
         await asyncio.sleep(10)
         catalogs = get_catalogs()
         for catalog in catalogs:
-            await bot.send_message(227184505, f'{catalog.phone} начал парсинг')
             if catalog.phone not in ['valentino', 'lesilla']:
+                await bot.send_message(227184505, f'{catalog.phone} начал парсинг')
                 url = f'https://web.whatsapp.com/catalog/{catalog.phone}'
                 items = await parser.get_catalog(url=url)
                 del_products(catalog=catalog.phone)
@@ -51,7 +55,7 @@ async def scheduled_catalogs(wait_for):
                     except:
                         description = None
                     create_product(name=item[0], category=item[1], subcategory=item[2], catalog=catalog.phone, description=description, price=price, image=item[5])
-        await parser.get_valentino()
+        
 
         await asyncio.sleep(wait_for)
 

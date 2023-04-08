@@ -627,7 +627,7 @@ async def get_lesilla():
         for name, url in urls.items():
             logging.info(f'Starting: {name}')
             product_urls = await get_subcategory(session, url)
-            for prodict_url in product_urls[:3]:
+            for prodict_url in product_urls:
                 i = product_urls.index(prodict_url) + 1
                 try:
                     items.append(await get_item(session, prodict_url, name, i))
