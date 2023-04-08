@@ -160,7 +160,7 @@ async def get_items(category : str, session, subcategory : str = 'Другое')
                 price_el = await session.get_element(price_xpath, SelectorType.xpath)
                 price_text = await price_el.get_text()
                 logging.info(price_text)
-                price = int(price_text.strip(' €').strip(',00').replace(' ', ''))
+                price = int(price_text.strip(' €').replace(',00', '').replace(' ', ''))
                 #price = float(browser.find_element(By.XPATH, price_xpath).text.strip(' €').replace(',', '.'))
             except:
                 logging.info('no price')
