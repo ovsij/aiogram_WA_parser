@@ -594,7 +594,7 @@ async def get_item(session, url, subcategory, i):
             png.write(request.content)
         images += img_path + '\n'
     
-    return [name, 'LeSILLA', subcategory, description, price, images]
+    return [name, 'LeSILLA', subcategory, 'lesilla', description, price, images]
 
 
 async def get_lesilla():
@@ -627,12 +627,22 @@ async def get_lesilla():
         for name, url in urls.items():
             logging.info(f'Starting: {name}')
             product_urls = await get_subcategory(session, url)
-            for prodict_url in product_urls:
+            for prodict_url in product_urls[:3]:
                 i = product_urls.index(prodict_url) + 1
                 try:
                     items.append(await get_item(session, prodict_url, name, i))
                 except:
                     pass
-        logging.info(items)
-        return items
+        #logging.info(items)
+    for item in items:
+        price = int((item[5] * (euro_cost() + 1)) / 100 * crud.get_catalog(phone='valentino').margin) if item[5] else None
+        crud.create_product(
+            name=item[0],
+            category=item[1],
+            subcategory=item[2],
+            catalog=item[3],
+            description=item[4],
+            price=price,
+            image=item[6])
+    return items
     
