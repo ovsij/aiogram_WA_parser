@@ -207,7 +207,7 @@ async def get_catalog(url):
         try:
             logging.warning('Попытка входа. Ищем название каталога.')
             header_xpath = '//*[@id="app"]/div/div/div[6]/span/div/span/div/div[2]/div[1]/div/div[2]/div[1]/span'
-            header_el = await session.wait_for_element(60, header_xpath, SelectorType.xpath)
+            header_el = await session.wait_for_element(30, header_xpath, SelectorType.xpath)
             header = await header_el.get_text()
             logging.warning(header)
         except:
@@ -216,8 +216,9 @@ async def get_catalog(url):
             img = await session.get_screenshot()
             with open('parser/checklogin.png', 'wb') as png:
                 png.write(img.read())
-            qc = await session.wait_for_element(120, qc_xpath, SelectorType.xpath)
-            img = await qc.get_screenshot()
+            #qc = await session.wait_for_element(120, qc_xpath, SelectorType.xpath)
+            await asyncio.sleep(30)
+            img = await session.get_screenshot()
             with open('parser/screenshot.png', 'wb') as png:
                 png.write(img.read())
             # и снова пытаемся найти заголовок (в это время нужно отсканировать qr-код)
