@@ -34,6 +34,8 @@ async def scheduled_valentino():
 
 async def scheduled_catalogs(wait_for):
     while True:
+        await parser.get_lesilla()
+        await asyncio.sleep(10)
         catalogs = get_catalogs()
         for catalog in catalogs:
             await bot.send_message(227184505, f'{catalog.phone} начал парсинг')

@@ -96,8 +96,8 @@ def create_product(
     description : str = None, 
     price : float = None, 
     image : str = None) -> Product:
-    if Product.exists(name = name, description = description, price = price):
-        Product.get(name = name, description = description, price = price).delete()
+    #if Product.exists(name = name, description = description, price = price):
+    #    Product.get(name = name, description = description, price = price).delete()
     if category_exists(name=category):
         category = Category.get(name=category)
     else:

@@ -17,6 +17,7 @@ import requests
 from bs4 import BeautifulSoup as bs
 import time
 import sys
+import urllib.request
 
 from database import crud
 
@@ -78,6 +79,47 @@ async def get_items(category : str, session, subcategory : str = 'Другое')
             #
             logging.info(title)
             time.sleep(1)
+
+            
+            img = await session.get_screenshot()
+            with open('item.png', 'wb') as png:
+                png.write(img.read())
+            if subcategory == 'Другое':
+                img_xpath = '//*[@id="app"]/div/div/div[6]/span/div/span/div/div[2]/div/div[2]/div/div[1]/div[1]/div/img'
+            else:
+                img_xpath = '//*[@id="app"]/div/div/div[6]/span/div/span/span/div/div[2]/div/div[2]/div/div[1]/div[1]/div/img'
+            images_el = await session.wait_for_element(10, img_xpath, SelectorType.xpath)
+            print(images_el)
+            src = await images_el.get_attribute('src')
+            print(src)
+           
+            
+            
+            # сохраняем изображения
+            webpage = await session.get_page_source()
+            soup = bs(webpage, 'lxml')
+            image_links = soup.find_all('div', '_1Z_Af')
+            for im in image_links:
+                print(im.find('img').get('src'))
+            """
+            images = ''
+            async with aiohttp.ClientSession() as session:
+                for link in image_links:
+                    i = image_links.index(link) + 1
+                    response = await session.get(url=link.find('img').get('src'), ssl=False)
+                    if subcategory == 'Другое':
+                        with open(f"database/images/{category}/{i}_{title.replace(' ', '_').replace('/', '_')}.png", 'wb') as png:
+                            png.write(response.content)
+                        images += f"database/images/{category}/{i}_{title.replace(' ', '_').replace('/', '_')}.png\n"
+                    else:
+                        if not os.path.exists(f"database/images/{category}/{subcategory}"):
+                            os.mkdir(f"database/images/{category}/{subcategory}")
+                        with open(f"database/images/{category}/{subcategory}/{i}_{title.replace(' ', '_').replace('/', '_')}.png", 'wb') as png:
+                            png.write(response.content)
+                        images += f"database/images/{category}/{subcategory}/{i}_{title.replace(' ', '_').replace('/', '_')}.png\n"
+
+            """
+            images = ''
             if subcategory == 'Другое':
                 img_xpath = '//*[@id="app"]/div/div/div[6]/span/div/span/div/div[2]/div/div[2]/div/div[1]/div[1]/div/img'
                 img_el = await session.wait_for_element(10, img_xpath, SelectorType.xpath)
@@ -87,11 +129,11 @@ async def get_items(category : str, session, subcategory : str = 'Другое')
                     img_xpath = '//*[@id="app"]/div/div/div[6]/span/div/span/span/div/div[2]/div/div[2]/div/div[1]/div/div/img'
                     img_el = await session.wait_for_element(10, img_xpath, SelectorType.xpath)
                     img = await img_el.get_screenshot()
-                # сохраняем изображениe
                 except:
                     img_xpath = '//*[@id="app"]/div/div/div[6]/span/div/span/span/div/div[2]/div/div[2]/div/div[1]/div[1]/div/img'
                     img_el = await session.wait_for_element(10, img_xpath, SelectorType.xpath)
                     img = await img_el.get_screenshot()
+            
             #создаем дирректорию категории если ее еще нет
             if not os.path.exists(f"database/images/{category}"):
                 os.mkdir(f"database/images/{category}")
@@ -99,11 +141,14 @@ async def get_items(category : str, session, subcategory : str = 'Другое')
             if subcategory == 'Другое':
                 with open(f"database/images/{category}/{i}_{title.replace(' ', '_').replace('/', '_')}.png", 'wb') as png:
                     png.write(img.read())
+                images += f"database/images/{category}/{i}_{title.replace(' ', '_').replace('/', '_')}.png\n"
             else:
                 if not os.path.exists(f"database/images/{category}/{subcategory}"):
                     os.mkdir(f"database/images/{category}/{subcategory}")
                 with open(f"database/images/{category}/{subcategory}/{i}_{title.replace(' ', '_').replace('/', '_')}.png", 'wb') as png:
                     png.write(img.read())
+                images += f"database/images/{category}/{subcategory}/{i}_{title.replace(' ', '_').replace('/', '_')}.png\n"
+            
             # записываем данные о товаре
             if subcategory == 'Другое':
                 price_xpath = '//*[@id="app"]/div/div/div[6]/span/div/span/div/div[2]/div/div[3]/div[2]/span'
@@ -134,9 +179,9 @@ async def get_items(category : str, session, subcategory : str = 'Другое')
                 logging.info('no description')
             subcategory_ = None if subcategory == 'Другое' else subcategory
             if subcategory == 'Другое':
-                lst = [title, category, subcategory_, description, price, f"database/images/{category}/{i}_{title.replace(' ', '_').replace('/', '_')}.png"]
+                lst = [title, category, subcategory_, description, price, images]
             else:
-                lst = [title, category, subcategory_, description, price, f"database/images/{category}/{subcategory}/{i}_{title.replace(' ', '_').replace('/', '_')}.png"]
+                lst = [title, category, subcategory_, description, price, images]
             items.append(lst)
             logging.info(lst)
             # закрываем карточку товара кнопкой "назад"
@@ -192,7 +237,8 @@ async def get_catalog(url):
         "goog:chromeOptions": {"args": [
             '--user-data-dir=parser/User', 
             '--headless',
-            'window-size=1280,720',
+            #'window-size=1280,720',
+            '--start-maximized',
             '--private',
             '--disable-gpu',
             '--disable-dev-shm-usage',
@@ -203,6 +249,7 @@ async def get_catalog(url):
     
     async with get_session(service, browser) as session:
         await session.get(url)
+        await session.set_window_fullscreen()
         # пытаемся найти заголовок каталога, если его нет - делаем скриншот qr-кода 
         try:
             logging.warning('Попытка входа. Ищем название каталога.')
@@ -216,9 +263,9 @@ async def get_catalog(url):
             img = await session.get_screenshot()
             with open('parser/checklogin.png', 'wb') as png:
                 png.write(img.read())
-            #qc = await session.wait_for_element(120, qc_xpath, SelectorType.xpath)
-            await asyncio.sleep(60)
-            img = await session.get_screenshot()
+            qc = await session.wait_for_element(120, qc_xpath, SelectorType.xpath)
+            #await asyncio.sleep(60)
+            img = await qc.get_screenshot()
             with open('parser/screenshot.png', 'wb') as png:
                 png.write(img.read())
             # и снова пытаемся найти заголовок (в это время нужно отсканировать qr-код)
