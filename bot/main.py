@@ -34,31 +34,31 @@ async def scheduled_valentino():
 
 async def scheduled_catalogs(wait_for):
     while True:
-        await bot.send_message(227184505, f'LeSILLA начал парсинг')
-        await parser.get_lesilla()
-        await asyncio.sleep(10)
-        await bot.send_message(227184505, f'VALENTINO начал парсинг')
-        await parser.get_valentino()
-        await asyncio.sleep(10)
-        catalogs = get_catalogs()
-        for catalog in catalogs:
-            if catalog.phone not in ['valentino', 'lesilla']:
-                await bot.send_message(227184505, f'{catalog.phone} начал парсинг')
-                url = f'https://web.whatsapp.com/catalog/{catalog.phone}'
-                items = await parser.get_catalog(url=url)
-                del_products(catalog=catalog.phone)
-                for item in items:
-                    price = int((item[4] * (euro_cost() + 1)) / 100 * get_catalog(phone=catalog.phone).margin) if item[4] else None
-                    try:
-                        description_cost = int((float(item[3].split(',00')[0].split(' ')[-1].replace('.', '') + '.00') * (euro_cost() + 1)) / 100 * get_catalog(phone=catalog.phone).margin)
-                        description = item[3].replace(item[3].split(',00')[0].split(' ')[-1] + ',00', str(description_cost)).replace('€', 'руб.')
-                    except:
-                        description = None
-                    create_product(name=item[0], category=item[1], subcategory=item[2], catalog=catalog.phone, description=description, price=price, image=item[5])
-        
-
-        await asyncio.sleep(wait_for)
-
+        try:
+            await bot.send_message(227184505, f'LeSILLA начал парсинг')
+            await parser.get_lesilla()
+            await asyncio.sleep(10)
+            await bot.send_message(227184505, f'VALENTINO начал парсинг')
+            await parser.get_valentino()
+            await asyncio.sleep(10)
+            catalogs = get_catalogs()
+            for catalog in catalogs:
+                if catalog.phone not in ['valentino', 'lesilla']:
+                    await bot.send_message(227184505, f'{catalog.phone} начал парсинг')
+                    url = f'https://web.whatsapp.com/catalog/{catalog.phone}'
+                    items = await parser.get_catalog(url=url)
+                    del_products(catalog=catalog.phone)
+                    for item in items:
+                        price = int((item[4] * (euro_cost() + 1)) / 100 * get_catalog(phone=catalog.phone).margin) if item[4] else None
+                        try:
+                            description_cost = int((float(item[3].split(',00')[0].split(' ')[-1].replace('.', '') + '.00') * (euro_cost() + 1)) / 100 * get_catalog(phone=catalog.phone).margin)
+                            description = item[3].replace(item[3].split(',00')[0].split(' ')[-1] + ',00', str(description_cost)).replace('€', 'руб.')
+                        except:
+                            description = None
+                        create_product(name=item[0], category=item[1], subcategory=item[2], catalog=catalog.phone, description=description, price=price, image=item[5])
+            await asyncio.sleep(wait_for)
+        except:
+            await asyncio.sleep(wait_for)
 
             
 
@@ -81,7 +81,7 @@ if __name__ == '__main__':
     from handlers import dp
     loop = asyncio.get_event_loop()
     #loop.create_task(parser.get_valentino())
-    loop.create_task(scheduled_catalogs(0))
+    #loop.create_task(scheduled_catalogs(0))
     loop.create_task(send_mes(5))
     #loop.create_task(scheduled_valentino(7200))
     executor.start_polling(dp, skip_updates=True)
