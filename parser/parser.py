@@ -625,6 +625,7 @@ async def get_lesilla():
     items = []
     async with aiohttp.ClientSession(trust_env=True) as session:
         for name, url in urls.items():
+            logging.info(f'Starting: {name}')
             product_urls = await get_subcategory(session, url)
             for prodict_url in product_urls:
                 i = product_urls.index(prodict_url) + 1
