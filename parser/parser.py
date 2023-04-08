@@ -623,8 +623,9 @@ async def get_lesilla():
         'Сумки': 'https://outlet.lesilla.com/row/bags.html'
     }
     items = []
+    crud.create_catalog(phone='lesilla', link='none', margin=30)
     async with aiohttp.ClientSession(trust_env=True) as session:
-        for name, url in urls.items():
+        for name, url in urls.items()[:3]:
             logging.info(f'Starting: {name}')
             product_urls = await get_subcategory(session, url)
             for prodict_url in product_urls[:3]:
