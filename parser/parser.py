@@ -412,10 +412,11 @@ async def get_valentino_catalog(url, subcategory):
                     image_link = await image_el.get_css_value('background-image')
                     #logging.info(image_link.strip('url(').strip(')'))
                     img_path = f"database/images/VALENTINO/{subcategory}/{i}_{name.replace(' ', '_').replace('/', '_')}_{num}.png"
-                    request = requests.get(image_link.strip('url("').strip('")'))
-                    with open(img_path, 'wb') as png:
-                        png.write(request.content)
-                    images += img_path + '\n'
+                    if not os.path.exists(img_path):
+                        request = requests.get(image_link.strip('url("').strip('")'))
+                        with open(img_path, 'wb') as png:
+                            png.write(request.content)
+                        images += img_path + '\n'
                 except:
                     pass
             

@@ -146,13 +146,15 @@ def get_categories():
     return select(p.category for p in Product)[:]
 
 @db_session()
-def get_product(id : int = None, category_id : int = None, subcategory_id : int = None):
+def get_product(id : int = None, category_id : int = None, subcategory_id : int = None, size : str = None):
     if id:
         return Product[id]
     if category_id and not subcategory_id:
         return select(p for p in Product if p.category.id == category_id)[:]
     if category_id and subcategory_id:
         return select(p for p in Product if p.category.id == category_id and p.subcategory.id == subcategory_id)[:]
+    if size:
+        return select(p for p in Product if p.subcategory.id == subcategory_id and size in p.description)[:]
 
 @db_session()
 def get_products_by_category(category : int):
