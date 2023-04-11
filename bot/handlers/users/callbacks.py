@@ -1,7 +1,13 @@
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State
+from dotenv import load_dotenv
+import os
 import re
+
+load_dotenv()
+
+
 
 from loader import dp, Form
 
@@ -21,7 +27,7 @@ async def btn_callback(callback_query: types.CallbackQuery):
 
     if code[1] == 'menu':
         text, reply_markup = inline_kb_menu(callback_query.from_user)
-        if callback_query.from_user.id in [227184505, 1853064073]:
+        if callback_query.from_user.id in os.getenv("ADMINS"):
             reply_markup.add(btn_admin())
         try:
             await callback_query.message.edit_text(
@@ -68,7 +74,7 @@ async def btn_callback(callback_query: types.CallbackQuery):
     
     if code[1] == 'subcategory':
         message_to_delete = Form.prev_message
-        text, reply_markup = inline_kb_products(category=int(code[2]), sub_category=int(code[3]), page=int(code[-1]))
+        text, reply_markup = inline_kb_products(tg_id=str(callback_query.from_user.id), category=int(code[2]), sub_category=int(code[3]), page=int(code[-1]))
         
         try:
             Form.prev_message = await callback_query.message.edit_text(
@@ -86,7 +92,22 @@ async def btn_callback(callback_query: types.CallbackQuery):
                 reply_markup=reply_markup
             )
 
-    if code[1] == 'product':
+    if 'product' in code[1]:
+        if code[1] == 'delproduct':
+            update_product(product_id=int(code[-1]), deleted=True)
+        if code[1] == 'returnproduct':
+            update_product(product_id=int(code[-1]), deleted=False)
+        if code[1] == 'editproduct':
+            text, reply_markup = inline_kb_editproduct(product_id=code[-1])
+            await callback_query.message.delete()
+            await bot.send_message(
+                callback_query.from_user.id, 
+                text=text, 
+                reply_markup=reply_markup)
+            return
+        if code[1] == 'uneditproduct':
+            update_product(product_id=int(code[-1]), edited=False)
+        
         text, reply_markup = inline_kb_product(tg_id=str(callback_query.from_user.id), id=int(code[-1]))
         images = get_image(int(code[-1])).split('\n')
         
@@ -137,9 +158,7 @@ async def btn_callback(callback_query: types.CallbackQuery):
                     reply_markup=reply_markup
                 )
                 await callback_query.message.delete()
-            
 
-            
         
     if code[1] == 'count':
         if code[3] == 'plus':

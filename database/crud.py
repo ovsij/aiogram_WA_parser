@@ -64,14 +64,16 @@ def update_user(
 # Product
 @db_session()
 def update_product(
-    product : Product,
-    category : Category,
-    catalog : Catalog,
+    product_id : int,
+    category : Category = None,
+    catalog : Catalog = None,
     name : str = None, 
     description : str = None, 
     price : float = None, 
-    image : str = None) -> Product:
-    product_to_upd = product
+    image : str = None,
+    deleted : bool = None,
+    edited : bool = None) -> Product:
+    product_to_upd = Product[product_id]
     if name:
         product_to_upd.name = name
     if category:
@@ -84,6 +86,10 @@ def update_product(
         product_to_upd.price = price
     if image:
         product_to_upd.image = image
+    if deleted or deleted == False:
+        product_to_upd.deleted = deleted
+    if edited or edited == False:
+        product_to_upd.edited = edited
 
     return product_to_upd
 
@@ -160,7 +166,6 @@ def get_product(id : int = None, category_id : int = None, subcategory_id : int 
 def get_products_by_category(category : int):
     return select(p for p in Product if p.category.id == category)[:]
 
-
 @db_session()
 def get_image(prod_id : int):
     return Product[prod_id].image    
@@ -172,6 +177,12 @@ def get_last_id():
     except ValueError:
         print('Список продуктов пуст')
         return 0
+    
+@db_session()
+def del_product(id : int):
+    product_to_delete = Product[id]
+    print(product_to_delete)
+    return product_to_delete.deleted == True
 
 @db_session()
 def del_products(catalog : str = None, category : str = None, subcategory : str = None):

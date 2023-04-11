@@ -22,3 +22,6 @@ class Form(StatesGroup):
     add_catalog = State()
     add_margin = State()
     cat_phone = State()
+    edit_name = State()
+    edit_description = State()
+    edit_price = State()

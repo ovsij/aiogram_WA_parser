@@ -81,9 +81,8 @@ def inline_kb_subcategories(category : int = None, page : int = 1):
     else:
         return inline_kb_products(category=category, page=page)
     
-def inline_kb_products(category : int = None, sub_category : int = None, page : int = 1):
+def inline_kb_products(tg_id : str, category : int = None, sub_category : int = None, page : int = 1):
     text = 'КАТАЛОГ'
-
     if sub_category == None:
         text += f'\n\n{get_category(id=category).name}'
         products = get_product(category_id=category)
@@ -97,18 +96,27 @@ def inline_kb_products(category : int = None, sub_category : int = None, page : 
     schema = []
     if bool(products):
         for p in products:
-            text_and_data.append([f'{p.name}', f'btn_product_{p.id}'])
+            if p.deleted:
+                if tg_id in os.getenv('ADMINS'):
+                    text_and_data.append([emojize(f':x: {p.name}', language='alias'), f'btn_product_{p.id}'])
+            elif p.edited:
+                if tg_id in os.getenv('ADMINS'):
+                    text_and_data.append([emojize(f':recycle: {p.name}', language='alias'), f'btn_product_{p.id}'])
+                else:
+                    text_and_data.append([f'{p.name}', f'btn_product_{p.id}'])
+            else:
+                text_and_data.append([f'{p.name}', f'btn_product_{p.id}'])
             schema.append(1)
     else:
         text += '\n\n К сожалению, на данный момент в этой категории ничего нет'
     if len(products) > 10:
         text_and_data, schema = btn_prevnext(len(products), text_and_data, schema, page, name=btn_prevnext_name)
     if sub_category == None:
-        
         text_and_data.append(btn_back(f'catalog_1'))
     else:
         text_and_data.append(btn_back(f'category_{category}_1'))
     schema.append(1)
+    
     inline_kb = InlineConstructor.create_kb(text_and_data, schema)
     return text, inline_kb
 
@@ -123,7 +131,11 @@ def inline_kb_product(tg_id : str, id : int, counter : int = 1):
     description = '' if not product.description else product.description
     price = 'Не указана' if not product.price else f'{product.price} руб.'
     text = f'{product.name}\n\n{description}\n\nЦена: {price}'
-    products_id = [p.id for p in products]
+    if tg_id in os.getenv('ADMINS'):
+        products_id = [p.id for p in products]
+    else:
+        print('del')
+        products_id = [p.id for p in products if not p.deleted]
     back = products_id[products_id.index(id) - 1]
     if products_id.index(id) == len(products) - 1:
         next = products_id[0]
@@ -137,12 +149,40 @@ def inline_kb_product(tg_id : str, id : int, counter : int = 1):
         [emojize(':arrow_backward:', language='alias'), f'btn_product_{back}'],
         [f'[{products_id.index(id) + 1} из {len(products)}]', f'btn_pass'],
         [emojize(':arrow_forward:', language='alias'), f'btn_product_{next}'],
-        [emojize(':leftwards_arrow_with_hook: Назад', language='alias'), btn_back]
     ]
-    schema = [3, 1]
-  
+    schema = [3]
+    # добавить кнопку "удалить товар"
+    if tg_id in os.getenv('ADMINS'):
+        if product.deleted:
+            text =  emojize(':x: ', language='alias') + text
+            text_and_data.append(['Восстановить товар', f'btn_returnproduct_{id}'])
+        else:
+            text_and_data.append(['Удалить товар', f'btn_delproduct_{id}'])
+        if product.edited:
+            text =  emojize(':recycle: ', language='alias') + text
+            text_and_data.append(['Очистить изменения', f'btn_uneditproduct_{id}'])
+        else:
+            text_and_data.append(['Изменить товар', f'btn_editproduct_{id}'])
+        schema.append(1)
+        schema.append(1)
+    # добавить кнопку назад
+    text_and_data.append([emojize(':leftwards_arrow_with_hook: Назад', language='alias'), btn_back])
+    schema.append(1)
     inline_kb = InlineConstructor.create_kb(text_and_data, schema)
     return text, inline_kb
+
+def inline_kb_editproduct(product_id):
+    text = 'Выберите, что бы вы хотели изменить.'
+    text_and_data = [
+        ['Наименование', f'btn_editproduct_name_{product_id}'],
+        ['Описание', f'btn_editproduct_description_{product_id}'],
+        ['Цена', f'btn_editproduct_price_{product_id}'],
+        btn_back(f'btn_product_{product_id}')
+    ]
+    schema = [1, 1, 1, 1]
+    inline_kb = InlineConstructor.create_kb(text_and_data, schema)
+    return text, inline_kb
+
 
 async def inline_kb_cart(telegram_user):
     text = 'КОРЗИНА\n'
@@ -372,8 +412,6 @@ def inline_kb_updatecatalog():
                 name = catalog.phone
             text_and_data.append([emojize(f':recycle: {name}', language='alias'), f'btn_updatecatalog_{catalog.phone}'])
             schema.append(1)
-    
-
     text_and_data.append(btn_back('admin'))
     inline_kb = InlineConstructor.create_kb(text_and_data, schema)
     return text, inline_kb
@@ -391,8 +429,6 @@ def inline_kb_approveupdatecapalog(phone : str = None, custom : str = None):
             [emojize(':white_check_mark: Обновить :white_check_mark:', language='alias'), f'btn_update{custom}_accept'],
             [emojize(':x: Отменить :x:', language='alias'), f'btn_update{custom}_deny']
         ]
-    
-    
     schema = [1, 1]
     inline_kb = InlineConstructor.create_kb(text_and_data, schema)
     return text, inline_kb

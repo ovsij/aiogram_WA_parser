@@ -33,6 +33,8 @@ class Product(db.Entity):
     description = Optional(str, nullable=True)
     price = Optional(int)
     image = Optional(str, nullable=True)
+    deleted = Optional(bool, default=False)
+    edited = Optional(bool, default=False)
 
 class SubCategory(db.Entity):
     id = PrimaryKey(int, auto=True)
