@@ -19,22 +19,21 @@ def inline_kb_menu(telegram_user):
     phone = [phone for phone in [user.phone, '\n--укажите в настройках--'] if phone][0]
     address = [address for address in [user.address, '\n--укажите в настройках--'] if address][0]
     text = markdown.text(
-        'ГЛАВНОЕ МЕНЮ',
-        'Добро пожаловать в службу оформления онлайн заказов кафе "Темпура".',
-        'Вы можете посмотреть наше меню в каталоге и добавить желаемые позиции в корзину.',
-        'Мы доставим заказ по вашему адресу или вы можете забрать его сами по адресу: 3-я улица Строителей, 25, офис 11',
-        f'\nИмя: \n{user.first_name} {last_name}',
-        f'\nТелефон: {phone}',
-        f'\nАдрес доставки: {address}',
+        'ГЛАВНОЕ МЕНЮ:',
+        '',
+        emojize('Всем привет! На связи Concierge Shopping:heart_hands: Мы - удобный сервис выкупа и доставки товаров самых известных брендов, найдем ту самую вещь из твоего виш листа', language='alias'),
+        '',
+        'Вы можете ознакомиться с нашим каталогом, а если вы не нашли то, что вам нужно-присылайте фото желаемой вещи в сообщения, а наши байеры выкупят ее для Вас по самой лучшей цене',
         sep='\n')
 
     text_and_data = [
         [emojize(':closed_book: Каталог', language='alias'), 'btn_catalog_1'],
-        [emojize(':telephone: Контакты', language='alias'), 'btn_contact'],
+        [emojize(':scissors: Таблица размеров', language='alias'), 'btn_sizes'],
+        [emojize(':package: Как сделать заказ', language='alias'), 'btn_howto'],
         [emojize(':question: Условия', language='alias'), 'btn_terms'],
-        [emojize(':gear: Настройки', language='alias'), 'btn_settings'],
+        [emojize(':telephone: Контакты', language='alias'), 'btn_contact'],
     ]
-    schema = [1, 2, 1]
+    schema = [1, 1, 1, 2]
     inline_kb = InlineConstructor.create_kb(text_and_data, schema)
     return text, inline_kb
 
@@ -277,13 +276,11 @@ def inline_kb_order(telegram_user : dict, id : int, page : int):
 
 def inline_kb_terms(tg_id):
     text = markdown.text(
-        'УСЛОВИЯ ДОСТАВКИ И ОПЛАТЫ',
+        'УСЛОВИЯ ДОСТАВКИ:',
         '',
-        'Мы работаем каждый день с 10:00 до 20:00',
-        'Вы можете оплатить заказ как через телеграм оплату, так и наличными при самовывозе',
+        'После приобретения товара, отправка осуществляется почтой РФ, через Германию (по мере изменений санкционной политики меняются маршруты)',
         '',
-        'Контактный телефон:',
-        '8800xxxxxxxxx',
+        'Сроки доставки рассчитываются индивидуально: зависят от страны отправки и города доставки (для РФ средний срок доставки 2-3 недель)',
         sep='\n'
     )
     text_and_data = [
@@ -295,27 +292,45 @@ def inline_kb_terms(tg_id):
 
 def inline_kb_contact():
     text = markdown.text(
-        'КОНТАКТЫ',
-        'У нас можно заказать бота для:',
-        '- Магазинов оптовой и розничной торговли',
-        '- Кафе, кондитерских и фастфудов',
-        '- Онлайн и офлайн бизнеса',
-        '- Любые иные цели по вашему запросу',
+        'КОНТАКТЫ:',
         '',
-        'Мы предоставляем:',
-        '- Удобное меню бота',
-        '- Походящий формат административной панели',
-        '- Индивидуальный подход к каждому клиенту',
-        '- Предсказуемые сроки работы',
+        'Для заказа или других вопросов вы можете обращаться по этому номеру/каналу (АЛЕКСЕЙ СКАЖИТЕ СПОСОБ СВЯЗИ)',
+       
         sep='\n'
         )
     text_and_data = [
-        ['Заказать бота', 't.me/v3talik'],
+        ['VK', 'https://vk.com/concierge_shopping'],
+        ['TG', 'https://t.me/Concierge_Shopping'],
+        ['TikTok', 'https://www.tiktok.com/@concierge_shopping?_t=8awO3chvF3Z&_r=1'],
+        ['YouTube', 'https://youtube.com/@concierge_shopping'],
         btn_back('menu')
     ]
-    schema = [1, 1]
-    button_type = ['url', 'callback_data']
+    schema = [1,1, 1,1, 1]
+    button_type = ['url', 'url', 'url', 'url', 'callback_data']
     inline_kb = InlineConstructor.create_kb(text_and_data, schema, button_type)
+    return text, inline_kb
+
+def inline_kb_sizes():
+    text = 'ТАБЛИЦА РАЗМЕРОВ'
+    text_and_data = [btn_back('menu')]
+    schema = [1]
+    inline_kb = InlineConstructor.create_kb(text_and_data, schema)
+    return text, inline_kb
+
+def inline_kb_howto():
+    text = markdown.text(
+        'КАК СДЕЛАТЬ ЗАКАЗ:',
+        '',
+        '- Вы присылаете скриншот нужного вам товара с характеристикой (размер, если одежда/ обувь и тд)',
+        '- Согласовываем с вами цену',
+        '- Вы оплачиваете удобным для Вас способом? (USDT/ПЕРЕВОД)',
+        '- Мы оформляем доставку (для этого от Вас потребуется ФИО, номер телефона, адрес)',
+        '- Вы ожидаете доставку посылки до двери или до отделения почты',
+        sep='\n'
+        )
+    text_and_data = [btn_back('menu')]
+    schema = [1]
+    inline_kb = InlineConstructor.create_kb(text_and_data, schema)
     return text, inline_kb
 
 def inline_kb_settings(telegram_user):
