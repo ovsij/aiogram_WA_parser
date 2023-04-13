@@ -37,7 +37,7 @@ def inline_kb_menu(telegram_user):
     inline_kb = InlineConstructor.create_kb(text_and_data, schema)
     return text, inline_kb
 
-def inline_kb_categories(page : int = 1):
+def inline_kb_categories(tg_id : str, page : int = 1):
     #выводит названия категорий, если их нет выводит продукты
     text = 'КАТАЛОГ'
     categories = get_categories()
@@ -57,9 +57,9 @@ def inline_kb_categories(page : int = 1):
         inline_kb = InlineConstructor.create_kb(text_and_data, schema)
         return text, inline_kb
     else:
-        return inline_kb_products()
+        return inline_kb_products(tg_id=tg_id)
     
-def inline_kb_subcategories(category : int = None, page : int = 1):
+def inline_kb_subcategories(tg_id : str, category : int = None, page : int = 1):
     #выводит названия суб-категорий, если их нет выводит продукты
     text = f'КАТАЛОГ\n\n{get_category(id=category).name}'
     sub_categories = get_subcategory(category_id=category)
@@ -78,7 +78,7 @@ def inline_kb_subcategories(category : int = None, page : int = 1):
         inline_kb = InlineConstructor.create_kb(text_and_data, schema)
         return text, inline_kb
     else:
-        return inline_kb_products(category=category, page=page)
+        return inline_kb_products(tg_id=tg_id, category=category, page=page)
     
 def inline_kb_products(tg_id : str, category : int = None, sub_category : int = None, page : int = 1):
     text = 'КАТАЛОГ'
