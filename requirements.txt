@@ -3,6 +3,7 @@ arsenic==21.8
 beautifulsoup4==4.11.2
 emoji==2.2.0
 httplib2==0.22.0
+opencv-python==4.7.0.72
 pandas==1.5.3
 pony==0.7.16
 python-dotenv==0.21.0

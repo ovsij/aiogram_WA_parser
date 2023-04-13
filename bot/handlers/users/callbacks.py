@@ -27,7 +27,7 @@ async def btn_callback(callback_query: types.CallbackQuery):
 
     if code[1] == 'menu':
         text, reply_markup = inline_kb_menu(callback_query.from_user)
-        if callback_query.from_user.id in os.getenv("ADMINS"):
+        if str(callback_query.from_user.id) in os.getenv("ADMINS"):
             reply_markup.add(btn_admin())
         try:
             await callback_query.message.edit_text(
@@ -98,6 +98,19 @@ async def btn_callback(callback_query: types.CallbackQuery):
         if code[1] == 'returnproduct':
             update_product(product_id=int(code[-1]), deleted=False)
         if code[1] == 'editproduct':
+            if code[2] == 'name':
+                await Form.edit_name.set()
+                Form.prev_message = await callback_query.message.edit_text(text=f'Введите новое наименование товара №{code[-1]}:')
+                return
+            if code[2] == 'description':
+                await Form.edit_description.set()
+                Form.prev_message = await callback_query.message.edit_text(text=f'Введите новое описание товара №{code[-1]}:')
+                return
+            if code[2] == 'price':
+                await Form.edit_price.set()
+                Form.prev_message = await callback_query.message.edit_text(text=f'Введите новую цену товара №{code[-1]}:')
+                return
+            # выбрать что изменить (первый шаг)
             text, reply_markup = inline_kb_editproduct(product_id=code[-1])
             await callback_query.message.delete()
             await bot.send_message(
@@ -107,6 +120,12 @@ async def btn_callback(callback_query: types.CallbackQuery):
             return
         if code[1] == 'uneditproduct':
             update_product(product_id=int(code[-1]), edited=False)
+            text, reply_markup = inline_kb_editproduct(product_id=code[-1])
+            await callback_query.message.edit_text(
+                text=text,
+                reply_markup=reply_markup
+            )
+            return
         
         text, reply_markup = inline_kb_product(tg_id=str(callback_query.from_user.id), id=int(code[-1]))
         images = get_image(int(code[-1])).split('\n')

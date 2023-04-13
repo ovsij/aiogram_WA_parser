@@ -158,11 +158,8 @@ def inline_kb_product(tg_id : str, id : int, counter : int = 1):
             text_and_data.append(['Восстановить товар', f'btn_returnproduct_{id}'])
         else:
             text_and_data.append(['Удалить товар', f'btn_delproduct_{id}'])
-        if product.edited:
-            text =  emojize(':recycle: ', language='alias') + text
-            text_and_data.append(['Очистить изменения', f'btn_uneditproduct_{id}'])
-        else:
-            text_and_data.append(['Изменить товар', f'btn_editproduct_{id}'])
+        
+        text_and_data.append(['Изменить товар', f'btn_editproduct_{id}'])
         schema.append(1)
         schema.append(1)
     # добавить кнопку назад
@@ -177,9 +174,13 @@ def inline_kb_editproduct(product_id):
         ['Наименование', f'btn_editproduct_name_{product_id}'],
         ['Описание', f'btn_editproduct_description_{product_id}'],
         ['Цена', f'btn_editproduct_price_{product_id}'],
-        btn_back(f'btn_product_{product_id}')
     ]
-    schema = [1, 1, 1, 1]
+    schema = [1, 1, 1]
+    if get_product(id=product_id).edited:
+        text_and_data.append(['Очистить изменения', f'btn_uneditproduct_{product_id}'])
+        schema.append(1)
+    text_and_data.append(btn_back(f'product_{product_id}'))
+    schema.append(1)
     inline_kb = InlineConstructor.create_kb(text_and_data, schema)
     return text, inline_kb
 

@@ -1,6 +1,7 @@
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 import time
+import re
 
 from loader import bot, dp, Form
 
@@ -8,6 +9,12 @@ from database.crud import *
 from database.models import *
 from keyboards.inline import *
 from keyboards.reply import *
+
+
+@dp.message_handler()
+async def user_message(message: types.Message):
+    await message.delete()
+
 
 @dp.message_handler(content_types=types.ContentType.CONTACT, state=Form.user_phone)
 #@dp.message_handler(content_types=types.Message, state=Form.user_phone)
@@ -139,8 +146,64 @@ async def add_catalog(message: types.Message, state: FSMContext):
                 reply_markup=reply_markup
                 )
 
+# получаем новое наименование товара
+@dp.message_handler(state=Form.edit_name)
+async def add_catalog(message: types.Message, state: FSMContext):
+    product_id = Form.prev_message.text.split('№')[1].strip(':')
+    update_product(product_id=int(product_id), name=message.text, edited=True)
 
-
-@dp.message_handler()
-async def user_message(message: types.Message):
+    await state.finish()
+    await bot.delete_message(chat_id=message.chat.id, message_id=Form.prev_message.message_id)
     await message.delete()
+
+    text, reply_markup = inline_kb_editproduct(product_id=int(product_id))
+    text += f'\n\nВнесение изменений произошло успешно'
+    await bot.send_message(
+                message.from_user.id,
+                text=text,
+                reply_markup=reply_markup
+                )
+# получаем новое описание товара
+@dp.message_handler(state=Form.edit_description)
+async def add_catalog(message: types.Message, state: FSMContext):
+    product_id = Form.prev_message.text.split('№')[1].strip(':')
+    update_product(product_id=int(product_id), description=message.text, edited=True)
+
+    await state.finish()
+    await bot.delete_message(chat_id=message.chat.id, message_id=Form.prev_message.message_id)
+    await message.delete()
+
+    text, reply_markup = inline_kb_editproduct(product_id=int(product_id))
+    text += f'\n\nВнесение изменений произошло успешно'
+    await bot.send_message(
+                message.from_user.id,
+                text=text,
+                reply_markup=reply_markup
+                )
+
+# неверный формат цены
+@dp.message_handler(lambda message: not re.fullmatch('\d*', message.text), state=Form.edit_price)
+async def add_catalog(message: types.Message, state: FSMContext):
+    await message.delete()
+    await Form.prev_message.edit_text(text='Введите только целове число. Без точек, запятых, пробелов и указания валюты.')
+
+# получаем новую цену товара
+@dp.message_handler(state=Form.edit_price)
+async def add_catalog(message: types.Message, state: FSMContext):
+    product_id = Form.prev_message.text.split('№')[1].strip(':')
+    update_product(product_id=int(product_id), price=int(message.text), edited=True)
+
+    await state.finish()
+    await bot.delete_message(chat_id=message.chat.id, message_id=Form.prev_message.message_id)
+    await message.delete()
+
+    text, reply_markup = inline_kb_editproduct(product_id=int(product_id))
+    text += f'\n\nВнесение изменений произошло успешно'
+    await bot.send_message(
+                message.from_user.id,
+                text=text,
+                reply_markup=reply_markup
+                )
+
+
+

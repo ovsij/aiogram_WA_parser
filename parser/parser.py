@@ -13,6 +13,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
+import re
 import requests
 from bs4 import BeautifulSoup as bs
 import time
@@ -20,8 +21,6 @@ import sys
 import urllib.request
 
 from database import crud
-
-
 
 #https://web.whatsapp.com/catalog/393421807916
 #https://web.whatsapp.com/catalog/390143686270 категории
@@ -373,7 +372,7 @@ async def get_valentino_catalog(url, subcategory):
         
         
         try:
-            cookie_xpath = f'//*[@id="main-wrapper"]/div[4]/div[2]'
+            cookie_xpath = f'//*[@id="onetrust-accept-btn-handler"]'
             cookie_el = await session.get_element(cookie_xpath, SelectorType.xpath)
             await cookie_el.click()
         except:
@@ -381,7 +380,7 @@ async def get_valentino_catalog(url, subcategory):
         
         logging.info(f'Start {subcategory} subcategory')
         
-        for i in range(1, num + 1):
+        for i in range(1, 5):# num + 1):
             logging.info(f'{i} {subcategory}')
             item_xpath = f'//*[@id="main"]/div/div[2]/div[1]/div[{i}]/div[2]/div[1]'
             #item_xpath = f'//*[@id="main"]/div/div[2]/div[1]/div[1]/div[2]/div[1]'
@@ -480,17 +479,17 @@ async def get_valentino():
     url = 'https://myv-experience.valentino.com/0040001024/OUTLET%20SERRAVALLE'
     categories = [
         '/VAL/search?category=APPAREL',
-        '/VAL/search?category=SHOES',
-        '/VAL/search?category=BAGS',
-        '/VAL/search?category=SMALL%20LEATHER%20GOODS',
-        '/VAL/search?category=BIJOUX',
-        '/VAL/search?category=SOFT%20ACCESSORIES',
-        '/VMA/search?category=APPAREL',
-        '/VMA/search?category=SHOES',
-        '/VMA/search?category=BAGS',
-        '/VMA/search?category=SMALL%20LEATHER%20GOODS',
-        '/VMA/search?category=BIJOUX',
-        '/VMA/search?category=SOFT%20ACCESSORIES'
+        #'/VAL/search?category=SHOES',
+        #'/VAL/search?category=BAGS',
+        #'/VAL/search?category=SMALL%20LEATHER%20GOODS',
+        #'/VAL/search?category=BIJOUX',
+        #'/VAL/search?category=SOFT%20ACCESSORIES',
+        #'/VMA/search?category=APPAREL',
+        #'/VMA/search?category=SHOES',
+        #'/VMA/search?category=BAGS',
+        #'/VMA/search?category=SMALL%20LEATHER%20GOODS',
+        #'/VMA/search?category=BIJOUX',
+        #'/VMA/search?category=SOFT%20ACCESSORIES'
     ]
     
     for category_url in categories:
@@ -501,10 +500,17 @@ async def get_valentino():
 
         if not crud.subcategory_exists(subcategory):
             crud.create_subcategory(name=subcategory, category='VALENTINO')
-        items = []
+        
         items = await get_valentino_catalog(url + category_url, subcategory)
-        crud.del_products(subcategory=items[0][2])
+        #print(items)
+        crud.del_products(subcategory=subcategory)
+        print(crud.get_product(category_id=crud.get_category(name='VALENTINO').id, subcategory_id=1))
+        not_deleted_items = [product.name for product in crud.get_product(category_id=crud.get_category(name='VALENTINO').id, subcategory_id=crud.get_subcategory(name=subcategory).id)]
+        #print(not_deleted_items)
         for item in items:
+            #print(item)
+            if item[0] in not_deleted_items:
+                continue
             price = int((item[5] * (euro_cost() + 1)) / 100 * crud.get_catalog(phone='valentino').margin) if item[5] else None
             crud.create_product(
                 name=item[0],
@@ -577,7 +583,10 @@ async def get_item(session, url, subcategory, i):
         description += sizes
     except:
         pass
-
+    try:
+        color = soup.find('h1', 'MuiTypography-root MuiTypography-body1 e18vcbt24 css-1u83stg').text
+    except:
+        color = 0
     if not os.path.exists(f"database/images/LESILLA"):
         os.mkdir(f"database/images/LESILLA")
 
@@ -595,7 +604,7 @@ async def get_item(session, url, subcategory, i):
             png.write(request.content)
         images += img_path + '\n'
     
-    return [name, 'LeSILLA', subcategory, 'lesilla', description, price, images]
+    return [name, 'LeSILLA', subcategory, 'lesilla', description, price, images, color]
 
 
 async def get_lesilla():
@@ -623,27 +632,42 @@ async def get_lesilla():
         'Сандалии на плоской подошве': 'https://outlet.lesilla.com/row/flat/sandals.html',
         'Сумки': 'https://outlet.lesilla.com/row/bags.html'
     }
-    items = []
+    
     async with aiohttp.ClientSession(trust_env=True) as session:
         for name, url in urls.items():
             logging.info(f'Starting: {name}')
             product_urls = await get_subcategory(session, url)
+            items = []
             for prodict_url in product_urls:
                 i = product_urls.index(prodict_url) + 1
                 try:
                     items.append(await get_item(session, prodict_url, name, i))
                 except:
                     pass
-        #logging.info(items)
-    for item in items:
-        price = int((item[5] * (euro_cost() + 1)) / 100 * crud.get_catalog(phone='valentino').margin) if item[5] else None
-        crud.create_product(
-            name=item[0],
-            category=item[1],
-            subcategory=item[2],
-            catalog=item[3],
-            description=item[4],
-            price=price,
-            image=item[6])
-    return items
+            crud.del_products(subcategory=name)
+            not_deleted_items = [product.name + product.description.split('Color:')[1].split('\n\n')[0] for product in crud.get_product(category_id=crud.get_category(name='LeSILLA').id, subcategory_id=crud.get_subcategory(name=name).id)]
+            print(not_deleted_items)
+            #hashes = [comparator.CalcImageHash(product.image.split('\n')[0]) for product in crud.get_product(catalog='lesilla')]
+            for item in items:
+                price = int((item[5] * (euro_cost() + 1)) / 100 * crud.get_catalog(phone='valentino').margin) if item[5] else None
+                description = item[4].replace('€ ', ' ')
+                for i in re.findall(r'\d*[.]\d\d', item[4]):
+                    if i:
+                        price_rub = str(int((float(i) * (euro_cost() + 1)) / 100 * crud.get_catalog(phone='lesilla').margin))
+                        description = description.replace(i, '<s>' + price_rub + ' руб.</s>  ')
+                description = f'Color: {item[7]}\n\n' + description.replace(f'<s>{price_rub} руб.</s>', f'{price_rub} руб.')
+                print(item[0] + ' ' + item[7])
+                if item[0] + ' ' + item[7] in not_deleted_items:
+                    continue
+                prod = crud.create_product(
+                    name=item[0],
+                    category=item[1],
+                    subcategory=item[2],
+                    catalog=item[3],
+                    description=description,
+                    price=price,
+                    image=item[6])
+                
+                
+            return items
     

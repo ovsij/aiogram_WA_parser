@@ -152,9 +152,11 @@ def get_categories():
     return select(p.category for p in Product)[:]
 
 @db_session()
-def get_product(id : int = None, category_id : int = None, subcategory_id : int = None, size : str = None):
+def get_product(id : int = None, catalog : str = None, category_id : int = None, subcategory_id : int = None, size : str = None):
     if id:
         return Product[id]
+    if catalog:
+        return select(p for p in Product if p.catalog.phone == catalog)[:]
     if category_id and not subcategory_id:
         return select(p for p in Product if p.category.id == category_id)[:]
     if category_id and subcategory_id:
@@ -177,26 +179,25 @@ def get_last_id():
     except ValueError:
         print('Список продуктов пуст')
         return 0
-    
+
+# удаление только для юзеров (админам остаются видны)
 @db_session()
 def del_product(id : int):
     product_to_delete = Product[id]
-    print(product_to_delete)
     return product_to_delete.deleted == True
 
 @db_session()
 def del_products(catalog : str = None, category : str = None, subcategory : str = None):
     if catalog:
-        products_to_delete = select(p for p in Product if p.catalog == Catalog.get(phone=catalog))[:]
+        products_to_delete = select(p for p in Product if p.catalog == Catalog.get(phone=catalog) and not p.deleted and not p.edited)[:]
         for product in  products_to_delete:
             product.delete()
-            #SubCategory[product.subcategory.id].delete()
     if category:
         products_to_delete = select(p for p in Product if p.category == Category.get(name=category))[:]
         for product in  products_to_delete:
             product.delete()
     if subcategory:
-        products_to_delete = select(p for p in Product if p.subcategory == SubCategory.get(name=subcategory))[:]
+        products_to_delete = select(p for p in Product if p.subcategory == SubCategory.get(name=subcategory) and not p.deleted and not p.edited)[:]
         for product in  products_to_delete:
             product.delete()
 
