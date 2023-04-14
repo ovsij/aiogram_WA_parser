@@ -118,36 +118,57 @@ async def get_items(category : str, session, subcategory : str = 'Другое')
                         images += f"database/images/{category}/{subcategory}/{i}_{title.replace(' ', '_').replace('/', '_')}.png\n"
 
             """
+            webpage = await session.get_page_source()
+            soup = bs(webpage, 'html.parser')
+            num_images = len(soup.find_all('div', '_1Z_Af'))
+            if num_images > 10:
+                num_images = 10
             images = ''
-            if subcategory == 'Другое':
-                img_xpath = '//*[@id="app"]/div/div/div[6]/span/div/span/div/div[2]/div/div[2]/div/div[1]/div[1]/div/img'
-                img_el = await session.wait_for_element(10, img_xpath, SelectorType.xpath)
-                img = await img_el.get_screenshot()
-            else:
-                try:
-                    img_xpath = '//*[@id="app"]/div/div/div[6]/span/div/span/span/div/div[2]/div/div[2]/div/div[1]/div/div/img'
+            for im in range(1, num_images + 1):
+                
+                if subcategory == 'Другое':
+                    img_xpath = '//*[@id="app"]/div/div/div[6]/span/div/span/div/div[2]/div/div[2]/div/div[1]/div[1]/div'
                     img_el = await session.wait_for_element(10, img_xpath, SelectorType.xpath)
                     img = await img_el.get_screenshot()
-                except:
-                    img_xpath = '//*[@id="app"]/div/div/div[6]/span/div/span/span/div/div[2]/div/div[2]/div/div[1]/div[1]/div/img'
-                    img_el = await session.wait_for_element(10, img_xpath, SelectorType.xpath)
-                    img = await img_el.get_screenshot()
-            
-            #создаем дирректорию категории если ее еще нет
-            if not os.path.exists(f"database/images/{category}"):
-                os.mkdir(f"database/images/{category}")
+                else:
+                    try:
+                        img_xpath = f'//*[@id="app"]/div/div/div[6]/span/div/span/span/div/div[2]/div/div[2]/div/div[1]/div[{im}]/div'
+                        img_el = await session.wait_for_element(10, img_xpath, SelectorType.xpath)
+                        img = await img_el.get_screenshot()
+                        print('first xpath')
+                    except:
+                        img_xpath = '//*[@id="app"]/div/div/div[6]/span/div/span/span/div/div[2]/div/div[2]/div/div[1]/div/div'
+                        img_el = await session.wait_for_element(10, img_xpath, SelectorType.xpath)
+                        img = await img_el.get_screenshot()
+                        print('second xpath')
+        
+                #создаем дирректорию категории если ее еще нет
+                if not os.path.exists(f"database/images/{category}"):
+                    os.mkdir(f"database/images/{category}")
 
-            if subcategory == 'Другое':
-                with open(f"database/images/{category}/{i}_{title.replace(' ', '_').replace('/', '_')}.png", 'wb') as png:
-                    png.write(img.read())
-                images += f"database/images/{category}/{i}_{title.replace(' ', '_').replace('/', '_')}.png\n"
-            else:
-                if not os.path.exists(f"database/images/{category}/{subcategory}"):
-                    os.mkdir(f"database/images/{category}/{subcategory}")
-                with open(f"database/images/{category}/{subcategory}/{i}_{title.replace(' ', '_').replace('/', '_')}.png", 'wb') as png:
-                    png.write(img.read())
-                images += f"database/images/{category}/{subcategory}/{i}_{title.replace(' ', '_').replace('/', '_')}.png\n"
-            
+                if subcategory == 'Другое':
+                    with open(f"database/images/{category}/{i}_{title.replace(' ', '_').replace('/', '_')}_{im}.png", 'wb') as png:
+                        png.write(img.read())
+                    images += f"database/images/{category}/{i}_{title.replace(' ', '_').replace('/', '_')}_{im}.png\n"
+                else:
+                    if not os.path.exists(f"database/images/{category}/{subcategory}"):
+                        os.mkdir(f"database/images/{category}/{subcategory}")
+                    with open(f"database/images/{category}/{subcategory}/{i}_{title.replace(' ', '_').replace('/', '_')}_{im}.png", 'wb') as png:
+                        png.write(img.read())
+                    print(f"database/images/{category}/{subcategory}/{i}_{title.replace(' ', '_').replace('/', '_')}_{im}.png\n")
+                    images += f"database/images/{category}/{subcategory}/{i}_{title.replace(' ', '_').replace('/', '_')}_{im}.png\n"
+                try:
+                    # переключаем на следующее изображение
+                    nextimage_xpath = '//*[@id="app"]/div/div/div[6]/span/div/span/span/div/div[2]/div/div[2]/div/div[3]/span'
+                    nextimageimg_el = await session.wait_for_element(2, nextimage_xpath, SelectorType.xpath)
+                    await nextimageimg_el.click()
+                    await asyncio.sleep(1)
+                except:
+                    print('no more images')
+                    break
+                
+        
+    
             # записываем данные о товаре
             if subcategory == 'Другое':
                 price_xpath = '//*[@id="app"]/div/div/div[6]/span/div/span/div/div[2]/div/div[3]/div[2]/span'
@@ -178,8 +199,6 @@ async def get_items(category : str, session, subcategory : str = 'Другое')
                 logging.info('no description')
 
             if category == 'FURLA DESIGNER OUTLET SERRAVALLE':
-                webpage = await session.get_page_source()
-                soup = bs(webpage, 'html.parser')
                 description = soup.find('div', 'f8jlpxt4 e4qy2s3t e1gr2w1z du8bjn1j gfz4du6o r7fjleex b6f1x6w7').find('span').text
                 for i in re.findall(r'€.?\d*', description):
                     description = description.replace(i, str(int((int(i.strip('€').strip(' ')) * (euro_cost() + 1)) / 100 * crud.get_catalog(phone='390143686270').margin)) + ' руб.')
@@ -193,6 +212,7 @@ async def get_items(category : str, session, subcategory : str = 'Другое')
                 lst = [title, category, subcategory_, description, price, images]
             else:
                 lst = [title, category, subcategory_, description, price, images]
+            print(lst)
             items.append(lst)
             logging.info(lst)
             # закрываем карточку товара кнопкой "назад"
@@ -249,7 +269,7 @@ async def get_catalog(url):
         "goog:chromeOptions": {"args": [
             '--user-data-dir=parser/User', 
             '--headless',
-            'window-size=1280,720',
+            'window-size=2560, 1600',
             #'--start-maximized',
             '--private',
             '--disable-gpu',
@@ -261,7 +281,7 @@ async def get_catalog(url):
     
     async with get_session(service, browser) as session:
         await session.get(url)
-        await session.set_window_fullscreen()
+        #await session.set_window_fullscreen()
         # пытаемся найти заголовок каталога, если его нет - делаем скриншот qr-кода 
         try:
             logging.warning('Попытка входа. Ищем название каталога.')
@@ -306,8 +326,8 @@ async def get_catalog(url):
                 
                 dct = []
                 for key, value in categories.items():
-                    if value == 'Все товары' or 'FINAL' in value:
-                        break
+                    #if value == 'Все товары':
+                    #    break
                     # скрин открытого каталога
                     img = await session.get_screenshot()
                     with open('parser/opened_catalog.png', 'wb') as png:
