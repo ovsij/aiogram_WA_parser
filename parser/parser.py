@@ -172,10 +172,22 @@ async def get_items(category : str, session, subcategory : str = 'Другое')
                 # получаем описание (если есть)    
                 description_el = await session.get_element(description_xpath, SelectorType.xpath)
                 description = await description_el.get_text()
-                if description == 'ОТПРАВИТЬ СООБЩЕНИЕ КОМПАНИИ':
+                if description == 'ОТПРАВИТЬ СООБЩЕНИЕ КОМПАНИИ' and category != 'FURLA DESIGNER OUTLET SERRAVALLE':
                     description = None
             except:
                 logging.info('no description')
+
+            if category == 'FURLA DESIGNER OUTLET SERRAVALLE':
+                webpage = await session.get_page_source()
+                soup = bs(webpage, 'html.parser')
+                description = soup.find('div', 'f8jlpxt4 e4qy2s3t e1gr2w1z du8bjn1j gfz4du6o r7fjleex b6f1x6w7').find('span').text
+                for i in re.findall(r'€.?\d*', description):
+                    description = description.replace(i, str(int((int(i.strip('€').strip(' ')) * (euro_cost() + 1)) / 100 * crud.get_catalog(phone='390143686270').margin)) + ' руб.')
+            img = await session.get_screenshot()
+            with open('parser/check.png', 'wb') as png:
+                png.write(img.read())
+            
+
             subcategory_ = None if subcategory == 'Другое' else subcategory
             if subcategory == 'Другое':
                 lst = [title, category, subcategory_, description, price, images]
@@ -191,6 +203,7 @@ async def get_items(category : str, session, subcategory : str = 'Другое')
             await asyncio.sleep(1)
             btn_catalog_back = await session.wait_for_element(10, btn_back_xpath, SelectorType.xpath)
             await btn_catalog_back.click()
+
         except Exception as ex:
             logging.error(ex)
             logging.warning('cant find item')
@@ -236,8 +249,8 @@ async def get_catalog(url):
         "goog:chromeOptions": {"args": [
             '--user-data-dir=parser/User', 
             '--headless',
-            #'window-size=1280,720',
-            '--start-maximized',
+            'window-size=1280,720',
+            #'--start-maximized',
             '--private',
             '--disable-gpu',
             '--disable-dev-shm-usage',
@@ -293,7 +306,7 @@ async def get_catalog(url):
                 
                 dct = []
                 for key, value in categories.items():
-                    if value == 'Все товары':
+                    if value == 'Все товары' or 'FINAL' in value:
                         break
                     # скрин открытого каталога
                     img = await session.get_screenshot()
@@ -369,7 +382,6 @@ async def get_valentino_catalog(url, subcategory):
         name_xpath = '//*[@id="main-wrapper"]/div[1]/div[2]'
         name_el = await session.wait_for_element(10, name_xpath, SelectorType.xpath)
         name = await name_el.get_text()
-        
         
         try:
             cookie_xpath = f'//*[@id="onetrust-accept-btn-handler"]'

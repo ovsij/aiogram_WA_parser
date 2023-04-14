@@ -46,7 +46,7 @@ async def scheduled_catalogs(wait_for):
             catalogs = get_catalogs()
             for catalog in catalogs:
                 # тест
-                if catalog.phone not in ['valentino', 'lesilla']:# and catalog.phone == '393455824868':
+                if catalog.phone not in ['valentino', 'lesilla']:# and catalog.phone == '390143686270':
                     try:
                         await bot.send_message(227184505, f'{catalog.phone} начал парсинг')
                         url = f'https://web.whatsapp.com/catalog/{catalog.phone}'
