@@ -28,12 +28,11 @@ def inline_kb_menu(telegram_user):
 
     text_and_data = [
         [emojize(':closed_book: Каталог', language='alias'), 'btn_catalog_1'],
-        [emojize(':scissors: Таблица размеров', language='alias'), 'btn_sizes'],
         [emojize(':package: Как сделать заказ', language='alias'), 'btn_howto'],
         [emojize(':question: Условия', language='alias'), 'btn_terms'],
         [emojize(':telephone: Контакты', language='alias'), 'btn_contact'],
     ]
-    schema = [1, 1, 1, 2]
+    schema = [1, 1, 2]
     inline_kb = InlineConstructor.create_kb(text_and_data, schema)
     return text, inline_kb
 
@@ -72,6 +71,9 @@ def inline_kb_subcategories(tg_id : str, category : int = None, page : int = 1):
         if len(sub_categories) > 10:
             text_and_data, schema = btn_prevnext(len(sub_categories), text_and_data, schema, page, name=f'category_{category}')
 
+        if get_category(id=category).name == 'LeSILLA':
+            text_and_data.append([emojize(':scissors: Таблица размеров', language='alias'), f'btn_sizes_{category}'])
+            schema.append(1)
         text_and_data.append(btn_back(f'catalog_1'))
         schema.append(1)
         
@@ -310,9 +312,9 @@ def inline_kb_contact():
     inline_kb = InlineConstructor.create_kb(text_and_data, schema, button_type)
     return text, inline_kb
 
-def inline_kb_sizes():
+def inline_kb_sizes(category_id : int):
     text = 'ТАБЛИЦА РАЗМЕРОВ'
-    text_and_data = [btn_back('menu')]
+    text_and_data = [['Скрыть', 'btn_hide']]
     schema = [1]
     inline_kb = InlineConstructor.create_kb(text_and_data, schema)
     return text, inline_kb

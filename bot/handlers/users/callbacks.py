@@ -264,7 +264,7 @@ async def btn_callback(callback_query: types.CallbackQuery):
         )
 
     if code[1] == 'sizes':
-        text, reply_markup = inline_kb_sizes()
+        text, reply_markup = inline_kb_sizes(category_id=code[-1])
         photo = types.InputFile('database/sizes.PNG')
         
         await bot.send_photo(
@@ -273,6 +273,8 @@ async def btn_callback(callback_query: types.CallbackQuery):
             caption=text, 
             reply_markup=reply_markup
         )
+
+    if code[1] == 'hide':
         await callback_query.message.delete()
 
     if code[1] == 'howto':
