@@ -545,3 +545,4 @@ async def denysending(callback_query: types.CallbackQuery, state: FSMContext):
             text=text + '\n\n Сообщение не разослано.', 
             reply_markup=reply_markup
             )
+    
