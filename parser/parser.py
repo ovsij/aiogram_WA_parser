@@ -306,8 +306,6 @@ async def get_catalog(url):
             header = await header_el.get_text() if header_el else 'не нашлось заголовка...'
             logging.warning(header)
             
-
-
         # если в каталоге есть категории
         try:
             check_xpath = '//*[@id="app"]/div/div/div[6]/span/div/span/div/div[2]/div[2]/div/div/div/div[1]/div/div[2]/div/div/div/span'
