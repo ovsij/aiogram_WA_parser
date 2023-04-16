@@ -376,17 +376,17 @@ async def get_valentino_catalog(url, subcategory):
     browser.capabilities = {
         "goog:chromeOptions": {"args": [
         '--no-sandbox',
-            '--user-data-dir=parser/User', 
-            '--headless',
-            'window-size=1280,720',
-            #'--start-maximized',
-            
-            '--private',
-            '--disable-gpu',
-            #'--disable-dev-shm-usage',
-            '--profile-directory=Profile 1',
-            'user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36',
-            '--lang="ru"'
+        '--user-data-dir=parser/User', 
+        '--headless',
+        'window-size=1280,720',
+        #'--start-maximized',
+        
+        '--private',
+        '--disable-gpu',
+        #'--disable-dev-shm-usage',
+        '--profile-directory=Profile 1',
+        'user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36',
+        '--lang="ru"'
         ]}}
     items = []
     async with get_session(service, browser) as session:
@@ -425,6 +425,10 @@ async def get_valentino_catalog(url, subcategory):
             name = await name_el.get_text()
             logging.info('name: ' + name)
 
+            img = await session.get_screenshot()
+            with open('parser/valentino1.png', 'w') as png:
+                png.write(img.read())
+
             if not os.path.exists(f"database/images/VALENTINO"):
                 os.mkdir(f"database/images/VALENTINO")
 
@@ -434,6 +438,9 @@ async def get_valentino_catalog(url, subcategory):
             images = ''
             for num in range(1, 20):
                 try:
+                    img = await session.get_screenshot()
+                    with open(f'parser/valentino2_{num}.png', 'w') as png:
+                        png.write(img.read())
                     tag_id = webpage.split('swiper-wrapper-')[-1].split('"')[0]
 
                     image_xpath = f'//*[@id="swiper-wrapper-{tag_id}"]/div[{num}]/div/div/div/div'                    
@@ -460,7 +467,9 @@ async def get_valentino_catalog(url, subcategory):
                         price = int(soup.find_all('div', 'sc-dQDPHY gwUuKq')[0].text.replace('.00', '').strip('€').replace(',', ''))
                 except IndexError:
                     pass
-                
+            img = await session.get_screenshot()
+            with open('parser/valentino3.png', 'w') as png:
+                png.write(img.read())
             #print(f'Цена: {price}')
             
             description = ''
@@ -495,7 +504,9 @@ async def get_valentino_catalog(url, subcategory):
                 except:
                     pass
                 
-
+            img = await session.get_screenshot()
+            with open('parser/valentino1.png', 'w') as png:
+                png.write(img.read())
             back_xpath = '//*[@id="main-wrapper"]/div[1]/div[1]'
             back_el = await session.wait_for_element(10, back_xpath, SelectorType.xpath)
             await back_el.click()
