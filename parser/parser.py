@@ -426,7 +426,7 @@ async def get_valentino_catalog(url, subcategory):
             logging.info('name: ' + name)
 
             img = await session.get_screenshot()
-            with open('parser/valentino1.png', 'w') as png:
+            with open('parser/valentino1.png', 'wb') as png:
                 png.write(img.read())
 
             if not os.path.exists(f"database/images/VALENTINO"):
@@ -439,7 +439,7 @@ async def get_valentino_catalog(url, subcategory):
             for num in range(1, 20):
                 try:
                     img = await session.get_screenshot()
-                    with open(f'parser/valentino2_{num}.png', 'w') as png:
+                    with open(f'parser/valentino2_{num}.png', 'wb') as png:
                         png.write(img.read())
                     tag_id = webpage.split('swiper-wrapper-')[-1].split('"')[0]
 
@@ -468,7 +468,7 @@ async def get_valentino_catalog(url, subcategory):
                 except IndexError:
                     pass
             img = await session.get_screenshot()
-            with open('parser/valentino3.png', 'w') as png:
+            with open('parser/valentino3.png', 'wb') as png:
                 png.write(img.read())
             #print(f'Цена: {price}')
             
@@ -505,7 +505,7 @@ async def get_valentino_catalog(url, subcategory):
                     pass
                 
             img = await session.get_screenshot()
-            with open('parser/valentino1.png', 'w') as png:
+            with open('parser/valentino1.png', 'wb') as png:
                 png.write(img.read())
             back_xpath = '//*[@id="main-wrapper"]/div[1]/div[1]'
             back_el = await session.wait_for_element(10, back_xpath, SelectorType.xpath)
