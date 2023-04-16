@@ -74,7 +74,7 @@ async def scheduled_catalogs(wait_for):
                             
                             price = int((item[4] * (euro_cost() + 1)) / 100 * get_catalog(phone=catalog.phone).margin) if item[4] else None
                             try:
-                                description_cost = int((float(item[3].split(',00')[0].split(' ')[-1].replace('.', '') + '.00') * (euro_cost() + 1)) / 100 * get_catalog(phone=catalog.phone).margin)
+                                description_cost = int((float(item[3].split(',00')[0].split(' ')[-1].replace('.', '') + '.00') * (euro_cost() + 1)) * float(f'1.{get_catalog(phone=catalog.phone).margin}'))
                                 description = item[3].replace(item[3].split(',00')[0].split(' ')[-1] + ',00', str(description_cost)).replace('€', 'руб.')
                             except:
                                 description = None

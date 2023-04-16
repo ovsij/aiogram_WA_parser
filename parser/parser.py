@@ -201,7 +201,7 @@ async def get_items(category : str, session, subcategory : str = 'Другое')
             if category == 'FURLA DESIGNER OUTLET SERRAVALLE':
                 description = soup.find('div', 'f8jlpxt4 e4qy2s3t e1gr2w1z du8bjn1j gfz4du6o r7fjleex b6f1x6w7').find('span').text
                 for i in re.findall(r'€.?\d*', description):
-                    description = description.replace(i, str(int((int(i.strip('€').strip(' ')) * (euro_cost() + 1)) / 100 * crud.get_catalog(phone='390143686270').margin)) + ' руб.')
+                    description = description.replace(i, str(int((int(i.strip('€').strip(' ')) * (euro_cost() + 1)) * float(f'1.{crud.get_catalog(phone="390143686270").margin}'))) + ' руб.')
             img = await session.get_screenshot()
             with open('parser/check.png', 'wb') as png:
                 png.write(img.read())
@@ -509,17 +509,17 @@ async def get_valentino():
     url = 'https://myv-experience.valentino.com/0040001024/OUTLET%20SERRAVALLE'
     categories = [
         '/VAL/search?category=APPAREL',
-        #'/VAL/search?category=SHOES',
-        #'/VAL/search?category=BAGS',
-        #'/VAL/search?category=SMALL%20LEATHER%20GOODS',
-        #'/VAL/search?category=BIJOUX',
-        #'/VAL/search?category=SOFT%20ACCESSORIES',
-        #'/VMA/search?category=APPAREL',
-        #'/VMA/search?category=SHOES',
-        #'/VMA/search?category=BAGS',
-        #'/VMA/search?category=SMALL%20LEATHER%20GOODS',
-        #'/VMA/search?category=BIJOUX',
-        #'/VMA/search?category=SOFT%20ACCESSORIES'
+        '/VAL/search?category=SHOES',
+        '/VAL/search?category=BAGS',
+        '/VAL/search?category=SMALL%20LEATHER%20GOODS',
+        '/VAL/search?category=BIJOUX',
+        '/VAL/search?category=SOFT%20ACCESSORIES',
+        '/VMA/search?category=APPAREL',
+        '/VMA/search?category=SHOES',
+        '/VMA/search?category=BAGS',
+        '/VMA/search?category=SMALL%20LEATHER%20GOODS',
+        '/VMA/search?category=BIJOUX',
+        '/VMA/search?category=SOFT%20ACCESSORIES'
     ]
     
     for category_url in categories:
