@@ -292,9 +292,9 @@ async def get_catalog(url):
         except:
             logging.warning('Не удается найти на странице название каталога. Проверьте авторизацию.')
             qc_xpath = '//*[@id="app"]/div/div/div[3]/div[1]/div/div/div[2]/div/canvas'
-            #img = await session.get_screenshot()
-            #with open('parser/checklogin.png', 'wb') as png:
-            #    png.write(img.read())
+            img = await session.get_screenshot()
+            with open('parser/checklogin.png', 'wb') as png:
+                png.write(img.read())
             qc = await session.wait_for_element(120, qc_xpath, SelectorType.xpath)
             #await asyncio.sleep(60)
             img = await qc.get_screenshot()
