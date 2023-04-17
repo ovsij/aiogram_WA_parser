@@ -710,5 +710,5 @@ async def get_lesilla():
                 logging.info(prod.name)
                 
                 
-            return items
+        return items
     
