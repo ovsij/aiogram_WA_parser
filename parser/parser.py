@@ -697,7 +697,6 @@ async def get_lesilla():
                         price_rub = str(int((float(i) * (euro_cost() + 1)) / 100 * crud.get_catalog(phone='lesilla').margin))
                         description = description.replace(i, '<s>' + price_rub + ' руб.</s>  ')
                 description = f'Color: {item[7]}\n\n' + description.replace(f'<s>{price_rub} руб.</s>', f'{price_rub} руб.')
-                print(item[0] + ' ' + item[7])
                 if item[0] + ' ' + item[7] in not_deleted_items:
                     continue
                 prod = crud.create_product(
@@ -708,6 +707,7 @@ async def get_lesilla():
                     description=description,
                     price=price,
                     image=item[6])
+                logging.info(prod.name)
                 
                 
             return items
