@@ -684,7 +684,7 @@ async def get_lesilla():
                 try:
                     items.append(await get_item(session, prodict_url, name, i))
                 except:
-                    pass
+                    continue
             crud.del_products(subcategory=name)
             not_deleted_items = [product.name + product.description.split('Color:')[1].split('\n\n')[0] for product in crud.get_product(category_id=crud.get_category(name='LeSILLA').id, subcategory_id=crud.get_subcategory(name=name).id)]
             print(not_deleted_items)
