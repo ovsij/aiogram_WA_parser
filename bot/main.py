@@ -84,17 +84,20 @@ async def scheduled_catalogs(wait_for):
 
 async def send_mes(wait_for):
     while True:
-        await asyncio.sleep(wait_for)
-        screen_time = datetime.fromtimestamp(getctime('screenshot.png'))
-        if datetime.now() - screen_time <= timedelta(minutes=1):
-            #await bot.send_message(227184505, 'Отсканируй QR')
-            photo = types.InputFile('screenshot.png')
-            await bot.send_photo(
-                227184505, 
-                photo=photo, 
-                caption='Для входа в аккаунт WhatsApp отсканируйте QR-код. Он действителен 2 минуты.'
-            )
-            await asyncio.sleep(60)
+        try:
+            await asyncio.sleep(wait_for)
+            screen_time = datetime.fromtimestamp(getctime('screenshot.png'))
+            if datetime.now() - screen_time <= timedelta(minutes=1):
+                #await bot.send_message(227184505, 'Отсканируй QR')
+                photo = types.InputFile('screenshot.png')
+                await bot.send_photo(
+                    227184505, 
+                    photo=photo, 
+                    caption='Для входа в аккаунт WhatsApp отсканируйте QR-код. Он действителен 2 минуты.'
+                )
+                await asyncio.sleep(60)
+        except:
+            continue
 
 
 if __name__ == '__main__':
