@@ -86,10 +86,10 @@ async def send_mes(wait_for):
     while True:
         try:
             await asyncio.sleep(wait_for)
-            screen_time = datetime.fromtimestamp(getctime('screenshot.png'))
+            screen_time = datetime.fromtimestamp(getctime('parser/screenshot.png'))
             if datetime.now() - screen_time <= timedelta(minutes=1):
                 #await bot.send_message(227184505, 'Отсканируй QR')
-                photo = types.InputFile('screenshot.png')
+                photo = types.InputFile('parser/screenshot.png')
                 await bot.send_photo(
                     227184505, 
                     photo=photo, 

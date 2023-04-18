@@ -280,7 +280,7 @@ async def get_catalog(url):
         #'log': {'level': 'warn'}}
     
     async with get_session(service, browser) as session:
-        await session.get(url)
+        await session.get(url)#'https://web.whatsapp.com')
         #await session.set_window_fullscreen()
         # пытаемся найти заголовок каталога, если его нет - делаем скриншот qr-кода 
         try:
@@ -296,10 +296,14 @@ async def get_catalog(url):
                 img = await session.get_screenshot()
                 with open('parser/checklogin.png', 'wb') as png:
                     png.write(img.read())
-                qc = await session.wait_for_element_gone(600, qc_xpath, SelectorType.xpath)
-                #await asyncio.sleep(60)
-                img1 = await qc.get_screenshot()
-                with open('screenshot.png', 'wb') as png:
+                #qc = await session.wait_for_element_gone(120, qc_xpath, SelectorType.xpath)
+                #print(qc)
+                await asyncio.sleep(20)
+                #qc = None
+                
+                img1 = await session.get_screenshot()
+
+                with open('parser/screenshot.png', 'wb') as png:
                     png.write(img1.read())
                 # и снова пытаемся найти заголовок (в это время нужно отсканировать qr-код)
                 header_xpath = '//*[@id="app"]/div/div/div[6]/span/div/span/div/div[2]/div[1]/div/div[2]/div[1]/span'
