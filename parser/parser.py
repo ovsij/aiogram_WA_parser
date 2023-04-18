@@ -299,7 +299,7 @@ async def get_catalog(url):
                 qc = await session.wait_for_element(120, qc_xpath, SelectorType.xpath)
                 #await asyncio.sleep(60)
                 img1 = await qc.get_screenshot()
-                with open('parser/screenshot.png', 'wb') as png:
+                with open('screenshot.png', 'wb') as png:
                     png.write(img1.read())
                 # и снова пытаемся найти заголовок (в это время нужно отсканировать qr-код)
                 header_xpath = '//*[@id="app"]/div/div/div[6]/span/div/span/div/div[2]/div[1]/div/div[2]/div[1]/span'
