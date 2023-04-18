@@ -114,6 +114,6 @@ if __name__ == '__main__':
     #loop.create_task(scheduled_catalogs(0))
     #loop.create_task(send_mes(5))
     #loop.create_task(scheduled_valentino(7200))
-    asyncio.run(scheduled_catalogs(0))
+    #asyncio.run(scheduled_catalogs(0))
     asyncio.run(send_mes(5))
     executor.start_polling(dp, skip_updates=True)
