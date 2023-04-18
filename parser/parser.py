@@ -269,7 +269,7 @@ async def get_catalog(url):
         "goog:chromeOptions": {"args": [
             '--user-data-dir=parser/User', 
             '--headless',
-            #'window-size=1024, 768',
+            'window-size=1920, 1080.',
             #'--start-maximized',
             '--private',
             '--disable-gpu',
@@ -298,7 +298,7 @@ async def get_catalog(url):
                     png.write(img.read())
                 #qc = await session.wait_for_element_gone(120, qc_xpath, SelectorType.xpath)
                 #print(qc)
-                await asyncio.sleep(20)
+                #await asyncio.sleep(20)
                 #qc = None
                 
                 img1 = await session.get_screenshot()
