@@ -269,7 +269,7 @@ async def get_catalog(url):
         "goog:chromeOptions": {"args": [
             '--user-data-dir=parser/User', 
             '--headless',
-            'window-size=1920, 1080.',
+            'window-size=1920, 1080',
             #'--start-maximized',
             '--private',
             '--disable-gpu',
