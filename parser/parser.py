@@ -298,7 +298,7 @@ async def get_catalog(url):
                     png.write(img.read())
                 #qc = await session.wait_for_element_gone(120, qc_xpath, SelectorType.xpath)
                 #print(qc)
-                #await asyncio.sleep(20)
+                await asyncio.sleep(20)
                 #qc = None
                 
                 img1 = await session.get_screenshot()
