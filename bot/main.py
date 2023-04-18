@@ -24,16 +24,6 @@ from parser import parser
 
 logging.basicConfig(level=logging.INFO)
 
-async def scheduled_valentino():
-    while True:
-        #try:
-        await bot.send_message(227184505, 'Валентино начал парсинг')
-        await parser.get_valentino()
-        #except Exception as ex:
-        #    print(ex)
-        
-
-
 async def scheduled_catalogs(wait_for):
     while True:
         try:
@@ -109,11 +99,11 @@ async def send_mes(wait_for):
 
 if __name__ == '__main__':
     from handlers import dp
-    #loop = asyncio.get_event_loop()
+    loop = asyncio.get_event_loop()
     #loop.create_task(parser.get_valentino())
-    #loop.create_task(scheduled_catalogs(0))
+    loop.create_task(scheduled_catalogs(0))
     #loop.create_task(send_mes(5))
     #loop.create_task(scheduled_valentino(7200))
-    #asyncio.run(scheduled_catalogs(0))
-    asyncio.run(send_mes(5))
+    #asyncio.run(send_mes(5))
     executor.start_polling(dp, skip_updates=True)
+    #asyncio.run(scheduled_catalogs(0))
