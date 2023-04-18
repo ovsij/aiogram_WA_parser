@@ -290,21 +290,24 @@ async def get_catalog(url):
             header = await header_el.get_text()
             logging.warning(header)
         except:
-            logging.warning('Не удается найти на странице название каталога. Проверьте авторизацию.')
-            qc_xpath = '//*[@id="app"]/div/div/div[3]/div[1]/div/div/div[2]/div/canvas'
-            img = await session.get_screenshot()
-            with open('parser/checklogin.png', 'wb') as png:
-                png.write(img.read())
-            qc = await session.wait_for_element(120, qc_xpath, SelectorType.xpath)
-            #await asyncio.sleep(60)
-            img = await qc.get_screenshot()
-            with open('parser/screenshot.png', 'wb') as png:
-                png.write(img.read())
-            # и снова пытаемся найти заголовок (в это время нужно отсканировать qr-код)
-            header_xpath = '//*[@id="app"]/div/div/div[6]/span/div/span/div/div[2]/div[1]/div/div[2]/div[1]/span'
-            header_el = await session.wait_for_element(120, header_xpath, SelectorType.xpath)
-            header = await header_el.get_text() if header_el else 'не нашлось заголовка...'
-            logging.warning(header)
+            try:
+                logging.warning('Не удается найти на странице название каталога. Проверьте авторизацию.')
+                qc_xpath = '//*[@id="app"]/div/div/div[3]/div[1]/div/div/div[2]/div/canvas'
+                img = await session.get_screenshot()
+                with open('parser/checklogin.png', 'wb') as png:
+                    png.write(img.read())
+                qc = await session.wait_for_element(120, qc_xpath, SelectorType.xpath)
+                #await asyncio.sleep(60)
+                img = await qc.get_screenshot()
+                with open('parser/screenshot.png', 'wb') as png:
+                    png.write(img.read())
+                # и снова пытаемся найти заголовок (в это время нужно отсканировать qr-код)
+                header_xpath = '//*[@id="app"]/div/div/div[6]/span/div/span/div/div[2]/div[1]/div/div[2]/div[1]/span'
+                header_el = await session.wait_for_element(120, header_xpath, SelectorType.xpath)
+                header = await header_el.get_text() if header_el else 'не нашлось заголовка...'
+                logging.warning(header)
+            except Exception as ex:
+                print(ex)
             
         # если в каталоге есть категории
         try:
