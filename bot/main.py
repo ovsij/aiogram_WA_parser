@@ -27,14 +27,14 @@ logging.basicConfig(level=logging.INFO)
 async def scheduled_catalogs(wait_for):
     while True:
         try:
-            #await parser.get_nike()
-            #await asyncio.sleep(999)
-            #await bot.send_message(227184505, f'VALENTINO начал парсинг')
-            #await parser.get_valentino()
-            #await asyncio.sleep(10)
-            #await bot.send_message(227184505, f'LeSILLA начал парсинг')
-            #await parser.get_lesilla()
-            #await asyncio.sleep(10)
+            await parser.get_nike()
+            await asyncio.sleep(999)
+            await bot.send_message(227184505, f'VALENTINO начал парсинг')
+            await parser.get_valentino()
+            await asyncio.sleep(10)
+            await bot.send_message(227184505, f'LeSILLA начал парсинг')
+            await parser.get_lesilla()
+            await asyncio.sleep(10)
             
             catalogs = get_catalogs()
             for catalog in catalogs:
