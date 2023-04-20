@@ -108,7 +108,7 @@ async def add_catalog(message: types.Message, state: FSMContext):
     if not catalog_exists(phone=message.text):
         phone = message.text
         link = 'https://web.whatsapp.com/catalog/' + message.text
-        create_catalog(phone=phone, link=link)
+        create_catalog(phone=phone, link=link, margin=30)
         text = 'Пришлите какой процент наценки будет у этого каталога (двузначное число). Например: 20'
         await Form.add_margin.set()
         Form.cat_phone = message.text

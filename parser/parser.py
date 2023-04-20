@@ -846,7 +846,6 @@ async def get_nike():
     for name, url in urls.items():
         async with aiohttp.ClientSession(trust_env=True) as session:
             items = await get_nike_subcategory(session, url, name)
-            print(items)
             # сохраняем товары [name, description, price, images]
             crud.del_products(subcategory=name)
             try:
@@ -855,7 +854,6 @@ async def get_nike():
                 not_deleted_items = []
             print(not_deleted_items)
             for item in items:
-                print(item)
 
                 if item[0] + ' ' + item[4] in not_deleted_items:
                     continue
