@@ -1,6 +1,6 @@
 from arsenic import get_session, services, browsers, stop_session
 from arsenic.constants import SelectorType
-import asyncio, aiohttp
+import asyncio, aiohttp, aiofiles
 import logging
 
 import os
@@ -593,7 +593,7 @@ async def get_subcategory(session, url):
 async def get_item(session, url, subcategory, i):
     item = []
     async with session.get(url, ssl=False) as response:
-            resp = await response.text()
+        resp = await response.text()
     #resp = requests.get(url)
     soup = bs(resp, 'lxml')
 
@@ -714,8 +714,121 @@ async def get_lesilla():
                     description=description,
                     price=price,
                     image=item[6])
-                logging.info(prod.name)
-                
-                
+                logging.info(prod.name) 
         return items
+
+
+def image_func(image):
+    try:
+        image = image['properties']["portraitURL"].replace('t_default', 't_PDP_1280_v1/f_auto,q_auto:eco')
+        return image
+    except:
+        return 0
+
+async def get_nike_subcategory(session, url, subcategory):
+    main_url = 'https://api.nike.com/cic/browse/v2?queryid=products&anonymousId=08A180A3B5AAD6BC6470F1A020095EDD&country=it&endpoint=%2Fproduct_feed%2Frollup_threads%2Fv2%3Ffilter%3Dmarketplace(IT)%26filter%3Dlanguage(it)%26filter%3DemployeePrice(true)%26filter%3DattributeIds({})%26anchor%3D{}%26consumerChannelId%3Dd9a5bc42-4b9c-4976-858a-f159cf99c647%26count%3D{}&language=en&localizedRangeStr=%7BlowestPrice%7D-%7BhighestPrice%7D'
+    products = []
+    for i in [60 * i for i in range(0, 20)]:
+        try:
+            async with session.get(main_url.format(url, i, 60), ssl=False) as response:
+                webpage = await response.json()
+            prod = webpage['data']['products']['products']
+            products += [{'title' : p['title'], 'url': p['url'].replace('{countryLang}', 'it'), 'curprice': p['price']['currentPrice'], 'fullPrice': p['price']['fullPrice'], 'colorDescription': p['colorDescription']} for p in prod]
+        except:
+            break
+    items = []
+
+    for prod in products:
+        headers = {'User-Agent': 'Mozilla/5.0'}
+        prod_url = f'https://api.nike.com/product_feed/threads/v2?filter=language(it)&filter=marketplace(IT)&filter=channelId(d9a5bc42-4b9c-4976-858a-f159cf99c647)&filter=productInfo.merchProduct.styleColor({prod["url"].split("/")[-1]})'
+        async with session.get(prod_url, headers=headers, ssl=False) as response:
+            item_webpage = await response.json()
+
+        # название товара
+        name = prod['title']
+        print(f'name {name}')
+        # цена  
+        price = int((prod['curprice'] * (euro_cost() + 1)) * float(f"1.{crud.get_catalog(phone='nike').margin}")) if prod['curprice'] else None
+        
+        # описание
+        fullPrice = int((prod['fullPrice'] * (euro_cost() + 1)) * float(f"1.{crud.get_catalog(phone='nike').margin}")) if prod['fullPrice'] else None
+        percent = int(100 - (price/fullPrice * 100))
+        description = f"Color: {prod['colorDescription']}\n\n"
+        description += f'<s>{fullPrice} руб.</s> -{percent}% {price} руб. \n\n'
+        #
+            # размеры
+        skus = item_webpage['objects'][0]['productInfo'][0]['skus']
+        availableSkus = {}
+        for av_sky in item_webpage['objects'][0]['productInfo'][0]['availableSkus']:
+            availableSkus[av_sky['id']] = av_sky['available']
+        sizes = 'Sizes: \n'
+        for sku in skus:
+            if availableSkus[sku['id']]:
+                sizes += f'<b>{sku["countrySpecifications"][0]["localizedSize"]}</b> '
+            else:
+                sizes += f'<s>{sku["countrySpecifications"][0]["localizedSize"]}</s> '
+        description += sizes
+        # изображения
+        if not os.path.exists(f"database/images/NIKE"):
+            os.mkdir(f"database/images/NIKE")
+
+        if not os.path.exists(f"database/images/NIKE/{subcategory}"):
+            os.mkdir(f"database/images/NIKE/{subcategory}")
+        
+        image_links = [image_func(image) for image in item_webpage['objects'][0]['publishedContent']['nodes'][0]['nodes']]
+        if 0 in image_links:
+            image_links.remove(0)
+        images = ''
+        i = products.index(prod)
+        for url in image_links[:10]:
+            try:
+                num = image_links.index(url) + 1
+                img_path = f"database/images/NIKE/{subcategory}/{i}_{name.replace(' ', '_').replace('/', '_')}_{num}.png"
+                async with session.get(url, ssl=False) as response:
+                    #image = await response.content
+                    f = await aiofiles.open(img_path, mode='wb')
+                    await f.write(await response.read())
+                    await f.close()
+                images +=  img_path + '\n'
+            except:
+                continue
+        items.append([name, description, price, images, prod['colorDescription']])
+        #print([name, description, price, images])
+    return items
+
+async def get_nike():
+    urls = {
+        'Мужская обувь': '5b21a62a-0503-400c-8336-3ccfbff2a684%2C16633190-45e5-4830-a068-232ac7aea82c%2C0f64ecc7-d624-4e91-b171-b83a03dd8550',
+        'Мужская одежда': '5b21a62a-0503-400c-8336-3ccfbff2a684%2Ca00f0bb2-648b-4853-9559-4cd943b7d6c6%2C0f64ecc7-d624-4e91-b171-b83a03dd8550',
+        'Мужские аксессуары': 'fa863563-4508-416d-bae9-a53188c04937%2C5b21a62a-0503-400c-8336-3ccfbff2a684%2C0f64ecc7-d624-4e91-b171-b83a03dd8550',
+        'Женская обувь': '5b21a62a-0503-400c-8336-3ccfbff2a684%2C16633190-45e5-4830-a068-232ac7aea82c%2C7baf216c-acc6-4452-9e07-39c2ca77ba32',
+        'Женская одежда': '5b21a62a-0503-400c-8336-3ccfbff2a684%2Ca00f0bb2-648b-4853-9559-4cd943b7d6c6%2C7baf216c-acc6-4452-9e07-39c2ca77ba32',
+        'Женские аксессуары': 'fa863563-4508-416d-bae9-a53188c04937%2C5b21a62a-0503-400c-8336-3ccfbff2a684%2C7baf216c-acc6-4452-9e07-39c2ca77ba32',
+        'Детская обувь': '5b21a62a-0503-400c-8336-3ccfbff2a684%2C16633190-45e5-4830-a068-232ac7aea82c%2C145ce13c-5740-49bd-b2fd-0f67214765b3',
+        'Детская одежда': '5b21a62a-0503-400c-8336-3ccfbff2a684%2C145ce13c-5740-49bd-b2fd-0f67214765b3%2Ca00f0bb2-648b-4853-9559-4cd943b7d6c6',
+        #'Детские аскессуары': 'https://www.nike.com/it/w/bambini-outlet-accessori-3yaepzawwpwzv4dh',
+    }
+    for name, url in urls.items():
+        async with aiohttp.ClientSession(trust_env=True) as session:
+            items = await get_nike_subcategory(session, url, name)
+            # сохраняем товары [name, description, price, images]
+            crud.del_products(subcategory=name)
+            try:
+                not_deleted_items = [product.name + product.description.split('Color:')[1].split('\n\n')[0] for product in crud.get_product(category_id=crud.get_category(name='NIKE').id, subcategory_id=crud.get_subcategory(name=name).id)]
+            except:
+                not_deleted_items = []
+            print(not_deleted_items)
+            for item in items:
+                if item[0] + ' ' + item[4] in not_deleted_items:
+                    continue
+                prod = crud.create_product(
+                    name=item[0],
+                    category='NIKE',
+                    subcategory=name,
+                    catalog='nike',
+                    description=item[1],
+                    price=item[2],
+                    image=item[3])
+                logging.info(prod.name) 
+
     

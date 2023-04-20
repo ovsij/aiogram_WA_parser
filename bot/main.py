@@ -27,12 +27,15 @@ logging.basicConfig(level=logging.INFO)
 async def scheduled_catalogs(wait_for):
     while True:
         try:
+            await parser.get_nike()
+            await asyncio.sleep(999)
             #await bot.send_message(227184505, f'VALENTINO начал парсинг')
             #await parser.get_valentino()
             #await asyncio.sleep(10)
             #await bot.send_message(227184505, f'LeSILLA начал парсинг')
             #await parser.get_lesilla()
             #await asyncio.sleep(10)
+            """
             catalogs = get_catalogs()
             for catalog in catalogs:
                 # тест
@@ -75,9 +78,10 @@ async def scheduled_catalogs(wait_for):
                     except:
                         continue
             await asyncio.sleep(wait_for)
+            """
         except Exception as ex:
             print(ex)
-
+            
             await asyncio.sleep(wait_for)
 
             
@@ -99,13 +103,16 @@ async def send_mes(wait_for):
         except:
             continue
 
+async def p():
+    await parser.get_nike()
 
 if __name__ == '__main__':
     from handlers import dp
+    
     loop = asyncio.get_event_loop()
-    #loop.create_task(parser.get_valentino())
-    loop.create_task(scheduled_catalogs(0))
-    loop.create_task(send_mes(5))
+    loop.create_task(p())
+    #loop.create_task(scheduled_catalogs(0))
+    #loop.create_task(send_mes(5))
     #loop.create_task(scheduled_valentino(7200))
     #asyncio.run(send_mes(5))
     executor.start_polling(dp, skip_updates=True)
