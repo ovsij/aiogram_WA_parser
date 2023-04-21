@@ -311,7 +311,7 @@ async def get_catalog(url):
                 header_el = await session.wait_for_element(120, header_xpath, SelectorType.xpath)
                 header = await header_el.get_text() if header_el else 'не нашлось заголовка...'
             except Exception as ex:
-                #print(ex)
+                print(ex)
             
         # если в каталоге есть категории
         try:
