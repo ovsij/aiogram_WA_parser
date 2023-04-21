@@ -27,14 +27,24 @@ logging.basicConfig(level=logging.INFO)
 async def scheduled_catalogs(wait_for):
     while True:
         try:
-            await parser.get_nike()
-            await asyncio.sleep(999)
-            await bot.send_message(227184505, f'VALENTINO начал парсинг')
-            await parser.get_valentino()
-            await asyncio.sleep(10)
-            await bot.send_message(227184505, f'LeSILLA начал парсинг')
-            await parser.get_lesilla()
-            await asyncio.sleep(10)
+            try:
+                await bot.send_message(227184505, f'NIKE начал парсинг')
+                await parser.get_nike()
+                await asyncio.sleep(10)
+            except:
+                await bot.send_message(227184505, f'Nike - произошла ошибка')
+            try:
+                await bot.send_message(227184505, f'VALENTINO начал парсинг')
+                await parser.get_valentino()
+                await asyncio.sleep(10)
+            except:
+                await bot.send_message(227184505, f'VALENTINO - произошла ошибка')
+            try:
+                await bot.send_message(227184505, f'LeSILLA начал парсинг')
+                await parser.get_lesilla()
+                await asyncio.sleep(10)
+            except:
+                await bot.send_message(227184505, f'LeSILLA - произошла ошибка')
             
             catalogs = get_catalogs()
             for catalog in catalogs:
@@ -46,20 +56,20 @@ async def scheduled_catalogs(wait_for):
                         items = await parser.get_catalog(url=url)
                         del_products(catalog=catalog.phone)
                         not_deleted_items = [p.name for p in get_product(catalog=catalog.phone)]
-                        print([p.image for p in get_product(catalog=catalog.phone)])
-                        print(not_deleted_items)
+                        #print([p.image for p in get_product(catalog=catalog.phone)])
+                        #print(not_deleted_items)
                         hashes = [comparator.CalcImageHash(product.image.split('\n')[0]) for product in get_product(catalog=catalog.phone)]
-                        print(hashes)
+                        #print(hashes)
                         for item in items:
                             diff = []
                             if item[0] in not_deleted_items:
                                 print(item[5])
                                 for hash in hashes:
                                     d = comparator.CompareHash(hash, comparator.CalcImageHash(item[5].split('\n')[0]))
-                                    print('diff: ')
-                                    print(d)
+                                    #print('diff: ')
+                                    #print(d)
                                     diff.append(d)
-                            print(diff)
+                            #print(diff)
                             if len(diff) >= 1:
                                 if min(diff) <= 1:
                                     print(f'dont add: {item[0]}')
@@ -76,6 +86,7 @@ async def scheduled_catalogs(wait_for):
                             prod = create_product(name=item[0], category=item[1], subcategory=item[2], catalog=catalog.phone, description=description, price=price, image=item[5])
                             print(f'add : {prod}')
                     except:
+                        await bot.send_message(227184505, f'{catalog.phone} - произошла ошибка')
                         continue
             await asyncio.sleep(wait_for)
             

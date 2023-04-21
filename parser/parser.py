@@ -553,7 +553,10 @@ async def get_valentino():
         #print(items)
         crud.del_products(subcategory=subcategory)
         print(crud.get_product(category_id=crud.get_category(name='VALENTINO').id, subcategory_id=1))
-        not_deleted_items = [product.name for product in crud.get_product(category_id=crud.get_category(name='VALENTINO').id, subcategory_id=crud.get_subcategory(name=subcategory).id)]
+        try:
+            not_deleted_items = [product.name for product in crud.get_product(category_id=crud.get_category(name='VALENTINO').id, subcategory_id=crud.get_subcategory(name=subcategory).id)]
+        except:
+            not_deleted_items = []
         #print(not_deleted_items)
         for item in items:
             #print(item)
@@ -657,7 +660,7 @@ async def get_item(session, url, subcategory, i):
 
 async def get_lesilla():
     urls = {
-        'Туфли на высоком каблуке': 'https://outlet.lesilla.com/row/pumps/high-heels.html',
+        #'Туфли на высоком каблуке': 'https://outlet.lesilla.com/row/pumps/high-heels.html',
         'Туфли на среднем каблуке': 'https://outlet.lesilla.com/row/pumps/mid-heels.html',
         'Туфли на плоской подошве': 'https://outlet.lesilla.com/row/pumps/flat.html',
         'Сандалии на высоком каблуке': 'https://outlet.lesilla.com/row/sandals/high-heels.html',
@@ -693,7 +696,10 @@ async def get_lesilla():
                 except:
                     continue
             crud.del_products(subcategory=name)
-            not_deleted_items = [product.name + product.description.split('Color:')[1].split('\n\n')[0] for product in crud.get_product(category_id=crud.get_category(name='LeSILLA').id, subcategory_id=crud.get_subcategory(name=name).id)]
+            try:
+                not_deleted_items = [product.name + product.description.split('Color:')[1].split('\n\n')[0] for product in crud.get_product(category_id=crud.get_category(name='LeSILLA').id, subcategory_id=crud.get_subcategory(name=name).id)]
+            except:
+                not_deleted_items = []
             print(not_deleted_items)
             #hashes = [comparator.CalcImageHash(product.image.split('\n')[0]) for product in crud.get_product(catalog='lesilla')]
             for item in items:
