@@ -135,12 +135,12 @@ async def get_items(category : str, session, subcategory : str = 'Другое')
                         img_xpath = f'//*[@id="app"]/div/div/div[6]/span/div/span/span/div/div[2]/div/div[2]/div/div[1]/div[{im}]/div'
                         img_el = await session.wait_for_element(10, img_xpath, SelectorType.xpath)
                         img = await img_el.get_screenshot()
-                        print('first xpath')
+                        #print('first xpath')
                     except:
                         img_xpath = '//*[@id="app"]/div/div/div[6]/span/div/span/span/div/div[2]/div/div[2]/div/div[1]/div/div'
                         img_el = await session.wait_for_element(10, img_xpath, SelectorType.xpath)
                         img = await img_el.get_screenshot()
-                        print('second xpath')
+                        #print('second xpath')
         
                 #создаем дирректорию категории если ее еще нет
                 if not os.path.exists(f"database/images/{category}"):
@@ -155,7 +155,7 @@ async def get_items(category : str, session, subcategory : str = 'Другое')
                         os.mkdir(f"database/images/{category}/{subcategory}")
                     with open(f"database/images/{category}/{subcategory}/{i}_{title.replace(' ', '_').replace('/', '_')}_{im}.png", 'wb') as png:
                         png.write(img.read())
-                    print(f"database/images/{category}/{subcategory}/{i}_{title.replace(' ', '_').replace('/', '_')}_{im}.png\n")
+                    #print(f"database/images/{category}/{subcategory}/{i}_{title.replace(' ', '_').replace('/', '_')}_{im}.png\n")
                     images += f"database/images/{category}/{subcategory}/{i}_{title.replace(' ', '_').replace('/', '_')}_{im}.png\n"
                 try:
                     # переключаем на следующее изображение
@@ -164,7 +164,7 @@ async def get_items(category : str, session, subcategory : str = 'Другое')
                     await nextimageimg_el.click()
                     await asyncio.sleep(1)
                 except:
-                    print('no more images')
+                    #print('no more images')
                     break
                 
         
@@ -213,7 +213,7 @@ async def get_items(category : str, session, subcategory : str = 'Другое')
                 lst = [title, category, subcategory_, description, price, images]
             else:
                 lst = [title, category, subcategory_, description, price, images]
-            print(lst)
+            #print(lst)
             items.append(lst)
             #logging.info(lst)
             # закрываем карточку товара кнопкой "назад"
@@ -250,7 +250,7 @@ async def get_items(category : str, session, subcategory : str = 'Другое')
 
 # функция обрабатывает каталог, открывает категории
 async def get_catalog(url):
-    print(url)
+    #print(url)
     logging.info(f'start parsing {url}')
 
     #options = webdriver.ChromeOptions()
@@ -311,7 +311,7 @@ async def get_catalog(url):
                 header_el = await session.wait_for_element(120, header_xpath, SelectorType.xpath)
                 header = await header_el.get_text() if header_el else 'не нашлось заголовка...'
             except Exception as ex:
-                print(ex)
+                #print(ex)
             
         # если в каталоге есть категории
         try:
@@ -347,7 +347,7 @@ async def get_catalog(url):
 
                     logging.info(f'Start parsing {value} subcategory')
                     products = await get_items(category=header, subcategory=value, session=session)
-                    print(products)
+                    #print(products)
                     dct += products
                     logging.info(f'Cancel {value} subcategory')
                     await asyncio.sleep(2)
@@ -514,7 +514,7 @@ async def get_valentino_catalog(url, subcategory):
             item = [name, 'VALENTINO', subcategory, 'valentino', description, price, images]
             items.append(item)
             #logging.info(item)
-            print(item)
+            #print(item)
         
     return items
 
@@ -547,7 +547,7 @@ async def get_valentino():
         items = await get_valentino_catalog(url + category_url, subcategory)
         #print(items)
         crud.del_products(subcategory=subcategory)
-        print(crud.get_product(category_id=crud.get_category(name='VALENTINO').id, subcategory_id=1))
+        #print(crud.get_product(category_id=crud.get_category(name='VALENTINO').id, subcategory_id=1))
         try:
             not_deleted_items = [product.name for product in crud.get_product(category_id=crud.get_category(name='VALENTINO').id, subcategory_id=crud.get_subcategory(name=subcategory).id)]
         except:
@@ -566,7 +566,7 @@ async def get_valentino():
                 description=item[4],
                 price=price,
                 image=item[6])
-            print(prod)
+            #print(prod)
     return items
 
 
@@ -589,6 +589,7 @@ async def get_subcategory(session, url):
                 break
     return items
 
+# lesilla
 async def get_item(session, url, subcategory, i):
     item = []
     async with session.get(url, ssl=False) as response:
@@ -650,12 +651,12 @@ async def get_item(session, url, subcategory, i):
         with open(img_path, 'wb') as png:
             png.write(request.content)
         images += img_path + '\n'
-    print([name, 'LeSILLA', subcategory, 'lesilla', description, price, images, color])
+    #print([name, 'LeSILLA', subcategory, 'lesilla', description, price, images, color])
     return [name, 'LeSILLA', subcategory, 'lesilla', description, price, images, color]
 
 
 async def get_lesilla():
-    print('start')
+    #print('start')
     urls = {
         'Туфли на высоком каблуке': 'https://outlet.lesilla.com/row/pumps/high-heels.html',
         'Туфли на среднем каблуке': 'https://outlet.lesilla.com/row/pumps/mid-heels.html',
@@ -697,7 +698,7 @@ async def get_lesilla():
                 not_deleted_items = [product.name + product.description.split('Color:')[1].split('\n\n')[0] for product in crud.get_product(category_id=crud.get_category(name='LeSILLA').id, subcategory_id=crud.get_subcategory(name=name).id)]
             except:
                 not_deleted_items = []
-            print(not_deleted_items)
+            #print(not_deleted_items)
             #hashes = [comparator.CalcImageHash(product.image.split('\n')[0]) for product in crud.get_product(catalog='lesilla')]
             for item in items:
                 price = int((item[5] * (euro_cost() + 1)) / 100 * crud.get_catalog(phone='valentino').margin) if item[5] else None
@@ -717,7 +718,7 @@ async def get_lesilla():
                     description=description,
                     price=price,
                     image=item[6])
-                print(prod.name)
+                #print(prod.name)
         logging.info(f'Canceled {name} added {len(items)} products') 
         return items
 
@@ -779,7 +780,7 @@ async def get_nike_subcategory(session, url, subcategory):
 
             # название товара
             name = prod['title']
-            print(f'name {name}')
+            #print(f'name {name}')
             # цена  
             price = int((prod['curprice'] * (euro_cost() + 1)) * float(f"1.{crud.get_catalog(phone='nike').margin}")) if prod['curprice'] else None
             
@@ -857,7 +858,7 @@ async def get_nike():
                 not_deleted_items = [product.name + product.description.split('Color:')[1].split('\n\n')[0] for product in crud.get_product(category_id=crud.get_category(name='NIKE').id, subcategory_id=crud.get_subcategory(name=name).id)]
             except:
                 not_deleted_items = []
-            print(not_deleted_items)
+            #print(not_deleted_items)
             for item in items:
 
                 if item[0] + ' ' + item[4] in not_deleted_items:
