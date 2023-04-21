@@ -27,6 +27,7 @@ logging.basicConfig(level=logging.INFO)
 async def scheduled_catalogs(wait_for):
     while True:
         try:
+            """
             try:
                 await bot.send_message(227184505, f'NIKE начал парсинг')
                 await parser.get_nike()
@@ -45,11 +46,12 @@ async def scheduled_catalogs(wait_for):
                 await asyncio.sleep(10)
             except:
                 await bot.send_message(227184505, f'LeSILLA - произошла ошибка')
-            
+            """
             catalogs = get_catalogs()
+
             for catalog in catalogs:
                 # тест
-                if catalog.phone not in ['valentino', 'lesilla']:# and catalog.phone == '390143686270':
+                if catalog.phone not in ['valentino', 'lesilla', 'nike']:# and catalog.phone == '390143686270':
                     try:
                         await bot.send_message(227184505, f'{catalog.phone} начал парсинг')
                         url = f'https://web.whatsapp.com/catalog/{catalog.phone}'
