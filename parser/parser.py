@@ -432,10 +432,6 @@ async def get_valentino_catalog(url, subcategory):
             name = await name_el.get_text()
             logging.info('name: ' + name)
 
-            img = await session.get_screenshot()
-            with open('parser/valentino1.png', 'wb') as png:
-                png.write(img.read())
-
             if not os.path.exists(f"database/images/VALENTINO"):
                 os.mkdir(f"database/images/VALENTINO")
 
@@ -445,9 +441,7 @@ async def get_valentino_catalog(url, subcategory):
             images = ''
             for num in range(1, 20):
                 try:
-                    img = await session.get_screenshot()
-                    with open(f'parser/valentino2_{num}.png', 'wb') as png:
-                        png.write(img.read())
+                    
                     tag_id = webpage.split('swiper-wrapper-')[-1].split('"')[0]
 
                     image_xpath = f'//*[@id="swiper-wrapper-{tag_id}"]/div[{num}]/div/div/div/div'                    
@@ -474,9 +468,8 @@ async def get_valentino_catalog(url, subcategory):
                         price = int(soup.find_all('div', 'sc-dQDPHY gwUuKq')[0].text.replace('.00', '').strip('€').replace(',', ''))
                 except IndexError:
                     pass
-            img = await session.get_screenshot()
-            with open('parser/valentino3.png', 'wb') as png:
-                png.write(img.read())
+            
+            
             #print(f'Цена: {price}')
             
             description = ''
@@ -527,18 +520,18 @@ async def get_valentino_catalog(url, subcategory):
 async def get_valentino():
     url = 'https://myv-experience.valentino.com/0040001024/OUTLET%20SERRAVALLE'
     categories = [
-        #'/VAL/search?category=APPAREL',
-        #'/VAL/search?category=SHOES',
-        #'/VAL/search?category=BAGS',
-        #'/VAL/search?category=SMALL%20LEATHER%20GOODS',
+        '/VAL/search?category=APPAREL',
+        '/VAL/search?category=SHOES',
+        '/VAL/search?category=BAGS',
+        '/VAL/search?category=SMALL%20LEATHER%20GOODS',
         '/VAL/search?category=BIJOUX',
-        #'/VAL/search?category=SOFT%20ACCESSORIES',
-        #'/VMA/search?category=APPAREL',
-        #'/VMA/search?category=SHOES',
-        #'/VMA/search?category=BAGS',
-        #'/VMA/search?category=SMALL%20LEATHER%20GOODS',
-        #'/VMA/search?category=BIJOUX',
-        #'/VMA/search?category=SOFT%20ACCESSORIES'
+        '/VAL/search?category=SOFT%20ACCESSORIES',
+        '/VMA/search?category=APPAREL',
+        '/VMA/search?category=SHOES',
+        '/VMA/search?category=BAGS',
+        '/VMA/search?category=SMALL%20LEATHER%20GOODS',
+        '/VMA/search?category=BIJOUX',
+        '/VMA/search?category=SOFT%20ACCESSORIES'
     ]
     
     for category_url in categories:
@@ -663,28 +656,28 @@ async def get_item(session, url, subcategory, i):
 async def get_lesilla():
     print('start')
     urls = {
-        #'Туфли на высоком каблуке': 'https://outlet.lesilla.com/row/pumps/high-heels.html',
+        'Туфли на высоком каблуке': 'https://outlet.lesilla.com/row/pumps/high-heels.html',
         'Туфли на среднем каблуке': 'https://outlet.lesilla.com/row/pumps/mid-heels.html',
-        #'Туфли на плоской подошве': 'https://outlet.lesilla.com/row/pumps/flat.html',
-        #'Сандалии на высоком каблуке': 'https://outlet.lesilla.com/row/sandals/high-heels.html',
-        #Сандалии на среднем каблуке': 'https://outlet.lesilla.com/row/sandals/mid-heels.html',
-        #'Сандалии на пизкой подошве': 'https://outlet.lesilla.com/row/sandals/flat.html',
-        #'Танкетки': 'https://outlet.lesilla.com/row/sandals/wedges.html',
-        #'Обувь на платформе': 'https://outlet.lesilla.com/row/sandals/platform.html',
-        #'Тапочки сандалии': 'https://outlet.lesilla.com/row/sandals/slippers.html',
-        #'Высокие кросовки': 'https://outlet.lesilla.com/row/sneaker/high-top.html',
-        #'Низкие кросовки': 'https://outlet.lesilla.com/row/sneaker/low-top.html',
-        #'Ботильоны на высоком каблуке': 'https://outlet.lesilla.com/row/ankle-boots/high-heels.html',
-        #'Ботильоны на среднем каблуке': 'https://outlet.lesilla.com/row/ankle-boots/flat.html',
-        #'Ботильоны техасцы': 'https://outlet.lesilla.com/row/ankle-boots/texans.html',
-        #'Сапоги на высоком каблуке': 'https://outlet.lesilla.com/row/boots/high-heels.html',
-        #'Сапоги на среднем каблуке': 'https://outlet.lesilla.com/row/boots/low-heels.html',
-        #'Сапоги на плоской подошве': 'https://outlet.lesilla.com/row/flat/ankle-boots.html',
-        #'Балетки': 'https://outlet.lesilla.com/row/flat/ballets.html',
-        #'Тапочки на плоскойподошве': 'https://outlet.lesilla.com/row/flat/slippers.html',
-        #'Мокасины': 'https://outlet.lesilla.com/row/flat/mocassins.html',
-        #'Сандалии на плоской подошве': 'https://outlet.lesilla.com/row/flat/sandals.html',
-        #'Сумки': 'https://outlet.lesilla.com/row/bags.html'
+        'Туфли на плоской подошве': 'https://outlet.lesilla.com/row/pumps/flat.html',
+        'Сандалии на высоком каблуке': 'https://outlet.lesilla.com/row/sandals/high-heels.html',
+        'Сандалии на среднем каблуке': 'https://outlet.lesilla.com/row/sandals/mid-heels.html',
+        'Сандалии на пизкой подошве': 'https://outlet.lesilla.com/row/sandals/flat.html',
+        'Танкетки': 'https://outlet.lesilla.com/row/sandals/wedges.html',
+        'Обувь на платформе': 'https://outlet.lesilla.com/row/sandals/platform.html',
+        'Тапочки сандалии': 'https://outlet.lesilla.com/row/sandals/slippers.html',
+        'Высокие кросовки': 'https://outlet.lesilla.com/row/sneaker/high-top.html',
+        'Низкие кросовки': 'https://outlet.lesilla.com/row/sneaker/low-top.html',
+        'Ботильоны на высоком каблуке': 'https://outlet.lesilla.com/row/ankle-boots/high-heels.html',
+        'Ботильоны на среднем каблуке': 'https://outlet.lesilla.com/row/ankle-boots/flat.html',
+        'Ботильоны техасцы': 'https://outlet.lesilla.com/row/ankle-boots/texans.html',
+        'Сапоги на высоком каблуке': 'https://outlet.lesilla.com/row/boots/high-heels.html',
+        'Сапоги на среднем каблуке': 'https://outlet.lesilla.com/row/boots/low-heels.html',
+        'Сапоги на плоской подошве': 'https://outlet.lesilla.com/row/flat/ankle-boots.html',
+        'Балетки': 'https://outlet.lesilla.com/row/flat/ballets.html',
+        'Тапочки на плоскойподошве': 'https://outlet.lesilla.com/row/flat/slippers.html',
+        'Мокасины': 'https://outlet.lesilla.com/row/flat/mocassins.html',
+        'Сандалии на плоской подошве': 'https://outlet.lesilla.com/row/flat/sandals.html',
+        'Сумки': 'https://outlet.lesilla.com/row/bags.html'
     }
     
     async with aiohttp.ClientSession(trust_env=True) as session:
