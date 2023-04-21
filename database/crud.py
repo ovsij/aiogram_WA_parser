@@ -6,7 +6,7 @@ import requests
 import os
 
 from database.db import *
-from parser.parser import *
+from parser import *
 
 # User
 @db_session

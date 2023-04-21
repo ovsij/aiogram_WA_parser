@@ -8,8 +8,6 @@ import logging
 
 from loader import dp, bot
 
-
-
 import os
 import sys
 PROJECT_ROOT = os.path.abspath(os.path.join(
@@ -119,13 +117,14 @@ async def send_mes(wait_for):
 async def p():
     await parser.get_nike()
 
+
+
 if __name__ == '__main__':
     from handlers import dp
-    
-    loop = asyncio.get_event_loop()
+    #loop = asyncio.get_event_loop()
     #loop.create_task(p())
-    loop.create_task(scheduled_catalogs(0))
-    loop.create_task(send_mes(5))
+    #loop.create_task(scheduled_catalogs(0))
+    #loop.create_task(send_mes(5))
     #loop.create_task(scheduled_valentino(7200))
     #asyncio.run(send_mes(5))
     executor.start_polling(dp, skip_updates=True)

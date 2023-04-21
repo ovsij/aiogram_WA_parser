@@ -56,7 +56,11 @@ def inline_kb_categories(tg_id : str, page : int = 1):
         inline_kb = InlineConstructor.create_kb(text_and_data, schema)
         return text, inline_kb
     else:
-        return inline_kb_products(tg_id=tg_id)
+        text += '\n\n К сожалению, на данный момент в каталоге ничего нет'
+        text_and_data = [btn_back('menu')]
+        schema = [1]
+        inline_kb = InlineConstructor.create_kb(text_and_data, schema)
+        return text, inline_kb
     
 def inline_kb_subcategories(tg_id : str, category : int = None, page : int = 1):
     #выводит названия суб-категорий, если их нет выводит продукты
