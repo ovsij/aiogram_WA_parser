@@ -70,7 +70,7 @@ def inline_kb_subcategories(tg_id : str, category : int = None, page : int = 1):
     schema = []
     if sub_categories:
         for sc in sub_categories:
-            text_and_data.append([f'{sc.name}', f'btn_subcategory_{category}_{sc.id}_1'])
+            text_and_data.append([f'{sc.name}', f'btn_listsubcategory_{category}_{sc.id}_1'])
             schema.append(1)
         if len(sub_categories) > 10:
             text_and_data, schema = btn_prevnext(len(sub_categories), text_and_data, schema, page, name=f'category_{category}')
@@ -85,6 +85,41 @@ def inline_kb_subcategories(tg_id : str, category : int = None, page : int = 1):
         return text, inline_kb
     else:
         return inline_kb_products(tg_id=tg_id, category=category, page=page)
+
+def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : int = None, page : int = 1):
+    textInline_kb = []
+    products = get_product(category_id=category, subcategory_id=sub_category)
+    for product in products[page * 10 - 10:(page * 10)]:
+        print(product)
+        dct = {}
+        description = product.description
+        description = '' if not product.description else product.description
+        price = 'Не указана' if not product.price else f'{product.price} руб.'
+        dct['text'] = f'{product.name}\n\n{description}\n\nЦена: {price}'
+        text_and_data = [
+            [emojize('Добавить в корзину', language='alias'), f'btn_cart_{product.id}']
+        ]
+        schema = [1]
+        dct['reply_markup'] = InlineConstructor.create_kb(text_and_data, schema)
+        dct['images'] = product.image
+        textInline_kb.append(dct)
+    len_prodcts = (page * 10 - 10) + len(textInline_kb) if len(textInline_kb) > 0 else len(products)
+    text_and_data = [
+        [emojize(':arrow_down_small: Eще 10 товаров :arrow_down_small:', language='alias'), f'btn_listsubcategory_{category}_{sub_category}_{page + 1}'],
+        [emojize('Открыть список товаров', language='alias'), f'btn_subcategory_{category}_{sub_category}_1'],
+        btn_back(f'catalog_1')
+    ]
+    textInline_kb.append(
+        {
+        'text' : f'{get_category(id=category).name}\n{get_subcategory(id=sub_category).name}\n\nПоказано {len_prodcts} товаров из {len(products)}',
+        'reply_markup' : InlineConstructor.create_kb(text_and_data, [1, 1, 1]),
+        'images' : False
+        }
+    )
+    
+    return textInline_kb
+    
+
     
 def inline_kb_products(tg_id : str, category : int = None, sub_category : int = None, page : int = 1):
     text = 'КАТАЛОГ'

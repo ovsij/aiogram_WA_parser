@@ -71,11 +71,30 @@ async def btn_callback(callback_query: types.CallbackQuery):
                 text=text, 
                 reply_markup=reply_markup
             )
-    
+
+    if code[1] == 'listsubcategory':
+        textReply_markup = inline_kb_listproducts(tg_id=str(callback_query.from_user.id), category=int(code[2]), sub_category=int(code[3]), page=int(code[-1]))
+        await callback_query.message.delete()
+        for item in textReply_markup:
+            if not item['images']:
+                await bot.send_message(
+                    callback_query.message.chat.id,
+                    text=item['text'], 
+                    reply_markup=item['reply_markup']
+                )
+            else:
+                images = item['images'].split('\n')
+                photo = [types.InputMedia(media=open(img, 'rb'), caption=item['text']) if images.index(img) == 0 else types.InputMedia(media=open(img, 'rb')) for img in images]
+                await bot.send_media_group(
+                    callback_query.message.chat.id, 
+                    media=photo,
+                    #reply_markup=item['reply_markup']
+                )
+            
+
     if code[1] == 'subcategory':
         message_to_delete = Form.prev_message
         text, reply_markup = inline_kb_products(tg_id=str(callback_query.from_user.id), category=int(code[2]), sub_category=int(code[3]), page=int(code[-1]))
-        
         try:
             Form.prev_message = await callback_query.message.edit_text(
                 text=text,
@@ -192,7 +211,7 @@ async def btn_callback(callback_query: types.CallbackQuery):
     if code[1] == 'tocart':
         if callback_query.message.caption.split(' ')[-1] == 'корзину!':
             return
-        add_to_cart(tg_id=str(callback_query.from_user.id), prod_id=int(code[2]), count=int(code[-1]))
+        add_to_cart(tg_id=str(callback_query.from_user.id), prod_id=int(code[2]))
         text, reply_markup = inline_kb_product(tg_id=str(callback_query.from_user.id), id=int(code[2]))
         text += '\n\nТовар успешно добавлен в корзину!'
         await callback_query.message.edit_caption(

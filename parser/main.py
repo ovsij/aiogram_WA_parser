@@ -16,17 +16,17 @@ from parser import *
 
 
 async def main():
-    tasks = set()
-    task1 = asyncio.create_task(get_lesilla())
-    tasks.add(task1)
-    #L = await asyncio.gather(task1)
-    task2 = asyncio.create_task(get_valentino())
-    tasks.add(task2)
-    task3 = asyncio.create_task(get_nike())
-    tasks.add(task3)
-    L = await asyncio.gather(*tasks)
-    
-    #L = await asyncio.gather(task3)
+    while True:
+        tasks = set()
+        task1 = asyncio.create_task(get_lesilla())
+        tasks.add(task1)
+        task2 = asyncio.create_task(get_valentino())
+        tasks.add(task2)
+        task3 = asyncio.create_task(get_nike())
+        tasks.add(task3)
+        L = await asyncio.gather(*tasks)
+        await asyncio.sleep(600)
+        
 
 if __name__ == '__main__':
     try:
