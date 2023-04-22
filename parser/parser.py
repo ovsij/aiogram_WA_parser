@@ -519,6 +519,7 @@ async def get_valentino_catalog(url, subcategory):
     return items
 
 async def get_valentino():
+    
     url = 'https://myv-experience.valentino.com/0040001024/OUTLET%20SERRAVALLE'
     categories = [
         '/VAL/search?category=APPAREL',
@@ -540,7 +541,7 @@ async def get_valentino():
             subcategory = 'Man ' + category_url.split('=')[1].replace('%20', ' ')
         else:
             subcategory = 'Woman ' + category_url.split('=')[1].replace('%20', ' ')
-
+        print(f'Start {subcategory}')
         if not crud.subcategory_exists(subcategory):
             crud.create_subcategory(name=subcategory, category='VALENTINO')
         
@@ -567,6 +568,7 @@ async def get_valentino():
                 price=price,
                 image=item[6])
             #print(prod)
+        print(f'Canceled {subcategory} added {len(items)} products') 
     return items
 
 
@@ -684,7 +686,7 @@ async def get_lesilla():
     
     async with aiohttp.ClientSession(trust_env=True) as session:
         for name, url in urls.items():
-            logging.info(f'Starting: {name}')
+            print(f'Starting: {name}')
             product_urls = await get_subcategory(session, url)
             items = []
             for prodict_url in product_urls:
@@ -719,7 +721,7 @@ async def get_lesilla():
                     price=price,
                     image=item[6])
                 #print(prod.name)
-        logging.info(f'Canceled {name} added {len(items)} products') 
+        print(f'Canceled {name} added {len(items)} products') 
         return items
 
 
@@ -849,7 +851,7 @@ async def get_nike():
         'Детские аскессуары': 'https://www.nike.com/it/w/bambini-outlet-accessori-3yaepzawwpwzv4dh',
     }
     for name, url in urls.items():
-        logging.info(f'Starting: {name}')
+        print(f'Starting: {name}')
         async with aiohttp.ClientSession(trust_env=True) as session:
             items = await get_nike_subcategory(session, url, name)
             # сохраняем товары [name, description, price, images]
@@ -871,6 +873,6 @@ async def get_nike():
                     description=item[1],
                     price=item[2],
                     image=item[3])
-            logging.info(f'Canceled {name} added {len(items)} products') 
+            print(f'Canceled {name} added {len(items)} products') 
 
     
