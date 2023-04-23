@@ -70,7 +70,7 @@ def inline_kb_subcategories(tg_id : str, category : int = None, page : int = 1):
     schema = []
     if sub_categories:
         for sc in sub_categories:
-            text_and_data.append([f'{sc.name}', f'btn_listsubcategory_{category}_{sc.id}_1'])
+            text_and_data.append([f'{sc.name}', f'btn_ls_{category}_{sc.id}_0-5'])
             schema.append(1)
         if len(sub_categories) > 10:
             text_and_data, schema = btn_prevnext(len(sub_categories), text_and_data, schema, page, name=f'category_{category}')
@@ -86,39 +86,137 @@ def inline_kb_subcategories(tg_id : str, category : int = None, page : int = 1):
     else:
         return inline_kb_products(tg_id=tg_id, category=category, page=page)
 
-def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : int = None, page : int = 1):
+def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : int = None, sizes : str = None, page : list = [0, 5]):
     textInline_kb = []
-    products = get_product(category_id=category, subcategory_id=sub_category)
-    for product in products[page * 10 - 10:(page * 10)]:
-        print(product)
+    if sizes:
+        products = get_product(category_id=category, subcategory_id=sub_category, sizes=sizes)
+    else:
+        products = get_product(category_id=category, subcategory_id=sub_category)
+    # показываем удаленные товары только админам
+    if tg_id in os.getenv('ADMINS'):
+        products_id = [p.id for p in products]
+    else:
+        products_id = [p.id for p in products if not p.deleted]
+
+    # формируем список товаров 5 или 10 в соответствии с выбором пользователя
+    for product in products[page[0]:page[1]]:
         dct = {}
         description = product.description
         description = '' if not product.description else product.description
         price = 'Не указана' if not product.price else f'{product.price} руб.'
-        dct['text'] = f'{product.name}\n\n{description}\n\nЦена: {price}'
+        dct['text'] = f'{product.name}\n\nАртикул: {product.article}\n{description}\n\nЦена: {price}'
         text_and_data = [
             [emojize('Добавить в корзину', language='alias'), f'btn_cart_{product.id}']
         ]
         schema = [1]
+        # добавить кнопку "удалить товар"
+        if tg_id in os.getenv('ADMINS'):
+            if product.deleted:
+                dct['text'] =  emojize(':x: ', language='alias') + dct['text']
+                text_and_data.append(['Восстановить товар', f'btn_returnproduct_{product.id}'])
+                schema.append(1)
+            if product.edited:
+                dct['text'] =  emojize(':recycle: ', language='alias') + dct['text']
+            else:
+                text_and_data.append(['Удалить товар', f'btn_delproduct_{product.id}'])
+                schema.append(1)
+            text_and_data.append(['Изменить товар', f'btn_editproduct_{product.id}'])
+            
+            schema.append(1)
+        
         dct['reply_markup'] = InlineConstructor.create_kb(text_and_data, schema)
         dct['images'] = product.image
         textInline_kb.append(dct)
-    len_prodcts = (page * 10 - 10) + len(textInline_kb) if len(textInline_kb) > 0 else len(products)
+    len_prodcts = page[1] if len(textInline_kb) >= 5 else len(products)
+    sizes_code = f'_s={sizes}' if sizes else ''
+    filter_emoji = ':white_check_mark:' if len(sizes_code) > 0 else ''
     text_and_data = [
-        [emojize(':arrow_down_small: Eще 10 товаров :arrow_down_small:', language='alias'), f'btn_listsubcategory_{category}_{sub_category}_{page + 1}'],
-        [emojize('Открыть список товаров', language='alias'), f'btn_subcategory_{category}_{sub_category}_1'],
+        [emojize(f'{filter_emoji} Фильтр по размеру', language='alias'), f'btn_sf_{category}_{sub_category}{sizes_code}'],
+        [emojize('Фильтр по цене', language='alias'), f'btn_pricefilter_{category}_{sub_category}'],
+        [emojize('Открыть списком', language='alias'), f'btn_subcategory_{category}_{sub_category}_1'],
+        [emojize(':arrow_down_small: Eще 5 товаров :arrow_down_small:', language='alias'), f'btn_ls_{category}_{sub_category}{sizes_code}_{page[1]}-{page[1] + 5}'],
+        [emojize(':arrow_down_small: Eще 10 товаров :arrow_down_small:', language='alias'), f'btn_ls_{category}_{sub_category}{sizes_code}_{page[1]}-{page[1] + 10}'],
         btn_back(f'catalog_1')
     ]
     textInline_kb.append(
         {
         'text' : f'{get_category(id=category).name}\n{get_subcategory(id=sub_category).name}\n\nПоказано {len_prodcts} товаров из {len(products)}',
-        'reply_markup' : InlineConstructor.create_kb(text_and_data, [1, 1, 1]),
+        'reply_markup' : InlineConstructor.create_kb(text_and_data, [1, 1, 1, 1, 1, 1]),
         'images' : False
         }
     )
     
     return textInline_kb
     
+def inline_kb_sizefilter(category : int = None, sub_category : int = None, sizes_code_list : list = None, page : list = None):
+    text = "Выберите один или несколько размеров из доступных для данной категории товаров\n\nМаксимум можно выбрать 6 размеров"
+    text_and_data = []
+    schema = []
+    all_sizes = []
+    for product in get_product(category_id=category, subcategory_id=sub_category):
+        all_sizes += str(product.sizes).split(', ')
+    print(all_sizes)
+    if 'S' in all_sizes or 'M' in all_sizes or 'L' in all_sizes or 'XL' in all_sizes or '2XL' in all_sizes or '3XL' in all_sizes or '4XL' in all_sizes or '5XL' in all_sizes:
+        standart_sizes = ['S', 'M', 'L', 'XL', '2XL', '3XL', '4XL', '5XL']
+        for st_size in ['S', 'M', 'L', 'XL', '2XL', '3XL', '4XL', '5XL']:
+            if st_size not in all_sizes:
+                standart_sizes.remove(st_size)
+        all_sizes = standart_sizes
+        print(all_sizes)
+    else:
+        all_sizes = list(set(all_sizes))
+        sorted_list = [float(size) for size in all_sizes]
+        sorted_list.sort()
+        all_sizes = [str(fl_size).replace('.0', '') for fl_size in sorted_list] 
+    if sizes_code_list:
+        for size_ in all_sizes:
+            new_sizes = []        
+            if size_ in sizes_code_list:
+                sizes_code = 's='
+                new_sizes = [size for size in sizes_code_list]
+                new_sizes.remove(size_)
+                for s in new_sizes:
+                    sizes_code += s + '-'
+                sizes_code = sizes_code.strip('-')
+                text_and_data.append(
+                    [emojize(f':white_check_mark: {size_}', language='alias'), f'btn_sf_{category}_{sub_category}_{sizes_code}']
+                )
+            elif size_ not in sizes_code_list:
+                sizes_code = 's='
+                new_sizes = [size for size in sizes_code_list]
+                new_sizes.append(size_)
+                for s in new_sizes:
+                    sizes_code += s + '-'
+                sizes_code = sizes_code.strip('-')
+                text_and_data.append(
+                    [emojize(f'{size_}', language='alias'), f'btn_sf_{category}_{sub_category}_{sizes_code}']
+                )
+        next_size_code = ''
+        for sze in sizes_code_list:
+            next_size_code += sze + '-'
+        next_size_code = next_size_code.strip('-')
+    else:
+        for size_ in all_sizes:
+            sizes_code = f's={size_}'
+            text_and_data.append(
+                    [emojize(f'{size_}', language='alias'), f'btn_sf_{category}_{sub_category}_{sizes_code}']
+                )
+        next_size_code = ''
+    schema = []
+    if len(text_and_data) % 3 == 0:
+        for _ in range(int(len(text_and_data)/3)):
+            schema.append(3)
+    else:
+        for _ in range(len(text_and_data)//3):
+            schema.append(3)
+        schema.append(len(text_and_data) - sum(schema))
+    page = [0, 5] if not page else page
+    text_and_data.append([emojize(':arrow_backward: Назад', language='alias'), f'btn_ls_{category}_{sub_category}_s={next_size_code}_{page[0]}-{page[1]}_back'])
+    text_and_data.append([emojize(':arrow_down_small: Применить :arrow_down_small:', language='alias'), f'btn_ls_{category}_{sub_category}_s={next_size_code}_0-5'])
+    schema.append(2)
+    #print(text_and_data)
+    inline_kb = InlineConstructor.create_kb(text_and_data, schema)
+    return text, inline_kb            
 
     
 def inline_kb_products(tg_id : str, category : int = None, sub_category : int = None, page : int = 1):

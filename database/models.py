@@ -10,8 +10,6 @@ class ExtendedEnum(Enum):
     def list(cls):
         return list(map(lambda c: c.value, cls))
 
-
-
 class User(db.Entity):
     id = PrimaryKey(int, auto=True)
     tg_id = Optional(str)
@@ -31,10 +29,12 @@ class Product(db.Entity):
     subcategory = Optional('SubCategory')
     catalog = Optional('Catalog')
     description = Optional(str, nullable=True)
+    sizes = Optional(str, nullable=True)
     price = Optional(int)
     image = Optional(str, nullable=True)
     deleted = Optional(bool, default=False)
     edited = Optional(bool, default=False)
+    article = Optional(str, nullable=True)
 
 class SubCategory(db.Entity):
     id = PrimaryKey(int, auto=True)

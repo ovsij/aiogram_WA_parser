@@ -430,6 +430,7 @@ async def get_valentino_catalog(url, subcategory):
             
             name_el = await session.wait_for_element(10, name_xpath, SelectorType.xpath)
             name = await name_el.get_text()
+            article = name
             #logging.info('name: ' + name)
 
             if not os.path.exists(f"database/images/VALENTINO"):
@@ -484,15 +485,18 @@ async def get_valentino_catalog(url, subcategory):
             #sizes_soup = await sizes_el.get_page_source()
             #print(sizes_soup)
             try:
+                list_sizes = ''
                 description += '\n\nРазмеры:\n'
                 sizes = soup.find('div', 'sc-GJyyB kXYhul').find_all('p')
                 for size in sizes:
-                    if size.get('class')[1] == 'kAJdQY':
-                        description += f'<b>{size.text}</b> '
+                    if size.get('class')[-1] == 'kAJdQY':
+                        description += f'<b>{size.text.strip("/")}</b> '
+                        list_sizes += size.text.strip('/') + ', '
                     elif size.text == 'One Size':
                         description += size.text
                     else:
-                        description += f'<s>{size.text}</s> '
+                        description += f'<s>{size.text.strip("/")}</s> '
+                list_sizes = list_sizes[:-2]
             except:
                 description += 'One Size'
             
@@ -511,7 +515,7 @@ async def get_valentino_catalog(url, subcategory):
             back_el = await session.wait_for_element(10, back_xpath, SelectorType.xpath)
             await back_el.click()
 
-            item = [name, 'VALENTINO', subcategory, 'valentino', description, price, images]
+            item = [name, 'VALENTINO', subcategory, 'valentino', description, price, images, list_sizes, article]
             items.append(item)
             #logging.info(item)
             #print(item)
@@ -565,8 +569,10 @@ async def get_valentino():
                 subcategory=item[2],
                 catalog=item[3],
                 description=item[4],
+                sizes=item[7],
                 price=price,
-                image=item[6])
+                image=item[6],
+                article=item[8])
             #print(prod)
         print(f'Canceled {subcategory} added {len(items)} products') 
     return items
@@ -593,6 +599,7 @@ async def get_subcategory(session, url):
 
 # lesilla
 async def get_item(session, url, subcategory, i):
+    article = url.split('.')[-2].split('-')[-1]
     item = []
     async with session.get(url, ssl=False) as response:
         resp = await response.text()
@@ -622,15 +629,18 @@ async def get_item(session, url, subcategory, i):
         pass
 
     try:
+        list_sizes = ''
         sizes = '\n\nРазмеры:\n'
         buttons = soup.find('div', 'MuiToggleButtonGroup-root ProductOptions text e18jvxhl2 css-rxylov').find_all('button')
         for button in buttons:
             if 'out-of-stock' in button.get('class'):
                 size = f"<s>{button.find('p').text}</s> "
             else:
+                list_sizes += button.find('p').text + ', '
                 size = f"<b>{button.find('p').text}</b> "
             sizes +=size
         description += sizes
+        list_sizes = list_sizes[:-2]
     except:
         pass
     try:
@@ -654,7 +664,8 @@ async def get_item(session, url, subcategory, i):
             png.write(request.content)
         images += img_path + '\n'
     #print([name, 'LeSILLA', subcategory, 'lesilla', description, price, images, color])
-    return [name, 'LeSILLA', subcategory, 'lesilla', description, price, images, color]
+    
+    return [name, 'LeSILLA', subcategory, 'lesilla', description, price, images, color, list_sizes, article]
 
 
 async def get_lesilla():
@@ -718,10 +729,12 @@ async def get_lesilla():
                     subcategory=item[2],
                     catalog=item[3],
                     description=description,
+                    sizes=item[8],
                     price=price,
-                    image=item[6])
+                    image=item[6],
+                    article=item[9])
                 #print(prod.name)
-        print(f'Canceled {name} added {len(items)} products') 
+            print(f'Canceled {name} added {len(items)} products') 
         return items
 
 
@@ -774,6 +787,7 @@ async def get_nike_subcategory(session, url, subcategory):
         
     items = []  
     for prod in products:
+        
         try:
             headers = {'User-Agent': 'Mozilla/5.0'}
             prod_url = f'https://api.nike.com/product_feed/threads/v2?filter=language(it)&filter=marketplace(IT)&filter=channelId(d9a5bc42-4b9c-4976-858a-f159cf99c647)&filter=productInfo.merchProduct.styleColor({prod["url"].split("/")[-1]})'
@@ -782,7 +796,9 @@ async def get_nike_subcategory(session, url, subcategory):
 
             # название товара
             name = prod['title']
-            #print(f'name {name}')
+            
+            # артикул
+            article = prod['url'].split('/')[-1]
             # цена  
             price = int((prod['curprice'] * (euro_cost() + 1)) * float(f"1.{crud.get_catalog(phone='nike').margin}")) if prod['curprice'] else None
             
@@ -798,11 +814,14 @@ async def get_nike_subcategory(session, url, subcategory):
             for av_sky in item_webpage['objects'][0]['productInfo'][0]['availableSkus']:
                 availableSkus[av_sky['id']] = av_sky['available']
             sizes = 'Sizes: \n'
+            list_sizes = ''
             for sku in skus:
                 if availableSkus[sku['id']]:
                     sizes += f'<b>{sku["countrySpecifications"][0]["localizedSize"]}</b> '
+                    list_sizes += sku["countrySpecifications"][0]["localizedSize"] + ', '
                 else:
                     sizes += f'<s>{sku["countrySpecifications"][0]["localizedSize"]}</s> '
+            list_sizes = list_sizes.strip(', ')
             if 'TAGLIA UNICA' in sizes:
                 sizes = 'Sizes: ONE SIZE\n'
             description += sizes
@@ -832,7 +851,7 @@ async def get_nike_subcategory(session, url, subcategory):
                     continue
             if len(images) < 1:
                 continue
-            items.append([name, description, price, images, prod['colorDescription']])
+            items.append([name, description, price, images, prod['colorDescription'], list_sizes, article])
             #print([name, description, price, images])
         except:
             continue
@@ -871,8 +890,10 @@ async def get_nike():
                     subcategory=name,
                     catalog='nike',
                     description=item[1],
+                    sizes=item[5],
                     price=item[2],
-                    image=item[3])
+                    image=item[3],
+                    article=item[6])
             print(f'Canceled {name} added {len(items)} products') 
 
     

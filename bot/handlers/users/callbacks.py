@@ -1,6 +1,7 @@
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State
+from aiogram.utils import exceptions
 from dotenv import load_dotenv
 import os
 import re
@@ -18,6 +19,12 @@ from keyboards.reply import *
 from parser import parser
 
 import asyncio
+
+# исключение при флуде от бота
+@dp.errors_handler(exception=exceptions.RetryAfter)
+async def exception_handler(update: types.Update, exception: exceptions.RetryAfter):
+    # Do something
+    return True
 
 # обработчик кнопок
 @dp.callback_query_handler(lambda c: c.data.startswith('btn'))
@@ -72,8 +79,36 @@ async def btn_callback(callback_query: types.CallbackQuery):
                 reply_markup=reply_markup
             )
 
-    if code[1] == 'listsubcategory':
-        textReply_markup = inline_kb_listproducts(tg_id=str(callback_query.from_user.id), category=int(code[2]), sub_category=int(code[3]), page=int(code[-1]))
+    if code[1] == 'ls':
+        # кнопка назад из меню выбора размеров
+        if code[-1] == 'back':
+            textReply_markup = inline_kb_listproducts(
+                tg_id=str(callback_query.from_user.id), 
+                category=int(code[2]), 
+                sub_category=int(code[3]),
+                sizes=code[4].strip('s='),
+                page=[int(p) for p in code[-2].split('-')]
+            )
+            await callback_query.message.edit_text(
+                text=textReply_markup[-1]['text'],
+                reply_markup=textReply_markup[-1]['reply_markup']
+            )
+            return
+        if 's=' in code[4]:
+            textReply_markup = inline_kb_listproducts(
+                tg_id=str(callback_query.from_user.id), 
+                category=int(code[2]), 
+                sub_category=int(code[3]),
+                sizes=code[4].strip('s='),
+                page=[int(p) for p in code[-1].split('-')]
+            )
+        else:
+            textReply_markup = inline_kb_listproducts(
+                tg_id=str(callback_query.from_user.id), 
+                category=int(code[2]), 
+                sub_category=int(code[3]),
+                page=[int(p) for p in code[-1].split('-')]
+            )
         await callback_query.message.delete()
         for item in textReply_markup:
             if not item['images']:
@@ -90,8 +125,52 @@ async def btn_callback(callback_query: types.CallbackQuery):
                     media=photo,
                     #reply_markup=item['reply_markup']
                 )
-            
+                await bot.send_message(
+                    callback_query.message.chat.id,
+                    text = 'Выберите действие: ',
+                    reply_markup=item['reply_markup']
+                )
 
+    if code[1] == 'sf':
+        # если выбраны размеры выводится это
+        if 's=' in code[-1]:
+            sizes = code[-1].strip('s=').split('-') if code[-1].strip('s=').split('-')[0] != '' else []
+            text, reply_markup = inline_kb_sizefilter(category=code[2], sub_category=code[3], sizes_code_list=sizes)
+            print(reply_markup)
+            print(reply_markup['inline_keyboard'][-1][0]['callback_data'].split('_')[4].strip('s=').split('-'))
+            # при превышении лимита в 6 размеров ничего не происходит
+            if len(reply_markup['inline_keyboard'][-1][0]['callback_data'].split('_')[4].strip('s=').split('-')) > 6:
+                
+                return
+            await callback_query.message.edit_text(
+                    text=text,
+                    reply_markup=reply_markup
+                )
+        # это первым или если не выбраны размеры
+        else:
+            text, reply_markup = inline_kb_sizefilter(category=code[2], sub_category=code[3], page=[0,5])
+        
+            await callback_query.message.edit_text(
+                text=text,
+                reply_markup=reply_markup
+                )
+
+    if code[1] == 'pricefilter':
+        # если выбраны размеры выводится это
+        if 'price=' in code[-1]:
+            sizes = code[-1].strip('price=').split('-') if code[-1].strip('price=').split('-')[0] != '' else []
+            text, reply_markup = inline_kb_sizefilter(category=code[2], sub_category=code[3], sizes_code_list=sizes)
+            await callback_query.message.edit_text(
+                    text=text,
+                    reply_markup=reply_markup
+                )
+        # это первым или если не выбраны размеры
+        else:
+            text, reply_markup = inline_kb_sizefilter(category=code[2], sub_category=code[3])
+        
+            await bot.send_message(callback_query.message.chat.id,text=text,
+                    reply_markup=reply_markup)
+        
     if code[1] == 'subcategory':
         message_to_delete = Form.prev_message
         text, reply_markup = inline_kb_products(tg_id=str(callback_query.from_user.id), category=int(code[2]), sub_category=int(code[3]), page=int(code[-1]))
@@ -131,9 +210,7 @@ async def btn_callback(callback_query: types.CallbackQuery):
                 return
             # выбрать что изменить (первый шаг)
             text, reply_markup = inline_kb_editproduct(product_id=code[-1])
-            await callback_query.message.delete()
-            await bot.send_message(
-                callback_query.from_user.id, 
+            await callback_query.message.edit_text(
                 text=text, 
                 reply_markup=reply_markup)
             return

@@ -99,9 +99,11 @@ def create_product(
     category : str,
     subcategory : str,
     catalog : str, 
-    description : str = None, 
+    description : str = None,
+    sizes : str = None, 
     price : float = None, 
-    image : str = None) -> Product:
+    image : str = None,
+    article : str = None) -> Product:
     #if Product.exists(name = name, description = description, price = price):
     #    Product.get(name = name, description = description, price = price).delete()
     if category_exists(name=category):
@@ -120,8 +122,10 @@ def create_product(
         subcategory=subcategory,
         catalog=Catalog.get(phone=catalog),
         description=description,
+        sizes=sizes,
         price=price,
-        image=image
+        image=image,
+        article=article
     )
     return product
 
@@ -152,17 +156,24 @@ def get_categories():
     return select(p.category for p in Product)[:]
 
 @db_session()
-def get_product(id : int = None, catalog : str = None, category_id : int = None, subcategory_id : int = None, size : str = None):
+def get_product(id : int = None, catalog : str = None, category_id : int = None, subcategory_id : int = None, sizes : str = None):
     if id:
         return Product[id]
     if catalog:
         return select(p for p in Product if p.catalog.phone == catalog)[:]
-    if category_id and not subcategory_id:
+    elif category_id and not subcategory_id:
         return select(p for p in Product if p.category.id == category_id)[:]
-    if category_id and subcategory_id:
+    elif category_id and subcategory_id and not sizes:
         return select(p for p in Product if p.category.id == category_id and p.subcategory.id == subcategory_id)[:]
-    if size:
-        return select(p for p in Product if p.subcategory.id == subcategory_id and size in p.description)[:]
+    elif category_id and subcategory_id and sizes:
+        product_sizes = select(p for p in Product if p.subcategory.id == subcategory_id)[:]
+        filter_products = []
+        for prod in product_sizes:
+            if len(list(set(sizes.split("-")) & set(str(prod.sizes).split(', ')))) > 0:
+                filter_products.append(prod)
+        return filter_products
+        
+        
 
 @db_session()
 def get_products_by_category(category : int):

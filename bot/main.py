@@ -123,8 +123,8 @@ if __name__ == '__main__':
     from handlers import dp
     loop = asyncio.get_event_loop()
     #loop.create_task(p())
-    loop.create_task(scheduled_catalogs(0))
-    loop.create_task(send_mes(5))
+    #loop.create_task(scheduled_catalogs(0))
+    #loop.create_task(send_mes(5))
     #loop.create_task(scheduled_valentino(7200))
     #asyncio.run(send_mes(5))
     executor.start_polling(dp, skip_updates=True)
