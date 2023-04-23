@@ -165,7 +165,7 @@ def inline_kb_sizefilter(category : int = None, sub_category : int = None, sizes
         print(all_sizes)
     else:
         all_sizes = list(set(all_sizes))
-        sorted_list = [float(size) if len(size) > 0 else size for size in all_sizes]
+        sorted_list = [float(size) if len(size) > 0 else 0 for size in all_sizes]
         sorted_list.sort()
         all_sizes = [str(fl_size).replace('.0', '') for fl_size in sorted_list] 
     if sizes_code_list:
