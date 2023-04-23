@@ -508,9 +508,7 @@ async def get_valentino_catalog(url, subcategory):
                 except:
                     pass
                 
-            img = await session.get_screenshot()
-            with open('parser/valentino1.png', 'wb') as png:
-                png.write(img.read())
+            
             back_xpath = '//*[@id="main-wrapper"]/div[1]/div[1]'
             back_el = await session.wait_for_element(10, back_xpath, SelectorType.xpath)
             await back_el.click()
