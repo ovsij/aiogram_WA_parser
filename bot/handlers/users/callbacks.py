@@ -87,6 +87,7 @@ async def btn_callback(callback_query: types.CallbackQuery):
                 category=int(code[2]), 
                 sub_category=int(code[3]),
                 sizes=code[4].strip('s='),
+                prices=code[5].strip('p='),
                 page=[int(p) for p in code[-2].split('-')]
             )
             await callback_query.message.edit_text(
@@ -94,19 +95,24 @@ async def btn_callback(callback_query: types.CallbackQuery):
                 reply_markup=textReply_markup[-1]['reply_markup']
             )
             return
-        if 's=' in code[4]:
-            textReply_markup = inline_kb_listproducts(
-                tg_id=str(callback_query.from_user.id), 
-                category=int(code[2]), 
-                sub_category=int(code[3]),
-                sizes=code[4].strip('s='),
-                page=[int(p) for p in code[-1].split('-')]
-            )
+            """
+            if 's=' in code[4]:
+                textReply_markup = inline_kb_listproducts(
+                    tg_id=str(callback_query.from_user.id), 
+                    category=int(code[2]), 
+                    sub_category=int(code[3]),
+                    sizes=code[4].strip('s='),
+                    prices=code[5].strip('p='),
+                    page=[int(p) for p in code[-1].split('-')]
+                )
+            """
         else:
             textReply_markup = inline_kb_listproducts(
                 tg_id=str(callback_query.from_user.id), 
                 category=int(code[2]), 
                 sub_category=int(code[3]),
+                sizes=code[4].strip('s=') if len(code[4].strip('s=')) > 0 else None,
+                prices=code[5].strip('p=') if len(code[5].strip('p=')) > 0 else None,
                 page=[int(p) for p in code[-1].split('-')]
             )
         await callback_query.message.delete()
@@ -133,43 +139,44 @@ async def btn_callback(callback_query: types.CallbackQuery):
 
     if code[1] == 'sf':
         # если выбраны размеры выводится это
-        if 's=' in code[-1]:
-            sizes = code[-1].strip('s=').split('-') if code[-1].strip('s=').split('-')[0] != '' else []
-            text, reply_markup = inline_kb_sizefilter(category=code[2], sub_category=code[3], sizes_code_list=sizes)
-            print(reply_markup)
-            print(reply_markup['inline_keyboard'][-1][0]['callback_data'].split('_')[4].strip('s=').split('-'))
-            # при превышении лимита в 6 размеров ничего не происходит
-            if len(reply_markup['inline_keyboard'][-1][0]['callback_data'].split('_')[4].strip('s=').split('-')) > 6:
-                
-                return
-            await callback_query.message.edit_text(
-                    text=text,
-                    reply_markup=reply_markup
-                )
-        # это первым или если не выбраны размеры
-        else:
-            text, reply_markup = inline_kb_sizefilter(category=code[2], sub_category=code[3], page=[0,5])
-        
-            await callback_query.message.edit_text(
+        #if 's=' in code[-1]:
+        sizes = code[4].strip('s=').split('-') if code[4].strip('s=').split('-')[0] != '' else []
+        prices = code[5].strip('p=').split('-') if code[5].strip('p=').split('-')[0] != '' else []
+        print(f'sizes {sizes}')
+        print(f'prices {prices}')
+        text, reply_markup = inline_kb_sizefilter(category=code[2], sub_category=code[3], sizes_code_list=sizes, prices_code_list=prices)
+        # при превышении лимита в 6 размеров ничего не происходит
+        if len(reply_markup['inline_keyboard'][-1][0]['callback_data'].split('_')[4].strip('s=').split('-')) > 6:
+            return
+        await callback_query.message.edit_text(
                 text=text,
                 reply_markup=reply_markup
-                )
-
-    if code[1] == 'pricefilter':
-        # если выбраны размеры выводится это
-        if 'price=' in code[-1]:
-            sizes = code[-1].strip('price=').split('-') if code[-1].strip('price=').split('-')[0] != '' else []
-            text, reply_markup = inline_kb_sizefilter(category=code[2], sub_category=code[3], sizes_code_list=sizes)
-            await callback_query.message.edit_text(
-                    text=text,
-                    reply_markup=reply_markup
-                )
+            )
         # это первым или если не выбраны размеры
-        else:
-            text, reply_markup = inline_kb_sizefilter(category=code[2], sub_category=code[3])
-        
-            await bot.send_message(callback_query.message.chat.id,text=text,
-                    reply_markup=reply_markup)
+        #else:
+        #    text, reply_markup = inline_kb_sizefilter(category=code[2], sub_category=code[3], page=[0,5])
+        #    await callback_query.message.edit_text(
+        #        text=text,
+        #        reply_markup=reply_markup
+        #        )
+
+    if code[1] == 'pf':
+        # если выбраны размеры выводится это
+        #if 'p=' in code[-1]:
+        sizes = code[4].strip('s=').split('-') if code[4].strip('s=').split('-')[0] != '' else []
+        prices = code[5].strip('p=').split('-') if code[5].strip('p=').split('-')[0] != '' else []
+        text, reply_markup = inline_kb_pricefilter(category=code[2], sub_category=code[3], sizes_code_list=sizes, prices=prices)
+        await callback_query.message.edit_text(
+                text=text,
+                reply_markup=reply_markup
+            )
+        ## это первым или если не выбраны цены
+        #else:
+        #    text, reply_markup = inline_kb_pricefilter(category=code[2], sub_category=code[3], sizes_code_list=code[4].strip('s=').split('-'), page=[0,5])
+        #    await callback_query.message.edit_text(
+        #        text=text,
+        #        reply_markup=reply_markup
+        #        )
         
     if code[1] == 'subcategory':
         message_to_delete = Form.prev_message

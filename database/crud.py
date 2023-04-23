@@ -156,21 +156,65 @@ def get_categories():
     return select(p.category for p in Product)[:]
 
 @db_session()
-def get_product(id : int = None, catalog : str = None, category_id : int = None, subcategory_id : int = None, sizes : str = None):
+def get_product(id : int = None, catalog : str = None, category_id : int = None, subcategory_id : int = None, sizes : str = None, prices : str = None):
     if id:
         return Product[id]
     if catalog:
         return select(p for p in Product if p.catalog.phone == catalog)[:]
     elif category_id and not subcategory_id:
         return select(p for p in Product if p.category.id == category_id)[:]
-    elif category_id and subcategory_id and not sizes:
+    elif category_id and subcategory_id and not sizes and not prices:
         return select(p for p in Product if p.category.id == category_id and p.subcategory.id == subcategory_id)[:]
-    elif category_id and subcategory_id and sizes:
+    elif category_id and subcategory_id and (sizes or prices):
         product_sizes = select(p for p in Product if p.subcategory.id == subcategory_id)[:]
         filter_products = []
+        print(f'crud sizes {sizes}')
+        print(f'crud prices {prices}')
         for prod in product_sizes:
-            if len(list(set(sizes.split("-")) & set(str(prod.sizes).split(', ')))) > 0:
-                filter_products.append(prod)
+            if sizes and not prices:
+                if len(list(set(sizes.split("-")) & set(str(prod.sizes).split(', ')))) > 0:
+                    filter_products.append(prod)
+            elif prices and not sizes:
+                if '1' in prices:
+                    if prod.price <= 5000:
+                        filter_products.append(prod)
+                if '2' in prices:
+                    if prod.price >= 5000 and prod.price <= 10000:
+                        filter_products.append(prod)
+                if '3' in prices:
+                    if prod.price >= 10000 and prod.price <= 20000:
+                        filter_products.append(prod)
+                if '4' in prices:
+                    if prod.price >= 20000 and prod.price <= 30000:
+                        filter_products.append(prod)
+                if '5' in prices:
+                    if prod.price >= 30000 and prod.price <= 40000:
+                        filter_products.append(prod)
+                if '6' in prices:
+                    if prod.price >= 40000:
+                        filter_products.append(prod)
+            elif sizes and prices:
+                if len(list(set(sizes.split("-")) & set(str(prod.sizes).split(', ')))) > 0:
+                    if '1' in prices:
+                        if prod.price <= 5000:
+                            filter_products.append(prod)
+                    if '2' in prices:
+                        if prod.price >= 5000 and prod.price <= 10000:
+                            filter_products.append(prod)
+                    if '3' in prices:
+                        if prod.price >= 10000 and prod.price <= 20000:
+                            filter_products.append(prod)
+                    if '4' in prices:
+                        if prod.price >= 20000 and prod.price <= 30000:
+                            filter_products.append(prod)
+                    if '5' in prices:
+                        if prod.price >= 30000 and prod.price <= 40000:
+                            filter_products.append(prod)
+                    if '6' in prices:
+                        if prod.price >= 40000:
+                            filter_products.append(prod)
+                    else:
+                        filter_products.append(prod)
         return filter_products
         
         

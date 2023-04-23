@@ -70,7 +70,7 @@ def inline_kb_subcategories(tg_id : str, category : int = None, page : int = 1):
     schema = []
     if sub_categories:
         for sc in sub_categories:
-            text_and_data.append([f'{sc.name}', f'btn_ls_{category}_{sc.id}_0-5'])
+            text_and_data.append([f'{sc.name}', f'btn_ls_{category}_{sc.id}_s=_p=_0-5'])
             schema.append(1)
         if len(sub_categories) > 10:
             text_and_data, schema = btn_prevnext(len(sub_categories), text_and_data, schema, page, name=f'category_{category}')
@@ -86,10 +86,10 @@ def inline_kb_subcategories(tg_id : str, category : int = None, page : int = 1):
     else:
         return inline_kb_products(tg_id=tg_id, category=category, page=page)
 
-def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : int = None, sizes : str = None, page : list = [0, 5]):
+def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : int = None, sizes : str = None, prices : str = None, page : list = [0, 5]):
     textInline_kb = []
-    if sizes:
-        products = get_product(category_id=category, subcategory_id=sub_category, sizes=sizes)
+    if sizes or prices:
+        products = get_product(category_id=category, subcategory_id=sub_category, sizes=sizes, prices=prices)
     else:
         products = get_product(category_id=category, subcategory_id=sub_category)
     # показываем удаленные товары только админам
@@ -128,14 +128,16 @@ def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : in
         dct['images'] = product.image
         textInline_kb.append(dct)
     len_prodcts = page[1] if len(textInline_kb) >= 5 else len(products)
-    sizes_code = f'_s={sizes}' if sizes else ''
-    filter_emoji = ':white_check_mark:' if len(sizes_code) > 0 else ''
+    sizes_code = f'_s={sizes}' if sizes else '_s='
+    filter_size_emoji = ':white_check_mark:' if len(sizes_code) > 3 else ''
+    prices_code = f'_p={prices}' if prices else '_p='
+    filter_price_emoji = ':white_check_mark:' if len(prices_code) > 3 else ''
     text_and_data = [
-        [emojize(f'{filter_emoji} Фильтр по размеру', language='alias'), f'btn_sf_{category}_{sub_category}{sizes_code}'],
-        [emojize('Фильтр по цене', language='alias'), f'btn_pricefilter_{category}_{sub_category}'],
+        [emojize(f'{filter_size_emoji} Фильтр по размеру', language='alias'), f'btn_sf_{category}_{sub_category}{sizes_code}{prices_code}'],
+        [emojize(f'{filter_price_emoji} Фильтр по цене', language='alias'), f'btn_pf_{category}_{sub_category}{sizes_code}{prices_code}'],
         [emojize('Открыть списком', language='alias'), f'btn_subcategory_{category}_{sub_category}_1'],
-        [emojize(':arrow_down_small: Eще 5 товаров :arrow_down_small:', language='alias'), f'btn_ls_{category}_{sub_category}{sizes_code}_{page[1]}-{page[1] + 5}'],
-        [emojize(':arrow_down_small: Eще 10 товаров :arrow_down_small:', language='alias'), f'btn_ls_{category}_{sub_category}{sizes_code}_{page[1]}-{page[1] + 10}'],
+        [emojize(':arrow_down_small: Eще 5 товаров :arrow_down_small:', language='alias'), f'btn_ls_{category}_{sub_category}{sizes_code}{prices_code}_{page[1]}-{page[1] + 5}'],
+        [emojize(':arrow_down_small: Eще 10 товаров :arrow_down_small:', language='alias'), f'btn_ls_{category}_{sub_category}{sizes_code}{prices_code}_{page[1]}-{page[1] + 10}'],
         btn_back(f'catalog_1')
     ]
     textInline_kb.append(
@@ -148,26 +150,28 @@ def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : in
     
     return textInline_kb
     
-def inline_kb_sizefilter(category : int = None, sub_category : int = None, sizes_code_list : list = None, page : list = None):
+def inline_kb_sizefilter(category : int = None, sub_category : int = None, sizes_code_list : list = None, prices_code_list : list = None, page : list = None):
     text = "Выберите один или несколько размеров из доступных для данной категории товаров\n\nМаксимум можно выбрать 6 размеров"
     text_and_data = []
     schema = []
     all_sizes = []
     for product in get_product(category_id=category, subcategory_id=sub_category):
         all_sizes += str(product.sizes).split(', ')
-    print(all_sizes)
     if 'S' in all_sizes or 'M' in all_sizes or 'L' in all_sizes or 'XL' in all_sizes or '2XL' in all_sizes or '3XL' in all_sizes or '4XL' in all_sizes or '5XL' in all_sizes:
         standart_sizes = ['S', 'M', 'L', 'XL', '2XL', '3XL', '4XL', '5XL']
         for st_size in ['S', 'M', 'L', 'XL', '2XL', '3XL', '4XL', '5XL']:
             if st_size not in all_sizes:
                 standart_sizes.remove(st_size)
         all_sizes = standart_sizes
-        print(all_sizes)
     else:
         all_sizes = list(set(all_sizes))
         sorted_list = [float(size) if len(size) > 0 else 0 for size in all_sizes]
         sorted_list.sort()
-        all_sizes = [str(fl_size).replace('.0', '') for fl_size in sorted_list] 
+        all_sizes = [str(fl_size).replace('.0', '') for fl_size in sorted_list]
+    prices_code = 'p='
+    for price in prices_code_list:
+        prices_code += price + '-'
+    prices_code = prices_code.strip('-')
     if sizes_code_list:
         for size_ in all_sizes:
             new_sizes = []        
@@ -179,7 +183,7 @@ def inline_kb_sizefilter(category : int = None, sub_category : int = None, sizes
                     sizes_code += s + '-'
                 sizes_code = sizes_code.strip('-')
                 text_and_data.append(
-                    [emojize(f':white_check_mark: {size_}', language='alias'), f'btn_sf_{category}_{sub_category}_{sizes_code}']
+                    [emojize(f':white_check_mark: {size_}', language='alias'), f'btn_sf_{category}_{sub_category}_{sizes_code}_{prices_code}']
                 )
             elif size_ not in sizes_code_list:
                 sizes_code = 's='
@@ -189,7 +193,7 @@ def inline_kb_sizefilter(category : int = None, sub_category : int = None, sizes
                     sizes_code += s + '-'
                 sizes_code = sizes_code.strip('-')
                 text_and_data.append(
-                    [emojize(f'{size_}', language='alias'), f'btn_sf_{category}_{sub_category}_{sizes_code}']
+                    [emojize(f'{size_}', language='alias'), f'btn_sf_{category}_{sub_category}_{sizes_code}_p=']
                 )
         next_size_code = ''
         for sze in sizes_code_list:
@@ -199,7 +203,7 @@ def inline_kb_sizefilter(category : int = None, sub_category : int = None, sizes
         for size_ in all_sizes:
             sizes_code = f's={size_}'
             text_and_data.append(
-                    [emojize(f'{size_}', language='alias'), f'btn_sf_{category}_{sub_category}_{sizes_code}']
+                    [emojize(f'{size_}', language='alias'), f'btn_sf_{category}_{sub_category}_{sizes_code}_p=']
                 )
         next_size_code = ''
     schema = []
@@ -211,14 +215,58 @@ def inline_kb_sizefilter(category : int = None, sub_category : int = None, sizes
             schema.append(3)
         schema.append(len(text_and_data) - sum(schema))
     page = [0, 5] if not page else page
-    text_and_data.append([emojize(':arrow_backward: Назад', language='alias'), f'btn_ls_{category}_{sub_category}_s={next_size_code}_{page[0]}-{page[1]}_back'])
-    text_and_data.append([emojize(':arrow_down_small: Применить :arrow_down_small:', language='alias'), f'btn_ls_{category}_{sub_category}_s={next_size_code}_0-5'])
+    text_and_data.append([emojize(':arrow_backward: Назад', language='alias'), f'btn_ls_{category}_{sub_category}_s={next_size_code}_{prices_code}_{page[0]}-{page[1]}_back'])
+    text_and_data.append([emojize(':arrow_down_small: Применить :arrow_down_small:', language='alias'), f'btn_ls_{category}_{sub_category}_s={next_size_code}_{prices_code}_0-5'])
     schema.append(2)
-    #print(text_and_data)
     inline_kb = InlineConstructor.create_kb(text_and_data, schema)
     return text, inline_kb            
 
+def inline_kb_pricefilter(category : int = None, sub_category : int = None, sizes_code_list : list = None, prices : list = None, page : list = [0, 5]):
+    text = "Выберите один или несколько диапазонов"
+    text_and_data = []
+    schema = []
+    diapazon_list = [
+        {'name' : 'до 5000 р.', 'id' : '1'}, 
+        {'name' : '5000 р. - 10000 р.', 'id' : '2'}, 
+        {'name' : '10000 р. - 20000 р.', 'id' : '3'}, 
+        {'name' : '20000 р. - 30000 р.', 'id' : '4'}, 
+        {'name' : '30000 р. - 40000 р.', 'id' : '5'}, 
+        {'name' : 'от 40000 р.', 'id' : '6'}]
     
+    prices_code = ''
+    if prices:
+        for price in prices:
+            prices_code += price + '-'
+    prices_code = prices_code.strip('-')
+    # добавляем размеры
+    sizes_code = ''
+    if sizes_code_list:
+        for code in sizes_code_list:
+            sizes_code += code + '-'
+        sizes_code = sizes_code.strip('-')
+
+    for code in diapazon_list:
+        if prices:
+            price_emoji = ':white_check_mark: ' if code['id'] in prices else ''
+        else:
+            price_emoji = ''
+
+        button_pcode = prices_code
+        if code['id'] in button_pcode:
+            button_pcode = button_pcode.replace(code['id'], '').replace('--', '-')
+        else:
+            button_pcode += '-' + code['id']
+            button_pcode = button_pcode.strip('-')
+        text_and_data.append([emojize(f'{price_emoji}{code["name"]}', language='alias'), f'btn_pf_{category}_{sub_category}_s={sizes_code}_p={button_pcode}'])
+        
+        #text_and_data.append([emojize(f'{price_emoji}{code["name"]}', language='alias'), f'btn_pf_{category}_{sub_category}_p={prices_code}'])
+        schema.append(1)
+    text_and_data.append([emojize(':arrow_backward: Назад', language='alias'), f'btn_ls_{category}_{sub_category}_s={sizes_code}_p={prices_code}_{page[0]}-{page[1]}_back'])
+    text_and_data.append([emojize(':arrow_down_small: Применить :arrow_down_small:', language='alias'), f'btn_ls_{category}_{sub_category}_s={sizes_code}_p={prices_code}_0-5'])
+    schema.append(2)
+    inline_kb = InlineConstructor.create_kb(text_and_data, schema)
+    return text, inline_kb   
+
 def inline_kb_products(tg_id : str, category : int = None, sub_category : int = None, page : int = 1):
     text = 'КАТАЛОГ'
     if sub_category == None:
@@ -272,7 +320,6 @@ def inline_kb_product(tg_id : str, id : int, counter : int = 1):
     if tg_id in os.getenv('ADMINS'):
         products_id = [p.id for p in products]
     else:
-        print('del')
         products_id = [p.id for p in products if not p.deleted]
     back = products_id[products_id.index(id) - 1]
     if products_id.index(id) == len(products) - 1:
