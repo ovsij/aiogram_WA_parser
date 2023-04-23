@@ -88,7 +88,8 @@ async def btn_callback(callback_query: types.CallbackQuery):
                 sub_category=int(code[3]),
                 sizes=code[4].strip('s='),
                 prices=code[5].strip('p='),
-                page=[int(p) for p in code[-2].split('-')]
+                page=[int(p) for p in code[-2].split('-')],
+                back=True
             )
             await callback_query.message.edit_text(
                 text=textReply_markup[-1]['text'],

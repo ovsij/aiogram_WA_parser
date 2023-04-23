@@ -86,7 +86,7 @@ def inline_kb_subcategories(tg_id : str, category : int = None, page : int = 1):
     else:
         return inline_kb_products(tg_id=tg_id, category=category, page=page)
 
-def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : int = None, sizes : str = None, prices : str = None, page : list = [0, 5]):
+def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : int = None, sizes : str = None, prices : str = None, page : list = [0, 5], back : bool = False):
     textInline_kb = []
     if sizes or prices:
         products = get_product(category_id=category, subcategory_id=sub_category, sizes=sizes, prices=prices)
@@ -132,12 +132,15 @@ def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : in
     filter_size_emoji = ':white_check_mark:' if len(sizes_code) > 3 else ''
     prices_code = f'_p={prices}' if prices else '_p='
     filter_price_emoji = ':white_check_mark:' if len(prices_code) > 3 else ''
+    page_0 = 0 if back else page[1]
+    page_5 = 5 if back else page[1] + 5
+    page_10 = 10 if back else page[1] + 10
     text_and_data = [
         [emojize(f'{filter_size_emoji} Фильтр по размеру', language='alias'), f'btn_sf_{category}_{sub_category}{sizes_code}{prices_code}'],
         [emojize(f'{filter_price_emoji} Фильтр по цене', language='alias'), f'btn_pf_{category}_{sub_category}{sizes_code}{prices_code}'],
         [emojize('Открыть списком', language='alias'), f'btn_subcategory_{category}_{sub_category}_1'],
-        [emojize(':arrow_down_small: Eще 5 товаров :arrow_down_small:', language='alias'), f'btn_ls_{category}_{sub_category}{sizes_code}{prices_code}_{page[1]}-{page[1] + 5}'],
-        [emojize(':arrow_down_small: Eще 10 товаров :arrow_down_small:', language='alias'), f'btn_ls_{category}_{sub_category}{sizes_code}{prices_code}_{page[1]}-{page[1] + 10}'],
+        [emojize(':arrow_down_small: Eще 5 товаров :arrow_down_small:', language='alias'), f'btn_ls_{category}_{sub_category}{sizes_code}{prices_code}_{page_0}-{page_5}'],
+        [emojize(':arrow_down_small: Eще 10 товаров :arrow_down_small:', language='alias'), f'btn_ls_{category}_{sub_category}{sizes_code}{prices_code}_{page_0}-{page_10}'],
         btn_back(f'catalog_1')
     ]
     textInline_kb.append(
