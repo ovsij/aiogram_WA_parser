@@ -168,8 +168,6 @@ def get_product(id : int = None, catalog : str = None, category_id : int = None,
     elif category_id and subcategory_id and (sizes or prices):
         product_sizes = select(p for p in Product if p.subcategory.id == subcategory_id)[:]
         filter_products = []
-        print(f'crud sizes {sizes}')
-        print(f'crud prices {prices}')
         for prod in product_sizes:
             if sizes and not prices:
                 if len(list(set(sizes.split("-")) & set(str(prod.sizes).split(', ')))) > 0:
@@ -213,8 +211,7 @@ def get_product(id : int = None, catalog : str = None, category_id : int = None,
                     if '6' in prices:
                         if prod.price >= 40000:
                             filter_products.append(prod)
-                    else:
-                        filter_products.append(prod)
+                    
         return filter_products
         
         
