@@ -146,7 +146,7 @@ async def btn_callback(callback_query: types.CallbackQuery):
         sizes = code[4].strip('s=').split('-') if code[4].strip('s=').split('-')[0] != '' else []
         prices = code[5].strip('p=').split('-') if code[5].strip('p=').split('-')[0] != '' else []
     
-        text, reply_markup = inline_kb_sizefilter(category=code[2], sub_category=code[3], sizes_code_list=sizes, prices_code_list=prices, sort=item[6])
+        text, reply_markup = inline_kb_sizefilter(category=code[2], sub_category=code[3], sizes_code_list=sizes, prices_code_list=prices, sort=code[6])
         # при превышении лимита в 6 размеров ничего не происходит
         if len(reply_markup['inline_keyboard'][-1][0]['callback_data'].split('_')[4].strip('s=').split('-')) > 6:
             return
