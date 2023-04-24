@@ -177,8 +177,13 @@ def inline_kb_sizefilter(category : int = None, sub_category : int = None, sizes
         all_sizes = standart_sizes
     else:
         all_sizes = list(set(all_sizes))
-        sorted_list = [float(size) if len(size) > 0 else 0 for size in all_sizes]
-        sorted_list.remove(0)
+        sorted_list = []
+        for size in all_sizes:
+            if len(size) > 0:
+                try:
+                    sorted_list.append(float(size))
+                except:
+                    continue
         sorted_list.sort()
         all_sizes = [str(fl_size).replace('.0', '') for fl_size in sorted_list]
     prices_code = 'p='
@@ -229,7 +234,7 @@ def inline_kb_sizefilter(category : int = None, sub_category : int = None, sizes
         schema.append(len(text_and_data) - sum(schema))
     page = [0, 5] if not page else page
     text_and_data.append([emojize(':arrow_backward: Назад', language='alias'), f'btn_ls_{category}_{sub_category}_s={next_size_code}_{prices_code}_{page[0]}-{page[1]}_back'])
-    text_and_data.append([emojize(':arrow_down_small: Применить :arrow_down_small:', language='alias'), f'btn_ls_{category}_{sub_category}_s={next_size_code}_{prices_code}_0-5'])
+    text_and_data.append([emojize(':arrow_down_small: Применить :arrow_down_small:', language='alias'), f'btn_ls_{category}_{sub_category}_s={next_size_code}_{prices_code}_n_0-5'])
     schema.append(2)
     inline_kb = InlineConstructor.create_kb(text_and_data, schema)
     return text, inline_kb            
