@@ -196,7 +196,7 @@ def inline_kb_sizefilter(category : int = None, sub_category : int = None, sizes
                     sizes_code += s + '-'
                 sizes_code = sizes_code.strip('-')
                 text_and_data.append(
-                    [emojize(f'{size_}', language='alias'), f'btn_sf_{category}_{sub_category}_{sizes_code}_p=']
+                    [emojize(f'{size_}', language='alias'), f'btn_sf_{category}_{sub_category}_{sizes_code}_{prices_code}']
                 )
         next_size_code = ''
         for sze in sizes_code_list:
