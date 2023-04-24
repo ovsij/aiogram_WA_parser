@@ -114,7 +114,8 @@ async def btn_callback(callback_query: types.CallbackQuery):
                 sub_category=int(code[3]),
                 sizes=code[4].strip('s=') if len(code[4].strip('s=')) > 0 else None,
                 prices=code[5].strip('p=') if len(code[5].strip('p=')) > 0 else None,
-                page=[int(p) for p in code[-1].split('-')]
+                page=[int(p) for p in code[-1].split('-')],
+                sort=code[6]
             )
         await callback_query.message.delete()
         for item in textReply_markup:
@@ -166,6 +167,8 @@ async def btn_callback(callback_query: types.CallbackQuery):
         sizes = code[4].strip('s=').split('-') if code[4].strip('s=').split('-')[0] != '' else []
         prices = code[5].strip('p=').split('-') if code[5].strip('p=').split('-')[0] != '' else []
         text, reply_markup = inline_kb_pricefilter(category=code[2], sub_category=code[3], sizes_code_list=sizes, prices=prices)
+        if len(reply_markup['inline_keyboard'][-1][0]['callback_data'].split('_')[5].strip('p=').split('-')) > 3:
+            return
         await callback_query.message.edit_text(
                 text=text,
                 reply_markup=reply_markup

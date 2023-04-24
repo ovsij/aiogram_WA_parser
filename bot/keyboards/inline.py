@@ -51,6 +51,10 @@ def inline_kb_categories(tg_id : str, page : int = 1):
         if len(categories) > 10:
             text_and_data, schema = btn_prevnext(len(categories), text_and_data, schema, page, name='catalog')
         
+        if tg_id in os.getenv('ADMINS'):
+            text_and_data.append(['Добавить категорию', 'btn_addcategory'])
+            schema.append(1)
+
         text_and_data.append(btn_back('menu'))
         schema.append(1)
         inline_kb = InlineConstructor.create_kb(text_and_data, schema)
@@ -86,12 +90,12 @@ def inline_kb_subcategories(tg_id : str, category : int = None, page : int = 1):
     else:
         return inline_kb_products(tg_id=tg_id, category=category, page=page)
 
-def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : int = None, sizes : str = None, prices : str = None, page : list = [0, 5], back : bool = False):
+def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : int = None, sizes : str = None, prices : str = None, page : list = [0, 5], back : bool = False, sort : str = None):
     textInline_kb = []
     if sizes or prices:
-        products = get_product(category_id=category, subcategory_id=sub_category, sizes=sizes, prices=prices)
+        products = get_product(category_id=category, subcategory_id=sub_category, sizes=sizes, prices=prices, sort=sort)
     else:
-        products = get_product(category_id=category, subcategory_id=sub_category)
+        products = get_product(category_id=category, subcategory_id=sub_category, sort=sort)
     # показываем удаленные товары только админам
     if tg_id in os.getenv('ADMINS'):
         products_id = [p.id for p in products]
@@ -132,21 +136,26 @@ def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : in
     filter_size_emoji = ':white_check_mark:' if len(sizes_code) > 3 else ''
     prices_code = f'_p={prices}' if prices else '_p='
     filter_price_emoji = ':white_check_mark:' if len(prices_code) > 3 else ''
+    filter_pricedown_emoji = ':white_check_mark:' if sort == 'd' else ''
+    filter_priceup_emoji = ':white_check_mark:' if sort == 'u' else ''
+    sort = f'{sort}_' if sort else ''
     page_0 = 0 if back else page[1]
     page_5 = 5 if back else page[1] + 5
     page_10 = 10 if back else page[1] + 10
     text_and_data = [
         [emojize(f'{filter_size_emoji} Фильтр по размеру', language='alias'), f'btn_sf_{category}_{sub_category}{sizes_code}{prices_code}'],
         [emojize(f'{filter_price_emoji} Фильтр по цене', language='alias'), f'btn_pf_{category}_{sub_category}{sizes_code}{prices_code}'],
+        [emojize(f'{filter_priceup_emoji} По возрастанию цены', language='alias'), f'btn_ls_{category}_{sub_category}{sizes_code}{prices_code}_u_0-5'],
+        [emojize(f'{filter_pricedown_emoji} По убыванию цены', language='alias'), f'btn_ls_{category}_{sub_category}{sizes_code}{prices_code}_d_0-5'],
         [emojize('Открыть списком', language='alias'), f'btn_subcategory_{category}_{sub_category}_1'],
-        [emojize(':arrow_down_small: Eще 5 товаров :arrow_down_small:', language='alias'), f'btn_ls_{category}_{sub_category}{sizes_code}{prices_code}_{page_0}-{page_5}'],
-        [emojize(':arrow_down_small: Eще 10 товаров :arrow_down_small:', language='alias'), f'btn_ls_{category}_{sub_category}{sizes_code}{prices_code}_{page_0}-{page_10}'],
+        [emojize(':arrow_down_small: Eще 5 товаров :arrow_down_small:', language='alias'), f'btn_ls_{category}_{sub_category}{sizes_code}{prices_code}_{sort}{page_0}-{page_5}'],
+        [emojize(':arrow_down_small: Eще 10 товаров :arrow_down_small:', language='alias'), f'btn_ls_{category}_{sub_category}{sizes_code}{prices_code}_{sort}{page_0}-{page_10}'],
         btn_back(f'catalog_1')
     ]
     textInline_kb.append(
         {
         'text' : f'{get_category(id=category).name}\n{get_subcategory(id=sub_category).name}\n\nПоказано {len_prodcts} товаров из {len(products)}',
-        'reply_markup' : InlineConstructor.create_kb(text_and_data, [1, 1, 1, 1, 1, 1]),
+        'reply_markup' : InlineConstructor.create_kb(text_and_data, [1, 1, 1, 1, 1, 1, 1, 1]),
         'images' : False
         }
     )
@@ -229,12 +238,10 @@ def inline_kb_pricefilter(category : int = None, sub_category : int = None, size
     text_and_data = []
     schema = []
     diapazon_list = [
-        {'name' : 'до 5000 р.', 'id' : '1'}, 
-        {'name' : '5000 р. - 10000 р.', 'id' : '2'}, 
-        {'name' : '10000 р. - 20000 р.', 'id' : '3'}, 
-        {'name' : '20000 р. - 30000 р.', 'id' : '4'}, 
-        {'name' : '30000 р. - 40000 р.', 'id' : '5'}, 
-        {'name' : 'от 40000 р.', 'id' : '6'}]
+        {'name' : 'до 10000 р.', 'id' : '1'}, 
+        {'name' : '10000 р. - 20000 р.', 'id' : '2'}, 
+        {'name' : '20000 р. - 50000 р.', 'id' : '3'}, 
+        {'name' : 'от 50000 р.', 'id' : '4'}]
     
     prices_code = ''
     if prices:

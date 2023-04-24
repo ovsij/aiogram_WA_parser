@@ -156,7 +156,7 @@ def get_categories():
     return select(p.category for p in Product)[:]
 
 @db_session()
-def get_product(id : int = None, catalog : str = None, category_id : int = None, subcategory_id : int = None, sizes : str = None, prices : str = None):
+def get_product(id : int = None, catalog : str = None, category_id : int = None, subcategory_id : int = None, sizes : str = None, prices : str = None, sort : str = None):
     if id:
         return Product[id]
     if catalog:
@@ -164,11 +164,22 @@ def get_product(id : int = None, catalog : str = None, category_id : int = None,
     elif category_id and not subcategory_id:
         return select(p for p in Product if p.category.id == category_id)[:]
     elif category_id and subcategory_id and not sizes and not prices:
-        return select(p for p in Product if p.category.id == category_id and p.subcategory.id == subcategory_id)[:]
+        if not sort:
+            return select(p for p in Product if p.category.id == category_id and p.subcategory.id == subcategory_id)[:]
+        if sort == 'u':
+            return  Product.select(lambda p: p.category.id == category_id and p.subcategory.id == subcategory_id).order_by(Product.price)[:]
+        if sort == 'd':
+            return  Product.select(lambda p: p.category.id == category_id and p.subcategory.id == subcategory_id).order_by(desc(Product.price))[:]
+         
     elif category_id and subcategory_id and (sizes or prices):
-        product_sizes = select(p for p in Product if p.subcategory.id == subcategory_id)[:]
+        if not sort:
+            products = select(p for p in Product if p.subcategory.id == subcategory_id)[:]
+        if sort == 'u':
+            products = Product.select(lambda p: p.subcategory.id == subcategory_id).order_by(Product.price)[:]
+        if sort == 'd':
+            products = Product.select(lambda p: p.subcategory.id == subcategory_id).order_by(desc(Product.price))[:]
         filter_products = []
-        for prod in product_sizes:
+        for prod in products:
             if sizes and not prices:
                 if len(list(set(sizes.split("-")) & set(str(prod.sizes).split(', ')))) > 0:
                     filter_products.append(prod)
@@ -194,22 +205,16 @@ def get_product(id : int = None, catalog : str = None, category_id : int = None,
             elif sizes and prices:
                 if len(list(set(sizes.split("-")) & set(str(prod.sizes).split(', ')))) > 0:
                     if '1' in prices:
-                        if prod.price <= 5000:
+                        if prod.price <= 10000:
                             filter_products.append(prod)
                     if '2' in prices:
-                        if prod.price >= 5000 and prod.price <= 10000:
-                            filter_products.append(prod)
-                    if '3' in prices:
                         if prod.price >= 10000 and prod.price <= 20000:
                             filter_products.append(prod)
+                    if '3' in prices:
+                        if prod.price >= 20000 and prod.price <= 50000:
+                            filter_products.append(prod)
                     if '4' in prices:
-                        if prod.price >= 20000 and prod.price <= 30000:
-                            filter_products.append(prod)
-                    if '5' in prices:
-                        if prod.price >= 30000 and prod.price <= 40000:
-                            filter_products.append(prod)
-                    if '6' in prices:
-                        if prod.price >= 40000:
+                        if prod.price >= 50000:
                             filter_products.append(prod)
                     
         return filter_products
