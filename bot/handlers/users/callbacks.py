@@ -143,8 +143,7 @@ async def btn_callback(callback_query: types.CallbackQuery):
         #if 's=' in code[-1]:
         sizes = code[4].strip('s=').split('-') if code[4].strip('s=').split('-')[0] != '' else []
         prices = code[5].strip('p=').split('-') if code[5].strip('p=').split('-')[0] != '' else []
-        print(f'sizes {sizes}')
-        print(f'prices {prices}')
+    
         text, reply_markup = inline_kb_sizefilter(category=code[2], sub_category=code[3], sizes_code_list=sizes, prices_code_list=prices)
         # при превышении лимита в 6 размеров ничего не происходит
         if len(reply_markup['inline_keyboard'][-1][0]['callback_data'].split('_')[4].strip('s=').split('-')) > 6:
@@ -529,16 +528,13 @@ async def btn_callback(callback_query: types.CallbackQuery):
                 reply_markup=reply_markup
             )
         elif code[-1] == 'accept':
-            print(get_catalog(phone='valentino').margin)
-            print(euro_cost())
+
             mesg = await callback_query.message.edit_text(
                 text=f'Запущено обновление каталога VALENTINO. \nЭто может занять продолжительное время, пожалуйста, подождите.',
             )
             items = await parser.get_valentino()
-            print(items)
             del_products(category='VALENTINO')
             for item in items:
-                print(item)
                 price = int((item[5] * (euro_cost() + 1)) / 100 * get_catalog(phone='valentino').margin) if item[5] else None
                 create_product(name=item[0], category=item[1], subcategory=item[2], catalog='valentino', description=item[4], price=price, image=item[6])
             
@@ -577,7 +573,6 @@ async def btn_callback(callback_query: types.CallbackQuery):
             
             del_products(category='LeSILLA')
             for item in items:
-                print(item)
                 price = int((item[4] * (euro_cost() + 1)) / 100 * get_catalog(phone='lesilla').margin) if item[4] else None
                 description = item[3].replace('€ ', ' ')
                 for i in re.findall(r'\d*[.]\d\d', item[3]):
