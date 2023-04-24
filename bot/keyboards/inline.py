@@ -178,6 +178,7 @@ def inline_kb_sizefilter(category : int = None, sub_category : int = None, sizes
     else:
         all_sizes = list(set(all_sizes))
         sorted_list = [float(size) if len(size) > 0 else 0 for size in all_sizes]
+        sorted_list.remove(0)
         sorted_list.sort()
         all_sizes = [str(fl_size).replace('.0', '') for fl_size in sorted_list]
     prices_code = 'p='
