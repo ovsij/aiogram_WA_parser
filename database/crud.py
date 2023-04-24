@@ -164,19 +164,19 @@ def get_product(id : int = None, catalog : str = None, category_id : int = None,
     elif category_id and not subcategory_id:
         return select(p for p in Product if p.category.id == category_id)[:]
     elif category_id and subcategory_id and not sizes and not prices:
-        if not sort:
+        if sort == 'n':
             return select(p for p in Product if p.category.id == category_id and p.subcategory.id == subcategory_id)[:]
-        if sort == 'u':
+        elif sort == 'u':
             return  Product.select(lambda p: p.category.id == category_id and p.subcategory.id == subcategory_id).order_by(Product.price)[:]
-        if sort == 'd':
+        elif sort == 'd':
             return  Product.select(lambda p: p.category.id == category_id and p.subcategory.id == subcategory_id).order_by(desc(Product.price))[:]
          
     elif category_id and subcategory_id and (sizes or prices):
-        if not sort:
+        if sort == 'n':
             products = select(p for p in Product if p.subcategory.id == subcategory_id)[:]
-        if sort == 'u':
+        elif sort == 'u':
             products = Product.select(lambda p: p.subcategory.id == subcategory_id).order_by(Product.price)[:]
-        if sort == 'd':
+        elif sort == 'd':
             products = Product.select(lambda p: p.subcategory.id == subcategory_id).order_by(desc(Product.price))[:]
         filter_products = []
         for prod in products:

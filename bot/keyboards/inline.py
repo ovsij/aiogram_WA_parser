@@ -74,7 +74,7 @@ def inline_kb_subcategories(tg_id : str, category : int = None, page : int = 1):
     schema = []
     if sub_categories:
         for sc in sub_categories:
-            text_and_data.append([f'{sc.name}', f'btn_ls_{category}_{sc.id}_s=_p=_0-5'])
+            text_and_data.append([f'{sc.name}', f'btn_ls_{category}_{sc.id}_s=_p=_n_0-5'])
             schema.append(1)
         if len(sub_categories) > 10:
             text_and_data, schema = btn_prevnext(len(sub_categories), text_and_data, schema, page, name=f'category_{category}')
@@ -97,10 +97,10 @@ def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : in
     else:
         products = get_product(category_id=category, subcategory_id=sub_category, sort=sort)
     # показываем удаленные товары только админам
-    if tg_id in os.getenv('ADMINS'):
-        products_id = [p.id for p in products]
-    else:
-        products_id = [p.id for p in products if not p.deleted]
+    #if tg_id in os.getenv('ADMINS'):
+    #    products_id = [p.id for p in products]
+    #else:
+    #    products_id = [p.id for p in products if not p.deleted]
 
     # формируем список товаров 5 или 10 в соответствии с выбором пользователя
     for product in products[page[0]:page[1]]:
