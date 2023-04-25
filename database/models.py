@@ -18,9 +18,15 @@ class User(db.Entity):
     last_name = Optional(str, nullable=True)
     phone = Optional(str, nullable=True)
     address = Optional(str, nullable=True)
+    carts = Set('Cart')
     first_usage = Optional(datetime, default=lambda: datetime.now())
     last_usage = Optional(datetime, default=lambda: datetime.now())
     is_banned = Optional(bool, default=False)
+
+class Cart(db.Entity):
+    id = PrimaryKey(int, auto=True)
+    user = Required(User)
+    product = Required(str)
 
 class Product(db.Entity):
     id = PrimaryKey(int, auto=True)

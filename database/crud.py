@@ -61,6 +61,25 @@ def update_user(
         user_to_update.last_usage = datetime.now()
     return user_to_update
 
+# Cart
+@db_session()
+def add_to_cart(tg_id : str, product_id : int):
+    if not Cart.exists(user=User.get(tg_id=tg_id), product=Product[product_id].article):
+        return Cart(user=User.get(tg_id=tg_id), product=Product[product_id].article)
+
+@db_session()
+def get_cart(tg_id : str):
+    return [Product.get(article=str(article)) for article in select(cart.product for cart in Cart if cart.user == User.get(tg_id=tg_id))[:]]
+
+@db_session()
+def delete_from_cart(tg_id : str, product_id : int):
+    cart_to_delete = Cart.get(user=User.get(tg_id=tg_id), product=Product[product_id].article)
+    cart_to_delete.delete()
+
+@db_session()
+def cart_exists(tg_id : str, product_id : int):
+    return Cart.exists(user=User.get(tg_id=tg_id), product=Product[product_id].article)
+
 # Product
 @db_session()
 def update_product(

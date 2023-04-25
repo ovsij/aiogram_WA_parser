@@ -298,46 +298,56 @@ async def btn_callback(callback_query: types.CallbackQuery):
         await callback_query.message.edit_caption(caption=text, reply_markup=reply_markup)
 
     if code[1] == 'tocart':
-        if callback_query.message.caption.split(' ')[-1] == 'корзину!':
-            return
-        add_to_cart(tg_id=str(callback_query.from_user.id), prod_id=int(code[2]))
-        text, reply_markup = inline_kb_product(tg_id=str(callback_query.from_user.id), id=int(code[2]))
-        text += '\n\nТовар успешно добавлен в корзину!'
-        await callback_query.message.edit_caption(
-            caption=text,
-            reply_markup=reply_markup
-        )
+        add_to_cart(tg_id=str(callback_query.from_user.id), product_id=int(code[2]))
+        reply_markup = callback_query.message['reply_markup']
+        reply_markup['inline_keyboard'][0][0]['text'] = 'Удалить из корзины'
+        reply_markup['inline_keyboard'][0][0]['callback_data'] = f'btn_delfromcart_{code[-1]}'
 
-    if code[1] == 'cart':
-        text, reply_markup = await inline_kb_cart(callback_query.from_user)
-        try:
-            await callback_query.message.edit_text(
-                text=text,
-                reply_markup=reply_markup
-            )
-        except:
-            await callback_query.message.delete()
-            await bot.send_message(
-                callback_query.from_user.id,
-                text=text,
-                reply_markup=reply_markup
-            )
-
-    if code[1] == 'delete':
-        del_from_cart(id=code[-1], tg_id=str(callback_query.from_user.id))
-        text, reply_markup = await inline_kb_cart(callback_query.from_user)
         await callback_query.message.edit_text(
-            text=text,
+            text = callback_query.message['text'],
             reply_markup=reply_markup
         )
 
-    if code[1] == 'deleteall':
+    if code[1] == 'delfromcart':
+        delete_from_cart(tg_id=str(callback_query.from_user.id), product_id=code[-1])
+        reply_markup = callback_query.message['reply_markup']
+        reply_markup['inline_keyboard'][0][0]['text'] = 'Добавить в корзину'
+        reply_markup['inline_keyboard'][0][0]['callback_data'] = f'btn_tocart_{code[-1]}'
+        await callback_query.message.edit_text(
+            text = callback_query.message['text'],
+            reply_markup=reply_markup
+        )
+
+    if code[1] == 'delallfromcart':
         clean_cart(callback_query.from_user)
         text, reply_markup = await inline_kb_cart(callback_query.from_user)
         await callback_query.message.edit_text(
             text=text,
             reply_markup=reply_markup
         )
+    
+    if code[1] == 'cart':
+        textReply_markup  = await inline_kb_cart(tg_id=str(callback_query.from_user.id), page=[int(p) for p in code[-1].split('-')])
+        for item in textReply_markup:
+            if not item['images']:
+                await bot.send_message(
+                    callback_query.message.chat.id,
+                    text=item['text'], 
+                    reply_markup=item['reply_markup']
+                )
+            else:
+                images = item['images'].split('\n')
+                photo = [types.InputMedia(media=open(img, 'rb'), caption=item['text']) if images.index(img) == 0 else types.InputMedia(media=open(img, 'rb')) for img in images]
+                await bot.send_media_group(
+                    callback_query.message.chat.id, 
+                    media=photo,
+                )
+                await bot.send_message(
+                    callback_query.message.chat.id,
+                    text='Выберите действие',
+                    reply_markup=item['reply_markup']
+                )
+
 
     if code[1] == 'orders':
         if int(code[-1]) > 0:

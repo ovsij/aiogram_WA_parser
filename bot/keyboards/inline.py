@@ -28,11 +28,12 @@ def inline_kb_menu(telegram_user):
 
     text_and_data = [
         [emojize(':closed_book: Каталог', language='alias'), 'btn_catalog_1'],
+        [emojize(':shopping_cart: Корзина', language='alias'), 'btn_cart_0-5'],
         [emojize(':package: Как сделать заказ', language='alias'), 'btn_howto'],
         [emojize(':question: Условия', language='alias'), 'btn_terms'],
         [emojize(':telephone: Контакты', language='alias'), 'btn_contact'],
     ]
-    schema = [1, 1, 2]
+    schema = [1, 1, 1, 2]
     inline_kb = InlineConstructor.create_kb(text_and_data, schema)
     return text, inline_kb
 
@@ -109,9 +110,14 @@ def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : in
         description = '' if not product.description else product.description
         price = 'Не указана' if not product.price else f'{product.price} руб.'
         dct['text'] = f'{product.name}\n\nАртикул: {product.article}\n{description}\n\nЦена: {price}'
-        text_and_data = [
-            [emojize('Добавить в корзину', language='alias'), f'btn_cart_{product.id}']
-        ]
+        if cart_exists(tg_id=tg_id, product_id=product.id):
+            text_and_data = [
+                [emojize('Удалить из корзины', language='alias'), f'btn_delfromcart_{product.id}']
+            ]
+        else:
+            text_and_data = [
+                [emojize('Добавить в корзину', language='alias'), f'btn_tocart_{product.id}']
+            ]
         schema = [1]
         # добавить кнопку "удалить товар"
         if tg_id in os.getenv('ADMINS'):
@@ -373,6 +379,7 @@ def inline_kb_product(tg_id : str, id : int, counter : int = 1):
     inline_kb = InlineConstructor.create_kb(text_and_data, schema)
     return text, inline_kb
 
+
 def inline_kb_editproduct(product_id):
     text = 'Выберите, что бы вы хотели изменить.'
     text_and_data = [
@@ -390,44 +397,42 @@ def inline_kb_editproduct(product_id):
     return text, inline_kb
 
 
-async def inline_kb_cart(telegram_user):
-    text = 'КОРЗИНА\n'
-    text_and_data = []
-    schema = []
-    cart = get_cart(telegram_user)
-    prices = []
-    sum = 0
-    for p in cart:
-        product = get_product_by_id(p.product.id)
-        sum += product.price * p.count
-        text += f'\n{cart.index(p) + 1}. {product.name} \n    ({round(product.price, 2)} р. * {p.count} шт.)'
-        text_and_data.append([emojize(f':x: {product.name} | {p.count} шт.', language='alias'), f'btn_delete_{p.id}'])
-        schema.append(1)
-        prices.append(types.LabeledPrice(label=f'{product.name} | {p.count} шт.', amount=int(product.price * p.count * 100)))
-    
-    if not cart:
-        text += '\nКорзина пуста...'
-        button_type = None
-    else:
-        text += f'\n\nИтого: {round(sum, 2)} руб.'
-        text_and_data.append([emojize(f':x: Очистить корзину', language='alias'), f'btn_deleteall'])
-        schema.append(1)
-        button_type = []
-        for i in range(len(text_and_data)):
-            button_type.append('callback_data')
-        link = await bot.create_invoice_link(title='Заказ', description='Оформление заказа', payload='test',
-            provider_token=os.getenv('provider_token'), currency='rub', 
-            prices=prices, 
-            need_name=True, need_phone_number=True, need_email=True, need_shipping_address=True)
-        text_and_data.append([emojize(f':white_check_mark: Оформить заказ', language='alias'), link])
-        button_type.append('url')
-        schema.append(1)
-        button_type.append('callback_data')
-    
-    text_and_data.append([emojize(':leftwards_arrow_with_hook: В меню', language='alias'), 'btn_menu'])
-    schema.append(1)
-    inline_kb = InlineConstructor.create_kb(text_and_data, schema, button_type)
-    return text, inline_kb
+async def inline_kb_cart(tg_id : str, page : list = [0, 5]):
+    textInline_kb = []
+    products = get_cart(tg_id=tg_id)
+    for product in products[page[0]:page[1]]:
+        dct = {}
+        description = product.description
+        description = '' if not product.description else product.description
+        price = 'Не указана' if not product.price else f'{product.price} руб.'
+        dct['text'] = f'{product.name}\n\nАртикул: {product.article}\n{description}\n\nЦена: {price}'
+        if cart_exists(tg_id=tg_id, product_id=product.id):
+            text_and_data = [
+                [emojize('Удалить из корзины', language='alias'), f'btn_delfromcart_{product.id}']
+            ]
+        else:
+            text_and_data = [
+                [emojize('Добавить в корзину', language='alias'), f'btn_tocart_{product.id}']
+            ]
+
+        dct['reply_markup'] = InlineConstructor.create_kb(text_and_data, [1])
+        dct['images'] = product.image
+        textInline_kb.append(dct)
+
+    len_prodcts = page[1] if len(textInline_kb) >= 5 else len(products)
+    text_and_data = [
+        [emojize(':arrow_down_small: Eще 5 товаров :arrow_down_small:', language='alias'), f'btn_cart_{page[1]}-{page[1] + 5}'],
+        [emojize(':arrow_down_small: Eще 10 товаров :arrow_down_small:', language='alias'), f'btn_cart_{page[1]}-{page[1] + 10}'],
+        btn_back(f'menu')
+    ]
+    textInline_kb.append(
+        {
+        'text' : f'Показано {len_prodcts} товаров из {len(products)}',
+        'reply_markup' : InlineConstructor.create_kb(text_and_data, [1, 1, 1]),
+        'images' : False
+        }
+    )
+    return textInline_kb
 
 def inline_kb_orders(telegram_user, page : int):
     text = 'ИСТОРИЯ ЗАКАЗОВ'
@@ -565,12 +570,12 @@ def inline_kb_admin():
         'КАБИНЕТ АДМИНИСТРАТОРА'
     )
     text_and_data = [
-        ['Рассылка', 'btn_sendmessage'],
-        ['Добавить каталог', 'btn_addcatalog'],
-        ['Удалить каталог', 'btn_delcatalog'],
-        ['Редактировать каталог', 'btn_editcatalog'],
+        ['Сообщение пользователям', 'btn_sendmessage'],
+        ['Добавить WA каталог', 'btn_addcatalog'],
+        ['Удалить WA каталог', 'btn_delcatalog'],
+        ['Редактировать WA каталог', 'btn_editcatalog'],
+        ['Обновление WA каталогов', 'btn_updatecatalog'],
         ['Поиск товара', 'btn_finditem'],
-        ['Запустить обновление каталогов', 'btn_updatecatalog'],
         btn_back('menu')
     ]
     schema = [1, 1, 1, 1, 1, 1, 1]
