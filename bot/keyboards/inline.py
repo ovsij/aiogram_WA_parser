@@ -363,6 +363,9 @@ def inline_kb_product(tg_id : str, id : int, counter : int = 1):
         text_and_data.append(['Изменить товар', f'btn_editproduct_{id}'])
         schema.append(1)
         schema.append(1)
+    # добавить кнопку в главное меню
+    text_and_data.append([emojize(':leftwards_arrow_with_hook: В главное меню', language='alias'), 'btm_menu'])
+    schema.append(1)
     # добавить кнопку назад
     text_and_data.append([emojize(':leftwards_arrow_with_hook: Назад', language='alias'), btn_back])
     schema.append(1)
