@@ -283,6 +283,7 @@ def inline_kb_pricefilter(category : int = None, sub_category : int = None, size
     inline_kb = InlineConstructor.create_kb(text_and_data, schema)
     return text, inline_kb   
 
+# при открытии списком субкатегории
 def inline_kb_products(tg_id : str, category : int = None, sub_category : int = None, page : int = 1):
     text = 'КАТАЛОГ'
     if sub_category == None:
@@ -291,7 +292,7 @@ def inline_kb_products(tg_id : str, category : int = None, sub_category : int = 
         btn_prevnext_name = f'category_{category}'
     else:
         text += f'\n\n{get_subcategory(id=sub_category).name}'
-        products = get_product(category_id=category, subcategory_id=sub_category)
+        products = get_product(category_id=category, subcategory_id=sub_category, sort='n')
         btn_prevnext_name = f'subcategory_{category}_{sub_category}'
     
     text_and_data = []
@@ -327,7 +328,7 @@ def inline_kb_product(tg_id : str, id : int, counter : int = 1):
     if not product.subcategory:
         products = get_product(category_id=product.category.id)
     else:
-        products = get_product(category_id=product.category.id, subcategory_id=product.subcategory.id)
+        products = get_product(category_id=product.category.id, subcategory_id=product.subcategory.id, sort='n')
     
     description = product.description
     description = '' if not product.description else product.description
@@ -364,7 +365,7 @@ def inline_kb_product(tg_id : str, id : int, counter : int = 1):
         schema.append(1)
         schema.append(1)
     # добавить кнопку в главное меню
-    text_and_data.append([emojize(':leftwards_arrow_with_hook: В главное меню', language='alias'), 'btm_menu'])
+    text_and_data.append([emojize(':leftwards_arrow_with_hook: В главное меню', language='alias'), 'btn_menu'])
     schema.append(1)
     # добавить кнопку назад
     text_and_data.append([emojize(':leftwards_arrow_with_hook: Назад', language='alias'), btn_back])
