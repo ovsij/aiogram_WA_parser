@@ -3,6 +3,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State
 from aiogram.utils import exceptions
 from dotenv import load_dotenv
+import logging
 import os
 import re
 
@@ -30,7 +31,7 @@ async def exception_handler(update: types.Update, exception: exceptions.RetryAft
 @dp.callback_query_handler(lambda c: c.data.startswith('btn'))
 async def btn_callback(callback_query: types.CallbackQuery):
     code = callback_query.data.split('_')
-    print(f'User {callback_query.from_user.id} open {code}')
+    logging.info(f'User {callback_query.from_user.id} open {code}')
 
     if code[1] == 'menu':
         text, reply_markup = inline_kb_menu(callback_query.from_user)
