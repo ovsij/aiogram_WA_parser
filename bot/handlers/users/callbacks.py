@@ -461,6 +461,13 @@ async def btn_callback(callback_query: types.CallbackQuery):
                 text=text
             )
 
+    if code[1] == 'finditem':
+        text = 'Пришлите артикул товара'
+        await Form.find_item.set()
+        Form.prev_message =  await callback_query.message.edit_text(
+            text=text
+        )
+
     if code[1] == 'updatecatalog':
         if code[-1] == 'accept':
             mesg = await callback_query.message.edit_text(

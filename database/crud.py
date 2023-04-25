@@ -156,7 +156,15 @@ def get_categories():
     return select(p.category for p in Product)[:]
 
 @db_session()
-def get_product(id : int = None, catalog : str = None, category_id : int = None, subcategory_id : int = None, sizes : str = None, prices : str = None, sort : str = None):
+def get_product(
+    id : int = None, 
+    catalog : str = None, 
+    category_id : int = None, 
+    subcategory_id : int = None, 
+    sizes : str = None, 
+    prices : str = None, 
+    sort : str = None,
+    article : str = None):
     if id:
         return Product[id]
     if catalog:
@@ -218,6 +226,8 @@ def get_product(id : int = None, catalog : str = None, category_id : int = None,
                             filter_products.append(prod)
                     
         return filter_products
+    if article:
+        return Product.get(article=article)
         
         
 

@@ -9,6 +9,7 @@ from database.crud import *
 from database.models import *
 from keyboards.inline import *
 from keyboards.reply import *
+from keyboards.constructor import InlineConstructor
 
 
 @dp.message_handler()
@@ -104,7 +105,6 @@ async def add_catalog(message: types.Message, state: FSMContext):
 
     #text, reply_markup = inline_kb_admin()
     
-
     if not catalog_exists(phone=message.text):
         phone = message.text
         link = 'https://web.whatsapp.com/catalog/' + message.text
@@ -163,6 +163,7 @@ async def add_catalog(message: types.Message, state: FSMContext):
                 text=text,
                 reply_markup=reply_markup
                 )
+
 # получаем новое описание товара
 @dp.message_handler(state=Form.edit_description)
 async def add_catalog(message: types.Message, state: FSMContext):
@@ -206,4 +207,40 @@ async def add_catalog(message: types.Message, state: FSMContext):
                 )
 
 
+
+# получаем артикул товара
+@dp.message_handler(state=Form.find_item)
+async def add_catalog(message: types.Message, state: FSMContext):
+    await state.finish()
+    article = message.text
+    product = get_product(article=article)
+
+    description = '' if not product.description else product.description
+    price = 'Не указана' if not product.price else f'{product.price} руб.'
+    text = f'{product.name}\n\nАртикул: {product.article}\n{description}\n\nЦена: {price}'
+    text_and_data = [btn_back('admin')]
+    schema = [1]
+    reply_markup = InlineConstructor.create_kb(text_and_data, schema)
+
+    images = product.image.split('\n')
+        
+    if len(images) == 1:
+        photo = types.InputFile(images[0])
+        await bot.send_photo(
+            message.from_user.id, 
+            photo=photo, 
+            caption=text, 
+            reply_markup=reply_markup
+        )
+    else:
+        photo = [types.InputMedia(media=open(img, 'rb')) for img in images]
+        await bot.send_media_group(
+            message.from_user.id, 
+            media=photo, 
+        )
+        await bot.send_message(
+            message.from_user.id,
+            text=text, 
+            reply_markup=reply_markup
+        )
 

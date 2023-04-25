@@ -332,7 +332,7 @@ def inline_kb_product(tg_id : str, id : int, counter : int = 1):
     description = product.description
     description = '' if not product.description else product.description
     price = 'Не указана' if not product.price else f'{product.price} руб.'
-    text = f'{product.name}\n\n{description}\n\nЦена: {price}'
+    text = f'{product.name}\n\nАртикул: {product.article}\n{description}\n\nЦена: {price}'
     if tg_id in os.getenv('ADMINS'):
         products_id = [p.id for p in products]
     else:
@@ -565,12 +565,11 @@ def inline_kb_admin():
         ['Добавить каталог', 'btn_addcatalog'],
         ['Удалить каталог', 'btn_delcatalog'],
         ['Редактировать каталог', 'btn_editcatalog'],
-        ['Добавить товар', 'btn_additem'],
-        ['Удалить товар', 'btn_delitem'],
+        ['Поиск товара', 'btn_finditem'],
         ['Запустить обновление каталогов', 'btn_updatecatalog'],
         btn_back('menu')
     ]
-    schema = [1, 1, 1, 1, 1, 1, 1, 1]
+    schema = [1, 1, 1, 1, 1, 1, 1]
     inline_kb = InlineConstructor.create_kb(text_and_data, schema)
     return text, inline_kb
 
