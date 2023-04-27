@@ -61,6 +61,7 @@ class Catalog(db.Entity):
     phone = Required(str, unique=True)
     link = Required(str)
     margin = Optional(int)
+    promocodes = Set('Promocode')
     product = Set(Product)
     category = Set(Category)
 
