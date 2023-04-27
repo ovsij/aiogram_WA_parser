@@ -375,7 +375,36 @@ def delete_catalog(id : int = None, phone : str = None):
 def catalog_exists(phone : str):
     return Catalog.exists(phone=phone)
 
+# Promocode
+@db_session()
+def create_promocode(name : str, discount : int):
+    return Promocode(name=name, discount=discount)
 
+@db_session()
+def get_promocode(id : int = None, name : str = None, tg_id : str = None):
+    if id:
+        return Promocode[id]
+    if name:
+        return Promocode.get(name=name)
+    if tg_id:
+        return select(p for p in Promocode if User.get(tg_id=tg_id) in p.users)
+    
+@db_session()
+def update_promocode(phone : str, margin : int):
+    catalog_to_update = Catalog.get(phone=phone)
+    catalog_to_update.margin = margin
+    return catalog_to_update
+
+@db_session()
+def delete_catalog(id : int = None, phone : str = None):
+    if id:
+        Catalog[id].delete()
+    if phone:
+        Catalog.get(phone=phone).delete()
+
+@db_session()
+def catalog_exists(phone : str):
+    return Catalog.exists(phone=phone)
 
 
 #Создание демонстрационной базы данных

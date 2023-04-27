@@ -26,3 +26,4 @@ class Form(StatesGroup):
     edit_description = State()
     edit_price = State()
     find_item = State()
+    promocode_user = State()

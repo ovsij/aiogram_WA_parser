@@ -19,6 +19,7 @@ class User(db.Entity):
     phone = Optional(str, nullable=True)
     address = Optional(str, nullable=True)
     carts = Set('Cart')
+    promocods = Set('Promocode')
     first_usage = Optional(datetime, default=lambda: datetime.now())
     last_usage = Optional(datetime, default=lambda: datetime.now())
     is_banned = Optional(bool, default=False)
@@ -63,4 +64,9 @@ class Catalog(db.Entity):
     product = Set(Product)
     category = Set(Category)
 
-
+class Promocode(db.Entity):
+    id = PrimaryKey(int, auto=True)
+    name = Required(str, unique=True)
+    discount = Required(int)
+    catalogs = Set(Catalog)
+    users = Set(User)

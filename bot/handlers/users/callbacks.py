@@ -380,6 +380,13 @@ async def btn_callback(callback_query: types.CallbackQuery):
             text=text,
             reply_markup=reply_markup
         )
+    
+    if code[1] == 'promocode':
+        Form.promocode_user.set()
+        Form.prev_message = await bot.send_message(
+            callback_query.message.chat.id,
+            text='Введите промокод:'
+        )
 
     if code[1] == 'sizes':
         text, reply_markup = inline_kb_sizes(category_id=code[-1])
@@ -401,23 +408,7 @@ async def btn_callback(callback_query: types.CallbackQuery):
             text=text,
             reply_markup=reply_markup
         )
-    
-    if code[1] == 'change':
-        if code[-1] == 'phone':
-            await Form.user_phone.set()
-            text, reply_markup = reply_kb_change(param='phone')
-            Form.prev_message = await bot.send_message(
-                callback_query.from_user.id, 
-			    text = text,
-                reply_markup=reply_markup)
-            
-        if code[-1] == 'address':
-            await Form.user_address.set()
-            text = reply_kb_change(param='address')
-            Form.prev_message = await bot.send_message(
-                callback_query.from_user.id, 
-			    text = text,
-            )
+        
     
     if code[1] == 'admin':
         text, reply_markup = inline_kb_admin()

@@ -86,7 +86,7 @@ async def sendmessate_text(message: types.Message, state: FSMContext):
 
 # неверный формат номера каталога
 @dp.message_handler(lambda message: len(message.text) != 12, state=Form.add_catalog)
-async def add_catalog(message: types.Message, state: FSMContext):
+async def add_catalog_wrong(message: types.Message, state: FSMContext):
     await bot.delete_message(chat_id=message.chat.id, message_id=Form.prev_message.message_id)
     await message.delete()
     text = 'Пришлите номер аккаунта в котором находится каталог в формате: 393421807916\n\n Номер телефона должен состоять из 12 цифр без пробелов и иных знаков'
@@ -97,7 +97,7 @@ async def add_catalog(message: types.Message, state: FSMContext):
 
 # получаем номер телефона для добавления каталога
 @dp.message_handler(state=Form.add_catalog)
-async def add_catalog(message: types.Message, state: FSMContext):
+async def add_catalog_phone(message: types.Message, state: FSMContext):
 
     await state.finish()
     await bot.delete_message(chat_id=message.chat.id, message_id=Form.prev_message.message_id)
@@ -123,12 +123,12 @@ async def add_catalog(message: types.Message, state: FSMContext):
     
 # неверный формат процента наценки
 @dp.message_handler(lambda message: len(message.text) != 2, state=Form.add_margin)
-async def add_catalog(message: types.Message, state: FSMContext):
+async def add_catalog_margin_wrong(message: types.Message, state: FSMContext):
     await message.delete()
 
 # получаем процент наценки каталога
 @dp.message_handler(state=Form.add_margin)
-async def add_catalog(message: types.Message, state: FSMContext):
+async def add_catalog_margin(message: types.Message, state: FSMContext):
 
     await state.finish()
     await bot.delete_message(chat_id=message.chat.id, message_id=Form.prev_message.message_id)
@@ -148,7 +148,7 @@ async def add_catalog(message: types.Message, state: FSMContext):
 
 # получаем новое наименование товара
 @dp.message_handler(state=Form.edit_name)
-async def add_catalog(message: types.Message, state: FSMContext):
+async def add_new_item_name(message: types.Message, state: FSMContext):
     product_id = Form.prev_message.text.split('№')[1].strip(':')
     update_product(product_id=int(product_id), name=message.text, edited=True)
 
@@ -166,7 +166,7 @@ async def add_catalog(message: types.Message, state: FSMContext):
 
 # получаем новое описание товара
 @dp.message_handler(state=Form.edit_description)
-async def add_catalog(message: types.Message, state: FSMContext):
+async def add_new_item_description(message: types.Message, state: FSMContext):
     product_id = Form.prev_message.text.split('№')[1].strip(':')
     update_product(product_id=int(product_id), description=message.text, edited=True)
 
@@ -184,13 +184,13 @@ async def add_catalog(message: types.Message, state: FSMContext):
 
 # неверный формат цены
 @dp.message_handler(lambda message: not re.fullmatch('\d*', message.text), state=Form.edit_price)
-async def add_catalog(message: types.Message, state: FSMContext):
+async def add_new_item_price_wrong(message: types.Message, state: FSMContext):
     await message.delete()
     await Form.prev_message.edit_text(text='Введите только целове число. Без точек, запятых, пробелов и указания валюты.')
 
 # получаем новую цену товара
 @dp.message_handler(state=Form.edit_price)
-async def add_catalog(message: types.Message, state: FSMContext):
+async def add_new_item_price(message: types.Message, state: FSMContext):
     product_id = Form.prev_message.text.split('№')[1].strip(':')
     update_product(product_id=int(product_id), price=int(message.text), edited=True)
 
@@ -210,7 +210,7 @@ async def add_catalog(message: types.Message, state: FSMContext):
 
 # получаем артикул товара
 @dp.message_handler(state=Form.find_item)
-async def add_catalog(message: types.Message, state: FSMContext):
+async def get_article(message: types.Message, state: FSMContext):
     await state.finish()
     article = message.text
     product = get_product(article=article)
@@ -244,3 +244,12 @@ async def add_catalog(message: types.Message, state: FSMContext):
             reply_markup=reply_markup
         )
 
+# получаем промокод
+@dp.message_handler(state=Form.promocode_user)
+async def add_user_promocode(message: types.Message, state: FSMContext):
+    await state.finish()
+    await bot.delete_message(chat_id=message.chat.id, message_id=Form.prev_message.message_id)
+    await message.delete()
+
+    promocode = message.text
+    

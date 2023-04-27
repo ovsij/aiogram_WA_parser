@@ -712,7 +712,7 @@ async def get_lesilla():
             #print(not_deleted_items)
             #hashes = [comparator.CalcImageHash(product.image.split('\n')[0]) for product in crud.get_product(catalog='lesilla')]
             for item in items:
-                price = int((item[5] * (euro_cost() + 1)) / 100 * crud.get_catalog(phone='valentino').margin) if item[5] else None
+                price = int((item[5] * (euro_cost() + 1)) * float(f'1.{crud.get_catalog(phone="lesilla").margin}')) if item[5] else None
                 description = item[4].replace('€ ', ' ')
                 for i in re.findall(r'\d*[.]\d\d', item[4]):
                     if i:

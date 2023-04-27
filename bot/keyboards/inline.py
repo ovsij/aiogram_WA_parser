@@ -32,8 +32,9 @@ def inline_kb_menu(telegram_user):
         [emojize(':package: Как сделать заказ', language='alias'), 'btn_howto'],
         [emojize(':question: Условия', language='alias'), 'btn_terms'],
         [emojize(':telephone: Контакты', language='alias'), 'btn_contact'],
+        [emojize(':money_with_wings: Ввести промокод', language='alias'), 'btn_promocode']
     ]
-    schema = [1, 1, 1, 2]
+    schema = [1, 1, 1, 2, 1]
     inline_kb = InlineConstructor.create_kb(text_and_data, schema)
     return text, inline_kb
 
