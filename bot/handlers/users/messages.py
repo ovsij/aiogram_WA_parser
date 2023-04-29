@@ -243,13 +243,57 @@ async def get_article(message: types.Message, state: FSMContext):
             text=text, 
             reply_markup=reply_markup
         )
+# получаем промокод от админа
+@dp.message_handler(state=Form.addpromocode)
+async def add_admin_promocode(message: types.Message, state: FSMContext):
+    await state.finish()
+    await bot.delete_message(chat_id=message.chat.id, message_id=Form.prev_message.message_id)
+    await message.delete()
 
-# получаем промокод
+    await Form.addpromocode_discount.set()
+    Form.prev_message = await bot.send_message(
+            message.from_user.id,
+            text=f'Введите размер скидки по промокоду: {message.text}', 
+        )
+
+# получаем размер скидки от админа
+@dp.message_handler(state=Form.addpromocode_discount)
+async def add_admin_promocode_discount(message: types.Message, state: FSMContext):
+    await state.finish()
+    await bot.delete_message(chat_id=message.chat.id, message_id=Form.prev_message.message_id)
+    await message.delete()
+    
+
+    create_promocode(name=Form.prev_message.text.split(': ')[-1], discount=message.text)
+    text, reply_markup = inline_kb_addpromocode_catalogs(name=Form.prev_message.text.split(': ')[-1])
+
+    await bot.send_message(
+            message.from_user.id,
+            text=text,
+            reply_markup=reply_markup
+        )
+    
+# получаем промокод от юзера
 @dp.message_handler(state=Form.promocode_user)
 async def add_user_promocode(message: types.Message, state: FSMContext):
     await state.finish()
     await bot.delete_message(chat_id=message.chat.id, message_id=Form.prev_message.message_id)
     await message.delete()
 
-    promocode = message.text
-    
+    if promocode_exists(name=message.text):
+        update_promocode(name=message.text, tg_id=str(message.from_user.id))
+        await bot.send_message(message.from_user.id, f'Промокод {message.text} добавлен в список ваших промокодов')
+    else:
+        await bot.send_message(message.from_user.id, f'Промокод {message.text} не существует')
+
+
+# получаем название новой категории
+@dp.message_handler(state=Form.add_category)
+async def add_category(message: types.Message, state: FSMContext):
+    await state.finish()
+    await bot.delete_message(chat_id=message.chat.id, message_id=Form.prev_message.message_id)
+    await message.delete()
+    if not category_exists(name=message.text):
+        create_category(name=message.text, custom=True)
+    text, reply_markup = inline_kb_categories(str(message.from_user.id))
+    await bot.send_message(message.from_user.id, text=text, reply_markup=reply_markup)

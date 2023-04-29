@@ -25,9 +25,11 @@ async def bot_start(message: types.Message):
         reply_markup=reply_markup
     )
 
+@dp.message_handler(commands=['stop'], state=Form.add_category)
+@dp.message_handler(commands=['stop'], state=Form.promocode_user)
 @dp.message_handler(commands=['stop'], state=Form.add_catalog)
 async def bot_start(message: types.Message, state: FSMContext):
-    state.finish()
+    await state.finish()
     text, reply_markup = inline_kb_menu(message.from_user)
     if str(message.from_user.id) in os.getenv('ADMINS'):
         reply_markup.add(btn_admin())

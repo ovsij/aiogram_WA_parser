@@ -32,7 +32,7 @@ def inline_kb_menu(telegram_user):
         [emojize(':package: Как сделать заказ', language='alias'), 'btn_howto'],
         [emojize(':question: Условия', language='alias'), 'btn_terms'],
         [emojize(':telephone: Контакты', language='alias'), 'btn_contact'],
-        [emojize(':money_with_wings: Ввести промокод', language='alias'), 'btn_promocode']
+        [emojize(':bust_in_silhouette: Личный кабинет', language='alias'), 'btn_lk']
     ]
     schema = [1, 1, 1, 2, 1]
     inline_kb = InlineConstructor.create_kb(text_and_data, schema)
@@ -41,7 +41,7 @@ def inline_kb_menu(telegram_user):
 def inline_kb_categories(tg_id : str, page : int = 1):
     #выводит названия категорий, если их нет выводит продукты
     text = 'КАТАЛОГ'
-    categories = get_categories()
+    categories = get_category()
     text_and_data = []
     schema = []
     if bool(categories):
@@ -63,8 +63,13 @@ def inline_kb_categories(tg_id : str, page : int = 1):
         return text, inline_kb
     else:
         text += '\n\n К сожалению, на данный момент в каталоге ничего нет'
-        text_and_data = [btn_back('menu')]
-        schema = [1]
+        text_and_data = []
+        schema = []
+        if tg_id in os.getenv('ADMINS'):
+            text_and_data.append(['Добавить категорию', 'btn_addcategory'])
+            schema.append(1)
+        text_and_data.append(btn_back('menu'))
+        schema.append(1)
         inline_kb = InlineConstructor.create_kb(text_and_data, schema)
         return text, inline_kb
     
@@ -90,7 +95,7 @@ def inline_kb_subcategories(tg_id : str, category : int = None, page : int = 1):
         inline_kb = InlineConstructor.create_kb(text_and_data, schema)
         return text, inline_kb
     else:
-        return inline_kb_products(tg_id=tg_id, category=category, page=page)
+        return inline_kb_listproducts(tg_id=tg_id, category=category, page=page)
 
 def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : int = None, sizes : str = None, prices : str = None, page : list = [0, 5], back : bool = False, sort : str = None):
     textInline_kb = []
@@ -98,11 +103,20 @@ def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : in
         products = get_product(category_id=category, subcategory_id=sub_category, sizes=sizes, prices=prices, sort=sort)
     else:
         products = get_product(category_id=category, subcategory_id=sub_category, sort=sort)
+    if len(products) == 0:
+        text_and_data = [
+            ['Добавить товар', 'btn_addproduct'],
+            btn_back('catalog_1')
+            ]
+        text = 'К сожалению, в данной категории пока ничего нет'
+        reply_markup = InlineConstructor.create_kb(text_and_data, [1, 1])
+        return text, reply_markup
+    
     # показываем удаленные товары только админам
-    #if tg_id in os.getenv('ADMINS'):
-    #    products_id = [p.id for p in products]
-    #else:
-    #    products_id = [p.id for p in products if not p.deleted]
+    if tg_id in os.getenv('ADMINS'):
+        products = [p for p in products]
+    else:
+        products = [p for p in products if not p.deleted]
 
     # формируем список товаров 5 или 10 в соответствии с выбором пользователя
     for product in products[page[0]:page[1]]:
@@ -159,10 +173,14 @@ def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : in
         [emojize(':arrow_down_small: Eще 10 товаров :arrow_down_small:', language='alias'), f'btn_ls_{category}_{sub_category}{sizes_code}{prices_code}_{sort}{page_0}-{page_10}'],
         btn_back(f'catalog_1')
     ]
+    schema = [1, 1, 1, 1, 1, 1, 1, 1]
+    if tg_id in os.getenv('ADMINS'):
+        text_and_data.insert(7, ['Добавить товар', 'btn_addproduct'])
+        schema.append(1)
     textInline_kb.append(
         {
         'text' : f'{get_category(id=category).name}\n{get_subcategory(id=sub_category).name}\n\nПоказано {len_prodcts} товаров из {len(products)}',
-        'reply_markup' : InlineConstructor.create_kb(text_and_data, [1, 1, 1, 1, 1, 1, 1, 1]),
+        'reply_markup' : InlineConstructor.create_kb(text_and_data, schema),
         'images' : False
         }
     )
@@ -522,6 +540,20 @@ def inline_kb_contact():
     inline_kb = InlineConstructor.create_kb(text_and_data, schema, button_type)
     return text, inline_kb
 
+def inline_kb_lk(tg_id : str):
+    text = markdown.text(
+        'ЛИЧНЫЙ КАБИНЕТ'
+    )
+    text_and_data = [
+        [emojize(':money_with_wings: Ввести промокод', language='alias'), 'btn_promocode'],
+        [emojize(':scissors: Мои размеры', language='alias'), 'btn_mysizes'],
+        [emojize(':fleur_de_lis: Мои бренды', language='alias'), 'btn_mybrands'],
+        btn_back('menu')
+    ]
+    schema = [1, 1, 1, 1]
+    inline_kb = InlineConstructor.create_kb(text_and_data, schema)
+    return text, inline_kb
+
 def inline_kb_sizes(category_id : int):
     text = 'ТАБЛИЦА РАЗМЕРОВ'
     text_and_data = [['Скрыть', 'btn_hide']]
@@ -572,14 +604,108 @@ def inline_kb_admin():
     )
     text_and_data = [
         ['Сообщение пользователям', 'btn_sendmessage'],
-        ['Добавить WA каталог', 'btn_addcatalog'],
-        ['Удалить WA каталог', 'btn_delcatalog'],
-        ['Редактировать WA каталог', 'btn_editcatalog'],
-        ['Обновление WA каталогов', 'btn_updatecatalog'],
+        ['WhatsApp каталоги', 'btn_wacatalogs'],
         ['Поиск товара', 'btn_finditem'],
+        ['Промокоды', 'btn_promocodes'],
         btn_back('menu')
     ]
-    schema = [1, 1, 1, 1, 1, 1, 1]
+    schema = [1, 1, 1, 1, 1]
+    inline_kb = InlineConstructor.create_kb(text_and_data, schema)
+    return text, inline_kb
+
+def inline_kb_promocodes():
+    text = markdown.text(
+        'КАБИНЕТ АДМИНИСТРАТОРА',
+        'Выберите промокод для редактирования или добавьте новый',
+        sep='\n\n'
+    )
+    text_and_data = []
+    schema = []
+    promocodes = get_promocode()
+    for promocode in promocodes:
+        text_and_data.append([f'{promocode.name} (- {promocode.discount} %)', f'btn_editpromocode_{promocode.id}'])
+        schema.append(1)
+
+    text_and_data.append(['Добавить промокод', 'btn_addpromocode'])
+    schema.append(1)
+    text_and_data.append(btn_back('admin'))
+    schema.append(1)
+    inline_kb = InlineConstructor.create_kb(text_and_data, schema)
+    return text, inline_kb 
+
+def inline_kb_editpromocode(promocode_id : int):
+    promocode = get_promocode(id=promocode_id)
+    users = get_promocode(id=promocode_id, users=True)
+    promo_categories = ''
+    for cat in get_promocode(id=promocode_id, categories=True):
+        promo_categories += f'- {cat.name}\n'
+    text = markdown.text(
+        f'Промокод: {promocode.name}',
+        f'Размер скидки: -{promocode.discount} %',
+        f'Распространяется на категории:\n{promo_categories}'
+        f'Промокодом воспользовались {len(users)} человек',
+        sep='\n')
+    text_and_data = [
+        ['Статистика', f'btn_userspromocode_{promocode.id}'],
+        ['Удалить промокод', f'btn_removepromocode_{promocode.id}'],
+        btn_back('promocodes')
+    ]
+    schema = [1, 1, 1]
+    inline_kb = InlineConstructor.create_kb(text_and_data, schema)
+    return text, inline_kb 
+
+def inline_kb_addpromocode_catalogs(name : str, cat_ids : list = []):
+    text = markdown.text(
+        f'Выберите категории, на который будет распространяться промокод {name}'
+    )
+    promocode = get_promocode(name=name)
+    
+    categories = get_category()
+    text_and_data = []
+    schema = []
+
+    if bool(categories):
+        for cat in categories:
+            if str(cat.id) in cat_ids:
+                cats_code = ''
+                new_cats = [cat for cat in cat_ids]
+                new_cats.remove(str(cat.id))
+                for ncat in new_cats:
+                    cats_code += ncat + '-'
+                cats_code = cats_code.strip('-')
+                new_cats = []
+                text_and_data.append([emojize(f':white_check_mark:{cat.name}', language='alias'), f'btn_promocodecategory_{promocode.id}_{cats_code}'])
+            else:
+
+                cats_code = ''
+                new_cats = [cat for cat in cat_ids]
+                new_cats.append(str(cat.id))
+                for ncat in new_cats:
+                    cats_code += ncat + '-'
+                cats_code = cats_code.strip('-')
+                new_cats = []
+                text_and_data.append([f'{cat.name}', f'btn_promocodecategory_{promocode.id}_{cats_code}'])
+            schema.append(1)
+        text_and_data.append([emojize(':heavy_check_mark: Применить', language='alias'), 'btn_promocodes'])
+        schema.append(1)
+    else:
+        text = 'У вас нет доступных категорий, промокод по умолчанию будет распространяться на все'
+    inline_kb = InlineConstructor.create_kb(text_and_data, schema)
+    return text, inline_kb
+
+# вотсап каталоги
+def inline_kb_wacatalogs():
+    text = markdown.text(
+        'КАБИНЕТ АДМИНИСТРАТОРА'
+    )
+    text_and_data = [
+        ['Добавить каталог', 'btn_addcatalog'],
+        ['Удалить каталог', 'btn_delcatalog'],
+        ['Редактировать каталог', 'btn_editcatalog'],
+        ['Обновление каталогов', 'btn_updatecatalog'],
+        btn_back('admin')
+    ]
+    schema = [1, 1, 1, 1, 1]
     inline_kb = InlineConstructor.create_kb(text_and_data, schema)
     return text, inline_kb
 
@@ -601,7 +727,7 @@ def inline_kb_delcatalog():
     for catalog in catalogs:
         text_and_data.append([emojize(f':recycle: {catalog.phone}', language='alias'), f'btn_delcatalog_{catalog.phone}'])
         schema.append(1)
-    text_and_data.append(btn_back('admin'))
+    text_and_data.append(btn_back('wacatalogs'))
     inline_kb = InlineConstructor.create_kb(text_and_data, schema)
     return text, inline_kb
 
@@ -613,7 +739,7 @@ def inline_kb_editcatalog():
     for catalog in catalogs:
         text_and_data.append([emojize(f':recycle: {catalog.phone} | {catalog.margin}%', language='alias'), f'btn_editcatalog_{catalog.phone}'])
         schema.append(1)
-    text_and_data.append(btn_back('admin'))
+    text_and_data.append(btn_back('wacatalogs'))
     inline_kb = InlineConstructor.create_kb(text_and_data, schema)
     return text, inline_kb
 
@@ -639,7 +765,7 @@ def inline_kb_updatecatalog():
                 name = catalog.phone
             text_and_data.append([emojize(f':recycle: {name}', language='alias'), f'btn_updatecatalog_{catalog.phone}'])
             schema.append(1)
-    text_and_data.append(btn_back('admin'))
+    text_and_data.append(btn_back('wacatalogs'))
     inline_kb = InlineConstructor.create_kb(text_and_data, schema)
     return text, inline_kb
 

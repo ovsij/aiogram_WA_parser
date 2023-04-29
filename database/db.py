@@ -6,9 +6,9 @@ db.generate_mapping(create_tables=True)
  
 with db_session:
     if not Category.exists(name='VALENTINO'):
-        Category(name='VALENTINO', catalog=Catalog(phone='valentino', link='none', margin=30))
+        Category(name='VALENTINO', phone='valentino', margin=30)
     if not Category.exists(name='LeSILLA'):
-        Category(name='LeSILLA', catalog=Catalog(phone='lesilla', link='none', margin=30))
+        Category(name='LeSILLA', phone='lesilla', margin=30)
     if not Category.exists(name='NIKE'):
-        Category(name='NIKE', catalog=Catalog(phone='nike', link='none', margin=30))
+        Category(name='NIKE', phone='nike', margin=30)
 

@@ -286,7 +286,6 @@ async def btn_callback(callback_query: types.CallbackQuery):
                 )
                 await callback_query.message.delete()
 
-        
     if code[1] == 'count':
         if code[3] == 'plus':
             counter = int(code[-1]) + 1
@@ -348,7 +347,6 @@ async def btn_callback(callback_query: types.CallbackQuery):
                     reply_markup=item['reply_markup']
                 )
 
-
     if code[1] == 'orders':
         if int(code[-1]) > 0:
             page = int(code[-1])
@@ -381,11 +379,18 @@ async def btn_callback(callback_query: types.CallbackQuery):
             reply_markup=reply_markup
         )
     
+    if code[1] == 'lk':
+        text, reply_markup = inline_kb_lk(str(callback_query.from_user.id))
+        await callback_query.message.edit_text(
+            text=text,
+            reply_markup=reply_markup
+        )
+
     if code[1] == 'promocode':
-        Form.promocode_user.set()
+        await Form.promocode_user.set()
         Form.prev_message = await bot.send_message(
             callback_query.message.chat.id,
-            text='Введите промокод:'
+            text='Для отмены этого действия введите команду /stop\n\nДля продолжения введите промокод:'
         )
 
     if code[1] == 'sizes':
@@ -409,7 +414,6 @@ async def btn_callback(callback_query: types.CallbackQuery):
             reply_markup=reply_markup
         )
         
-    
     if code[1] == 'admin':
         text, reply_markup = inline_kb_admin()
         await callback_query.message.edit_text(
@@ -417,6 +421,74 @@ async def btn_callback(callback_query: types.CallbackQuery):
             reply_markup=reply_markup
         )
     
+    if code[1] == 'wacatalogs':
+        text, reply_markup = inline_kb_wacatalogs()
+        await callback_query.message.edit_text(
+            text=text,
+            reply_markup=reply_markup
+        )
+
+    if code[1] == 'promocodes':
+        text, reply_markup = inline_kb_promocodes()
+        await callback_query.message.edit_text(
+            text=text,
+            reply_markup=reply_markup
+        )
+        
+    if code[1] == 'editpromocode':
+        text, reply_markup = inline_kb_editpromocode(promocode_id=int(code[2]))
+        await callback_query.message.edit_text(
+            text=text,
+            reply_markup=reply_markup
+        )
+
+    if code[1] == 'userspromocode':
+        name = get_promocode(id=int(code[2])).name
+        users = [f'Список пользователей, активировавших промокод {name}: \n\n - ']
+        
+        for user in get_promocode(id=int(code[2]), users=True):
+            user_str = f'- '
+            if user.username:
+                user_str += f'@{user.username} | '
+            else:
+                user_str += f'{user.tg_id} | '
+            if user.first_name:
+                user_str += f'{user.first_name} '
+            if user.last_name:
+                user_str += f'{user.last_name}'
+            user_str += '\n'
+            users.append(user_str)
+        with open(f'{name} users.txt', 'w') as file:
+            for line in users:
+                file.write(line)
+        await bot.send_document(callback_query.from_user.id, open(f'{name} users.txt', 'r'))
+        os.remove(f'{name} users.txt')
+    
+    if code[1] == 'removepromocode':
+        name = get_promocode(id=int(code[2])).name
+        delete_promocode(id=int(code[2]))
+        text, reply_markup = inline_kb_promocodes()
+        text += f'\n\nПромокод {name} удален'
+
+        await callback_query.message.edit_text(
+            text=text,
+            reply_markup=reply_markup
+        )
+
+    if code[1] == 'addpromocode':
+        await Form.addpromocode.set()
+        Form.prev_message = await callback_query.message.edit_text(
+            text='Пришлите название промокода:',
+        )
+
+    if code[1] == 'promocodecategory':
+        update_promocode(name=get_promocode(id=code[2]).name, categories=[int(cat) for cat in code[3].split('-')])
+        text, reply_markup = inline_kb_addpromocode_catalogs(name=get_promocode(id=code[2]).name, cat_ids=code[3].split('-'))
+        await callback_query.message.edit_text(
+                text=text,
+                reply_markup=reply_markup
+            )
+        
     if code[1] == 'sendmessage':
         text = 'Введите текст сообщения'
         await Form.new_message.set()
@@ -425,7 +497,7 @@ async def btn_callback(callback_query: types.CallbackQuery):
         )
     
     if code[1] == 'addcatalog':
-        text = 'Пришлите номер аккаунта в котором находится каталог в формате: 393421807916'
+        text = 'Пришлите номер аккаунта в котором находится каталог в формате: 393421807916 \n Для отвены введите команду /stop'
         await Form.add_catalog.set()
         Form.prev_message = await callback_query.message.edit_text(
             text=text
@@ -611,7 +683,9 @@ async def btn_callback(callback_query: types.CallbackQuery):
                 reply_markup=reply_markup
             )
 
-
+    if code[1] == 'addcategory':
+        await Form.add_category.set()
+        Form.prev_message = await bot.send_message(callback_query.from_user.id, 'Для отмены введите /stop\n\nДля продолжения введите название новой категории:')
             
 
 # Рассылка сообщения
@@ -625,7 +699,7 @@ async def acceptsending(callback_query: types.CallbackQuery, state: FSMContext):
 
     text = data['new_message']
 
-    for user_id in get_users():
+    for user_id in [u.tg_id for u in get_users()]:
         try:
             await bot.send_message(
                 user_id,

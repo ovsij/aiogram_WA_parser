@@ -28,7 +28,7 @@ def get_user(telegram_user) -> User:
 
 @db_session
 def get_users() -> list:
-    return select(int(u.tg_id) for u in User)[:]
+    return select(u for u in User)[:]
         
 @db_session()
 def update_user(
@@ -85,7 +85,7 @@ def cart_exists(tg_id : str, product_id : int):
 def update_product(
     product_id : int,
     category : Category = None,
-    catalog : Catalog = None,
+    #catalog : Catalog = None,
     name : str = None, 
     description : str = None, 
     price : float = None, 
@@ -97,8 +97,8 @@ def update_product(
         product_to_upd.name = name
     if category:
         product_to_upd.category = category
-    if catalog:
-        product_to_upd.catalog = catalog
+    #if catalog:
+    #    product_to_upd.catalog = catalog
     if description:
         product_to_upd.description = description
     if price:
@@ -117,7 +117,7 @@ def create_product(
     name : str, 
     category : str,
     subcategory : str,
-    catalog : str, 
+    #catalog : str, 
     description : str = None,
     sizes : str = None, 
     price : float = None, 
@@ -128,7 +128,7 @@ def create_product(
     if category_exists(name=category):
         category = Category.get(name=category)
     else:
-        category = Category(name=category, catalog=Catalog.get(phone=catalog))
+        category = Category(name=category)
     if subcategory:
         if subcategory_exists(name=subcategory):
             subcategory = SubCategory.get(name=subcategory)
@@ -139,7 +139,7 @@ def create_product(
         name=name,
         category=category,
         subcategory=subcategory,
-        catalog=Catalog.get(phone=catalog),
+        #catalog=Catalog.get(phone=catalog),
         description=description,
         sizes=sizes,
         price=price,
@@ -154,7 +154,7 @@ def create_products(items):
         if category_exists(name=category):
             category = Category.get(name=item[1])
         else:
-            category = Category(name=item[1], catalog=Catalog.get(phone=item[3]))
+            category = Category(name=item[1])
         if subcategory:
             if subcategory_exists(name=item[2]):
                 subcategory = SubCategory.get(name=item[2])
@@ -164,7 +164,7 @@ def create_products(items):
         name=item[0],
         category=category,
         subcategory=subcategory,
-        catalog=Catalog.get(phone=item[3]),
+        #catalog=Catalog.get(phone=item[3]),
         description=item[4],
         price=item[5],
         image=item[6]
@@ -177,7 +177,7 @@ def get_categories():
 @db_session()
 def get_product(
     id : int = None, 
-    catalog : str = None, 
+    #catalog : str = None, 
     category_id : int = None, 
     subcategory_id : int = None, 
     sizes : str = None, 
@@ -186,8 +186,8 @@ def get_product(
     article : str = None):
     if id:
         return Product[id]
-    if catalog:
-        return select(p for p in Product if p.catalog.phone == catalog)[:]
+    #if catalog:
+    #    return select(p for p in Product if p.catalog.phone == catalog)[:]
     elif category_id and not subcategory_id:
         return select(p for p in Product if p.category.id == category_id)[:]
     elif category_id and subcategory_id and not sizes and not prices:
@@ -274,10 +274,10 @@ def del_product(id : int):
 
 @db_session()
 def del_products(catalog : str = None, category : str = None, subcategory : str = None):
-    if catalog:
-        products_to_delete = select(p for p in Product if p.catalog == Catalog.get(phone=catalog) and not p.deleted and not p.edited)[:]
-        for product in  products_to_delete:
-            product.delete()
+    #if catalog:
+    #    products_to_delete = select(p for p in Product if p.catalog == Catalog.get(phone=catalog) and not p.deleted and not p.edited)[:]
+    #    for product in  products_to_delete:
+    #        product.delete()
     if category:
         products_to_delete = select(p for p in Product if p.category == Category.get(name=category))[:]
         for product in  products_to_delete:
@@ -292,18 +292,21 @@ def del_products(catalog : str = None, category : str = None, subcategory : str 
 
 # Category
 @db_session()
-def create_category(name : str, catalog : str):
-    catalog = Catalog.get(phone=catalog)
-    return Category(name=name, catalog=catalog)
+def create_category(name : str, custom : bool = False):
+    #catalog = Catalog.get(phone=catalog)
+    if custom:
+        return Category(name=name, custom=custom)
+    else:
+        return Category(name=name)
 
 @db_session()
-def get_category(id : int = None, name : str = None, catalog_id : Catalog = None):
+def get_category(id : int = None, name : str = None):
     if id:
         return Category[id]
     if name:
         return Category.get(name=name)
-    if catalog_id:
-        return Category.get(catalog=catalog_id)
+    else:
+        return select(c for c in Category)[:]
 
 @db_session()
 def delete_category(id : int = None, name : str = None):
@@ -341,39 +344,6 @@ def delete_subcategory(id : int = None, name : str = None):
 def subcategory_exists(name : str):
     return SubCategory.exists(name=name)
 
-# Catalog
-@db_session()
-def create_catalog(phone : str, link: str, margin : int):
-    return Catalog(phone=phone, link=link, margin=margin)
-
-@db_session()
-def get_catalog(id : int = None, phone : str = None):
-    if id:
-        return Catalog[id]
-    if phone:
-        return Catalog.get(phone=phone)
-    
-@db_session()
-def get_catalogs():
-    return select(c for c in Catalog)[:]
-
-
-@db_session()
-def update_catalog(phone : str, margin : int):
-    catalog_to_update = Catalog.get(phone=phone)
-    catalog_to_update.margin = margin
-    return catalog_to_update
-
-@db_session()
-def delete_catalog(id : int = None, phone : str = None):
-    if id:
-        Catalog[id].delete()
-    if phone:
-        Catalog.get(phone=phone).delete()
-
-@db_session()
-def catalog_exists(phone : str):
-    return Catalog.exists(phone=phone)
 
 # Promocode
 @db_session()
@@ -381,31 +351,44 @@ def create_promocode(name : str, discount : int):
     return Promocode(name=name, discount=discount)
 
 @db_session()
-def get_promocode(id : int = None, name : str = None, tg_id : str = None):
+def get_promocode(id : int = None, name : str = None, tg_id : str = None, users : bool = False, categories : bool = False):
     if id:
-        return Promocode[id]
+        if users:
+            return select(u for u in Promocode[id].users)[:]
+        if categories:
+            return select(u for u in Promocode[id].categories)[:]
+        else:
+            return Promocode[id]
     if name:
         return Promocode.get(name=name)
     if tg_id:
         return select(p for p in Promocode if User.get(tg_id=tg_id) in p.users)
+    else:
+        return select(p for p in Promocode)[:]
     
 @db_session()
-def update_promocode(phone : str, margin : int):
-    catalog_to_update = Catalog.get(phone=phone)
-    catalog_to_update.margin = margin
-    return catalog_to_update
+def update_promocode(name : str, discount : int = None, categories : list = None, tg_id : str = None):
+    promocode_to_update = Promocode.get(name=name)
+    if discount:
+        promocode_to_update.discount = discount
+    if categories:
+        categories_obj = [get_category(id=cat) for cat in categories]
+        promocode_to_update.categories = categories_obj
+    if tg_id:
+        user = User.get(tg_id=tg_id)
+        promocode_to_update.users += user
+    return promocode_to_update
 
 @db_session()
-def delete_catalog(id : int = None, phone : str = None):
+def delete_promocode(id : int = None, name : str = None):
     if id:
-        Catalog[id].delete()
-    if phone:
-        Catalog.get(phone=phone).delete()
+        Promocode[id].delete()
+    if name:
+        Promocode.get(name=name).delete()
 
 @db_session()
-def catalog_exists(phone : str):
-    return Catalog.exists(phone=phone)
-
+def promocode_exists(name : str):
+    return Promocode.exists(name=name)
 
 #Создание демонстрационной базы данных
 @db_session()

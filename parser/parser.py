@@ -202,7 +202,7 @@ async def get_items(category : str, session, subcategory : str = 'Другое')
             if category == 'FURLA DESIGNER OUTLET SERRAVALLE':
                 description = soup.find('div', 'f8jlpxt4 e4qy2s3t e1gr2w1z du8bjn1j gfz4du6o r7fjleex b6f1x6w7').find('span').text
                 for i in re.findall(r'€.?\d*', description):
-                    description = description.replace(i, str(int((int(i.strip('€').strip(' ')) * (euro_cost() + 1)) * float(f'1.{crud.get_catalog(phone="390143686270").margin}'))) + ' руб.')
+                    description = description.replace(i, str(int((int(i.strip('€').strip(' ')) * (euro_cost() + 1)) * float(f'1.{crud.get_category(phone="390143686270").margin}'))) + ' руб.')
             img = await session.get_screenshot()
             with open('parser/check.png', 'wb') as png:
                 png.write(img.read())
@@ -560,12 +560,11 @@ async def get_valentino():
             #print(item)
             if item[0] in not_deleted_items:
                 continue
-            price = int((item[5] * (euro_cost() + 1)) / 100 * crud.get_catalog(phone='valentino').margin) if item[5] else None
+            price = int((item[5] * (euro_cost() + 1)) * float(f'1.{crud.get_category(name="VALENTINO").margin}')) if item[5] else None
             prod = crud.create_product(
                 name=item[0],
                 category=item[1],
                 subcategory=item[2],
-                catalog=item[3],
                 description=item[4],
                 sizes=item[7],
                 price=price,
@@ -701,6 +700,7 @@ async def get_lesilla():
             for prodict_url in product_urls:
                 i = product_urls.index(prodict_url) + 1
                 try:
+                    print(prodict_url)
                     items.append(await get_item(session, prodict_url, name, i))
                 except:
                     continue
@@ -712,11 +712,12 @@ async def get_lesilla():
             #print(not_deleted_items)
             #hashes = [comparator.CalcImageHash(product.image.split('\n')[0]) for product in crud.get_product(catalog='lesilla')]
             for item in items:
-                price = int((item[5] * (euro_cost() + 1)) * float(f'1.{crud.get_catalog(phone="lesilla").margin}')) if item[5] else None
+                price = int((item[5] * (euro_cost() + 1)) * float(f'1.{crud.get_category(name="LeSILLA").margin}')) if item[5] else None
+                print(price)
                 description = item[4].replace('€ ', ' ')
                 for i in re.findall(r'\d*[.]\d\d', item[4]):
                     if i:
-                        price_rub = str(int((float(i) * (euro_cost() + 1)) / 100 * crud.get_catalog(phone='lesilla').margin))
+                        price_rub = str(int((float(i) * (euro_cost() + 1)) / 100 * crud.get_category(name='LeSILLA').margin))
                         description = description.replace(i, '<s>' + price_rub + ' руб.</s>  ')
                 description = f'Color: {item[7]}\n\n' + description.replace(f'<s>{price_rub} руб.</s>', f'{price_rub} руб.')
                 if item[0] + ' ' + item[7] in not_deleted_items:
@@ -725,7 +726,6 @@ async def get_lesilla():
                     name=item[0],
                     category=item[1],
                     subcategory=item[2],
-                    catalog=item[3],
                     description=description,
                     sizes=item[8],
                     price=price,
@@ -798,10 +798,10 @@ async def get_nike_subcategory(session, url, subcategory):
             # артикул
             article = prod['url'].split('/')[-1]
             # цена  
-            price = int((prod['curprice'] * (euro_cost() + 1)) * float(f"1.{crud.get_catalog(phone='nike').margin}")) if prod['curprice'] else None
+            price = int((prod['curprice'] * (euro_cost() + 1)) * float(f"1.{crud.get_category(name='NIKE').margin}")) if prod['curprice'] else None
             
             # описание
-            fullPrice = int((prod['fullPrice'] * (euro_cost() + 1)) * float(f"1.{crud.get_catalog(phone='nike').margin}")) if prod['fullPrice'] else None
+            fullPrice = int((prod['fullPrice'] * (euro_cost() + 1)) * float(f"1.{crud.get_category(name='NIKE').margin}")) if prod['fullPrice'] else None
             percent = int(100 - (price/fullPrice * 100))
             description = f"Color: {prod['colorDescription']}\n\n"
             description += f'<s>{fullPrice} руб.</s> -{percent}% {price} руб. \n\n'
@@ -879,14 +879,12 @@ async def get_nike():
                 not_deleted_items = []
             #print(not_deleted_items)
             for item in items:
-
                 if item[0] + ' ' + item[4] in not_deleted_items:
                     continue
                 prod = crud.create_product(
                     name=item[0],
                     category='NIKE',
                     subcategory=name,
-                    catalog='nike',
                     description=item[1],
                     sizes=item[5],
                     price=item[2],
