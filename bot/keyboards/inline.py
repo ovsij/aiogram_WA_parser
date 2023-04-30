@@ -587,7 +587,7 @@ def inline_kb_lk(tg_id : str):
     user = get_user(tg_id=tg_id)
     
     if user.sizes:
-        all_sizes = {'1': 'XXS', '2': 'XS', '3': 'S', '4': 'M', '5': 'L', '6': 'XL', '7': '3Xl', '8': '4XL', '9': '5XL'}
+        all_sizes = {'1': 'XXS', '2': 'XS', '3': 'S', '4': 'M', '5': 'L', '6': 'XL', '7': '2Xl', '8': '3XL', '9': '4XL'}
         sizes_str = ''
         for s in sorted([int(s) for s in str(user.sizes).split('-')]):
             sizes_str += f"{all_sizes[str(s)]}, "
