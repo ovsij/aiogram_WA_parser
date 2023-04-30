@@ -421,7 +421,10 @@ def promocode_exists(name : str):
 
 @db_session()
 def get_user_promocode(tg_id : str):
-    return User.get(tg_id=tg_id).promocode.id
+    try:
+        return User.get(tg_id=tg_id).promocode.id
+    except:
+        return False
 
 #Создание демонстрационной базы данных
 @db_session()

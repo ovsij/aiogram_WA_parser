@@ -143,8 +143,11 @@ def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : in
         description = '' if not product.description else product.description
         price = 'Не указана' if not product.price else product.price
         dct['text'] = f'{product.name}\n\nАртикул: {product.article}\n{description}\n\nЦена: {price} руб.'
-        promocode_id = get_user_promocode(tg_id=tg_id)
-        promocode = get_promocode(id=promocode_id)
+        try:
+            promocode_id = get_user_promocode(tg_id=tg_id)
+            promocode = get_promocode(id=promocode_id)
+        except:
+            promocode = False
         if promocode and price != 'Не указана':
             promo_price = price - (price / 100 * promocode.discount)
             dct['text'] += f'\n\nСо скидкой по промокоду {promocode.name}:\n{int(promo_price)} руб'
@@ -382,8 +385,11 @@ def inline_kb_product(tg_id : str, id : int, counter : int = 1):
     description = '' if not product.description else product.description
     price = 'Не указана' if not product.price else product.price
     text = f'{product.name}\n\nАртикул: {product.article}\n{description}\n\nЦена: {price} руб.'
-    promocode_id = get_user_promocode(tg_id=tg_id)
-    promocode = get_promocode(id=promocode_id)
+    try:
+        promocode_id = get_user_promocode(tg_id=tg_id)
+        promocode = get_promocode(id=promocode_id)
+    except:
+        promocode = False
     if promocode:
         promo_price = price - (price / 100 * promocode.discount)
         text += f'\n\nСо скидкой по промокоду {promocode.name}:\n{int(promo_price)} руб'
@@ -573,8 +579,11 @@ def inline_kb_lk(tg_id : str):
     text = markdown.text(
         'ЛИЧНЫЙ КАБИНЕТ\n'
     )
-    promocode_id = get_user_promocode(tg_id=tg_id)
-    promocode = get_promocode(id=promocode_id)
+    try:
+        promocode_id = get_user_promocode(tg_id=tg_id)
+        promocode = get_promocode(id=promocode_id)
+    except:
+        promocode = False
     user = get_user(tg_id=tg_id)
     
     if user.sizes:
