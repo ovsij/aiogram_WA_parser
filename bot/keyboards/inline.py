@@ -581,11 +581,11 @@ def inline_kb_lk(tg_id : str):
     )
     try:
         promocode_id = get_user_promocode(tg_id=tg_id)
+        print(promocode_id)
         promocode = get_promocode(id=promocode_id)
     except:
         promocode = False
     user = get_user(tg_id=tg_id)
-    
     if user.sizes:
         all_sizes = {'1': 'XXS', '2': 'XS', '3': 'S', '4': 'M', '5': 'L', '6': 'XL', '7': '2Xl', '8': '3XL', '9': '4XL'}
         sizes_str = ''
