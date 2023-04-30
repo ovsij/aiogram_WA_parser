@@ -25,6 +25,12 @@ async def bot_start(message: types.Message):
         reply_markup=reply_markup
     )
 
+@dp.message_handler(commands=['stop'], state=Form.edit_name)
+@dp.message_handler(commands=['stop'], state=Form.edit_description)
+@dp.message_handler(commands=['stop'], state=Form.edit_price)
+@dp.message_handler(commands=['stop'], state=Form.edit_sizes)
+@dp.message_handler(commands=['stop'], state=Form.edit_images)
+@dp.message_handler(commands=['stop'], state=Form.add_subcategory)
 @dp.message_handler(commands=['stop'], state=Form.add_category)
 @dp.message_handler(commands=['stop'], state=Form.promocode_user)
 @dp.message_handler(commands=['stop'], state=Form.add_catalog)

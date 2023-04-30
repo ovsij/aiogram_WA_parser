@@ -23,8 +23,11 @@ def register_user(telegram_user) -> User:
         print(f'User {telegram_user.id} exists')
 
 @db_session
-def get_user(telegram_user) -> User:
-    return User.get(tg_id=str(telegram_user.id))
+def get_user(telegram_user = None, tg_id : str = None) -> User:
+    if telegram_user:
+        return User.get(tg_id=str(telegram_user.id))
+    if tg_id:
+        return User.get(tg_id=tg_id)
 
 @db_session
 def get_users() -> list:
@@ -38,6 +41,11 @@ def update_user(
     last_name : str = None,
     phone : str = None,
     address : str = None,
+    promocode : str = None,
+    sizes : str = None,
+    shoe_sizes : str = None,
+    brands : str = None,
+    prices : str = None,
     last_usage : bool = None,
     is_banned : bool = None
     ) -> User:
@@ -53,8 +61,18 @@ def update_user(
         user_to_update.phone = phone
     if address:
         user_to_update.address = address
+    if promocode:
+        user_to_update.promocode = Promocode.get(name=promocode)
     if is_banned:
         user_to_update.is_banned = is_banned
+    if sizes:
+        user_to_update.sizes = sizes
+    if shoe_sizes:
+        user_to_update.shoe_sizes = shoe_sizes
+    if brands:
+        user_to_update.brands = brands
+    if prices:
+        user_to_update.prices = prices
     if is_banned == False:
         user_to_update.is_banned = is_banned
     if last_usage:
@@ -89,7 +107,10 @@ def update_product(
     name : str = None, 
     description : str = None, 
     price : float = None, 
+    sizes : str = None,
     image : str = None,
+    several_images : bool = False,
+    article : str = None,
     deleted : bool = None,
     edited : bool = None) -> Product:
     product_to_upd = Product[product_id]
@@ -103,12 +124,19 @@ def update_product(
         product_to_upd.description = description
     if price:
         product_to_upd.price = price
-    if image:
+    if sizes:
+        product_to_upd.sizes = sizes
+    if image and not several_images:
+        print('ok')
         product_to_upd.image = image
+    if image and several_images:
+        product_to_upd.image += '\n' + image
     if deleted or deleted == False:
         product_to_upd.deleted = deleted
     if edited or edited == False:
         product_to_upd.edited = edited
+    if article:
+        product_to_upd.article = article
 
     return product_to_upd
 
@@ -117,21 +145,19 @@ def create_product(
     name : str, 
     category : str,
     subcategory : str,
-    #catalog : str, 
     description : str = None,
     sizes : str = None, 
     price : float = None, 
     image : str = None,
     article : str = None) -> Product:
-    #if Product.exists(name = name, description = description, price = price):
-    #    Product.get(name = name, description = description, price = price).delete()
+    
     if category_exists(name=category):
         category = Category.get(name=category)
     else:
         category = Category(name=category)
     if subcategory:
-        if subcategory_exists(name=subcategory):
-            subcategory = SubCategory.get(name=subcategory)
+        if subcategory_exists(name=subcategory, category=category.name):
+            subcategory = SubCategory.get(name=subcategory, category=category)
         else:
             subcategory = SubCategory(name=subcategory, category=category)
 
@@ -139,7 +165,6 @@ def create_product(
         name=name,
         category=category,
         subcategory=subcategory,
-        #catalog=Catalog.get(phone=catalog),
         description=description,
         sizes=sizes,
         price=price,
@@ -268,9 +293,12 @@ def get_last_id():
 
 # удаление только для юзеров (админам остаются видны)
 @db_session()
-def del_product(id : int):
+def del_product(id : int, forever : bool = False):
     product_to_delete = Product[id]
-    return product_to_delete.deleted == True
+    if forever:
+        return product_to_delete.delete()
+    else:
+        return product_to_delete.deleted == True
 
 @db_session()
 def del_products(catalog : str = None, category : str = None, subcategory : str = None):
@@ -292,12 +320,13 @@ def del_products(catalog : str = None, category : str = None, subcategory : str 
 
 # Category
 @db_session()
-def create_category(name : str, custom : bool = False):
-    #catalog = Catalog.get(phone=catalog)
+def create_category(name : str, margin : int, custom : bool = False):
+    category = Category(name=name)
     if custom:
-        return Category(name=name, custom=custom)
-    else:
-        return Category(name=name)
+        category.custom = custom
+    if margin:
+        category.margin = margin
+    
 
 @db_session()
 def get_category(id : int = None, name : str = None):
@@ -341,8 +370,8 @@ def delete_subcategory(id : int = None, name : str = None):
         SubCategory.get(name=name).delete()
 
 @db_session()
-def subcategory_exists(name : str):
-    return SubCategory.exists(name=name)
+def subcategory_exists(name : str, category : str):
+    return SubCategory.exists(name=name, category=Category.get(name=category))
 
 
 # Promocode
@@ -389,6 +418,10 @@ def delete_promocode(id : int = None, name : str = None):
 @db_session()
 def promocode_exists(name : str):
     return Promocode.exists(name=name)
+
+@db_session()
+def get_user_promocode(tg_id : str):
+    return User.get(tg_id=tg_id).promocode.id
 
 #Создание демонстрационной базы данных
 @db_session()

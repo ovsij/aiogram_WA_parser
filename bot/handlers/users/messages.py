@@ -1,11 +1,13 @@
 from aiogram import types
 from aiogram.dispatcher import FSMContext
-import time
+import os
 import re
+import time
 
 from loader import bot, dp, Form
 
 from database.crud import *
+from database.db import *
 from database.models import *
 from keyboards.inline import *
 from keyboards.reply import *
@@ -150,7 +152,11 @@ async def add_catalog_margin(message: types.Message, state: FSMContext):
 @dp.message_handler(state=Form.edit_name)
 async def add_new_item_name(message: types.Message, state: FSMContext):
     product_id = Form.prev_message.text.split('№')[1].strip(':')
-    update_product(product_id=int(product_id), name=message.text, edited=True)
+    product = get_product(id=product_id)
+    if get_category(id=product.category.id).custom:
+        update_product(product_id=int(product_id), name=message.text)
+    else:
+        update_product(product_id=int(product_id), name=message.text, edited=True)
 
     await state.finish()
     await bot.delete_message(chat_id=message.chat.id, message_id=Form.prev_message.message_id)
@@ -168,7 +174,11 @@ async def add_new_item_name(message: types.Message, state: FSMContext):
 @dp.message_handler(state=Form.edit_description)
 async def add_new_item_description(message: types.Message, state: FSMContext):
     product_id = Form.prev_message.text.split('№')[1].strip(':')
-    update_product(product_id=int(product_id), description=message.text, edited=True)
+    product = get_product(id=product_id)
+    if get_category(id=product.category.id).custom:
+        update_product(product_id=int(product_id), description=message.text)
+    else:
+        update_product(product_id=int(product_id), description=message.text, edited=True)
 
     await state.finish()
     await bot.delete_message(chat_id=message.chat.id, message_id=Form.prev_message.message_id)
@@ -192,7 +202,11 @@ async def add_new_item_price_wrong(message: types.Message, state: FSMContext):
 @dp.message_handler(state=Form.edit_price)
 async def add_new_item_price(message: types.Message, state: FSMContext):
     product_id = Form.prev_message.text.split('№')[1].strip(':')
-    update_product(product_id=int(product_id), price=int(message.text), edited=True)
+    product = get_product(id=product_id)
+    if get_category(id=product.category.id).custom:
+        update_product(product_id=int(product_id), price=int(message.text))
+    else:
+        update_product(product_id=int(product_id), price=int(message.text), edited=True)
 
     await state.finish()
     await bot.delete_message(chat_id=message.chat.id, message_id=Form.prev_message.message_id)
@@ -206,7 +220,56 @@ async def add_new_item_price(message: types.Message, state: FSMContext):
                 reply_markup=reply_markup
                 )
 
+# получаем новые размеры товара
+@dp.message_handler(state=Form.edit_sizes)
+async def add_new_item_description(message: types.Message, state: FSMContext):
+    product_id = Form.prev_message.text.split('№')[1].strip(':')
+   
+    product = get_product(id=int(product_id))
+    try: # если описание None - произойдет исключение
+        description = product.description.split('Sizes:')[0].strip('\n\n') + f'\n\nSizes: {message.text}'
+    except:
+        description = f'Sizes: {message.text}'
+    if get_category(id=product.category.id).custom:
+        update_product(product_id=int(product_id), description=description, sizes=message.text)
+    else:
+        update_product(product_id=int(product_id), description=description, sizes=message.text, edited=True)
+    
+    text, reply_markup = inline_kb_editproduct(product_id=int(product_id))
+    text += f'\n\nВнесение изменений произошло успешно'
+    
+    await state.finish()
+    await bot.delete_message(chat_id=message.chat.id, message_id=Form.prev_message.message_id)
+    await message.delete()
 
+    await bot.send_message(
+                message.from_user.id,
+                text=text,
+                reply_markup=reply_markup
+                )
+
+# получаем новые фото товара
+@dp.message_handler(content_types=['photo'], state=Form.edit_images)
+async def get_photo(message: types.Message, state: FSMContext):
+    
+    product = get_product(id=int(Form.prev_message.text.split('№')[-1].strip(':')))
+    category = get_category(id=product.category.id)
+    subcategory = get_subcategory(id=product.subcategory.id)
+    if not os.path.exists(f"database/images/{category.name}"):
+        os.mkdir(f"database/images/{category.name}")
+
+    if not os.path.exists(f"database/images/{category.name}/{subcategory.name}"):
+        os.mkdir(f"database/images/{category.name}/{subcategory.name}")
+    
+    
+    img_path = ''
+    for i, photo in enumerate(message.photo):
+        if i == 3:
+            await photo.download(destination_file=f'database/images/{category.name}/{subcategory.name}/{photo["file_unique_id"]}.png')
+            img_path += f'database/images/{category.name}/{subcategory.name}/{photo["file_unique_id"]}.png'
+            update_product(product_id=product.id, image=img_path + '\n', several_images=True)
+
+    await state.finish()
 
 # получаем артикул товара
 @dp.message_handler(state=Form.find_item)
@@ -275,14 +338,25 @@ async def add_admin_promocode_discount(message: types.Message, state: FSMContext
     
 # получаем промокод от юзера
 @dp.message_handler(state=Form.promocode_user)
+#@db_session
 async def add_user_promocode(message: types.Message, state: FSMContext):
     await state.finish()
     await bot.delete_message(chat_id=message.chat.id, message_id=Form.prev_message.message_id)
     await message.delete()
 
     if promocode_exists(name=message.text):
-        update_promocode(name=message.text, tg_id=str(message.from_user.id))
-        await bot.send_message(message.from_user.id, f'Промокод {message.text} добавлен в список ваших промокодов')
+        new_promocode = get_promocode(name=message.text)
+        promocode_id = get_user_promocode(tg_id=str(message.from_user.id))
+        promocode = get_promocode(id=promocode_id)
+        if new_promocode.discount >= promocode.discount:
+            update_user(tg_id=str(message.from_user.id), promocode=message.text)
+        
+        text, reply_markup = inline_kb_lk(tg_id=str(message.from_user.id))
+        await bot.send_message(
+            message.from_user.id, 
+            text=text,
+            reply_markup=reply_markup
+        )
     else:
         await bot.send_message(message.from_user.id, f'Промокод {message.text} не существует')
 
@@ -294,6 +368,19 @@ async def add_category(message: types.Message, state: FSMContext):
     await bot.delete_message(chat_id=message.chat.id, message_id=Form.prev_message.message_id)
     await message.delete()
     if not category_exists(name=message.text):
-        create_category(name=message.text, custom=True)
+        create_category(name=message.text, margin=30, custom=True)
     text, reply_markup = inline_kb_categories(str(message.from_user.id))
+    await bot.send_message(message.from_user.id, text=text, reply_markup=reply_markup)
+
+# получаем название новой подкатегории
+@dp.message_handler(state=Form.add_subcategory)
+async def add_subcategory(message: types.Message, state: FSMContext):
+    await state.finish()
+    await bot.delete_message(chat_id=message.chat.id, message_id=Form.prev_message.message_id)
+    await message.delete()
+    if not subcategory_exists(name=message.text, category=Form.prev_message.text.split('"')[-2]):
+        s = create_subcategory(name=message.text, category=Form.prev_message.text.split('"')[-2])
+        print(s)
+    category = get_category(name=Form.prev_message.text.split('"')[-2])
+    text, reply_markup = inline_kb_subcategories(str(message.from_user.id), category=category.id)
     await bot.send_message(message.from_user.id, text=text, reply_markup=reply_markup)

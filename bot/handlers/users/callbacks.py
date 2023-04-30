@@ -9,11 +9,10 @@ import re
 
 load_dotenv()
 
-
-
 from loader import dp, Form
 
 from database.crud import *
+from database.db import *
 from database.models import *
 from keyboards.inline import *
 from keyboards.reply import *
@@ -93,6 +92,7 @@ async def btn_callback(callback_query: types.CallbackQuery):
                 back=True,
                 sort='n'
                 )
+            
             await callback_query.message.edit_text(
                 text=textReply_markup[-1]['text'],
                 reply_markup=textReply_markup[-1]['reply_markup']
@@ -119,6 +119,7 @@ async def btn_callback(callback_query: types.CallbackQuery):
                 page=[int(p) for p in code[-1].split('-')],
                 sort=code[6]
             )
+            
         await callback_query.message.delete()
         for item in textReply_markup:
             if not item['images']:
@@ -204,9 +205,39 @@ async def btn_callback(callback_query: types.CallbackQuery):
 
     if 'product' in code[1]:
         if code[1] == 'delproduct':
-            update_product(product_id=int(code[-1]), deleted=True)
+            product = get_product(id=int(code[-1]))
+            if get_category(id=product.category.id).custom:
+                del_product(id=int(code[-1]), forever=True)
+                text, reply_markup = inline_kb_products(tg_id=str(callback_query.from_user.id), category=product.category.id, sub_category=product.subcategory.id, page=1)
+                try:
+                    Form.prev_message = await callback_query.message.edit_text(
+                        text=text,
+                        reply_markup=reply_markup
+                    )
+                    if type(message_to_delete) == list:
+                        for mes in message_to_delete:
+                            await bot.delete_message(chat_id=callback_query.from_user.id, message_id=mes.message_id)
+                    return
+                except:
+                    await callback_query.message.delete()
+                    await bot.send_message(
+                        callback_query.message.chat.id,
+                        text=text, 
+                        reply_markup=reply_markup
+                    )
+                    return
+            else:
+                update_product(product_id=int(code[-1]), deleted=True)
         if code[1] == 'returnproduct':
             update_product(product_id=int(code[-1]), deleted=False)
+        if code[1] == 'addproduct':
+            category = get_category(id=int(code[2]))
+            subcategory = get_subcategory(id=int(code[3]))
+            product = create_product(name='New product', category=category.name, subcategory=subcategory.name)
+            update_product(product_id=product.id, article=str(product.id))
+            await Form.edit_name.set()
+            Form.prev_message = await callback_query.message.edit_text(text=f'Введите новое наименование товара №{product.id}:')
+            return
         if code[1] == 'editproduct':
             if code[2] == 'name':
                 await Form.edit_name.set()
@@ -219,6 +250,19 @@ async def btn_callback(callback_query: types.CallbackQuery):
             if code[2] == 'price':
                 await Form.edit_price.set()
                 Form.prev_message = await callback_query.message.edit_text(text=f'Введите новую цену товара №{code[-1]}:')
+                return
+            if code[2] == 'sizes':
+                await Form.edit_sizes.set()
+                Form.prev_message = await callback_query.message.edit_text(text=f'Введите размеры через запятую (например: 36, 37, 38, 39). Товар №{code[-1]}:')
+                return
+            if code[2] == 'images':
+                product = get_product(id=int(code[3]))
+                if product.image:
+                    for image in product.image.split('\n'):
+                        os.remove(image)
+                update_product(product_id=int(code[3]), image=' ')
+                await Form.edit_images.set()
+                Form.prev_message = await callback_query.message.edit_text(text=f'Пришлите в одном сообщении одну или несколько фотографий товара №{code[-1]}:')
                 return
             # выбрать что изменить (первый шаг)
             text, reply_markup = inline_kb_editproduct(product_id=code[-1])
@@ -236,7 +280,10 @@ async def btn_callback(callback_query: types.CallbackQuery):
             return
         
         text, reply_markup = inline_kb_product(tg_id=str(callback_query.from_user.id), id=int(code[-1]))
-        images = get_image(int(code[-1])).split('\n')
+        try:
+            images = get_image(int(code[-1])).split('\n')
+        except:
+            images = []
         
         if len(images) == 1:
             try:
@@ -257,33 +304,41 @@ async def btn_callback(callback_query: types.CallbackQuery):
                     pass
                 await callback_query.message.delete()
         else:
-            if type(Form.prev_message) == list:
-                message_to_delete = Form.prev_message
-                photo = [types.InputMedia(media=open(img, 'rb')) for img in images]
-                Form.prev_message = await bot.send_media_group(
-                    callback_query.message.chat.id, 
-                    media=photo, 
-                )
+            try:
+                if type(Form.prev_message) == list:
+                    message_to_delete = Form.prev_message
+                    photo = [types.InputMedia(media=open(img, 'rb')) for img in images]
+                    Form.prev_message = await bot.send_media_group(
+                        callback_query.message.chat.id, 
+                        media=photo, 
+                    )
+                    await bot.send_message(
+                        callback_query.message.chat.id,
+                        text=text, 
+                        reply_markup=reply_markup
+                    )
+                    for mes in message_to_delete:
+                        await bot.delete_message(chat_id=callback_query.from_user.id, message_id=mes.message_id)
+                    await callback_query.message.delete()
+                else:
+                    
+                    photo = [types.InputMedia(media=open(img, 'rb')) for img in images]
+                    Form.prev_message = await bot.send_media_group(
+                        callback_query.message.chat.id, 
+                        media=photo, 
+                    )
+                    await bot.send_message(
+                        callback_query.message.chat.id,
+                        text=text, 
+                        reply_markup=reply_markup
+                    )
+                    await callback_query.message.delete()
+            except:
                 await bot.send_message(
-                    callback_query.message.chat.id,
-                    text=text, 
-                    reply_markup=reply_markup
-                )
-                for mes in message_to_delete:
-                    await bot.delete_message(chat_id=callback_query.from_user.id, message_id=mes.message_id)
-                await callback_query.message.delete()
-            else:
-                
-                photo = [types.InputMedia(media=open(img, 'rb')) for img in images]
-                Form.prev_message = await bot.send_media_group(
-                    callback_query.message.chat.id, 
-                    media=photo, 
-                )
-                await bot.send_message(
-                    callback_query.message.chat.id,
-                    text=text, 
-                    reply_markup=reply_markup
-                )
+                        callback_query.message.chat.id,
+                        text=text, 
+                        reply_markup=reply_markup
+                    )
                 await callback_query.message.delete()
 
     if code[1] == 'count':
@@ -381,6 +436,40 @@ async def btn_callback(callback_query: types.CallbackQuery):
     
     if code[1] == 'lk':
         text, reply_markup = inline_kb_lk(str(callback_query.from_user.id))
+        await callback_query.message.edit_text(
+            text=text,
+            reply_markup=reply_markup
+        )
+
+    if code[1] == 'mysizes':
+        update_user(tg_id=str(callback_query.from_user.id), sizes=code[2])
+        text, reply_markup = inline_kb_mysizes(sizes=code[2])
+        await callback_query.message.edit_text(
+            text=text,
+            reply_markup=reply_markup
+        )
+    
+    if code[1] == 'mshs':
+        if len(code[2].split('-')) > 10:
+            return
+        update_user(tg_id=str(callback_query.from_user.id), shoe_sizes=code[2])
+        text, reply_markup = inline_kb_myshoesizes(sizes=code[2].split('-'))
+        await callback_query.message.edit_text(
+            text=text,
+            reply_markup=reply_markup
+        )
+    
+    if code[1] == 'mybr':
+        update_user(tg_id=str(callback_query.from_user.id), brands=code[2])
+        text, reply_markup = inline_kb_mybrands(brands=code[2].split('-'))
+        await callback_query.message.edit_text(
+            text=text,
+            reply_markup=reply_markup
+        )
+    
+    if code[1] == 'pr':
+        update_user(tg_id=str(callback_query.from_user.id), prices=code[2])
+        text, reply_markup = inline_kb_myprices(prices=code[2])
         await callback_query.message.edit_text(
             text=text,
             reply_markup=reply_markup
@@ -686,7 +775,12 @@ async def btn_callback(callback_query: types.CallbackQuery):
     if code[1] == 'addcategory':
         await Form.add_category.set()
         Form.prev_message = await bot.send_message(callback_query.from_user.id, 'Для отмены введите /stop\n\nДля продолжения введите название новой категории:')
-            
+    
+    if code[1] == 'addsubcategory':
+        await Form.add_subcategory.set()
+        category = get_category(id=code[2])
+        Form.prev_message = await bot.send_message(callback_query.from_user.id, f'Для отмены введите /stop\n\nДля продолжения введите название новой подкатегории в категории "{category.name}"')
+    
 
 # Рассылка сообщения
 @dp.callback_query_handler(lambda c: c.data == 'aceptsending', state=Form.new_message)
