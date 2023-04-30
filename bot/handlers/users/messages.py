@@ -345,10 +345,13 @@ async def add_user_promocode(message: types.Message, state: FSMContext):
     await message.delete()
 
     if promocode_exists(name=message.text):
-        new_promocode = get_promocode(name=message.text)
-        promocode_id = get_user_promocode(tg_id=str(message.from_user.id))
-        promocode = get_promocode(id=promocode_id)
-        if new_promocode.discount >= promocode.discount:
+        try:
+            new_promocode = get_promocode(name=message.text)
+            promocode_id = get_user_promocode(tg_id=str(message.from_user.id))
+            promocode = get_promocode(id=promocode_id)
+            if new_promocode.discount >= promocode.discount:
+                update_user(tg_id=str(message.from_user.id), promocode=message.text)
+        except:
             update_user(tg_id=str(message.from_user.id), promocode=message.text)
         
         text, reply_markup = inline_kb_lk(tg_id=str(message.from_user.id))
