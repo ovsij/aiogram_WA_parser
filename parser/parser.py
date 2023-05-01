@@ -431,7 +431,7 @@ async def get_valentino_catalog(url, subcategory):
             name_el = await session.wait_for_element(10, name_xpath, SelectorType.xpath)
             name = await name_el.get_text()
             article = name
-            #logging.info('name: ' + name)
+            logging.info('name: ' + name)
 
             if not os.path.exists(f"database/images/VALENTINO"):
                 os.mkdir(f"database/images/VALENTINO")

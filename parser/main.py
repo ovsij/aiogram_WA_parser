@@ -14,6 +14,7 @@ sys.path.append(PROJECT_ROOT)
 from database.crud import *
 from parser import *
 
+logging.basicConfig(level=logging.INFO)
 
 async def main():
     while True:
