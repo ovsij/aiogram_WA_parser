@@ -21,6 +21,7 @@ import sys
 import urllib.request
 
 from database import crud
+from bot.loader import dp, bot
 
 #https://web.whatsapp.com/catalog/393421807916
 #https://web.whatsapp.com/catalog/390143686270 категории
@@ -572,6 +573,7 @@ async def get_valentino():
                 article=item[8])
             #print(prod)
         print(f'Canceled {subcategory} added {len(items)} products') 
+    await bot.send_message(227184505, f'VALENTINO закончил парсинг')
     return items
 
 
@@ -700,7 +702,6 @@ async def get_lesilla():
             for prodict_url in product_urls:
                 i = product_urls.index(prodict_url) + 1
                 try:
-                    print(prodict_url)
                     items.append(await get_item(session, prodict_url, name, i))
                 except:
                     continue
@@ -732,7 +733,8 @@ async def get_lesilla():
                     image=item[6],
                     article=item[9])
                 #print(prod.name)
-            print(f'Canceled {name} added {len(items)} products') 
+            print(f'Canceled {name} added {len(items)} products')
+        await bot.send_message(227184505, f'LeSILLA закончил парсинг')
         return items
 
 
@@ -891,5 +893,6 @@ async def get_nike():
                     image=item[3],
                     article=item[6])
             print(f'Canceled {name} added {len(items)} products') 
+    await bot.send_message(227184505, f'NIKE закончил парсинг')
 
     

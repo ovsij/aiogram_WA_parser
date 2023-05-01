@@ -19,14 +19,14 @@ logging.basicConfig(level=logging.INFO)
 async def main():
     while True:
         tasks = set()
-        #task1 = asyncio.create_task(get_lesilla())
-        #tasks.add(task1)
+        task1 = asyncio.create_task(get_lesilla())
+        tasks.add(task1)
         task2 = asyncio.create_task(get_valentino())
         tasks.add(task2)
-        #task3 = asyncio.create_task(get_nike())
-        #tasks.add(task3)
+        task3 = asyncio.create_task(get_nike())
+        tasks.add(task3)
         L = await asyncio.gather(*tasks)
-        await asyncio.sleep(600)
+        await asyncio.sleep(10)
         
 
 if __name__ == '__main__':
