@@ -432,7 +432,7 @@ async def get_valentino_catalog(url, subcategory):
             name_el = await session.wait_for_element(10, name_xpath, SelectorType.xpath)
             name = await name_el.get_text()
             article = name
-            logging.info('name: ' + name)
+            #logging.info('name: ' + name)
 
             if not os.path.exists(f"database/images/VALENTINO"):
                 os.mkdir(f"database/images/VALENTINO")
@@ -572,7 +572,7 @@ async def get_valentino():
                 image=item[6],
                 article=item[8])
             #print(prod)
-        print(f'Canceled {subcategory} added {len(items)} products') 
+        logging.info(f'Canceled {subcategory} added {len(items)} products') 
     await bot.send_message(227184505, f'VALENTINO закончил парсинг')
     return items
 
@@ -733,7 +733,7 @@ async def get_lesilla():
                     image=item[6],
                     article=item[9])
                 #print(prod.name)
-            print(f'Canceled {name} added {len(items)} products')
+            logging.info(f'Canceled {name} added {len(items)} products')
         await bot.send_message(227184505, f'LeSILLA закончил парсинг')
         return items
 
@@ -892,7 +892,7 @@ async def get_nike():
                     price=item[2],
                     image=item[3],
                     article=item[6])
-            print(f'Canceled {name} added {len(items)} products') 
+            logging.info(f'Canceled {name} added {len(items)} products') 
     await bot.send_message(227184505, f'NIKE закончил парсинг')
 
     
