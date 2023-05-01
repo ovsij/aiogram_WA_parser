@@ -581,7 +581,6 @@ def inline_kb_lk(tg_id : str):
     )
     try:
         promocode_id = get_user_promocode(tg_id=tg_id)
-        print(promocode_id)
         promocode = get_promocode(id=promocode_id)
     except:
         promocode = False
