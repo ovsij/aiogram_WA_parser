@@ -75,7 +75,8 @@ def inline_kb_categories(tg_id : str, page : int = 1):
     
 def inline_kb_subcategories(tg_id : str, category : int = None, page : int = 1):
     #выводит названия суб-категорий, если их нет выводит продукты
-    text = f'КАТАЛОГ\n\n{get_category(id=category).name}'
+    category_name = get_category(id=category).name
+    text = f'КАТАЛОГ\n\n{category_name}'
     sub_categories = get_subcategory(category_id=category)
     text_and_data = []
     schema = []
@@ -91,6 +92,8 @@ def inline_kb_subcategories(tg_id : str, category : int = None, page : int = 1):
             schema.append(1)
 
         if tg_id in os.getenv('ADMINS'):
+            text_and_data.append([f'Удалить категорию {category_name}', f'btn_deletecategory_{category}'])
+            schema.append(1)
             text_and_data.append(['Добавить подкатегорию', f'btn_addsubcategory_{category}'])
             schema.append(1)
         text_and_data.append(btn_back(f'catalog_1'))
@@ -101,6 +104,8 @@ def inline_kb_subcategories(tg_id : str, category : int = None, page : int = 1):
     else:
         text_and_data = []
         if tg_id in os.getenv('ADMINS'):
+            text_and_data.append([f'Удалить категорию {category_name}', f'btn_deletecategory_{category}'])
+            schema.append(1)
             text_and_data.append(['Добавить подкатегорию', f'btn_addsubcategory_{category}'])
             schema.append(1)
         text_and_data.append(btn_back(f'catalog_1'))
@@ -120,13 +125,15 @@ def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : in
         text_and_data = []
         schema = []
         if tg_id in os.getenv('ADMINS'):
+            text_and_data.append(['Удалить подкатегорию', f'btn_deletesubcategory_{category}_{sub_category}'])
+            schema.append(1)
             text_and_data.append(['Добавить товар', f'btn_addproduct_{category}_{sub_category}'])
             schema.append(1)
 
         text_and_data.append(btn_back('menu'))
         schema.append(1)
 
-        text = 'К сожалению, в данной субкатегории пока ничего нет'
+        text = 'К сожалению, в данной подкатегории пока ничего нет'
         reply_markup = InlineConstructor.create_kb(text_and_data, schema)
         return [{'text' : text, 'reply_markup' : reply_markup, 'images' : False}]
     
@@ -201,6 +208,8 @@ def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : in
     ]
     schema = [1, 1, 1, 1, 1, 1, 1, 1]
     if tg_id in os.getenv('ADMINS'):
+        text_and_data.append([f'Удалить подкатегорию {get_subcategory(id=sub_category).name}', f'btn_deletesubcategory_{category}_{sub_category}'])
+        schema.append(1)
         text_and_data.insert(7, ['Добавить товар', f'btn_addproduct_{category}_{sub_category}'])
         schema.append(1)
     textInline_kb.append(
@@ -391,7 +400,7 @@ def inline_kb_product(tg_id : str, id : int, counter : int = 1):
     except:
         promocode = False
     if promocode:
-        promo_price = price - (price / 100 * promocode.discount)
+        promo_price = int(price) - (int(price) / 100 * promocode.discount)
         text += f'\n\nСо скидкой по промокоду {promocode.name}:\n{int(promo_price)} руб'
     if tg_id in os.getenv('ADMINS'):
         products_id = [p.id for p in products]

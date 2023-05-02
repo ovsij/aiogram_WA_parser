@@ -524,26 +524,22 @@ async def get_valentino_catalog(url, subcategory):
 async def get_valentino():
     
     url = 'https://myv-experience.valentino.com/0040001024/OUTLET%20SERRAVALLE'
-    categories = [
-        '/VAL/search?category=APPAREL',
-        '/VAL/search?category=SHOES',
-        '/VAL/search?category=BAGS',
-        '/VAL/search?category=SMALL%20LEATHER%20GOODS',
-        '/VAL/search?category=BIJOUX',
-        '/VAL/search?category=SOFT%20ACCESSORIES',
-        '/VMA/search?category=APPAREL',
-        '/VMA/search?category=SHOES',
-        '/VMA/search?category=BAGS',
-        '/VMA/search?category=SMALL%20LEATHER%20GOODS',
-        '/VMA/search?category=BIJOUX',
-        '/VMA/search?category=SOFT%20ACCESSORIES'
-    ]
+    categories = {
+        'Женская одежда': '/VAL/search?category=APPAREL',
+        'Женская обувь': '/VAL/search?category=SHOES',
+        'Женские сумки': '/VAL/search?category=BAGS',
+        'Женские кожаные изделия': '/VAL/search?category=SMALL%20LEATHER%20GOODS',
+        'Женская бижутерия': '/VAL/search?category=BIJOUX',
+        'Женские аксессуары': '/VAL/search?category=SOFT%20ACCESSORIES',
+        'Мужская одежда': '/VMA/search?category=APPAREL',
+        'Мужская обувь': '/VMA/search?category=SHOES',
+        'Мужские сумки': '/VMA/search?category=BAGS',
+        'Мужские кожаные изделия': '/VMA/search?category=SMALL%20LEATHER%20GOODS',
+        'Мужская бижутерия': '/VMA/search?category=BIJOUX',
+        'Мужские аксессуары': '/VMA/search?category=SOFT%20ACCESSORIES'
+    }
     
-    for category_url in categories:
-        if 'VMA' in category_url:
-            subcategory = 'Man ' + category_url.split('=')[1].replace('%20', ' ')
-        else:
-            subcategory = 'Woman ' + category_url.split('=')[1].replace('%20', ' ')
+    for subcategory, category_url in categories.items():
         print(f'Start {subcategory}')
         if not crud.subcategory_exists(name=subcategory, category='VALENTINO'):
             crud.create_subcategory(name=subcategory, category='VALENTINO')

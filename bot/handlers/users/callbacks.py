@@ -774,13 +774,34 @@ async def btn_callback(callback_query: types.CallbackQuery):
 
     if code[1] == 'addcategory':
         await Form.add_category.set()
-        Form.prev_message = await bot.send_message(callback_query.from_user.id, 'Для отмены введите /stop\n\nДля продолжения введите название новой категории:')
+        Form.prev_message = await bot.send_message(
+            callback_query.from_user.id, 
+            'Для отмены введите /stop\n\nДля продолжения введите название новой категории:'
+        )
     
+    if code[1] == 'deletecategory':
+        delete_category(id=code[2])
+        text, reply_markup = inline_kb_categories(tg_id=str(callback_query.from_user.id))
+        await callback_query.message.edit_text(
+            text=text,
+            reply_markup=reply_markup
+        )
+
     if code[1] == 'addsubcategory':
         await Form.add_subcategory.set()
         category = get_category(id=code[2])
-        Form.prev_message = await bot.send_message(callback_query.from_user.id, f'Для отмены введите /stop\n\nДля продолжения введите название новой подкатегории в категории "{category.name}"')
+        Form.prev_message = await bot.send_message(
+            callback_query.from_user.id, 
+            f'Для отмены введите /stop\n\nДля продолжения введите название новой подкатегории в категории "{category.name}"'
+        )
     
+    if code[1] == 'deletesubcategory':
+        delete_category(id=code[2])
+        text, reply_markup = inline_kb_categories(tg_id=str(callback_query.from_user.id))
+        await callback_query.message.edit_text(
+            text=text,
+            reply_markup=reply_markup
+        )
 
 # Рассылка сообщения
 @dp.callback_query_handler(lambda c: c.data == 'aceptsending', state=Form.new_message)
