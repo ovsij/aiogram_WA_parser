@@ -11,4 +11,7 @@ with db_session:
         Category(name='LeSILLA', phone='lesilla', margin=30)
     if not Category.exists(name='NIKE'):
         Category(name='NIKE', phone='nike', margin=30)
+    if not Category.exists(name='Dolce&Gabanna'):
+        Category(name='Dolce&Gabanna', phone='dolcegabanna', margin=30)
+        
 

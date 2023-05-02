@@ -441,9 +441,8 @@ async def get_valentino_catalog(url, subcategory):
                 os.mkdir(f"database/images/VALENTINO/{subcategory}")
             await asyncio.sleep(1)
             images = ''
-            for num in range(1, 20):
+            for num in range(1, 11):
                 try:
-                    
                     tag_id = webpage.split('swiper-wrapper-')[-1].split('"')[0]
 
                     image_xpath = f'//*[@id="swiper-wrapper-{tag_id}"]/div[{num}]/div/div/div/div'                    
@@ -451,6 +450,8 @@ async def get_valentino_catalog(url, subcategory):
                     image_link = await image_el.get_css_value('background-image')
                     #logging.info(image_link.strip('url(').strip(')'))
                     img_path = f"database/images/VALENTINO/{subcategory}/{i}_{name.replace(' ', '_').replace('/', '_')}_{num}.png"
+                    if os.path.exists(img_path):
+                        continue
                     if not os.path.exists(img_path):
                         request = requests.get(image_link.strip('url("').strip('")'))
                         with open(img_path, 'wb') as png:
@@ -651,9 +652,11 @@ async def get_item(session, url, subcategory, i):
     photo_span = soup.find('div', {'class' : 'Gallery-root'}).find_all('span')
     photo = [img.find('img').attrs['style'].split('background-image:url("')[1].strip('")').replace('q_1,w_30', 'q_100,w_3840') for img in photo_span]
     images = ''
-    for url in photo:
+    for url in photo[:10]:
         num = photo.index(url) + 1
         img_path = f"database/images/LESILLA/{subcategory}/{i}_{name.replace(' ', '_').replace('/', '_')}_{num}.png"
+        if os.path.exists(img_path):
+            continue
         request = requests.get(url)
         with open(img_path, 'wb') as png:
             png.write(request.content)
@@ -837,6 +840,8 @@ async def get_nike_subcategory(session, url, subcategory):
                 try:
                     num = image_links.index(url) + 1
                     img_path = f"database/images/NIKE/{subcategory}/{i}_{name.replace(' ', '_').replace('/', '_')}_{num}.png"
+                    if os.path.exists(img_path):
+                        continue
                     async with session.get(url, ssl=False) as response:
                         #image = await response.content
                         f = await aiofiles.open(img_path, mode='wb')
@@ -891,4 +896,155 @@ async def get_nike():
             logging.info(f'Canceled {name} added {len(items)} products') 
     await bot.send_message(227184505, f'NIKE закончил парсинг')
 
-    
+
+
+async def get_golcegabbana():
+    subcategories = {
+        'Женские платья' : 'https://dolcegabbanaprivatesales.com/collections/dresses-jumpsuits',
+        'Женские топы' : 'https://dolcegabbanaprivatesales.com/collections/top',
+        'Женские юбки' : 'https://dolcegabbanaprivatesales.com/collections/skirt',
+        'Женские брюки и шорты' : 'https://dolcegabbanaprivatesales.com/collections/pants',
+        'Женские пиджаки' : 'https://dolcegabbanaprivatesales.com/collections/jacket',
+        'Женские пальто' : 'https://dolcegabbanaprivatesales.com/collections/coat',
+        'Женские рубашки' : 'https://dolcegabbanaprivatesales.com/collections/shirts-woman',
+        'Женские джерси' : 'https://dolcegabbanaprivatesales.com/collections/jersey',
+        'Женские спортивные комтюмы' : 'https://dolcegabbanaprivatesales.com/collections/sportswear-1',
+        'Женский трикотаж' : 'https://dolcegabbanaprivatesales.com/collections/knitwear',
+        'Женские мини-сумки' : 'https://dolcegabbanaprivatesales.com/collections/mini-bags',
+        'Женские кросовки' : 'https://dolcegabbanaprivatesales.com/collections/sneakers-woman',
+        'Женские туфли' : 'https://dolcegabbanaprivatesales.com/collections/elegant-woman',
+        'Женская бижутерия' : 'https://dolcegabbanaprivatesales.com/collections/bijoux',
+        'Женские платки' : 'https://dolcegabbanaprivatesales.com/collections/foulard',
+        'Женские кожаные изделия' : 'https://dolcegabbanaprivatesales.com/collections/small-leather-goods-woman',
+        'Женские очки' : 'https://dolcegabbanaprivatesales.com/collections/eyewear-woman',
+        'Женские вязаные аксессуары' : 'https://dolcegabbanaprivatesales.com/collections/knit-accessories',
+        'Женские ремни' : 'https://dolcegabbanaprivatesales.com/collections/belts',
+        'Женские' : 'https://dolcegabbanaprivatesales.com/collections/bra',
+        'Женские бюстгальтеры' : 'https://dolcegabbanaprivatesales.com/collections/bra',
+        'Мужские брюки и шорты' : 'https://dolcegabbanaprivatesales.com/collections/pants-man',
+        'Мужские пиджаки' : 'https://dolcegabbanaprivatesales.com/collections/jacket-1',
+        'Мужские джинсы' : 'https://dolcegabbanaprivatesales.com/collections/denim-tc',
+        'Мужской трикотаж' : 'https://dolcegabbanaprivatesales.com/collections/knitwear-1',
+        'Мужская верхняя одежда' : 'https://dolcegabbanaprivatesales.com/collections/outerwear',
+        'Мужские рубашки' : 'https://dolcegabbanaprivatesales.com/collections/shirts',
+        'Мужские джерси' : 'https://dolcegabbanaprivatesales.com/collections/jersey-man',
+        'Мужские цветные брюки' : 'https://dolcegabbanaprivatesales.com/collections/garment-dyed',
+        'Мужские рюкзаки' : 'https://dolcegabbanaprivatesales.com/collections/backpacks-man',
+        'Мужские тапочки' : 'https://dolcegabbanaprivatesales.com/collections/rubber',
+        'Мужские кросовки' : 'https://dolcegabbanaprivatesales.com/collections/sneakers',
+        'Мужские туфли' : 'https://dolcegabbanaprivatesales.com/collections/elegant',
+        'Мужские эспадрильи' : 'https://dolcegabbanaprivatesales.com/collections/espadrilles-woman',
+        'Мужские маленькие кожаные изделия' : 'https://dolcegabbanaprivatesales.com/collections/small-leather-goods',
+        'Мужская бижутерия' : 'https://dolcegabbanaprivatesales.com/collections/bijoux-man',
+        'Мужские текстильные аксессуары' : 'https://dolcegabbanaprivatesales.com/collections/textile-accessories',
+        'Мужские очки' : 'https://dolcegabbanaprivatesales.com/collections/eyewear',
+        'Мужские ремни' : 'https://dolcegabbanaprivatesales.com/collections/belts-1',
+        'Мужские вязанные аксессуары' : 'https://dolcegabbanaprivatesales.com/collections/knit-accessories-man',
+        'Мужские коданые изделия' : 'https://dolcegabbanaprivatesales.com/collections/leather-man',
+        'Мужские плавки' : 'https://dolcegabbanaprivatesales.com/collections/beachwear-1',
+        'Для младенцев (девоки)' : 'https://dolcegabbanaprivatesales.com/collections/app-newborn-female',
+        'Для младенцев (мальчики)' : 'https://dolcegabbanaprivatesales.com/collections/apparel-newborn-male',
+        'Для малышей (девочки)' : 'https://dolcegabbanaprivatesales.com/collections/baby-female-1',
+        'Для малышей (мальчики)' : 'https://dolcegabbanaprivatesales.com/collections/baby-male',
+        'Для детей 2-12 лет' : 'https://dolcegabbanaprivatesales.com/collections/baby-2-12-years',
+        'Для новорожденных (3-30 месяцев)' : 'https://dolcegabbanaprivatesales.com/collections/kids-apparel',
+        'Детские аксессуары' : 'https://dolcegabbanaprivatesales.com/collections/kids-accessories',
+        'Детские кожаные изделия' : 'https://dolcegabbanaprivatesales.com/collections/baby-leather',
+        'Детская обувь' : 'https://dolcegabbanaprivatesales.com/collections/baby-shoes',
+    }
+    for subcategory, subcat_url in subcategories.items():
+        print(f'Starting: {subcategory}')
+        async with aiohttp.ClientSession(trust_env=True) as session:
+            items_urls = []
+            for i in range(1, 100):
+                url = subcat_url + f'?page={i}'
+                async with session.get(url, ssl=False) as response:
+                    webpage = await response.text()
+                    soup = bs(webpage, 'html.parser')
+                    items = [item.find('a').get('href') for item in soup.find_all('div', 'product-item small--one-half medium--one-half large-up--one-quarter')]
+                    if len(items) == 0:
+                        break
+                    items_urls += items
+        
+        items = []
+        for url in items_urls:
+            async with aiohttp.ClientSession(trust_env=True) as session:
+                async with session.get('https://dolcegabbanaprivatesales.com' + url, ssl=False) as response:
+                    webpage = await response.text()
+                    soup = bs(webpage, 'html.parser')
+                    title = soup.find('h1', 'product__title').text
+                    #print(title)
+                    old_price = soup.find('s', 'product__price--strike').text.strip('\n').strip(' ').strip('\n').strip(' ').strip('\n').strip(' ').strip('€').replace('.', '').replace(',', '.')
+                    #print(old_price)
+                    old_price = int((float(old_price) * (euro_cost() + 1)) * float(f"1.{crud.get_category(name='Dolce&Gabanna').margin}"))
+                    #print(old_price)
+                    current_price = soup.find('span', 'product__price--sale').text.strip('\n').strip(' ').strip('€').replace('.', '').replace(',', '.').strip('\n').strip(' ')
+                    #print(current_price)
+                    current_price = int((float(current_price) * (euro_cost() + 1)) * float(f"1.{crud.get_category(name='Dolce&Gabanna').margin}"))
+                    #print(current_price)
+                    percent = int(100 - float(current_price)/(float(old_price)/100))
+                    #print(percent)
+                    description = soup.find('div', 'product-description rte').text.strip('\n').strip(' ').strip('\n')
+                    description += f'\n\n<s>{old_price} руб.</s> -{percent}% {current_price} руб.'
+                    
+                    #print(description)
+                    sizes = [int(size.text.replace('\n', '').strip(' ')) for size in soup.find_all('div', 'variant-field')]
+                    if sizes[0] > 100:
+                        sizes = [size/100 for size in sizes]
+                    list_sizes = ''
+                    for size in sizes:
+                        list_sizes += f'{size}, '
+                    list_sizes = list_sizes.strip(', ')
+                    description += f'\n\nРазмеры: {list_sizes}'
+                    #print(list_sizes)
+                    article = url.split('/')[-1]
+
+                    # изображения
+                    if not os.path.exists(f"database/images/Dolce&Gabanna"):
+                        os.mkdir(f"database/images/Dolce&Gabanna")
+
+                    if not os.path.exists(f"database/images/Dolce&Gabanna/{subcategory}"):
+                        os.mkdir(f"database/images/Dolce&Gabanna/{subcategory}")
+                    image_links = ['https:' + photo.find('img', {'style': "display: none;"}).get('data-src') for photo in soup.find_all('div', ['product__photo', 'product__photo media--hidden'])]
+                    
+                    i = items_urls.index(url) + 1
+                    images = ''
+                    
+                    for url in image_links[:10]:
+                        try:
+                            num = image_links.index(url) + 1
+                            img_path = f"database/images/Dolce&Gabanna/{subcategory}/{i}_{title.replace(' ', '_').replace('/', '_')}_{num}.png"
+                            if not os.path.exists(img_path):
+                                async with session.get(url, ssl=False) as response:
+                                    f = await aiofiles.open(img_path, mode='wb')
+                                    await f.write(await response.read())
+                                    await f.close()
+                            images +=  img_path + '\n'
+                        except:
+                            continue
+                    if len(images) < 1:
+                        continue
+                    #print(images)
+                    items.append([title, description, current_price, images, list_sizes, article])
+                    #print([title, description, current_price, images, list_sizes, article])
+        crud.del_products(subcategory=subcategory)
+        try:
+            not_deleted_items = [product.article for product in crud.get_product(category_id=crud.get_category(name='Dolce&Gabanna').id, subcategory_id=crud.get_subcategory(name=subcategory).id)]
+        except:
+            not_deleted_items = []
+        for item in items:
+            if item[5] in not_deleted_items:
+                continue
+            prod = crud.create_product(
+                name=item[0],
+                category='Dolce&Gabanna',
+                subcategory=subcategory,
+                description=item[1],
+                sizes=item[4],
+                price=item[2],
+                image=item[3],
+                article=item[5])
+        print(f'Canceled {subcategory} added {len(items)} products')
+        logging.info(f'Canceled {subcategory} added {len(items)} products') 
+    await bot.send_message(227184505, f'Dolce&Gabanna закончил парсинг')
+

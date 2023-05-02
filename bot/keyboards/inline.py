@@ -111,7 +111,7 @@ def inline_kb_subcategories(tg_id : str, category : int = None, page : int = 1):
         text_and_data.append(btn_back(f'catalog_1'))
         schema.append(1)
         text = 'К сожалению, в данной категории пока ничего нет'
-        inline_kb = InlineConstructor.create_kb(text_and_data, [1, 1])
+        inline_kb = InlineConstructor.create_kb(text_and_data, schema)
         return text, inline_kb
         #return inline_kb_listproducts(tg_id=tg_id, category=category, page=page)
 
