@@ -988,9 +988,12 @@ async def get_golcegabbana():
                     description += f'\n\n<s>{old_price} руб.</s> -{percent}% {current_price} руб.'
                     
                     #print(description)
-                    sizes = [int(size.text.replace('\n', '').strip(' ')) for size in soup.find_all('div', 'variant-field')]
-                    if sizes[0] > 100:
-                        sizes = [size/100 for size in sizes]
+                    sizes = [size.text.replace('\n', '').strip(' ') for size in soup.find_all('div', 'variant-field')]
+                    try:
+                        if sizes[0] > 100:
+                            sizes = [size/100 for size in sizes]
+                    except:
+                        pass
                     list_sizes = ''
                     for size in sizes:
                         list_sizes += f'{size}, '
