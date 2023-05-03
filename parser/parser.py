@@ -900,7 +900,7 @@ async def get_nike():
 
 async def get_golcegabbana():
     subcategories = {
-        #'Женские платья' : 'https://dolcegabbanaprivatesales.com/collections/dresses-jumpsuits',
+        'Женские платья' : 'https://dolcegabbanaprivatesales.com/collections/dresses-jumpsuits',
         'Женские топы' : 'https://dolcegabbanaprivatesales.com/collections/top',
         'Женские юбки' : 'https://dolcegabbanaprivatesales.com/collections/skirt',
         'Женские брюки и шорты' : 'https://dolcegabbanaprivatesales.com/collections/pants',
