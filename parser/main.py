@@ -20,12 +20,12 @@ async def main():
     while True:
         try:
             tasks = set()
-            #task1 = asyncio.create_task(get_lesilla())
-            #tasks.add(task1)
-            #task2 = asyncio.create_task(get_valentino())
-            #tasks.add(task2)
-            #task3 = asyncio.create_task(get_nike())
-            #tasks.add(task3)
+            task1 = asyncio.create_task(get_lesilla())
+            tasks.add(task1)
+            task2 = asyncio.create_task(get_valentino())
+            tasks.add(task2)
+            task3 = asyncio.create_task(get_nike())
+            tasks.add(task3)
             task4 = asyncio.create_task(get_golcegabbana())
             tasks.add(task4)
             L = await asyncio.gather(*tasks)
