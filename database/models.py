@@ -33,6 +33,7 @@ class Cart(db.Entity):
     id = PrimaryKey(int, auto=True)
     user = Required(User)
     product = Required(str)
+    sizes = Required(str)
 
 class Product(db.Entity):
     id = PrimaryKey(int, auto=True)
@@ -62,21 +63,18 @@ class Category(db.Entity):
     margin = Optional(int)
     phone = Optional(str, unique=True)
     #catalog = Optional('Catalog', nullable=True)
-    promocodes = Set('Promocode')
+    promocodes = Set('PromocodeCategory')
     product = Set(Product)
     users = Set(User)
-
-#class Catalog(db.Entity):
-#   id = PrimaryKey(int, auto=True)
-#   phone = Required(str, unique=True)
-#    link = Required(str)
-#    margin = Optional(int)
-#    product = Set(Product)
-#    category = Set(Category)
 
 class Promocode(db.Entity):
     id = PrimaryKey(int, auto=True)
     name = Required(str, unique=True)
-    discount = Optional(int)
-    categories = Set(Category)
+    categories = Set('PromocodeCategory')
     users = Set(User)
+
+class PromocodeCategory(db.Entity):
+    id = PrimaryKey(int, auto=True)
+    promocode = Required(Promocode)
+    category = Required(Category)
+    discount = Required(int)

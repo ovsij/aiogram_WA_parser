@@ -900,7 +900,7 @@ async def get_nike():
 
 async def get_golcegabbana():
     subcategories = {
-        'Женские платья' : 'https://dolcegabbanaprivatesales.com/collections/dresses-jumpsuits',
+        #'Женские платья' : 'https://dolcegabbanaprivatesales.com/collections/dresses-jumpsuits',
         'Женские топы' : 'https://dolcegabbanaprivatesales.com/collections/top',
         'Женские юбки' : 'https://dolcegabbanaprivatesales.com/collections/skirt',
         'Женские брюки и шорты' : 'https://dolcegabbanaprivatesales.com/collections/pants',
@@ -973,7 +973,7 @@ async def get_golcegabbana():
                     webpage = await response.text()
                     soup = bs(webpage, 'html.parser')
                     title = soup.find('h1', 'product__title').text
-                    #print(title)
+                    print(title)
                     old_price = soup.find('s', 'product__price--strike').text.strip('\n').strip(' ').strip('\n').strip(' ').strip('\n').strip(' ').strip('€').replace('.', '').replace(',', '.')
                     #print(old_price)
                     old_price = int((float(old_price) * (euro_cost() + 1)) * float(f"1.{crud.get_category(name='Dolce&Gabanna').margin}"))

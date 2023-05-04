@@ -98,17 +98,7 @@ async def btn_callback(callback_query: types.CallbackQuery):
                 reply_markup=textReply_markup[-1]['reply_markup']
             )
             return
-            """
-            if 's=' in code[4]:
-                textReply_markup = inline_kb_listproducts(
-                    tg_id=str(callback_query.from_user.id), 
-                    category=int(code[2]), 
-                    sub_category=int(code[3]),
-                    sizes=code[4].strip('s='),
-                    prices=code[5].strip('p='),
-                    page=[int(p) for p in code[-1].split('-')]
-                )
-            """
+          
         else:
             textReply_markup = inline_kb_listproducts(
                 tg_id=str(callback_query.from_user.id), 
@@ -352,15 +342,27 @@ async def btn_callback(callback_query: types.CallbackQuery):
         await callback_query.message.edit_caption(caption=text, reply_markup=reply_markup)
 
     if code[1] == 'tocart':
-        add_to_cart(tg_id=str(callback_query.from_user.id), product_id=int(code[2]))
-        reply_markup = callback_query.message['reply_markup']
-        reply_markup['inline_keyboard'][0][0]['text'] = 'Удалить из корзины'
-        reply_markup['inline_keyboard'][0][0]['callback_data'] = f'btn_delfromcart_{code[-1]}'
-
-        await callback_query.message.edit_text(
-            text = callback_query.message['text'],
-            reply_markup=reply_markup
-        )
+        if 's=' in code[-1]:
+            sizes = code[-1].split('-')
+            if len(sizes) > 6:
+                return
+            add_to_cart(tg_id=str(callback_query.from_user.id), product_id=int(code[2]), sizes=code[-1].strip('s='))
+            
+            text, reply_markup = inline_kb_tocart(product_id=int(code[2]), sizes=code[-1].strip('s=').split('-'))
+            text += f"\n\nРазмер(ы) в корзине: {code[-1].strip('s=').replace('-', ', ')}"
+            await callback_query.message.edit_text(
+                text=text,
+                reply_markup=reply_markup
+            )
+        else:
+            text, reply_markup = inline_kb_tocart(product_id=int(code[2]))
+            await callback_query.message.edit_text(
+                text=text,
+                reply_markup=reply_markup
+            )
+            #reply_markup = callback_query.message['reply_markup']
+            #reply_markup['inline_keyboard'][0][0]['text'] = 'Удалить из корзины'
+            #reply_markup['inline_keyboard'][0][0]['callback_data'] = f'btn_delfromcart_{code[-1]}'
 
     if code[1] == 'delfromcart':
         delete_from_cart(tg_id=str(callback_query.from_user.id), product_id=code[-1])
@@ -571,11 +573,24 @@ async def btn_callback(callback_query: types.CallbackQuery):
         )
 
     if code[1] == 'promocodecategory':
-        update_promocode(name=get_promocode(id=code[2]).name, categories=[int(cat) for cat in code[3].split('-')])
-        text, reply_markup = inline_kb_addpromocode_catalogs(name=get_promocode(id=code[2]).name, cat_ids=code[3].split('-'))
+        update_promocode(name=get_promocode(id=code[2]).name, categories=[int(cat) for cat in code[3].split('-')], discount=int(code[4]))
+        text, reply_markup = inline_kb_addpromocode_catalogs(name=get_promocode(id=code[2]).name, cat_ids=code[3].split('-'), discount=int(code[4]))
         await callback_query.message.edit_text(
                 text=text,
                 reply_markup=reply_markup
+            )
+        
+    if code[1] == 'editpd':
+        if len(code) == 3:
+            text, reply_markup = inline_kb_editpromocodediscount(promocode_id=int(code[2]))
+            await callback_query.message.edit_text(
+                text=text,
+                reply_markup=reply_markup
+            )
+        elif len(code) == 4:
+            await Form.editpromocode_discount.set()
+            Form.prev_message = await callback_query.message.edit_text(
+                text=f'Введите новую скидку по промокоду "{get_promocode(id=int(code[2])).name}" для категории "{get_category(id=int(code[3])).name}"',
             )
         
     if code[1] == 'sendmessage':

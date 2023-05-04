@@ -306,39 +306,84 @@ async def get_article(message: types.Message, state: FSMContext):
             text=text, 
             reply_markup=reply_markup
         )
-# получаем промокод от админа
+# получаем название промокода от админа
 @dp.message_handler(state=Form.addpromocode)
 async def add_admin_promocode(message: types.Message, state: FSMContext):
+    create_promocode(name=message.text.split(': ')[-1])
+
     await state.finish()
     await bot.delete_message(chat_id=message.chat.id, message_id=Form.prev_message.message_id)
     await message.delete()
 
     await Form.addpromocode_discount.set()
     Form.prev_message = await bot.send_message(
-            message.from_user.id,
-            text=f'Введите размер скидки по промокоду: {message.text}', 
-        )
+        message.from_user.id,
+        text=f'Введите общий размер скидки по промокоду: {message.text}\n(изменить размер скидки для конкретной категории можно будет позже)', 
+    )
 
 # получаем размер скидки от админа
 @dp.message_handler(state=Form.addpromocode_discount)
 async def add_admin_promocode_discount(message: types.Message, state: FSMContext):
-    await state.finish()
+    
     await bot.delete_message(chat_id=message.chat.id, message_id=Form.prev_message.message_id)
     await message.delete()
-    
+    try:
+        i = int(message.text)
+        if i < 1 or i > 99:
+            Form.prev_message = await bot.send_message(
+            message.from_user.id,
+            text=f'Введите общий размер скидки по промокоду: {message.text}\n(введите целое число от 1 до 99)',
+            )
+            return
+    except:
+        Form.prev_message = await bot.send_message(
+            message.from_user.id,
+            text=f'Введите общий размер скидки по промокоду: {message.text}\n(введите целое число от 1 до 99)',
+        )
+        return
+    await state.finish()
 
-    create_promocode(name=Form.prev_message.text.split(': ')[-1], discount=message.text)
-    text, reply_markup = inline_kb_addpromocode_catalogs(name=Form.prev_message.text.split(': ')[-1])
+    text, reply_markup = inline_kb_addpromocode_catalogs(name=Form.prev_message.text.split(': ')[-1].split('\n')[0], discount=int(message.text))
 
-    await bot.send_message(
+    Form.prev_message = await bot.send_message(
             message.from_user.id,
             text=text,
             reply_markup=reply_markup
         )
+
+# получаем новую скидку для категории
+@dp.message_handler(state=Form.editpromocode_discount)
+async def add_user_promocode(message: types.Message, state: FSMContext):
+    
+    await bot.delete_message(chat_id=message.chat.id, message_id=Form.prev_message.message_id)
+    await message.delete()
+    try:
+        category = get_category(name=Form.prev_message.text.split('"')[-2])
+        promocode = get_promocode(name=Form.prev_message.text.split('"')[-4])
+        i = int(message.text)
+        if i < 1 or i > 99:
+            Form.prev_message = await bot.send_message(
+            message.from_user.id,
+            text=f'Введите новую скидку по промокоду "{promocode.name}" для категории "{category.name}"(введите целое число от 1 до 99)',
+            )
+            return
+    except:
+        Form.prev_message = await bot.send_message(
+            message.from_user.id,
+            text=f'Введите целое число от 1 до 99',
+        )
+        return
+    await state.finish()
+    update_promocodecategory(promocode_id=promocode.id, category_id=category.id, discount=int(message.text))
+    text, reply_markup = inline_kb_editpromocode(promocode_id=promocode.id)
+    await bot.send_message(
+        message.from_user.id,
+        text=text,
+        reply_markup=reply_markup
+    )
     
 # получаем промокод от юзера
 @dp.message_handler(state=Form.promocode_user)
-#@db_session
 async def add_user_promocode(message: types.Message, state: FSMContext):
     await state.finish()
     await bot.delete_message(chat_id=message.chat.id, message_id=Form.prev_message.message_id)

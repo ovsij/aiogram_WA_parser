@@ -7,26 +7,23 @@ def btn_back(code : str):
     return btn_back
 
 def btn_prevnext(length, text_and_data, schema, page, name):
-    #if length % 10 == 0:
-    #    num_pages = length/10
-    #    del text_and_data[page * 10 - 10:page * 10]
-    #    del schema[page * 10 - 10:page * 10]
+    
     #if length % 10 > 0:
-    num_pages = length//10 + 1
+    num_pages = length//30 + 1
     # первая страница
     if page == 1:
-        del text_and_data[10:]
-        del schema[10:]
+        del text_and_data[30:]
+        del schema[30:]
     # последняя страница
     elif page == num_pages:
-        del text_and_data[:page * 10 - 10]
-        del schema[:page * 10 - 10]
+        del text_and_data[:page * 30 - 30]
+        del schema[:page * 30 - 30]
     # промежуточные страницы
     else:
-        del text_and_data[(page * 10):]
-        del text_and_data[:page * 10 - 10]
-        del schema[(page * 10):]
-        del schema[:page * 10 - 10]
+        del text_and_data[(page * 30):]
+        del text_and_data[:page * 30 - 30]
+        del schema[(page * 30):]
+        del schema[:page * 30 - 30]
             
     btn_prev = f'btn_{name}_{page - 1}'
     btn_next = f'btn_{name}_{page + 1}'

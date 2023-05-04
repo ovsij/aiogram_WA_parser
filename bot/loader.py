@@ -31,5 +31,6 @@ class Form(StatesGroup):
     promocode_user = State()
     addpromocode = State()
     addpromocode_discount = State()
+    editpromocode_discount = State()
     add_category = State()
     add_subcategory = State()

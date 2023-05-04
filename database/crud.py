@@ -81,13 +81,17 @@ def update_user(
 
 # Cart
 @db_session()
-def add_to_cart(tg_id : str, product_id : int):
+def add_to_cart(tg_id : str, product_id : int, sizes : str):
     if not Cart.exists(user=User.get(tg_id=tg_id), product=Product[product_id].article):
-        return Cart(user=User.get(tg_id=tg_id), product=Product[product_id].article)
+        return Cart(user=User.get(tg_id=tg_id), product=Product[product_id].article, sizes=sizes)
+    else:
+        cart_to_upgrade = Cart.get(user=User.get(tg_id=tg_id), product=Product[product_id].article)
+        cart_to_upgrade.sizes = sizes
+        return cart_to_upgrade
 
 @db_session()
 def get_cart(tg_id : str):
-    return [Product.get(article=str(article)) for article in select(cart.product for cart in Cart if cart.user == User.get(tg_id=tg_id))[:]]
+    return [[Product.get(article=str(article.product)), article.sizes] for article in select(cart for cart in Cart if cart.user == User.get(tg_id=tg_id))[:]]
 
 @db_session()
 def delete_from_cart(tg_id : str, product_id : int):
@@ -376,8 +380,8 @@ def subcategory_exists(name : str, category : str):
 
 # Promocode
 @db_session()
-def create_promocode(name : str, discount : int):
-    return Promocode(name=name, discount=discount)
+def create_promocode(name : str):
+    return Promocode(name=name)
 
 @db_session()
 def get_promocode(id : int = None, name : str = None, tg_id : str = None, users : bool = False, categories : bool = False):
@@ -385,7 +389,7 @@ def get_promocode(id : int = None, name : str = None, tg_id : str = None, users 
         if users:
             return select(u for u in Promocode[id].users)[:]
         if categories:
-            return select(u for u in Promocode[id].categories)[:]
+            return select(u for u in Promocode[id].categories.category)[:]
         else:
             return Promocode[id]
     if name:
@@ -398,11 +402,18 @@ def get_promocode(id : int = None, name : str = None, tg_id : str = None, users 
 @db_session()
 def update_promocode(name : str, discount : int = None, categories : list = None, tg_id : str = None):
     promocode_to_update = Promocode.get(name=name)
-    if discount:
+    if discount and not categories:
         promocode_to_update.discount = discount
-    if categories:
+    if categories and not discount:
         categories_obj = [get_category(id=cat) for cat in categories]
         promocode_to_update.categories = categories_obj
+    if categories and discount:
+        categories_obj = [get_category(id=cat) for cat in categories]
+        for cat in categories_obj:
+            if promocodecategory_exists(promocode_id=promocode_to_update.id, category_id=cat.id):
+                pass
+            else:
+                create_promocodecategory(promocode_id=promocode_to_update.id, category_id=cat.id, discount=discount)
     if tg_id:
         user = User.get(tg_id=tg_id)
         promocode_to_update.users += user
@@ -426,30 +437,29 @@ def get_user_promocode(tg_id : str):
     except:
         return 'False'
 
-#Создание демонстрационной базы данных
+# PromocodeCategory
 @db_session()
-def update_catalog_info():
-    df = get_catalog('https://web.whatsapp.com/catalog/393427688947')
-    print(df)
-    """
-    try:
-        os.mkdir(f'database/images/{tg_id}')
-    except FileExistsError:
-        pass
+def create_promocodecategory(promocode_id : int, category_id : int, discount : int):
+    return PromocodeCategory(promocode=Promocode[promocode_id], category=Category[category_id], discount=discount)
 
-    for i in range(len(df)):
-        if not Product.exists(name=df.iloc[i]['Наименование']):
+@db_session()
+def get_promocodecategory(promocode_id : int, category_id : int = None):
+    if promocode_id and category_id:
+        return PromocodeCategory.get(promocode=Promocode[promocode_id], category=Category[category_id])
+    else:
+        return select(p for p in PromocodeCategory if p.promocode == Promocode[promocode_id])[:]
 
-            # создаем продукт
-            product = create_product(
-                name=str(df.iloc[i]['Наименование']),
-                description=str(df.iloc[i]['Описание']),
-                price=float(df.iloc[i]['Цена']),
-                image=f"database/images/{df.iloc[i]['Наименование']}.jpeg",
-                )
-            
-            if Category.exists(name=str(df.iloc[i]['Категория'])):
-                update_product(product=product, category=Category.get(name=str(df.iloc[i]['Категория'])))
-            else:
-                update_product(product=product, category=Category(name=str(df.iloc[i]['Категория'])))       
-"""
+@db_session()
+def update_promocodecategory(promocode_id : int, category_id : int, discount : int):
+    promcat_to_update = PromocodeCategory.get(promocode=Promocode[promocode_id], category=Category[category_id])
+    promcat_to_update.discount = discount
+    return promcat_to_update
+
+@db_session()
+def delete_promocodecategory(promocode_id : int, category_id : int):
+    promcat_to_delete = PromocodeCategory.get(promocode=Promocode[promocode_id], category=Category[category_id])
+    promcat_to_delete.delete()
+
+@db_session()
+def promocodecategory_exists(promocode_id : int, category_id : int):
+    return PromocodeCategory.exists(promocode=Promocode[promocode_id], category=Category[category_id])

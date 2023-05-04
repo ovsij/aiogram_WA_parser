@@ -50,7 +50,7 @@ def inline_kb_categories(tg_id : str, page : int = 1):
             text_and_data.append([f'{cat.name}', f'btn_category_{cat.id}_1'])
             schema.append(1)
         
-        if len(categories) > 10:
+        if len(categories) > 30:
             text_and_data, schema = btn_prevnext(len(categories), text_and_data, schema, page, name='catalog')
         
         if tg_id in os.getenv('ADMINS'):
@@ -84,7 +84,7 @@ def inline_kb_subcategories(tg_id : str, category : int = None, page : int = 1):
         for sc in sub_categories:
             text_and_data.append([f'{sc.name}', f'btn_ls_{category}_{sc.id}_s=_p=_n_0-5'])
             schema.append(1)
-        if len(sub_categories) > 10:
+        if len(sub_categories) > 30:
             text_and_data, schema = btn_prevnext(len(sub_categories), text_and_data, schema, page, name=f'category_{category}')
 
         if get_category(id=category).name == 'LeSILLA':
@@ -208,9 +208,9 @@ def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : in
     ]
     schema = [1, 1, 1, 1, 1, 1, 1, 1]
     if tg_id in os.getenv('ADMINS'):
-        text_and_data.append([f'Удалить подкатегорию {get_subcategory(id=sub_category).name}', f'btn_deletesubcategory_{category}_{sub_category}'])
-        schema.append(1)
         text_and_data.insert(7, ['Добавить товар', f'btn_addproduct_{category}_{sub_category}'])
+        schema.append(1)
+        text_and_data.insert(8, [f'Удалить подкатегорию {get_subcategory(id=sub_category).name}', f'btn_deletesubcategory_{category}_{sub_category}'])
         schema.append(1)
     textInline_kb.append(
         {
@@ -221,7 +221,37 @@ def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : in
     )
     
     return textInline_kb
-    
+def inline_kb_tocart(product_id : int, sizes : list = []):
+    text = 'Выберите размер, который хотите добавить в корзину'
+    text_and_data = []
+    schema = []
+    product = get_product(id=product_id)
+    for size in product.sizes.split(', '):
+        if size in sizes:
+            sizes_emoji = ':white_check_mark:'
+            sizes_code = '_s='
+            new_sizes = [s for s in sizes]
+            new_sizes.remove(size)
+            for ns in new_sizes:
+                sizes_code += ns + '-'
+            sizes_code = sizes_code.strip('-')
+        else:
+            sizes_emoji = ''
+            sizes_code = '_s='
+            new_sizes = [s for s in sizes]
+            new_sizes.append(size)
+            for ns in new_sizes:
+                sizes_code += ns + '-'
+            sizes_code = sizes_code.strip('-')
+        text_and_data.append([emojize(f'{sizes_emoji} {size}', language='alias'), f'btn_tocart_{product.id}{sizes_code}'])
+    for _ in range(len(text_and_data) // 4):
+        schema.append(4)
+    if len(text_and_data) % 4 > 0:
+        schema.append(len(text_and_data) % 4)
+   
+    inline_kb = InlineConstructor.create_kb(text_and_data, schema)
+    return text, inline_kb  
+
 def inline_kb_sizefilter(category : int = None, sub_category : int = None, sizes_code_list : list = None, prices_code_list : list = None, page : list = None, sort : str = None):
     text = "Выберите один или несколько размеров из доступных для данной категории товаров\n\nМаксимум можно выбрать 6 размеров"
     text_and_data = []
@@ -372,7 +402,7 @@ def inline_kb_products(tg_id : str, category : int = None, sub_category : int = 
             schema.append(1)
     else:
         text += '\n\n К сожалению, на данный момент в этой категории ничего нет'
-    if len(products) > 10:
+    if len(products) > 30:
         text_and_data, schema = btn_prevnext(len(products), text_and_data, schema, page, name=btn_prevnext_name)
     if sub_category == None:
         text_and_data.append(btn_back(f'catalog_1'))
@@ -464,21 +494,21 @@ async def inline_kb_cart(tg_id : str, page : list = [0, 5]):
     products = get_cart(tg_id=tg_id)
     for product in products[page[0]:page[1]]:
         dct = {}
-        description = product.description
-        description = '' if not product.description else product.description
-        price = 'Не указана' if not product.price else f'{product.price} руб.'
-        dct['text'] = f'{product.name}\n\nАртикул: {product.article}\n{description}\n\nЦена: {price}'
-        if cart_exists(tg_id=tg_id, product_id=product.id):
+        description = '' if not product[0].description else product[0].description.split('\n\nSizes:')[0].split('\n\nРазмеры:')[0]
+        description += f"\n\nВыбранные размеры: {product[1].replace(' ', ', ')}"
+        price = 'Не указана' if not product[0].price else f'{product[0].price} руб.'
+        dct['text'] = f'{product[0].name}\n\nАртикул: {product[0].article}\n{description}\n\nЦена: {price}'
+        if cart_exists(tg_id=tg_id, product_id=product[0].id):
             text_and_data = [
-                [emojize('Удалить из корзины', language='alias'), f'btn_delfromcart_{product.id}']
+                [emojize('Удалить из корзины', language='alias'), f'btn_delfromcart_{product[0].id}']
             ]
         else:
             text_and_data = [
-                [emojize('Добавить в корзину', language='alias'), f'btn_tocart_{product.id}']
+                [emojize('Добавить в корзину', language='alias'), f'btn_tocart_{product[0].id}']
             ]
 
         dct['reply_markup'] = InlineConstructor.create_kb(text_and_data, [1])
-        dct['images'] = product.image
+        dct['images'] = product[0].image
         textInline_kb.append(dct)
 
     len_prodcts = page[1] if len(textInline_kb) >= 5 else len(products)
@@ -583,7 +613,6 @@ def inline_kb_contact():
     inline_kb = InlineConstructor.create_kb(text_and_data, schema, button_type)
     return text, inline_kb
 
-
 def inline_kb_lk(tg_id : str):
     text = markdown.text(
         'ЛИЧНЫЙ КАБИНЕТ\n'
@@ -627,7 +656,13 @@ def inline_kb_lk(tg_id : str):
         text = text.strip(', ')
         text += '\n'
     if promocode:
-        text += f'\nПромокод: \n{promocode.name} (- {promocode.discount} %)'
+        text += f'\nМои промокоды:'
+        text += emojize(f'\n:sparkle:{promocode.name} (', language='alias')
+        for pc in get_promocodecategory(promocode_id=promocode.id):
+            category = get_category(id=pc.category.id)
+            text += f'{category.name} -{pc.discount}%, '
+        text = text.strip(', ')
+        text += ')'
 
     text_and_data = [
         [emojize(':money_with_wings: Ввести промокод', language='alias'), 'btn_promocode'],
@@ -836,7 +871,7 @@ def inline_kb_promocodes():
     schema = []
     promocodes = get_promocode()
     for promocode in promocodes:
-        text_and_data.append([f'{promocode.name} (- {promocode.discount} %)', f'btn_editpromocode_{promocode.id}'])
+        text_and_data.append([f'{promocode.name}', f'btn_editpromocode_{promocode.id}'])
         schema.append(1)
 
     text_and_data.append(['Добавить промокод', 'btn_addpromocode'])
@@ -850,24 +885,41 @@ def inline_kb_editpromocode(promocode_id : int):
     promocode = get_promocode(id=promocode_id)
     users = get_promocode(id=promocode_id, users=True)
     promo_categories = ''
-    for cat in get_promocode(id=promocode_id, categories=True):
-        promo_categories += f'- {cat.name}\n'
+    for pc in get_promocodecategory(promocode_id=promocode_id):
+        category = get_category(id=pc.category.id)
+        promo_categories += f'- {category.name} (- {pc.discount} %)\n'
     text = markdown.text(
-        f'Промокод: {promocode.name}',
-        f'Размер скидки: -{promocode.discount} %',
-        f'Распространяется на категории:\n{promo_categories}'
+        f'Промокод: {promocode.name}\n',
+        f'Категории и размеры скидок:\n{promo_categories}',
         f'Промокодом воспользовались {len(users)} человек',
         sep='\n')
     text_and_data = [
+        ['Изменить скидку для категории', f'btn_editpd_{promocode.id}'],
         ['Статистика', f'btn_userspromocode_{promocode.id}'],
         ['Удалить промокод', f'btn_removepromocode_{promocode.id}'],
         btn_back('promocodes')
     ]
-    schema = [1, 1, 1]
+    schema = [1, 1, 1, 1]
     inline_kb = InlineConstructor.create_kb(text_and_data, schema)
     return text, inline_kb 
 
-def inline_kb_addpromocode_catalogs(name : str, cat_ids : list = []):
+def inline_kb_editpromocodediscount(promocode_id : int):
+    promocode = get_promocode(id=promocode_id)
+    text = f'Выберите категорию скидку по которой хотите изменить для промокода {promocode.name}'
+    text_and_data = []
+    schema = []
+    promcats = get_promocodecategory(promocode_id=promocode_id)
+    for cat in promcats:
+        category = get_category(id=cat.category.id)
+        text_and_data.append([category.name, f'btn_editpd_{promocode.id}_{category.id}'])
+        schema.append(1)
+    text_and_data.append(btn_back('editpromocode'))
+    schema.append(1)
+    inline_kb = InlineConstructor.create_kb(text_and_data, schema)
+    return text, inline_kb 
+
+
+def inline_kb_addpromocode_catalogs(name : str, discount : int, cat_ids : list = []):
     text = markdown.text(
         f'Выберите категории, на который будет распространяться промокод {name}'
     )
@@ -887,7 +939,7 @@ def inline_kb_addpromocode_catalogs(name : str, cat_ids : list = []):
                     cats_code += ncat + '-'
                 cats_code = cats_code.strip('-')
                 new_cats = []
-                text_and_data.append([emojize(f':white_check_mark:{cat.name}', language='alias'), f'btn_promocodecategory_{promocode.id}_{cats_code}'])
+                text_and_data.append([emojize(f':white_check_mark:{cat.name}', language='alias'), f'btn_promocodecategory_{promocode.id}_{cats_code}_{discount}'])
             else:
 
                 cats_code = ''
@@ -897,7 +949,7 @@ def inline_kb_addpromocode_catalogs(name : str, cat_ids : list = []):
                     cats_code += ncat + '-'
                 cats_code = cats_code.strip('-')
                 new_cats = []
-                text_and_data.append([f'{cat.name}', f'btn_promocodecategory_{promocode.id}_{cats_code}'])
+                text_and_data.append([f'{cat.name}', f'btn_promocodecategory_{promocode.id}_{cats_code}_{discount}'])
             schema.append(1)
         text_and_data.append([emojize(':heavy_check_mark: Применить', language='alias'), 'btn_promocodes'])
         schema.append(1)
