@@ -187,8 +187,8 @@ def create_products(items):
         else:
             category = Category(name=item[1])
         if subcategory:
-            if subcategory_exists(name=item[2]):
-                subcategory = SubCategory.get(name=item[2])
+            if subcategory_exists(name=item[2], category=category):
+                subcategory = SubCategory.get(name=item[2], category=category)
             else:
                 subcategory = SubCategory(name=item[2], category=item[1])
         Product(
@@ -317,7 +317,7 @@ def del_products(catalog : str = None, category : str = None, subcategory : str 
         for product in  products_to_delete:
             product.delete()
     if subcategory:
-        products_to_delete = select(p for p in Product if p.subcategory == SubCategory.get(name=subcategory) and not p.deleted and not p.edited)[:]
+        products_to_delete = select(p for p in Product if p.subcategory == SubCategory.get(name=subcategory, category=category) and not p.deleted and not p.edited)[:]
         for product in  products_to_delete:
             product.delete()
 
@@ -364,16 +364,16 @@ def get_subcategory(id : int = None, name : str = None, category_id : int = None
     if id:
         return SubCategory[id]
     if name:
-        return SubCategory.get(name=name)
+        return SubCategory.get(name=name, category=Category[category_id])
     if category_id:
         return select(sc for sc in SubCategory if sc.category == Category[category_id])[:]
 
 @db_session()
-def delete_subcategory(id : int = None, name : str = None):
+def delete_subcategory(id : int = None, name : str = None, category_id : int = None):
     if id:
         SubCategory[id].delete()
     if name:
-        SubCategory.get(name=name).delete()
+        SubCategory.get(name=name, category=Category[category_id]).delete()
 
 @db_session()
 def subcategory_exists(name : str, category : str):
