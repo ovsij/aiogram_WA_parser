@@ -793,7 +793,6 @@ async def get_nike_subcategory(session, url, subcategory):
                 item_webpage = await response.json()
             # название товара
             name = prod['title']
-            print(name)
             
             # артикул
             article = prod['url'].split('/')[-1]
