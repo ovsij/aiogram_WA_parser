@@ -1,7 +1,7 @@
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State
-from aiogram.utils import exceptions
+from aiogram.utils import exceptions, markdown
 from dotenv import load_dotenv
 import logging
 import os
@@ -346,7 +346,7 @@ async def btn_callback(callback_query: types.CallbackQuery):
             sizes = code[-1].split('-')
             if len(sizes) > 6:
                 return
-            add_to_cart(tg_id=str(callback_query.from_user.id), product_id=int(code[2]), sizes=code[-1].strip('s='))
+            add_to_cart(tg_id=str(callback_query.from_user.id), product_id=int(code[2]), sizes=code[-1].strip('s=').replace('-', ', '))
             
             text, reply_markup = inline_kb_tocart(product_id=int(code[2]), sizes=code[-1].strip('s=').split('-'))
             text += f"\n\nРазмер(ы) в корзине: {code[-1].strip('s=').replace('-', ', ')}"
@@ -383,26 +383,151 @@ async def btn_callback(callback_query: types.CallbackQuery):
         )
     
     if code[1] == 'cart':
-        textReply_markup  = await inline_kb_cart(tg_id=str(callback_query.from_user.id), page=[int(p) for p in code[-1].split('-')])
-        for item in textReply_markup:
-            if not item['images']:
-                await bot.send_message(
-                    callback_query.message.chat.id,
-                    text=item['text'], 
-                    reply_markup=item['reply_markup']
-                )
-            else:
-                images = item['images'].split('\n')
-                photo = [types.InputMedia(media=open(img, 'rb'), caption=item['text']) if images.index(img) == 0 else types.InputMedia(media=open(img, 'rb')) for img in images]
-                await bot.send_media_group(
-                    callback_query.message.chat.id, 
-                    media=photo,
-                )
-                await bot.send_message(
-                    callback_query.message.chat.id,
-                    text='Выберите действие',
-                    reply_markup=item['reply_markup']
-                )
+        if code[-1] == 'cart':
+            textReply_markup  = await inline_kb_cart(tg_id=str(callback_query.from_user.id), page=[0, 5])
+            for item in textReply_markup:
+                if not item['images']:
+                    await callback_query.message.edit_text(
+                        text=item['text'], 
+                        reply_markup=item['reply_markup']
+                    )
+        else:
+            textReply_markup  = await inline_kb_cart(tg_id=str(callback_query.from_user.id), page=[int(p) for p in code[-1].split('-')])
+            for item in textReply_markup:
+                if not item['images']:
+                    await bot.send_message(
+                        callback_query.message.chat.id,
+                        text=item['text'], 
+                        reply_markup=item['reply_markup']
+                    )
+                else:
+                    images = item['images'].split('\n')
+                    photo = [types.InputMedia(media=open(img, 'rb'), caption=item['text']) if images.index(img) == 0 else types.InputMedia(media=open(img, 'rb')) for img in images]
+                    await bot.send_media_group(
+                        callback_query.message.chat.id, 
+                        media=photo,
+                    )
+                    await bot.send_message(
+                        callback_query.message.chat.id,
+                        text='Выберите действие',
+                        reply_markup=item['reply_markup']
+                    )
+
+    if code[1] == 'createorder':
+        if code[-1] == '1':
+             # создание заказа
+            cart = get_cart(tg_id=str(callback_query.from_user.id))
+            order = create_order(tg_id=str(callback_query.from_user.id), products=cart)
+
+            # отправка в чат
+            user = get_user(tg_id=str(callback_query.from_user.id))
+            promocodes = get_promocode(tg_id=str(callback_query.from_user.id))
+            promocodes_text = '' if promocodes else 'Нет'
+            if promocodes:
+                for promocode in promocodes:
+                    promocodes_text += f'{promocode.name}, '
+                promocodes_text = promocodes_text.strip(', ')
+
+            sum = 0
+            i = 1
+            order_text = 'Состав заказа:'
+            for product in cart:
+                price = get_promoprice(product=product[0], tg_id=str(callback_query.from_user.id))
+                category = get_category(id=product[0].category.id)
+                order_text += f'\n {i}. {category.name} | {product[0].name} ({product[1]}) - {price} руб. | {product[0].article}'
+                sum += price
+                i += 1
+            order_text += f'\n\nИтого: {sum} руб.'
+
+            cart = get_cart(tg_id=str(callback_query.from_user.id))
+            order_text = markdown.text(
+                f'Заказ № {order.id}\n',
+                'Статус: Создан\n',
+                'Менеджер:',
+                '\n',
+                f'Покупатель:',
+                f'{user.first_name} {user.last_name}',
+                f'@{user.username} | {user.phone}\n',
+                f'Промокоды:',
+                f'{promocodes_text}\n',
+                f'{order_text}',
+                '---------------',
+                sep='\n'
+            )
+            reply_markup = InlineConstructor.create_kb([
+                ['Взять в работу', f'btn_orderstatus_{order.id}_2'],
+                ['Добавить комментарий', f'btn_ordercomment_{order.id}']], [1, 1])
+            await bot.send_message(-1001810938907, text=order_text, reply_markup=reply_markup)
+            text, reply_markup = inline_kb_createorder(tg_id=str(callback_query.from_user.id), create=bool(int(code[-1])), order_id=order.id)
+        else:
+            text, reply_markup = inline_kb_createorder(tg_id=str(callback_query.from_user.id), create=bool(int(code[-1])))
+        await callback_query.message.edit_text(
+            text=text,
+            reply_markup=reply_markup
+        )
+
+    if code[1] == 'orderstatus':
+        status = {
+            '1' : 'Создан',
+            '2' : 'Взят в работу',
+            '3' : 'Заказан с сайта',
+            '4' : 'Получен на склад',
+            '5' : 'Отправлен клиенту',
+            '6' : 'Завершен'
+        }
+        order = update_order(id=int(code[2]), status=status[code[3]])
+        text = callback_query.message.text
+        text = text.replace(text.split('Статус: ')[1].split('\n')[0], status[code[3]])
+        if code[3] == '1':
+            text_and_data = [
+                [status[str(int(code[3]) + 1)], f'btn_orderstatus_{order.id}_{str(int(code[3]) + 1)}'],
+                ['Добавить комментарий', f'btn_ordercomment_{order.id}']
+            ]
+            reply_markup = InlineConstructor.create_kb(text_and_data, [1, 1])
+        elif code[3] == '2':
+            text = text.split('Менеджер: ')[0] + f'{callback_query.from_user.username}' + text.split('Менеджер: ')[1].split('\n')[1]
+            #text.replace('Менеджер: ', f'Менеджер: @{callback_query.from_user.username}\n')
+            text_and_data = [
+                [status[str(int(code[3]) + 1)], f'btn_orderstatus_{order.id}_{str(int(code[3]) + 1)}'],
+                ['Откатить статус', f'btn_orderstatus_{order.id}_{str(int(code[3]) - 1)}'],
+                ['Добавить комментарий', f'btn_ordercomment_{order.id}']
+            ]
+            reply_markup = InlineConstructor.create_kb(text_and_data, [1, 1, 1])
+        elif code[3] == '6':
+            text_and_data = [
+                ['Откатить статус', f'btn_orderstatus_{order.id}_{str(int(code[3]) - 1)}'],
+                ['Добавить комментарий', f'btn_ordercomment_{order.id}']
+            ]
+            reply_markup = InlineConstructor.create_kb(text_and_data, [1, 1])
+        else:
+            text_and_data = [
+                [status[str(int(code[3]) + 1)], f'btn_orderstatus_{order.id}_{str(int(code[3]) + 1)}'],
+                ['Откатить статус', f'btn_orderstatus_{order.id}_{str(int(code[3]) - 1)}'],
+                ['Добавить комментарий', f'btn_ordercomment_{order.id}']
+            ]
+            reply_markup = InlineConstructor.create_kb(text_and_data, [1, 1, 1])
+        await callback_query.message.edit_text(
+            text=text,
+            reply_markup=reply_markup
+        )
+
+    if code[1] == 'ordercomment':
+        Form.order_message = callback_query.message
+        await Form.add_comment.set()
+        order = get_order(id=int(code[2]))
+        Form.prev_message = await bot.send_message(
+            -1001810938907,
+            text = f'Введите комментарий к заказу №{order.id}'
+        )
+
+    if code[1] == 'phone':
+        await callback_query.message.delete()
+        await Form.user_phone.set()
+        text, reply_markup = reply_kb_phone()
+        await bot.send_message(
+            callback_query.from_user.id, 
+            text = text,
+            reply_markup=reply_markup)
 
     if code[1] == 'orders':
         if int(code[-1]) > 0:

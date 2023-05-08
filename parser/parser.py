@@ -569,7 +569,7 @@ async def get_valentino():
                 image=item[6],
                 article=item[8])
             #print(prod)
-        logging.info(f'Canceled {subcategory} added {len(items)} products') 
+        logging.info(f'Canceled VALENTINO {subcategory} added {len(items)} products') 
     await bot.send_message(227184505, f'VALENTINO закончил парсинг')
     return items
 
@@ -713,7 +713,6 @@ async def get_lesilla():
             #hashes = [comparator.CalcImageHash(product.image.split('\n')[0]) for product in crud.get_product(catalog='lesilla')]
             for item in items:
                 price = int((item[5] * (euro_cost() + 1)) * float(f'1.{crud.get_category(name="LeSILLA").margin}')) if item[5] else None
-                print(price)
                 description = item[4].replace('€ ', ' ')
                 for i in re.findall(r'\d*[.]\d\d', item[4]):
                     if i:
@@ -732,7 +731,7 @@ async def get_lesilla():
                     image=item[6],
                     article=item[9])
                 #print(prod.name)
-            logging.info(f'Canceled {name} added {len(items)} products')
+            logging.info(f'Canceled LeSILLA {name} added {len(items)} products')
         await bot.send_message(227184505, f'LeSILLA закончил парсинг')
         return items
 
@@ -893,14 +892,14 @@ async def get_nike():
                     price=item[2],
                     image=item[3],
                     article=item[6])
-            logging.info(f'Canceled {name} added {len(items)} products') 
+            logging.info(f'Canceled NIKE {name} added {len(items)} products') 
     await bot.send_message(227184505, f'NIKE закончил парсинг')
 
 
 
 async def get_golcegabbana():
     subcategories = {
-        #'Женские платья' : 'https://dolcegabbanaprivatesales.com/collections/dresses-jumpsuits',
+        'Женские платья' : 'https://dolcegabbanaprivatesales.com/collections/dresses-jumpsuits',
         'Женские топы' : 'https://dolcegabbanaprivatesales.com/collections/top',
         'Женские юбки' : 'https://dolcegabbanaprivatesales.com/collections/skirt',
         'Женские брюки и шорты' : 'https://dolcegabbanaprivatesales.com/collections/pants',
@@ -967,7 +966,7 @@ async def get_golcegabbana():
                     items_urls += items
         
         items = []
-        for url in items_urls:
+        for url in items_urls[:5]:
             async with aiohttp.ClientSession(trust_env=True) as session:
                 async with session.get('https://dolcegabbanaprivatesales.com' + url, ssl=False) as response:
                     webpage = await response.text()
@@ -1048,6 +1047,6 @@ async def get_golcegabbana():
                 image=item[3],
                 article=item[5])
         print(f'Canceled {subcategory} added {len(items)} products')
-        logging.info(f'Canceled {subcategory} added {len(items)} products') 
+        logging.info(f'Canceled DG {subcategory} added {len(items)} products') 
     await bot.send_message(227184505, f'Dolce&Gabanna закончил парсинг')
 

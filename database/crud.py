@@ -395,7 +395,7 @@ def get_promocode(id : int = None, name : str = None, tg_id : str = None, users 
     if name:
         return Promocode.get(name=name)
     if tg_id:
-        return select(p for p in Promocode if User.get(tg_id=tg_id) in p.users)
+        return select(p for p in Promocode if User.get(tg_id=tg_id) in p.users)[:]
     else:
         return select(p for p in Promocode)[:]
     
@@ -431,35 +431,71 @@ def promocode_exists(name : str):
     return Promocode.exists(name=name)
 
 @db_session()
-def get_user_promocode(tg_id : str):
-    try:
-        return User.get(tg_id=tg_id).promocode.id
-    except:
-        return 'False'
+def get_promoprice(product : Product, tg_id : int):
+    user_promocodes = get_promocode(tg_id=tg_id)
+    if len(user_promocodes) == 0:
+        return product.price
+    else:
+        for promocode in user_promocodes:
+            if product.category.id in [promcat.category.id for promcat in promocode.categories]:
+                promcat = get_promocodecategory(promocode_id=promocode.id, category_id=product.category.id)
+                return int(product.price * (1 - promcat.discount / 100))
+    
 
 # PromocodeCategory
 @db_session()
 def create_promocodecategory(promocode_id : int, category_id : int, discount : int):
-    return PromocodeCategory(promocode=Promocode[promocode_id], category=Category[category_id], discount=discount)
+    return Promocode_Category(promocode=Promocode[promocode_id], category=Category[category_id], discount=discount)
 
 @db_session()
 def get_promocodecategory(promocode_id : int, category_id : int = None):
     if promocode_id and category_id:
-        return PromocodeCategory.get(promocode=Promocode[promocode_id], category=Category[category_id])
+        return Promocode_Category.get(promocode=Promocode[promocode_id], category=Category[category_id])
     else:
-        return select(p for p in PromocodeCategory if p.promocode == Promocode[promocode_id])[:]
+        return select(p for p in Promocode_Category if p.promocode == Promocode[promocode_id])[:]
 
 @db_session()
 def update_promocodecategory(promocode_id : int, category_id : int, discount : int):
-    promcat_to_update = PromocodeCategory.get(promocode=Promocode[promocode_id], category=Category[category_id])
+    promcat_to_update = Promocode_Category.get(promocode=Promocode[promocode_id], category=Category[category_id])
     promcat_to_update.discount = discount
     return promcat_to_update
 
 @db_session()
 def delete_promocodecategory(promocode_id : int, category_id : int):
-    promcat_to_delete = PromocodeCategory.get(promocode=Promocode[promocode_id], category=Category[category_id])
+    promcat_to_delete = Promocode_Category.get(promocode=Promocode[promocode_id], category=Category[category_id])
     promcat_to_delete.delete()
 
 @db_session()
 def promocodecategory_exists(promocode_id : int, category_id : int):
-    return PromocodeCategory.exists(promocode=Promocode[promocode_id], category=Category[category_id])
+    return Promocode_Category.exists(promocode=Promocode[promocode_id], category=Category[category_id])
+
+#Order
+@db_session()
+def create_order(tg_id : str, products : list):
+    order = Order(user=User.get(tg_id=tg_id))
+    for product in products:
+        Order_Product(order=order, product=product[0].article, sizes=product[1])
+    return order
+
+@db_session()
+def get_order(id : int = None, tg_id : str = None, category_id : int = None):
+    if id:
+        return Order[id]
+    if tg_id:
+        return Order.get(user=User.get(tg_id=tg_id))
+
+@db_session()
+def update_order(id : int = None, tg_id : str = None, status : str = None, comment : str = None):
+    if id:
+        order_to_update = Order[id]
+    if tg_id:
+        order_to_update = Order.get(user=User.get(tg_id=tg_id))
+    if status:
+        order_to_update.status = status
+    if comment:
+        order_to_update.comment = comment
+    return order_to_update
+
+@db_session()
+def delete_order(id : int = None):
+    Order[id].delete()

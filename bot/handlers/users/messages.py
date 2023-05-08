@@ -16,11 +16,11 @@ from keyboards.constructor import InlineConstructor
 
 @dp.message_handler()
 async def user_message(message: types.Message):
-    await message.delete()
+    if message.chat.id != -1001810938907:
+        await message.delete()
 
 
 @dp.message_handler(content_types=types.ContentType.CONTACT, state=Form.user_phone)
-#@dp.message_handler(content_types=types.Message, state=Form.user_phone)
 async def change_phone(message: types.Message, state: FSMContext):
     # записываем номер телефона
     update_user(tg_id=str(message.from_user.id), phone=message.contact.phone_number)
@@ -30,47 +30,24 @@ async def change_phone(message: types.Message, state: FSMContext):
     await message.delete()
     types.ReplyKeyboardRemove()
     await bot.delete_message(chat_id=message.chat.id, message_id=Form.prev_message.message_id)
-    # обновляем текст сообщения с меню "настройки"
-    try:
-        text, reply_markup = inline_kb_settings(message.from_user)
-        await Form.menu_message.edit_text(
-                    text=text,
-                    reply_markup=reply_markup
-                )
-    except:
-        pass
+    # обновляем текст сообщения с заказом
+    text, reply_markup = text, reply_markup = inline_kb_createorder(tg_id=str(message.from_user.id))
+    await bot.send_message(
+        message.from_user.id,
+        text=text,
+        reply_markup=reply_markup
+    )
 
 @dp.message_handler(state=Form.user_phone)
 async def user_message(message: types.Message):
     await message.delete()
-    await bot.delete_message(chat_id=message.chat.id, message_id=Form.prev_message.message_id)
     
-    _, reply_markup = reply_kb_change(param='phone')
+    _, reply_markup = reply_kb_phone()
     Form.prev_message = await bot.send_message(
                 message.from_user.id, 
 			    text='К сожалению, ввести номер телефона текстом не получится. Нажмите на кнопку "Поделиться номером телефона. \nЕсли вы не видите кнопку, нажмите за значек слева от микрофона внизу экрана, тогда кнопка появится',
                 reply_markup=reply_markup
             )
-    
-
-@dp.message_handler(state=Form.user_address)
-async def change_address(message: types.Message, state: FSMContext):
-    # записываем номер телефона
-    update_user(tg_id=str(message.from_user.id), address=message.text)
-    await state.finish()
-    # удаляем ненужные сообщения
-    time.sleep(1)
-    await message.delete()
-    await bot.delete_message(chat_id=message.chat.id, message_id=Form.prev_message.message_id)
-    # обновляем текст сообщения с меню "настройки"
-    try:
-        text, reply_markup = inline_kb_settings(message.from_user)
-        await Form.menu_message.edit_text(
-                    text=text,
-                    reply_markup=reply_markup
-                )
-    except:
-        pass
 
 # получаем текст сообщения для рассылки
 @dp.message_handler(state=Form.new_message)
@@ -432,3 +409,13 @@ async def add_subcategory(message: types.Message, state: FSMContext):
     category = get_category(name=Form.prev_message.text.split('"')[-2])
     text, reply_markup = inline_kb_subcategories(str(message.from_user.id), category=category.id)
     await bot.send_message(message.from_user.id, text=text, reply_markup=reply_markup)
+
+# получаем комментарий к заказу
+@dp.message_handler(state=Form.add_comment)
+async def add_comment(message: types.Message, state: FSMContext):
+    await state.finish()
+    await bot.delete_message(chat_id=-1001810938907, message_id=Form.prev_message.message_id)
+    await message.delete()
+    order = update_order(id=int(Form.prev_message.text.split('№')[1]), comment=message.text)
+
+    await Form.order_message.edit_text(text=Form.order_message.text + '\n' + message.text, reply_markup=Form.order_message.reply_markup)

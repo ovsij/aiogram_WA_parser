@@ -1,3 +1,4 @@
+from aiogram.types import Message
 from datetime import datetime
 from decimal import Decimal
 from enum import Enum
@@ -5,10 +6,19 @@ from pony.orm import *
 
 db = Database()
 
+
 class ExtendedEnum(Enum):
     @classmethod
     def list(cls):
         return list(map(lambda c: c.value, cls))
+
+class Status(Enum):
+    START = 'Создан'
+    ORDERED = 'Заказан с сайта'
+    RECIEVED = 'Получен на склад'
+    DELIVERED = 'Отправлен клиенту'
+    CLOSED = 'Отменен'
+    CANCELED = 'Завершен'
 
 class User(db.Entity):
     id = PrimaryKey(int, auto=True)
@@ -23,8 +33,9 @@ class User(db.Entity):
     brands = Optional(str, nullable=True)
     prices = Optional(str, nullable=True)
     carts = Set('Cart')
-    promocode = Optional('Promocode')
+    promocode = Set('Promocode')
     categories = Set('Category')
+    orderd = Set('Order')
     first_usage = Optional(datetime, default=lambda: datetime.now())
     last_usage = Optional(datetime, default=lambda: datetime.now())
     is_banned = Optional(bool, default=False)
@@ -40,7 +51,6 @@ class Product(db.Entity):
     name = Optional(str)
     category = Optional('Category')
     subcategory = Optional('SubCategory')
-    #catalog = Optional('Catalog')
     description = Optional(str, nullable=True)
     sizes = Optional(str, nullable=True)
     price = Optional(int)
@@ -62,19 +72,34 @@ class Category(db.Entity):
     subcategory = Set(SubCategory)
     margin = Optional(int)
     phone = Optional(str, unique=True)
-    #catalog = Optional('Catalog', nullable=True)
-    promocodes = Set('PromocodeCategory')
+    promocodes = Set('Promocode_Category')
     product = Set(Product)
     users = Set(User)
 
 class Promocode(db.Entity):
     id = PrimaryKey(int, auto=True)
     name = Required(str, unique=True)
-    categories = Set('PromocodeCategory')
+    categories = Set('Promocode_Category')
     users = Set(User)
 
-class PromocodeCategory(db.Entity):
+class Promocode_Category(db.Entity):
     id = PrimaryKey(int, auto=True)
     promocode = Required(Promocode)
     category = Required(Category)
     discount = Required(int)
+
+class Order(db.Entity):
+    id = PrimaryKey(int, auto=True)
+    user = Required(User)
+    products = Set('Order_Product')
+    status = Required(str, default='Создан')
+    datetime = Required(datetime, default=lambda: datetime.now())
+    comment = Optional(str, nullable=True)
+    
+
+class Order_Product(db.Entity):
+    id = PrimaryKey(int, auto=True)
+    order = Required(Order)
+    product = Required(str) # артикул товара
+    sizes = Required(str)
+    

@@ -495,7 +495,7 @@ async def inline_kb_cart(tg_id : str, page : list = [0, 5]):
     for product in products[page[0]:page[1]]:
         dct = {}
         description = '' if not product[0].description else product[0].description.split('\n\nSizes:')[0].split('\n\nРазмеры:')[0]
-        description += f"\n\nВыбранные размеры: {product[1].replace(' ', ', ')}"
+        description += f"\n\nВыбранные размеры: {product[1].replace('-', ', ')}"
         price = 'Не указана' if not product[0].price else f'{product[0].price} руб.'
         dct['text'] = f'{product[0].name}\n\nАртикул: {product[0].article}\n{description}\n\nЦена: {price}'
         if cart_exists(tg_id=tg_id, product_id=product[0].id):
@@ -513,6 +513,7 @@ async def inline_kb_cart(tg_id : str, page : list = [0, 5]):
 
     len_prodcts = page[1] if len(textInline_kb) >= 5 else len(products)
     text_and_data = [
+        [emojize(':shopping_bags: Оформить заказ', language='alias'), f'btn_createorder_0'],
         [emojize(':arrow_down_small: Eще 5 товаров :arrow_down_small:', language='alias'), f'btn_cart_{page[1]}-{page[1] + 5}'],
         [emojize(':arrow_down_small: Eще 10 товаров :arrow_down_small:', language='alias'), f'btn_cart_{page[1]}-{page[1] + 10}'],
         btn_back(f'menu')
@@ -520,11 +521,42 @@ async def inline_kb_cart(tg_id : str, page : list = [0, 5]):
     textInline_kb.append(
         {
         'text' : f'Показано {len_prodcts} товаров из {len(products)}',
-        'reply_markup' : InlineConstructor.create_kb(text_and_data, [1, 1, 1]),
+        'reply_markup' : InlineConstructor.create_kb(text_and_data, [1, 1, 1, 1]),
         'images' : False
         }
     )
     return textInline_kb
+
+def inline_kb_createorder(tg_id : str, create : bool, order_id : int = None):
+    if not create:
+        text = 'Состав заказа:'
+        products = get_cart(tg_id=tg_id)
+        sum = 0
+        i = 1
+        for product in products:
+            price = get_promoprice(product=product[0], tg_id=tg_id)
+            text += f'\n\n {i}. {product[0].name} ({product[1]}) - {price} руб.'
+            sum += price
+            i += 1
+        text += f'\n\nИтого: {sum} руб.'
+        text += '\n\n**Для оформления заказа нам необходимо знать ваш номер телефона. Если вы не хотите делиться номером, для оформления заказа перешлите сообщения с товарами менеджеру.'
+        if not get_user(tg_id=tg_id).phone:
+            text_and_data = [
+                [emojize(':telephone_receiver: Указать номер телефона', language='alias'), f'btn_phone'],
+                btn_back(f'cart')
+            ]
+        else:
+            text_and_data = [
+                [emojize(':shopping_bags: Заказать', language='alias'), f'btn_createorder_1'],
+                btn_back(f'cart')
+            ]
+        schema = [1, 1]
+    else:
+        text = f'Заказ оформлен!\n\nНомер вашего заказа: {order_id}\n\nВ ближайшее время с вами свяжется наш менеджер для уточнения деталей.'
+        text_and_data = [btn_back('menu')]
+        schema = [1]
+    inline_kb = InlineConstructor.create_kb(text_and_data, schema)
+    return text, inline_kb
 
 def inline_kb_orders(telegram_user, page : int):
     text = 'ИСТОРИЯ ЗАКАЗОВ'

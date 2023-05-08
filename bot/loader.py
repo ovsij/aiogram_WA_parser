@@ -15,7 +15,6 @@ dp = Dispatcher(bot, storage=storage)
 
 class Form(StatesGroup):
     user_phone = State()
-    user_address = State()
     menu_message = State()
     prev_message = State()
     new_message = State()
@@ -34,3 +33,5 @@ class Form(StatesGroup):
     editpromocode_discount = State()
     add_category = State()
     add_subcategory = State()
+    add_comment = State()
+    order_message = State()

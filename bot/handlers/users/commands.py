@@ -24,6 +24,7 @@ async def bot_start(message: types.Message):
         text=text,
         reply_markup=reply_markup
     )
+    
 
 @dp.message_handler(commands=['stop'], state=Form.edit_name)
 @dp.message_handler(commands=['stop'], state=Form.edit_description)
