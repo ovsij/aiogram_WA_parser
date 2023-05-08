@@ -17,23 +17,17 @@ from parser import *
 logging.basicConfig(level=logging.INFO)
 
 async def main():
-    while True:
-        try:
-            tasks = set()
-            task1 = asyncio.create_task(get_lesilla())
-            tasks.add(task1)
-            task2 = asyncio.create_task(get_valentino())
-            tasks.add(task2)
-            task3 = asyncio.create_task(get_nike())
-            tasks.add(task3)
-            task4 = asyncio.create_task(get_golcegabbana())
-            tasks.add(task4)
-            L = await asyncio.gather(*tasks)
-            await asyncio.sleep(10)
-        except Exception as ex:
-            print(ex)
-            await asyncio.sleep(10)
-        
+    tasks = set()
+    task1 = asyncio.create_task(get_lesilla())
+    tasks.add(task1)
+    task2 = asyncio.create_task(get_valentino())
+    tasks.add(task2)
+    task3 = asyncio.create_task(get_nike())
+    tasks.add(task3)
+    task4 = asyncio.create_task(get_golcegabbana())
+    tasks.add(task4)
+    L = await asyncio.gather(*tasks)
+    await asyncio.sleep(10)
 
 if __name__ == '__main__':
     try:
@@ -44,10 +38,6 @@ if __name__ == '__main__':
     if loop and loop.is_running():
         print('Async event loop already running. Adding coroutine to the event loop.')
         tsk = loop.create_task(main())
-        # ^-- https://docs.python.org/3/library/asyncio-task.html#task-object
-        # Optionally, a callback function can be executed when the coroutine completes
-        tsk.add_done_callback(
-            lambda t: print(f'Task done with result={t.result()}  << return val of main()'))
     else:
         print('Starting new event loop')
         result = asyncio.run(main())

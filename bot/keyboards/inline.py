@@ -150,14 +150,10 @@ def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : in
         description = '' if not product.description else product.description
         price = 'Не указана' if not product.price else product.price
         dct['text'] = f'{product.name}\n\nАртикул: {product.article}\n{description}\n\nЦена: {price} руб.'
-        try:
-            promocode_id = get_user_promocode(tg_id=tg_id)
-            promocode = get_promocode(id=promocode_id)
-        except:
-            promocode = False
+        promocode = get_promocode(tg_id=tg_id, category_id=category)
+    
         if promocode and price != 'Не указана':
-            promo_price = price - (price / 100 * promocode.discount)
-            dct['text'] += f'\n\nСо скидкой по промокоду {promocode.name}:\n{int(promo_price)} руб'
+            dct['text'] += f'\n\nСо скидкой по промокоду:\n{int(get_promoprice(product=product, tg_id=tg_id))} руб'
         if cart_exists(tg_id=tg_id, product_id=product.id):
             text_and_data = [
                 [emojize('Удалить из корзины', language='alias'), f'btn_delfromcart_{product.id}']
@@ -498,6 +494,11 @@ async def inline_kb_cart(tg_id : str, page : list = [0, 5]):
         description += f"\n\nВыбранные размеры: {product[1].replace('-', ', ')}"
         price = 'Не указана' if not product[0].price else f'{product[0].price} руб.'
         dct['text'] = f'{product[0].name}\n\nАртикул: {product[0].article}\n{description}\n\nЦена: {price}'
+        # применяем промокод
+        promocode = get_promocode(tg_id=tg_id, category_id=product[0].category.id)
+        if promocode and price != 'Не указана':
+            dct['text'] += f'\n\nСо скидкой по промокоду:\n{int(get_promoprice(product=product[0], tg_id=tg_id))} руб'
+
         if cart_exists(tg_id=tg_id, product_id=product[0].id):
             text_and_data = [
                 [emojize('Удалить из корзины', language='alias'), f'btn_delfromcart_{product[0].id}']
@@ -545,12 +546,18 @@ def inline_kb_createorder(tg_id : str, create : bool, order_id : int = None):
                 [emojize(':telephone_receiver: Указать номер телефона', language='alias'), f'btn_phone'],
                 btn_back(f'cart')
             ]
+            schema = [1, 1]
+        elif sum == 0:
+            text_and_data = [
+                btn_back(f'cart')
+            ]
+            schema = [1]
         else:
             text_and_data = [
                 [emojize(':shopping_bags: Заказать', language='alias'), f'btn_createorder_1'],
                 btn_back(f'cart')
             ]
-        schema = [1, 1]
+            schema = [1, 1]
     else:
         text = f'Заказ оформлен!\n\nНомер вашего заказа: {order_id}\n\nВ ближайшее время с вами свяжется наш менеджер для уточнения деталей.'
         text_and_data = [btn_back('menu')]
@@ -649,12 +656,10 @@ def inline_kb_lk(tg_id : str):
     text = markdown.text(
         'ЛИЧНЫЙ КАБИНЕТ\n'
     )
-    try:
-        promocode_id = get_user_promocode(tg_id=tg_id)
-        promocode = get_promocode(id=promocode_id)
-    except:
-        promocode = False
+
+    promocodes = get_promocode(tg_id=tg_id)
     user = get_user(tg_id=tg_id)
+
     if user.sizes:
         all_sizes = {'1': 'XXS', '2': 'XS', '3': 'S', '4': 'M', '5': 'L', '6': 'XL', '7': '2Xl', '8': '3XL', '9': '4XL'}
         sizes_str = ''
@@ -687,14 +692,16 @@ def inline_kb_lk(tg_id : str):
             text += f'{cat.name}, '
         text = text.strip(', ')
         text += '\n'
-    if promocode:
+    if promocodes:
+        print(promocodes)
         text += f'\nМои промокоды:'
-        text += emojize(f'\n:sparkle:{promocode.name} (', language='alias')
-        for pc in get_promocodecategory(promocode_id=promocode.id):
-            category = get_category(id=pc.category.id)
-            text += f'{category.name} -{pc.discount}%, '
-        text = text.strip(', ')
-        text += ')'
+        for promocode in promocodes:
+            text += emojize(f'\n:sparkle:{promocode.name} (', language='alias')
+            for pc in get_promocodecategory(promocode_id=promocode.id):
+                category = get_category(id=pc.category.id)
+                text += f'{category.name} -{pc.discount}%, '
+            text = text.strip(', ')
+            text += ')'
 
     text_and_data = [
         [emojize(':money_with_wings: Ввести промокод', language='alias'), 'btn_promocode'],

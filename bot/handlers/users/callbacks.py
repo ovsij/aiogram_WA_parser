@@ -434,7 +434,7 @@ async def btn_callback(callback_query: types.CallbackQuery):
             for product in cart:
                 price = get_promoprice(product=product[0], tg_id=str(callback_query.from_user.id))
                 category = get_category(id=product[0].category.id)
-                order_text += f'\n {i}. {category.name} | {product[0].name} ({product[1]}) - {price} руб. | {product[0].article}'
+                order_text += f'\n {i}. {category.name} | {markdown.link(product[0].name, product[0].url)} ({product[1]}) - {price} руб. | {product[0].article}'
                 sum += price
                 i += 1
             order_text += f'\n\nИтого: {sum} руб.'
@@ -444,7 +444,7 @@ async def btn_callback(callback_query: types.CallbackQuery):
                 f'Заказ № {order.id}\n',
                 'Статус: Создан\n',
                 'Менеджер:',
-                '\n',
+                '~\n',
                 f'Покупатель:',
                 f'{user.first_name} {user.last_name}',
                 f'@{user.username} | {user.phone}\n',
@@ -457,7 +457,7 @@ async def btn_callback(callback_query: types.CallbackQuery):
             reply_markup = InlineConstructor.create_kb([
                 ['Взять в работу', f'btn_orderstatus_{order.id}_2'],
                 ['Добавить комментарий', f'btn_ordercomment_{order.id}']], [1, 1])
-            await bot.send_message(-1001810938907, text=order_text, reply_markup=reply_markup)
+            await bot.send_message(-1001810938907, text=order_text, reply_markup=reply_markup, parse_mode='Markdown')
             text, reply_markup = inline_kb_createorder(tg_id=str(callback_query.from_user.id), create=bool(int(code[-1])), order_id=order.id)
         else:
             text, reply_markup = inline_kb_createorder(tg_id=str(callback_query.from_user.id), create=bool(int(code[-1])))
@@ -479,14 +479,15 @@ async def btn_callback(callback_query: types.CallbackQuery):
         text = callback_query.message.text
         text = text.replace(text.split('Статус: ')[1].split('\n')[0], status[code[3]])
         if code[3] == '1':
+            text = text.split('Менеджер:')[0] + 'Менеджер:\n' + '~' + text.split('Менеджер:')[1].split('~')[1]
             text_and_data = [
                 [status[str(int(code[3]) + 1)], f'btn_orderstatus_{order.id}_{str(int(code[3]) + 1)}'],
                 ['Добавить комментарий', f'btn_ordercomment_{order.id}']
             ]
             reply_markup = InlineConstructor.create_kb(text_and_data, [1, 1])
         elif code[3] == '2':
-            text = text.split('Менеджер: ')[0] + f'{callback_query.from_user.username}' + text.split('Менеджер: ')[1].split('\n')[1]
-            #text.replace('Менеджер: ', f'Менеджер: @{callback_query.from_user.username}\n')
+            text = text.split('Менеджер:')[0] + 'Менеджер:\n' + f'@{callback_query.from_user.username}~' + text.split('Менеджер:')[1].split('~')[1]
+            
             text_and_data = [
                 [status[str(int(code[3]) + 1)], f'btn_orderstatus_{order.id}_{str(int(code[3]) + 1)}'],
                 ['Откатить статус', f'btn_orderstatus_{order.id}_{str(int(code[3]) - 1)}'],
@@ -660,7 +661,7 @@ async def btn_callback(callback_query: types.CallbackQuery):
 
     if code[1] == 'userspromocode':
         name = get_promocode(id=int(code[2])).name
-        users = [f'Список пользователей, активировавших промокод {name}: \n\n - ']
+        users = [f'Список пользователей, активировавших промокод {name}: \n\n']
         
         for user in get_promocode(id=int(code[2]), users=True):
             user_str = f'- '

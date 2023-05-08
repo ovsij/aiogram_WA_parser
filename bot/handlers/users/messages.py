@@ -29,9 +29,8 @@ async def change_phone(message: types.Message, state: FSMContext):
     time.sleep(1)
     await message.delete()
     types.ReplyKeyboardRemove()
-    await bot.delete_message(chat_id=message.chat.id, message_id=Form.prev_message.message_id)
     # обновляем текст сообщения с заказом
-    text, reply_markup = text, reply_markup = inline_kb_createorder(tg_id=str(message.from_user.id))
+    text, reply_markup = inline_kb_createorder(tg_id=str(message.from_user.id), create=False)
     await bot.send_message(
         message.from_user.id,
         text=text,
@@ -367,13 +366,10 @@ async def add_user_promocode(message: types.Message, state: FSMContext):
     await message.delete()
 
     if promocode_exists(name=message.text):
-        try:
-            new_promocode = get_promocode(name=message.text)
-            promocode_id = get_user_promocode(tg_id=str(message.from_user.id))
-            promocode = get_promocode(id=promocode_id)
-            if new_promocode.discount >= promocode.discount:
-                update_user(tg_id=str(message.from_user.id), promocode=message.text)
-        except:
+        promocode = get_promocode(name=message.text)
+        if get_user(tg_id=str(message.from_user.id)).id in [u.id for u in get_promocode(id=promocode.id, users=True)]:
+            pass
+        else:
             update_user(tg_id=str(message.from_user.id), promocode=message.text)
         
         text, reply_markup = inline_kb_lk(tg_id=str(message.from_user.id))

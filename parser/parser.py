@@ -428,7 +428,9 @@ async def get_valentino_catalog(url, subcategory):
 
             webpage = await session.get_page_source()
             soup = bs(webpage, 'lxml')
-            
+
+            url = await session.get_url()
+
             name_el = await session.wait_for_element(10, name_xpath, SelectorType.xpath)
             name = await name_el.get_text()
             article = name
@@ -450,13 +452,14 @@ async def get_valentino_catalog(url, subcategory):
                     image_link = await image_el.get_css_value('background-image')
                     #logging.info(image_link.strip('url(').strip(')'))
                     img_path = f"database/images/VALENTINO/{subcategory}/{i}_{name.replace(' ', '_').replace('/', '_')}_{num}.png"
+                    images += img_path + '\n'
                     if os.path.exists(img_path):
                         continue
                     if not os.path.exists(img_path):
                         request = requests.get(image_link.strip('url("').strip('")'))
                         with open(img_path, 'wb') as png:
                             png.write(request.content)
-                    images += img_path + '\n'
+                    
                 except:
                     pass
             
@@ -515,7 +518,7 @@ async def get_valentino_catalog(url, subcategory):
             back_el = await session.wait_for_element(10, back_xpath, SelectorType.xpath)
             await back_el.click()
 
-            item = [name, 'VALENTINO', subcategory, 'valentino', description, price, images, list_sizes, article]
+            item = [name, 'VALENTINO', subcategory, 'valentino', description, price, images, list_sizes, article, url]
             items.append(item)
             #logging.info(item)
             #print(item)
@@ -541,7 +544,7 @@ async def get_valentino():
     }
     
     for subcategory, category_url in categories.items():
-        print(f'Start {subcategory}')
+        print(f'Start VALENTINO {subcategory}')
         if not crud.subcategory_exists(name=subcategory, category='VALENTINO'):
             crud.create_subcategory(name=subcategory, category='VALENTINO')
         
@@ -567,7 +570,8 @@ async def get_valentino():
                 sizes=item[7],
                 price=price,
                 image=item[6],
-                article=item[8])
+                article=item[8],
+                url=item[9])
             #print(prod)
         logging.info(f'Canceled VALENTINO {subcategory} added {len(items)} products') 
     await bot.send_message(227184505, f'VALENTINO закончил парсинг')
@@ -595,6 +599,7 @@ async def get_subcategory(session, url):
 
 # lesilla
 async def get_item(session, url, subcategory, i):
+    
     article = url.split('.')[-2].split('-')[-1]
     item = []
     async with session.get(url, ssl=False) as response:
@@ -655,26 +660,24 @@ async def get_item(session, url, subcategory, i):
     for url in photo[:10]:
         num = photo.index(url) + 1
         img_path = f"database/images/LESILLA/{subcategory}/{i}_{name.replace(' ', '_').replace('/', '_')}_{num}.png"
+        images += img_path + '\n'
         if os.path.exists(img_path):
             continue
         request = requests.get(url)
         with open(img_path, 'wb') as png:
             png.write(request.content)
-        images += img_path + '\n'
-    #print([name, 'LeSILLA', subcategory, 'lesilla', description, price, images, color])
-    
-    return [name, 'LeSILLA', subcategory, 'lesilla', description, price, images, color, list_sizes, article]
+            
+    return [name, 'LeSILLA', subcategory, 'lesilla', description, price, images, color, list_sizes, article, url]
 
 
 async def get_lesilla():
-    #print('start')
     urls = {
         'Туфли на высоком каблуке': 'https://outlet.lesilla.com/row/pumps/high-heels.html',
         'Туфли на среднем каблуке': 'https://outlet.lesilla.com/row/pumps/mid-heels.html',
         'Туфли на плоской подошве': 'https://outlet.lesilla.com/row/pumps/flat.html',
         'Сандалии на высоком каблуке': 'https://outlet.lesilla.com/row/sandals/high-heels.html',
         'Сандалии на среднем каблуке': 'https://outlet.lesilla.com/row/sandals/mid-heels.html',
-        'Сандалии на пизкой подошве': 'https://outlet.lesilla.com/row/sandals/flat.html',
+        'Сандалии на низкой подошве': 'https://outlet.lesilla.com/row/sandals/flat.html',
         'Танкетки': 'https://outlet.lesilla.com/row/sandals/wedges.html',
         'Обувь на платформе': 'https://outlet.lesilla.com/row/sandals/platform.html',
         'Тапочки сандалии': 'https://outlet.lesilla.com/row/sandals/slippers.html',
@@ -695,7 +698,7 @@ async def get_lesilla():
     
     async with aiohttp.ClientSession(trust_env=True) as session:
         for name, url in urls.items():
-            print(f'Starting: {name}')
+            print(f'Starting LeSILLA: {name}')
             product_urls = await get_subcategory(session, url)
             items = []
             for prodict_url in product_urls:
@@ -710,7 +713,6 @@ async def get_lesilla():
             except:
                 not_deleted_items = []
             #print(not_deleted_items)
-            #hashes = [comparator.CalcImageHash(product.image.split('\n')[0]) for product in crud.get_product(catalog='lesilla')]
             for item in items:
                 price = int((item[5] * (euro_cost() + 1)) * float(f'1.{crud.get_category(name="LeSILLA").margin}')) if item[5] else None
                 description = item[4].replace('€ ', ' ')
@@ -729,7 +731,8 @@ async def get_lesilla():
                     sizes=item[8],
                     price=price,
                     image=item[6],
-                    article=item[9])
+                    article=item[9],
+                    url=item[10])
                 #print(prod.name)
             logging.info(f'Canceled LeSILLA {name} added {len(items)} products')
         await bot.send_message(227184505, f'LeSILLA закончил парсинг')
@@ -770,7 +773,6 @@ async def get_nike_subcategory(session, url, subcategory):
                     dct['fullPrice'] = fullPrice
                     dct['colorDescription'] = color
                     products.append(dct)
-
     else:
         main_url = 'https://api.nike.com/cic/browse/v2?queryid=products&anonymousId=08A180A3B5AAD6BC6470F1A020095EDD&country=it&endpoint=%2Fproduct_feed%2Frollup_threads%2Fv2%3Ffilter%3Dmarketplace(IT)%26filter%3Dlanguage(it)%26filter%3DemployeePrice(true)%26filter%3DattributeIds({})%26anchor%3D{}%26consumerChannelId%3Dd9a5bc42-4b9c-4976-858a-f159cf99c647%26count%3D{}&language=en&localizedRangeStr=%7BlowestPrice%7D-%7BhighestPrice%7D'
         products = []
@@ -782,10 +784,9 @@ async def get_nike_subcategory(session, url, subcategory):
                 products += [{'title' : p['title'], 'url': p['url'].replace('{countryLang}', 'it'), 'curprice': p['price']['currentPrice'], 'fullPrice': p['price']['fullPrice'], 'colorDescription': p['colorDescription']} for p in prod]
             except:
                 break
-        
     items = []  
-    for prod in products:
-        
+    for prod in products[:5]:
+        item_url = 'https://www.nike.com/' + prod['url']
         try:
             headers = {'User-Agent': 'Mozilla/5.0'}
             prod_url = f'https://api.nike.com/product_feed/threads/v2?filter=language(it)&filter=marketplace(IT)&filter=channelId(d9a5bc42-4b9c-4976-858a-f159cf99c647)&filter=productInfo.merchProduct.styleColor({prod["url"].split("/")[-1]})'
@@ -805,8 +806,8 @@ async def get_nike_subcategory(session, url, subcategory):
             percent = int(100 - (price/fullPrice * 100))
             description = f"Color: {prod['colorDescription']}\n\n"
             description += f'<s>{fullPrice} руб.</s> -{percent}% {price} руб. \n\n'
-            #
-                # размеры
+
+            # размеры
             skus = item_webpage['objects'][0]['productInfo'][0]['skus']
             availableSkus = {}
             for av_sky in item_webpage['objects'][0]['productInfo'][0]['availableSkus']:
@@ -839,6 +840,7 @@ async def get_nike_subcategory(session, url, subcategory):
                 try:
                     num = image_links.index(url) + 1
                     img_path = f"database/images/NIKE/{subcategory}/{i}_{name.replace(' ', '_').replace('/', '_')}_{num}.png"
+                    images +=  img_path + '\n'
                     if os.path.exists(img_path):
                         continue
                     async with session.get(url, ssl=False) as response:
@@ -846,13 +848,11 @@ async def get_nike_subcategory(session, url, subcategory):
                         f = await aiofiles.open(img_path, mode='wb')
                         await f.write(await response.read())
                         await f.close()
-                    images +=  img_path + '\n'
                 except:
                     continue
             if len(images) < 1:
                 continue
-            items.append([name, description, price, images, prod['colorDescription'], list_sizes, article])
-            #print([name, description, price, images])
+            items.append([name, description, price, images, prod['colorDescription'], list_sizes, article, item_url])
         except:
             continue
     return items
@@ -870,7 +870,7 @@ async def get_nike():
         'Детские аскессуары': 'https://www.nike.com/it/w/bambini-outlet-accessori-3yaepzawwpwzv4dh',
     }
     for name, url in urls.items():
-        print(f'Starting: {name}')
+        print(f'Starting NIKE: {name}')
         async with aiohttp.ClientSession(trust_env=True) as session:
             items = await get_nike_subcategory(session, url, name)
             # сохраняем товары [name, description, price, images]
@@ -891,7 +891,8 @@ async def get_nike():
                     sizes=item[5],
                     price=item[2],
                     image=item[3],
-                    article=item[6])
+                    article=item[6],
+                    url=item[7])
             logging.info(f'Canceled NIKE {name} added {len(items)} products') 
     await bot.send_message(227184505, f'NIKE закончил парсинг')
 
@@ -952,7 +953,7 @@ async def get_golcegabbana():
         'Детская обувь' : 'https://dolcegabbanaprivatesales.com/collections/baby-shoes',
     }
     for subcategory, subcat_url in subcategories.items():
-        print(f'Starting: {subcategory}')
+        print(f'Starting Dolce&Gabanna: {subcategory}')
         async with aiohttp.ClientSession(trust_env=True) as session:
             items_urls = []
             for i in range(1, 100):
@@ -966,13 +967,14 @@ async def get_golcegabbana():
                     items_urls += items
         
         items = []
-        for url in items_urls[:5]:
+        for url in items_urls:
             async with aiohttp.ClientSession(trust_env=True) as session:
                 async with session.get('https://dolcegabbanaprivatesales.com' + url, ssl=False) as response:
+                    item_url = 'https://dolcegabbanaprivatesales.com' + url
                     webpage = await response.text()
                     soup = bs(webpage, 'html.parser')
                     title = soup.find('h1', 'product__title').text
-                    print(title)
+                    #print(title)
                     old_price = soup.find('s', 'product__price--strike').text.strip('\n').strip(' ').strip('\n').strip(' ').strip('\n').strip(' ').strip('€').replace('.', '').replace(',', '.')
                     #print(old_price)
                     old_price = int((float(old_price) * (euro_cost() + 1)) * float(f"1.{crud.get_category(name='Dolce&Gabanna').margin}"))
@@ -1027,7 +1029,7 @@ async def get_golcegabbana():
                     if len(images) < 1:
                         continue
                     #print(images)
-                    items.append([title, description, current_price, images, list_sizes, article])
+                    items.append([title, description, current_price, images, list_sizes, article, item_url])
                     #print([title, description, current_price, images, list_sizes, article])
         crud.del_products(subcategory=subcategory)
         try:
@@ -1045,7 +1047,8 @@ async def get_golcegabbana():
                 sizes=item[4],
                 price=item[2],
                 image=item[3],
-                article=item[5])
+                article=item[5],
+                url=item[6])
         print(f'Canceled {subcategory} added {len(items)} products')
         logging.info(f'Canceled DG {subcategory} added {len(items)} products') 
     await bot.send_message(227184505, f'Dolce&Gabanna закончил парсинг')

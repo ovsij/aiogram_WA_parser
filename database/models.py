@@ -58,6 +58,7 @@ class Product(db.Entity):
     deleted = Optional(bool, default=False)
     edited = Optional(bool, default=False)
     article = Optional(str, nullable=True)
+    url = Optional(str, nullable=True)
 
 class SubCategory(db.Entity):
     id = PrimaryKey(int, auto=True)

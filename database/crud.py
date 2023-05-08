@@ -62,7 +62,7 @@ def update_user(
     if address:
         user_to_update.address = address
     if promocode:
-        user_to_update.promocode = Promocode.get(name=promocode)
+        user_to_update.promocode += Promocode.get(name=promocode)
     if is_banned:
         user_to_update.is_banned = is_banned
     if sizes:
@@ -91,7 +91,7 @@ def add_to_cart(tg_id : str, product_id : int, sizes : str):
 
 @db_session()
 def get_cart(tg_id : str):
-    return [[Product.get(article=str(article.product)), article.sizes] for article in select(cart for cart in Cart if cart.user == User.get(tg_id=tg_id))[:]]
+    return [[Product.get(article=str(article.product)), article.sizes] for article in select(cart for cart in Cart if cart.user == User.get(tg_id=tg_id))[:] if Product.get(article=str(article.product))]
 
 @db_session()
 def delete_from_cart(tg_id : str, product_id : int):
@@ -153,7 +153,8 @@ def create_product(
     sizes : str = None, 
     price : float = None, 
     image : str = None,
-    article : str = None) -> Product:
+    article : str = None,
+    url : str = None) -> Product:
     
     if category_exists(name=category):
         category = Category.get(name=category)
@@ -173,7 +174,8 @@ def create_product(
         sizes=sizes,
         price=price,
         image=image,
-        article=article
+        article=article,
+        url=url
     )
     return product
 
@@ -384,18 +386,20 @@ def create_promocode(name : str):
     return Promocode(name=name)
 
 @db_session()
-def get_promocode(id : int = None, name : str = None, tg_id : str = None, users : bool = False, categories : bool = False):
+def get_promocode(id : int = None, name : str = None, tg_id : str = None, users : bool = False, category_id : int = None, categories : bool = False):
     if id:
         if users:
             return select(u for u in Promocode[id].users)[:]
         if categories:
-            return select(u for u in Promocode[id].categories.category)[:]
+            return select(c for c in Promocode[id].categories.category)[:]
         else:
             return Promocode[id]
     if name:
         return Promocode.get(name=name)
-    if tg_id:
+    if tg_id and not category_id:
         return select(p for p in Promocode if User.get(tg_id=tg_id) in p.users)[:]
+    if tg_id and category_id:
+        return select(p for p in Promocode if User.get(tg_id=tg_id) in p.users and category_id in (pc.category.id for pc in p.categories))[:]
     else:
         return select(p for p in Promocode)[:]
     
@@ -436,10 +440,12 @@ def get_promoprice(product : Product, tg_id : int):
     if len(user_promocodes) == 0:
         return product.price
     else:
+        price = []
         for promocode in user_promocodes:
             if product.category.id in [promcat.category.id for promcat in promocode.categories]:
                 promcat = get_promocodecategory(promocode_id=promocode.id, category_id=product.category.id)
-                return int(product.price * (1 - promcat.discount / 100))
+                price.append(int(product.price * (1 - promcat.discount / 100)))
+        return min(price)
     
 
 # PromocodeCategory
