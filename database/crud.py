@@ -107,7 +107,6 @@ def cart_exists(tg_id : str, product_id : int):
 def update_product(
     product_id : int,
     category : Category = None,
-    #catalog : Catalog = None,
     name : str = None, 
     description : str = None, 
     price : float = None, 
@@ -122,8 +121,6 @@ def update_product(
         product_to_upd.name = name
     if category:
         product_to_upd.category = category
-    #if catalog:
-    #    product_to_upd.catalog = catalog
     if description:
         product_to_upd.description = description
     if price:
@@ -162,6 +159,7 @@ def create_product(
         category = Category(name=category)
     if subcategory:
         if subcategory_exists(name=subcategory, category=category.name):
+            print(category)
             subcategory = SubCategory.get(name=subcategory, category=category)
         else:
             subcategory = SubCategory(name=subcategory, category=category)
@@ -187,7 +185,7 @@ def create_products(items):
         else:
             category = Category(name=item[1])
         if subcategory:
-            if subcategory_exists(name=item[2], category=category):
+            if subcategory_exists(name=item[2], category=category.name):
                 subcategory = SubCategory.get(name=item[2], category=category)
             else:
                 subcategory = SubCategory(name=item[2], category=item[1])
@@ -312,14 +310,10 @@ def del_products(catalog : str = None, category : str = None, subcategory : str 
     #    products_to_delete = select(p for p in Product if p.catalog == Catalog.get(phone=catalog) and not p.deleted and not p.edited)[:]
     #    for product in  products_to_delete:
     #        product.delete()
-    if category:
-        products_to_delete = select(p for p in Product if p.category == Category.get(name=category))[:]
-        for product in  products_to_delete:
-            product.delete()
-    if subcategory:
-        products_to_delete = select(p for p in Product if p.subcategory == SubCategory.get(name=subcategory, category=category) and not p.deleted and not p.edited)[:]
-        for product in  products_to_delete:
-            product.delete()
+    
+    products_to_delete = select(p for p in Product if p.subcategory == SubCategory.get(name=subcategory, category=Category.get(name=category)) and not p.deleted and not p.edited)[:]
+    for product in  products_to_delete:
+        product.delete()
 
 
 

@@ -550,7 +550,7 @@ async def get_valentino():
         
         items = await get_valentino_catalog(url + category_url, subcategory)
         #print(items)
-        crud.del_products(subcategory=subcategory)
+        crud.del_products(subcategory=subcategory, category='VALENTINO')
         #print(crud.get_product(category_id=crud.get_category(name='VALENTINO').id, subcategory_id=1))
         try:
             not_deleted_items = [product.name for product in crud.get_product(category_id=crud.get_category(name='VALENTINO').id, subcategory_id=crud.get_subcategory(name=subcategory).id)]
@@ -707,7 +707,7 @@ async def get_lesilla():
                     items.append(await get_item(session, prodict_url, name, i))
                 except:
                     continue
-            crud.del_products(subcategory=name)
+            crud.del_products(subcategory=name, category='LeSILLA')
             try:
                 not_deleted_items = [product.name + product.description.split('Color:')[1].split('\n\n')[0] for product in crud.get_product(category_id=crud.get_category(name='LeSILLA').id, subcategory_id=crud.get_subcategory(name=name).id)]
             except:
@@ -785,15 +785,15 @@ async def get_nike_subcategory(session, url, subcategory):
                 break
     items = []  
     for prod in products:
-        item_url = 'https://www.nike.com/' + prod['url']
         try:
+            item_url = 'https://www.nike.com/' + prod['url']
+            #try:
             headers = {'User-Agent': 'Mozilla/5.0'}
             prod_url = f'https://api.nike.com/product_feed/threads/v2?filter=language(it)&filter=marketplace(IT)&filter=channelId(d9a5bc42-4b9c-4976-858a-f159cf99c647)&filter=productInfo.merchProduct.styleColor({prod["url"].split("/")[-1]})'
             async with session.get(prod_url, headers=headers, ssl=False) as response:
                 item_webpage = await response.json()
             # название товара
             name = prod['title']
-            
             # артикул
             article = prod['url'].split('/')[-1]
             # цена  
@@ -873,7 +873,7 @@ async def get_nike_outlet():
         async with aiohttp.ClientSession(trust_env=True) as session:
             items = await get_nike_subcategory(session, url, name)
             # сохраняем товары [name, description, price, images]
-            crud.del_products(subcategory=name)
+            crud.del_products(subcategory=name, category='NIKE Outlet')
             try:
                 not_deleted_items = [product.name + product.description.split('Color:')[1].split('\n\n')[0] for product in crud.get_product(category_id=crud.get_category(name='NIKE Outlet').id, subcategory_id=crud.get_subcategory(name=name).id)]
             except:
@@ -912,7 +912,7 @@ async def get_nike():
         async with aiohttp.ClientSession(trust_env=True) as session:
             items = await get_nike_subcategory(session, url, name)
             # сохраняем товары [name, description, price, images]
-            crud.del_products(subcategory=name)
+            crud.del_products(subcategory=name, category='NIKE')
             try:
                 not_deleted_items = [product.name + product.description.split('Color:')[1].split('\n\n')[0] for product in crud.get_product(category_id=crud.get_category(name='NIKE').id, subcategory_id=crud.get_subcategory(name=name).id)]
             except:
@@ -1067,7 +1067,7 @@ async def get_golcegabbana():
                     #print(images)
                     items.append([title, description, current_price, images, list_sizes, article, item_url])
                     #print([title, description, current_price, images, list_sizes, article])
-        crud.del_products(subcategory=subcategory)
+        crud.del_products(subcategory=subcategory, category='Dolce&Gabanna')
         try:
             not_deleted_items = [product.article for product in crud.get_product(category_id=crud.get_category(name='Dolce&Gabanna').id, subcategory_id=crud.get_subcategory(name=subcategory).id)]
         except:
