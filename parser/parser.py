@@ -986,7 +986,7 @@ async def get_golcegabbana():
                     percent = int(100 - float(current_price)/(float(old_price)/100))
                     #print(percent)
                     description = soup.find('div', 'product-description rte').text.strip('\n').strip(' ').strip('\n')
-                    description += f'\n\n<s>{old_price} руб.</s> -{percent}% {current_price} руб.'
+                    description = description[:700] + f'\n\n<s>{old_price} руб.</s> -{percent}% {current_price} руб.'
                     
                     #print(description)
                     sizes = [size.text.replace('\n', '').strip(' ') for size in soup.find_all('div', 'variant-field')]
