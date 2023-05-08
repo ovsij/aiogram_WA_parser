@@ -785,7 +785,7 @@ async def get_nike_subcategory(session, url, subcategory):
             except:
                 break
     items = []  
-    for prod in products[:5]:
+    for prod in products:
         item_url = 'https://www.nike.com/' + prod['url']
         try:
             headers = {'User-Agent': 'Mozilla/5.0'}
