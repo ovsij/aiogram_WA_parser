@@ -747,7 +747,6 @@ def image_func(image):
         return 0
 
 async def get_nike_subcategory(session, url, subcategory):
-    
     if subcategory == 'Детские аскессуары':
         async with session.get('https://www.nike.com/it/w/bambini-outlet-accessori-3yaepzawwpwzv4dh', ssl=False) as response:
             webpage = await response.text()
@@ -792,9 +791,9 @@ async def get_nike_subcategory(session, url, subcategory):
             prod_url = f'https://api.nike.com/product_feed/threads/v2?filter=language(it)&filter=marketplace(IT)&filter=channelId(d9a5bc42-4b9c-4976-858a-f159cf99c647)&filter=productInfo.merchProduct.styleColor({prod["url"].split("/")[-1]})'
             async with session.get(prod_url, headers=headers, ssl=False) as response:
                 item_webpage = await response.json()
-
             # название товара
             name = prod['title']
+            print(name)
             
             # артикул
             article = prod['url'].split('/')[-1]
@@ -853,11 +852,12 @@ async def get_nike_subcategory(session, url, subcategory):
             if len(images) < 1:
                 continue
             items.append([name, description, price, images, prod['colorDescription'], list_sizes, article, item_url])
-        except:
+        except Exception as ex:
+            print(ex)
             continue
     return items
 
-async def get_nike():
+async def get_nike_outlet():
     urls = {
         'Мужская обувь': '5b21a62a-0503-400c-8336-3ccfbff2a684%2C16633190-45e5-4830-a068-232ac7aea82c%2C0f64ecc7-d624-4e91-b171-b83a03dd8550',
         'Мужская одежда': '5b21a62a-0503-400c-8336-3ccfbff2a684%2Ca00f0bb2-648b-4853-9559-4cd943b7d6c6%2C0f64ecc7-d624-4e91-b171-b83a03dd8550',
@@ -867,7 +867,46 @@ async def get_nike():
         'Женские аксессуары': 'fa863563-4508-416d-bae9-a53188c04937%2C5b21a62a-0503-400c-8336-3ccfbff2a684%2C7baf216c-acc6-4452-9e07-39c2ca77ba32',
         'Детская обувь': '5b21a62a-0503-400c-8336-3ccfbff2a684%2C16633190-45e5-4830-a068-232ac7aea82c%2C145ce13c-5740-49bd-b2fd-0f67214765b3',
         'Детская одежда': '5b21a62a-0503-400c-8336-3ccfbff2a684%2C145ce13c-5740-49bd-b2fd-0f67214765b3%2Ca00f0bb2-648b-4853-9559-4cd943b7d6c6',
-        'Детские аскессуары': 'https://www.nike.com/it/w/bambini-outlet-accessori-3yaepzawwpwzv4dh',
+        'Детские аскессуары': 'https://www.nike.com/it/w/bambini-outlet-3yaepzv4dh',
+    }
+    for name, url in urls.items():
+        print(f'Starting NIKE outlet: {name}')
+        async with aiohttp.ClientSession(trust_env=True) as session:
+            items = await get_nike_subcategory(session, url, name)
+            # сохраняем товары [name, description, price, images]
+            crud.del_products(subcategory=name)
+            try:
+                not_deleted_items = [product.name + product.description.split('Color:')[1].split('\n\n')[0] for product in crud.get_product(category_id=crud.get_category(name='NIKE Outlet').id, subcategory_id=crud.get_subcategory(name=name).id)]
+            except:
+                not_deleted_items = []
+            #print(not_deleted_items)
+            for item in items:
+                if item[0] + ' ' + item[4] in not_deleted_items:
+                    continue
+                prod = crud.create_product(
+                    name=item[0],
+                    category='NIKE Outlet',
+                    subcategory=name,
+                    description=item[1],
+                    sizes=item[5],
+                    price=item[2],
+                    image=item[3],
+                    article=item[6],
+                    url=item[7])
+            logging.info(f'Canceled NIKE outlet {name} added {len(items)} products') 
+    await bot.send_message(227184505, f'NIKE outlet закончил парсинг')
+
+async def get_nike():
+    urls = {
+        'Мужская обувь' : '16633190-45e5-4830-a068-232ac7aea82c%2C0f64ecc7-d624-4e91-b171-b83a03dd8550',
+        'Мужская одежда': 'a00f0bb2-648b-4853-9559-4cd943b7d6c6%2C0f64ecc7-d624-4e91-b171-b83a03dd8550',
+        'Мужские аксессуары': 'fa863563-4508-416d-bae9-a53188c04937%2C0f64ecc7-d624-4e91-b171-b83a03dd8550',
+        'Женская обувь': '16633190-45e5-4830-a068-232ac7aea82c%2C7baf216c-acc6-4452-9e07-39c2ca77ba32',
+        'Женская одежда': 'a00f0bb2-648b-4853-9559-4cd943b7d6c6%2C7baf216c-acc6-4452-9e07-39c2ca77ba32',
+        'Женские аксессуары': 'fa863563-4508-416d-bae9-a53188c04937%2C7baf216c-acc6-4452-9e07-39c2ca77ba32',
+        'Детская обувь': '16633190-45e5-4830-a068-232ac7aea82c%2C145ce13c-5740-49bd-b2fd-0f67214765b3',
+        'Детская одежда': '145ce13c-5740-49bd-b2fd-0f67214765b3%2Ca00f0bb2-648b-4853-9559-4cd943b7d6c6',
+        'Детские аскессуары': 'fa863563-4508-416d-bae9-a53188c04937%2C145ce13c-5740-49bd-b2fd-0f67214765b3',
     }
     for name, url in urls.items():
         print(f'Starting NIKE: {name}')
@@ -895,8 +934,6 @@ async def get_nike():
                     url=item[7])
             logging.info(f'Canceled NIKE {name} added {len(items)} products') 
     await bot.send_message(227184505, f'NIKE закончил парсинг')
-
-
 
 async def get_golcegabbana():
     subcategories = {
