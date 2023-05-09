@@ -17,30 +17,12 @@ from parser import *
 logging.basicConfig(level=logging.INFO)
 
 async def main():
-    try:
-        await get_lesilla()
-    except:
-        pass
-    try:
+        #await get_lesilla()
         await get_valentino()
-    except:
-        pass
-    try:
-        await get_nike()
-    except:
-        pass
-    try:
-        await get_nike_outlet()
-    except:
-        pass
-    try:
+        #await get_nike()
+        #await get_nike_outlet()
         await get_golcegabbana()
-    except:
-        pass
-    try:
         await get_coach()
-    except:
-        pass
         
         #tasks = set()
         #task1 = asyncio.create_task(get_lesilla())
