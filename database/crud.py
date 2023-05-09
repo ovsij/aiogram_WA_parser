@@ -115,7 +115,8 @@ def update_product(
     several_images : bool = False,
     article : str = None,
     deleted : bool = None,
-    edited : bool = None) -> Product:
+    edited : bool = None,
+    url : str = None) -> Product:
     product_to_upd = Product[product_id]
     if name:
         product_to_upd.name = name
@@ -128,7 +129,6 @@ def update_product(
     if sizes:
         product_to_upd.sizes = sizes
     if image and not several_images:
-        print('ok')
         product_to_upd.image = image
     if image and several_images:
         product_to_upd.image += '\n' + image
@@ -138,6 +138,8 @@ def update_product(
         product_to_upd.edited = edited
     if article:
         product_to_upd.article = article
+    if url:
+        product_to_upd.url = url
 
     return product_to_upd
 
@@ -275,8 +277,10 @@ def get_product(
         return filter_products
     if article:
         return Product.get(article=article)
-        
-        
+
+@db_session()     
+def product_exists(article : str):
+    return Product.exists(article=article)
 
 @db_session()
 def get_products_by_category(category : int):

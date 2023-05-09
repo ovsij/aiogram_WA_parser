@@ -91,7 +91,7 @@ def inline_kb_subcategories(tg_id : str, category : int = None, page : int = 1):
             text_and_data.append([emojize(':scissors: Таблица размеров', language='alias'), f'btn_sizes_{category}'])
             schema.append(1)
 
-        if tg_id in os.getenv('ADMINS'):
+        if tg_id in os.getenv('ADMINS') and get_category(id=category).custom:
             text_and_data.append([f'Удалить категорию {category_name}', f'btn_deletecategory_{category}'])
             schema.append(1)
             text_and_data.append(['Добавить подкатегорию', f'btn_addsubcategory_{category}'])
@@ -200,10 +200,10 @@ def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : in
         [emojize('Открыть списком', language='alias'), f'btn_subcategory_{category}_{sub_category}_1'],
         [emojize(':arrow_down_small: Eще 5 товаров :arrow_down_small:', language='alias'), f'btn_ls_{category}_{sub_category}{sizes_code}{prices_code}_{sort}{page_0}-{page_5}'],
         [emojize(':arrow_down_small: Eще 10 товаров :arrow_down_small:', language='alias'), f'btn_ls_{category}_{sub_category}{sizes_code}{prices_code}_{sort}{page_0}-{page_10}'],
-        btn_back(f'catalog_1')
+        btn_back(f'category_{category}_1')
     ]
     schema = [1, 1, 1, 1, 1, 1, 1, 1]
-    if tg_id in os.getenv('ADMINS'):
+    if tg_id in os.getenv('ADMINS') and get_category(id=category).custom:
         text_and_data.insert(7, ['Добавить товар', f'btn_addproduct_{category}_{sub_category}'])
         schema.append(1)
         text_and_data.insert(8, [f'Удалить подкатегорию {get_subcategory(id=sub_category).name}', f'btn_deletesubcategory_{category}_{sub_category}'])

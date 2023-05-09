@@ -544,7 +544,7 @@ async def get_valentino():
     }
     
     for subcategory, category_url in categories.items():
-        print(f'Start VALENTINO {subcategory}')
+        logging.info(f'Start VALENTINO {subcategory}')
         if not crud.subcategory_exists(name=subcategory, category='VALENTINO'):
             crud.create_subcategory(name=subcategory, category='VALENTINO')
         
@@ -698,7 +698,7 @@ async def get_lesilla():
     
     async with aiohttp.ClientSession(trust_env=True) as session:
         for name, url in urls.items():
-            print(f'Starting LeSILLA: {name}')
+            logging.info(f'Starting LeSILLA: {name}')
             product_urls = await get_subcategory(session, url)
             items = []
             for prodict_url in product_urls:
@@ -869,7 +869,7 @@ async def get_nike_outlet():
         'Детские аскессуары': 'https://www.nike.com/it/w/bambini-outlet-3yaepzv4dh',
     }
     for name, url in urls.items():
-        print(f'Starting NIKE outlet: {name}')
+        logging.info(f'Starting NIKE outlet: {name}')
         async with aiohttp.ClientSession(trust_env=True) as session:
             items = await get_nike_subcategory(session, url, name)
             # сохраняем товары [name, description, price, images]
@@ -908,7 +908,7 @@ async def get_nike():
         'Детские аскессуары': 'fa863563-4508-416d-bae9-a53188c04937%2C145ce13c-5740-49bd-b2fd-0f67214765b3',
     }
     for name, url in urls.items():
-        print(f'Starting NIKE: {name}')
+        logging.info(f'Starting NIKE: {name}')
         async with aiohttp.ClientSession(trust_env=True) as session:
             items = await get_nike_subcategory(session, url, name)
             # сохраняем товары [name, description, price, images]
@@ -1087,3 +1087,113 @@ async def get_golcegabbana():
         logging.info(f'Canceled DG {subcategory} added {len(items)} products') 
     await bot.send_message(227184505, f'Dolce&Gabanna закончил парсинг')
 
+async def get_coach():
+    subcategories = {
+        'Женская одежда' : 'https://it.coach.com/api/get-shop/donna/pret-a-porter/visualizza-tutto{}&__v__=0vd2xlsFnzxBsryah6o6X&locale=it_IT',
+        'Женские сумки' : 'https://it.coach.com/api/get-shop/donna/borse/visualizza-tutto{}&__v__=0vd2xlsFnzxBsryah6o6X&locale=it_IT',
+        'Женские кожаные изеделия' : 'https://it.coach.com/api/get-shop/donna/piccoli-accessori-in-pelle/visualizza-tutto{}&__v__=0vd2xlsFnzxBsryah6o6X&locale=it_IT',
+        'Женская обувь' : 'https://it.coach.com/api/get-shop/donna/calzature/visualizza-tutto{}&__v__=0vd2xlsFnzxBsryah6o6X&locale=it_IT',
+        'Женские аксессуары' : 'https://it.coach.com/api/get-shop/donna/accessori/visualizza-tutto{}&__v__=0vd2xlsFnzxBsryah6o6X&locale=it_IT',
+        'Женские ювелирные издения' : 'https://it.coach.com/api/get-shop/donna/accessori/gioielli{}&__v__=0vd2xlsFnzxBsryah6o6X&locale=it_IT',
+        'Мужская одежда' : 'https://it.coach.com/api/get-shop/uomo/pret-a-porter/visualizza-tutto{}&__v__=0vd2xlsFnzxBsryah6o6X&locale=it_IT',
+        'Мужские сумки' : 'https://it.coach.com/api/get-shop/uomo/borse/visualizza-tutto{}&__v__=0vd2xlsFnzxBsryah6o6X&locale=it_IT',
+        'Мужские кошельки' : 'https://it.coach.com/api/get-shop/uomo/portafogli/visualizza-tutto{}&__v__=0vd2xlsFnzxBsryah6o6X&locale=it_IT',
+        'Мужская обувь' : 'https://it.coach.com/api/get-shop/uomo/calzature/visualizza-tutto{}&__v__=0vd2xlsFnzxBsryah6o6X&locale=it_IT',
+        'Мужские аксессуары' : 'https://it.coach.com/api/get-shop/uomo/accessori/visualizza-tutto{}&__v__=0vd2xlsFnzxBsryah6o6X&locale=it_IT',
+    }
+    for subcategory, subcat_url in subcategories.items():
+        print(f'Starting COACH: {subcategory}')
+        async with aiohttp.ClientSession(trust_env=True) as session:
+            items = []
+            for i in range(1, 100):
+                url = subcat_url.format(f'?page={i}')
+                async with session.get(url, ssl=False) as response:
+                    webpage = await response.json()
+                    try:
+                        items += webpage['pageData']['products']
+                    except:
+                        break
+            products = []
+            for item in items:
+                for color_item in item['colors']:
+                    item_url = 'https://it.coach.com/it_IT' + item['url']
+                    #print(item_url)
+                    title = item['name'] + ' ' + color_item['text']
+                    #print(title)
+                    color = color_item['text']
+                    #print(color)
+                    price = int((float(item['prices']['currentPrice']) * (euro_cost() + 1)) * float(f"1.{crud.get_category(name='COACH').margin}"))
+                    #print(price)
+                    async with session.get(f"https://it.coach.com/api/get-suggestions-products?ids={item['id'].replace(' ', '+')}%2CCF925+B4%2FWN%2CCE897+LJN++S%2CCG798+BLK++XL&locale=it_IT&__v__=0vd2xlsFnzxBsryah6o6X", ssl=False) as response:
+                        webpage = await response.json()
+                    #print(soup)
+                    description = webpage['productsData'][0]['longDescription'].replace('<li>', '').replace('</li>', '').replace('<ul>', '').replace('</ul>', '')
+                    list_sizes = ''
+                    try:
+                        sizes = [size['value'] for size in webpage['productsData'][0]['variationGroup'][0]['variationAttributes'][1]['values'] if size['orderable']]
+                        list_sizes = ''
+                        for size in sizes:
+                            list_sizes += size + ', '
+                        list_sizes = list_sizes.strip(', ')
+
+                        description += '\n\nРазмеры:\n' + list_sizes
+                    except:
+                        pass
+                    #print(description)
+                    article = item['masterId'] + ' ' + color
+                    #print(article)
+                   
+                    # изображения
+                    if not os.path.exists(f"database/images/COACH"):
+                        os.mkdir(f"database/images/COACH")
+
+                    if not os.path.exists(f"database/images/COACH/{subcategory}"):
+                        os.mkdir(f"database/images/COACH/{subcategory}")
+                    image_links = [image['src'] for image in color_item['media']['full']]
+                    
+                    i = items.index(item) + 1
+                    images = ''
+                    
+                    for url in image_links[:10]:
+                        try:
+                            num = image_links.index(url) + 1
+                            img_path = f"database/images/COACH/{subcategory}/{i}_{title.replace(' ', '_').replace('/', '_')}_{num}.png"
+                            if not os.path.exists(img_path):
+                                async with session.get(url, ssl=False) as response:
+                                    f = await aiofiles.open(img_path, mode='wb')
+                                    await f.write(await response.read())
+                                    await f.close()
+                            images +=  img_path + '\n'
+                        except:
+                            continue
+                    products.append([title, description, price, images, list_sizes, article, item_url])
+            
+        for product in products:
+            if not crud.product_exists(article=product[5]):
+                prod = crud.create_product(
+                name=product[0],
+                category='COACH',
+                subcategory=subcategory,
+                description=product[1],
+                sizes=product[4],
+                price=product[2],
+                image=product[3],
+                article=product[5],
+                url=product[6])
+            else:
+                prod = crud.get_product(article=product[5])
+                if not prod.deleted and not prod.edited:
+                    crud.update_product(
+                        product_id=prod.id,
+                        name=product[0],
+                        description=product[1],
+                        sizes=product[4],
+                        price=product[2],
+                        image=product[3],
+                        article=product[5],
+                        url=product[6]
+                    )
+
+        print(f'Canceled COACH {subcategory} added {len(products)} products')
+        logging.info(f'Canceled COACH {subcategory} added {len(products)} products') 
+    await bot.send_message(227184505, f'COACH закончил парсинг')

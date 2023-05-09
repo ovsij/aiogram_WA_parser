@@ -18,21 +18,45 @@ logging.basicConfig(level=logging.INFO)
 
 async def main():
     try:
-        tasks = set()
+        await get_lesilla()
+    except:
+        pass
+    try:
+        await get_valentino()
+    except:
+        pass
+    try:
+        await get_nike()
+    except:
+        pass
+    try:
+        await get_nike_outlet()
+    except:
+        pass
+    try:
+        await get_golcegabbana()
+    except:
+        pass
+    try:
+        await get_coach()
+    except:
+        pass
+        
+        #tasks = set()
         #task1 = asyncio.create_task(get_lesilla())
         #tasks.add(task1)
         #task2 = asyncio.create_task(get_valentino())
         #tasks.add(task2)
         #task3 = asyncio.create_task(get_nike())
         #tasks.add(task3)
-        task4 = asyncio.create_task(get_golcegabbana())
-        tasks.add(task4)
+        #task4 = asyncio.create_task(get_golcegabbana())
+        #tasks.add(task4)
         #task5 = asyncio.create_task(get_nike_outlet())
         #tasks.add(task5)
-        L = await asyncio.gather(*tasks)
-        await asyncio.sleep(10)
-    except Exception as ex:
-        print(ex)
+        #L = await asyncio.gather(*tasks)
+    #    await asyncio.sleep(10)
+    #except Exception as ex:
+    #    print(ex)
 
 if __name__ == '__main__':
     try:

@@ -17,5 +17,7 @@ with db_session:
         Category(name='NIKE Outlet', phone='nikeoutlet', margin=30)
     if not Category.exists(name='Dolce&Gabanna'):
         Category(name='Dolce&Gabanna', phone='dolcegabanna', margin=30)
+    if not Category.exists(name='COACH'):
+        Category(name='COACH', phone='coach', margin=30)
 
 
