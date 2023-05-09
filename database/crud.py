@@ -159,7 +159,6 @@ def create_product(
         category = Category(name=category)
     if subcategory:
         if subcategory_exists(name=subcategory, category=category.name):
-            print(category)
             subcategory = SubCategory.get(name=subcategory, category=category)
         else:
             subcategory = SubCategory(name=subcategory, category=category)
@@ -290,7 +289,7 @@ def get_image(prod_id : int):
 @db_session()
 def get_last_id():
     try:
-        return max(select(p.id for p in Product)[:]) 
+        return max(select(p.id for p in Product)[:])
     except ValueError:
         print('Список продуктов пуст')
         return 0
