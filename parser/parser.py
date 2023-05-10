@@ -999,7 +999,7 @@ async def get_golcegabbana():
         'Детская обувь' : 'https://dolcegabbanaprivatesales.com/collections/baby-shoes',
     }
     for subcategory, subcat_url in subcategories.items():
-        print(f'Starting Dolce&Gabanna: {subcategory}')
+        logging.info(f'Starting Dolce&Gabanna: {subcategory}')
         async with aiohttp.ClientSession(trust_env=True) as session:
             items_urls = []
             for i in range(1, 100):
@@ -1197,7 +1197,7 @@ async def get_coach():
                         except:
                             continue
                     products.append([title, description, current_price, images, list_sizes, article, item_url])
-                    print([title, description, current_price, images, list_sizes, article, item_url])
+                    #print([title, description, current_price, images, list_sizes, article, item_url])
                 #except Exception as ex:
                 #    print(ex)
         for product in products:
