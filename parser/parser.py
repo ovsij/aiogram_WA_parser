@@ -1133,7 +1133,7 @@ async def get_coach():
                     except:
                         break
             products = []
-            for item in items[:1]:
+            for item in items:
                 #print(item)
                 #try:
                 for color_item in item['colors']:
