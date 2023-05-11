@@ -1001,6 +1001,19 @@ async def get_golcegabbana():
         'Детские кожаные изделия' : 'https://dolcegabbanaprivatesales.com/collections/baby-leather',
         'Детская обувь' : 'https://dolcegabbanaprivatesales.com/collections/baby-shoes',
     }
+    # logging
+    url = 'https://dolcegabbanaprivatesales.com/account/login/'
+    s = requests.Session()
+    r = s.get(url)
+    csrf_token = r.cookies['_secure_session_id']#Cookie _secure_session_id
+    data = {
+        'login': os.getenv('DGLogin'),
+        'password': os.getenv('DGPassword'),
+        'csrfmiddlewaretoken': csrf_token
+    }
+    d = s.post(url, data=data, headers=dict(Referer=url))
+    dd = s.get('https://dolcegabbanaprivatesales.com/collections/dresses-jumpsuits')
+
     for subcategory, subcat_url in subcategories.items():
         logging.info(f'Starting Dolce&Gabanna: {subcategory}')
         async with aiohttp.ClientSession(trust_env=True) as session:
@@ -1025,7 +1038,7 @@ async def get_golcegabbana():
                         webpage = await response.text()
                         soup = bs(webpage, 'html.parser')
                         title = soup.find('h1', 'product__title').text
-                        #logging.info(title)
+                        logging.info(title)
                         old_price = soup.find('s', 'product__price--strike').text.strip('\n').strip(' ').strip('\n').strip(' ').strip('\n').strip(' ').strip('€').replace('.', '').replace(',', '.')
                         #print(old_price)
                         old_price = int((float(old_price) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Dolce&Gabanna').margin}"))
@@ -1103,6 +1116,7 @@ async def get_golcegabbana():
                     image=item[3],
                     article=item[5],
                     url=item[6])
+                print(prod)
             except Exception as ex:
                 logging.warning(ex)
         print(f'Canceled {subcategory} added {len(items)} products')
