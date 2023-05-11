@@ -740,7 +740,7 @@ async def get_lesilla():
                         url=item[10])
                     #print(prod.name)
                 except Exception as ex:
-                    print(ex)
+                    logging.warning(ex)
             logging.info(f'Canceled LeSILLA {name} added {len(items)} products')
         await bot.send_message(227184505, f'LeSILLA закончил парсинг')
         return items
@@ -859,7 +859,7 @@ async def get_nike_subcategory(session, url, subcategory):
                 continue
             items.append([name, description, price, images, prod['colorDescription'], list_sizes, article, item_url])
         except Exception as ex:
-            print(ex)
+            logging.warning(ex)
     return items
 
 async def get_nike_outlet():
@@ -900,7 +900,7 @@ async def get_nike_outlet():
                         article=item[6] + '-outlet', #чтобы не задваивались с обычным найком
                         url=item[7])
                 except Exception as ex:
-                    print(ex)
+                    logging.warning(ex)
             logging.info(f'Canceled NIKE outlet {name} added {len(items)} products') 
     await bot.send_message(227184505, f'NIKE outlet закончил парсинг')
 
@@ -942,7 +942,7 @@ async def get_nike():
                         article=item[6],
                         url=item[7])
                 except Exception as ex:
-                    print(ex)
+                    logging.warning(ex)
             logging.info(f'Canceled NIKE {name} added {len(items)} products') 
     await bot.send_message(227184505, f'NIKE закончил парсинг')
 
@@ -1079,7 +1079,7 @@ async def get_golcegabbana():
                         items.append([title, description, current_price, images, list_sizes, article, item_url])
                         #print([title, description, current_price, images, list_sizes, article])
             except Exception as ex:
-                print(ex)
+                logging.warning(ex)
         crud.del_products(subcategory=subcategory, category='Dolce&Gabanna')
         try:
             not_deleted_items = [product.article for product in crud.get_product(category_id=crud.get_category(name='Dolce&Gabanna').id, subcategory_id=crud.get_subcategory(name=subcategory).id)]
@@ -1100,7 +1100,7 @@ async def get_golcegabbana():
                     article=item[5],
                     url=item[6])
             except Exception as ex:
-                print(ex)
+                logging.warning(ex)
         print(f'Canceled {subcategory} added {len(items)} products')
         logging.info(f'Canceled DG {subcategory} added {len(items)} products') 
     await bot.send_message(227184505, f'Dolce&Gabanna закончил парсинг')
@@ -1119,7 +1119,6 @@ async def get_coach():
         'Мужская обувь' : 'https://it.coach.com/api/get-shop/outlet/uomo/calzature{}&__v__=0vd2xlsFnzxBsryah6o6X',
         'Мужские аксессуары' : 'https://it.coach.com/api/get-shop/outlet/uomo/accessori{}&__v__=0vd2xlsFnzxBsryah6o6X',
     }
-    ['Hobo Mara in tela esclusiva Gold/Light Khaki Chalk', ' Esclusiva tela rivestita e liscia pelle\n Tasche interne con cerniera, per cellulare e multifunzione\n Chiusura superiore con cerniera, fodera in tessuto\n Tracolla amovibile con altezza di 24,8\xa0cm\n Tasca esterna con cerniera\n Tracolla amovibile con lunghezza\xa0di 55,2\xa0cm, da indossare su spalla o a tracolla\n L 34,3\xa0cm x A 17,8\xa0cm x P 10,2\xa0cmStyle No. CI791\n\n<s>64135 руб.</s> -49% 32534 руб.', 32534, 'database/images/COACH/Женские сумки/1_Hobo_Mara_in_tela_esclusiva_Gold_Light_Khaki_Chalk_1.png\ndatabase/images/COACH/Женские сумки/1_Hobo_Mara_in_tela_esclusiva_Gold_Light_Khaki_Chalk_2.png\ndatabase/images/COACH/Женские сумки/1_Hobo_Mara_in_tela_esclusiva_Gold_Light_Khaki_Chalk_3.png\ndatabase/images/COACH/Женские сумки/1_Hobo_Mara_in_tela_esclusiva_Gold_Light_Khaki_Chalk_4.png\ndatabase/images/COACH/Женские сумки/1_Hobo_Mara_in_tela_esclusiva_Gold_Light_Khaki_Chalk_5.png\n', '', 'CI791 Gold/Light Khaki Chalk', 'https://it.coach.com/it_IT/products/hobo-mara-in-tela-esclusiva/CI791-IMDQC.html?frp=CI791%20IMDQC']
     for subcategory, subcat_url in subcategories.items():
         print(f'Starting COACH: {subcategory}')
         async with aiohttp.ClientSession(trust_env=True) as session:
@@ -1135,71 +1134,71 @@ async def get_coach():
             products = []
             for item in items:
                 #print(item)
-                #try:
-                for color_item in item['colors']:
-                    item_url = 'https://it.coach.com/it_IT' + item['url']
-                    #print(item_url)
-                    title = item['name'] + ' ' + color_item['text']
-                    #print(title)
-                    color = color_item['text']
-                    #print(color)
-                    
-                    current_price = int((float(item['prices']['currentPrice']) * (euro_cost() + 1)) * float(f"1.{crud.get_category(name='COACH').margin}"))
-                    try:
-                        old_price = int((float(item['prices']['regularPrice']) * (euro_cost() + 1)) * float(f"1.{crud.get_category(name='COACH').margin}"))
-                        percent = int(100 - float(current_price)/(float(old_price)/100))
-                    except:
-                        old_price = False
-                    
-                    #print(price)
-                    async with session.get(f"https://it.coach.com/api/get-suggestions-products?ids={item['id'].replace(' ', '+')}%2CCF925+B4%2FWN%2CCE897+LJN++S%2CCG798+BLK++XL&locale=it_IT&__v__=0vd2xlsFnzxBsryah6o6X", ssl=False) as response:
-                        item_webpage = await response.json()
-                    #print(soup)
-                    description = item_webpage['productsData'][0]['longDescription'].replace('<li>', '').replace('</li>', '').replace('<ul>', '').replace('</ul>', '')
-                    if old_price:
-                        description = description[:700] + f'\n\n<s>{old_price} руб.</s> -{percent}% {current_price} руб.'
-                    list_sizes = ''
-                    try:
-                        sizes = [size['value'] for size in item_webpage['productsData'][0]['variationGroup'][0]['variationAttributes'][1]['values'] if size['orderable']]
-                        list_sizes = ''
-                        for size in sizes:
-                            list_sizes += size + ', '
-                        list_sizes = list_sizes.strip(', ')
-
-                        description += '\n\nРазмеры:\n' + list_sizes
-                    except:
-                        pass
-                    #print(description)
-                    article = item['masterId'] + ' ' + color
-                    #print(article)
-                
-                    # изображения
-                    if not os.path.exists(f"database/images/COACH"):
-                        os.mkdir(f"database/images/COACH")
-
-                    if not os.path.exists(f"database/images/COACH/{subcategory}"):
-                        os.mkdir(f"database/images/COACH/{subcategory}")
-                    image_links = [image['src'] for image in color_item['media']['full']]
-                    
-                    i = items.index(item) + 1
-                    images = ''
-                    
-                    for url in image_links[:10]:
+                try:
+                    for color_item in item['colors']:
+                        item_url = 'https://it.coach.com/it_IT' + item['url']
+                        #print(item_url)
+                        title = item['name'] + ' ' + color_item['text']
+                        #print(title)
+                        color = color_item['text']
+                        #print(color)
+                        
+                        current_price = int((float(item['prices']['currentPrice']) * (euro_cost() + 1)) * float(f"1.{crud.get_category(name='COACH').margin}"))
                         try:
-                            num = image_links.index(url) + 1
-                            img_path = f"database/images/COACH/{subcategory}/{i}_{title.replace(' ', '_').replace('/', '_')}_{num}.png"
-                            if not os.path.exists(img_path):
-                                async with session.get(url, ssl=False) as response:
-                                    f = await aiofiles.open(img_path, mode='wb')
-                                    await f.write(await response.read())
-                                    await f.close()
-                            images +=  img_path + '\n'
+                            old_price = int((float(item['prices']['regularPrice']) * (euro_cost() + 1)) * float(f"1.{crud.get_category(name='COACH').margin}"))
+                            percent = int(100 - float(current_price)/(float(old_price)/100))
                         except:
-                            continue
-                    products.append([title, description, current_price, images, list_sizes, article, item_url])
-                    #print([title, description, current_price, images, list_sizes, article, item_url])
-                #except Exception as ex:
-                #    print(ex)
+                            old_price = False
+                        
+                        #print(price)
+                        async with session.get(f"https://it.coach.com/api/get-suggestions-products?ids={item['id'].replace(' ', '+')}%2CCF925+B4%2FWN%2CCE897+LJN++S%2CCG798+BLK++XL&locale=it_IT&__v__=0vd2xlsFnzxBsryah6o6X", ssl=False) as response:
+                            item_webpage = await response.json()
+                        #print(soup)
+                        description = item_webpage['productsData'][0]['longDescription'].replace('<li>', '').replace('</li>', '').replace('<ul>', '').replace('</ul>', '')
+                        if old_price:
+                            description = description[:700] + f'\n\n<s>{old_price} руб.</s> -{percent}% {current_price} руб.'
+                        list_sizes = ''
+                        try:
+                            sizes = [size['value'] for size in item_webpage['productsData'][0]['variationGroup'][0]['variationAttributes'][1]['values'] if size['orderable']]
+                            list_sizes = ''
+                            for size in sizes:
+                                list_sizes += size + ', '
+                            list_sizes = list_sizes.strip(', ')
+
+                            description += '\n\nРазмеры:\n' + list_sizes
+                        except:
+                            pass
+                        #print(description)
+                        article = item['masterId'] + ' ' + color
+                        #print(article)
+                    
+                        # изображения
+                        if not os.path.exists(f"database/images/COACH"):
+                            os.mkdir(f"database/images/COACH")
+
+                        if not os.path.exists(f"database/images/COACH/{subcategory}"):
+                            os.mkdir(f"database/images/COACH/{subcategory}")
+                        image_links = [image['src'] for image in color_item['media']['full']]
+                        
+                        i = items.index(item) + 1
+                        images = ''
+                        
+                        for url in image_links[:10]:
+                            try:
+                                num = image_links.index(url) + 1
+                                img_path = f"database/images/COACH/{subcategory}/{i}_{title.replace(' ', '_').replace('/', '_')}_{num}.png"
+                                if not os.path.exists(img_path):
+                                    async with session.get(url, ssl=False) as response:
+                                        f = await aiofiles.open(img_path, mode='wb')
+                                        await f.write(await response.read())
+                                        await f.close()
+                                images +=  img_path + '\n'
+                            except:
+                                continue
+                        products.append([title, description, current_price, images, list_sizes, article, item_url])
+                        #print([title, description, current_price, images, list_sizes, article, item_url])
+                except Exception as ex:
+                    logging.warning(ex)
         for product in products:
             try:
                 if not crud.product_exists(article=product[5]):
@@ -1227,7 +1226,7 @@ async def get_coach():
                             url=product[6]
                         )
             except Exception as ex:
-                print(ex)
+                logging.warning(ex)
 
         print(f'Canceled COACH {subcategory} added {len(products)} products')
         logging.info(f'Canceled COACH {subcategory} added {len(products)} products') 
