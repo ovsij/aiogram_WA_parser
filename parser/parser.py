@@ -1266,63 +1266,67 @@ async def get_asics():
             items = []
             euro_costs = euro_cost()
             for item_url in item_links:
-                async with session.get(item_url, ssl=False) as response:
-                    item_wp = await response.read()
-                    item_sp = bs(item_wp, 'html.parser')
-                    title = item_sp.find('div', 'pdp-top__product-name large-bold').text.replace('\n', '').strip(' ')
-                    #print(title)
-                    color = item_sp.find_all('span', 'variants__header variants__header--light small-reg')[0].text
-                    #print(color)
-                    old_price = int((float(item_sp.find('span', 'price-standard outlet-pricing').text.replace('\n', '').strip(' ').strip(' €').replace(',00', ' ').replace(',', '.')) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Asics').margin}"))
-                    current_price = int((float(item_sp.find('span', 'price-sales price-sales-discount').text.replace('\n', '').strip(' ').strip(' €').replace(',00', ' ').replace(',', '.')) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Asics').margin}"))
-                    
-                    percent = int(100 - float(current_price) / (float(old_price) / 100))
-                    #print(old_price)
-                    #print(current_price)
-                    #print(percent)
-                    description = item_sp.find('div', 'product-info-section-inner small-reg').text.strip('\n').replace('\n\n', '\n')
-                    #print(description)
-                    if old_price:
-                        description = description[:700] + f'\n\n<s>{old_price} руб.</s> -{percent}% {current_price} руб.'
-                    try:
-                        sizes = ''
-                        sizes_tag = item_sp.find('ul', 'variants__list variants__list--size js-mens-size').find_all('li')
-                        for size in sizes_tag:
-                            if size.get('data-instock') == 'true':
-                                sizes += size.text.replace('\n', '').strip(' ') + ', '
-                        sizes = sizes.strip(', ')
-                        description += '\n\nРазмеры:\n' + sizes
-                        #print(sizes)
-                    except:
-                        pass
-                    article = item_url.split('/')[-1].split('.')[0]
-                    print(article)
-
-                    image_links = [a.get('href') for a in item_sp.find('div', 'product-thumbnails').find_all('a')]
-                    # изображения
-                    if not os.path.exists(f"database/images/Asics"):
-                        os.mkdir(f"database/images/Asics")
-
-                    if not os.path.exists(f"database/images/Asics/{subcategory}"):
-                        os.mkdir(f"database/images/Asics/{subcategory}")
-
-                    i = item_links.index(item_url) + 1
-                    images = ''
-                    
-                    for url in image_links[:10]:
+                try:
+                    async with session.get(item_url, ssl=False) as response:
+                        item_wp = await response.read()
+                        item_sp = bs(item_wp, 'html.parser')
+                        title = item_sp.find('div', 'pdp-top__product-name large-bold').text.replace('\n', '').strip(' ')
+                        #print(title)
+                        color = item_sp.find_all('span', 'variants__header variants__header--light small-reg')[0].text
+                        #print(color)
+                        old_price = int((float(item_sp.find('span', 'price-standard outlet-pricing').text.replace('\n', '').strip(' ').strip(' €').replace(',00', ' ').replace(',', '.')) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Asics').margin}"))
+                        current_price = int((float(item_sp.find('span', 'price-sales price-sales-discount').text.replace('\n', '').strip(' ').strip(' €').replace(',00', ' ').replace(',', '.')) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Asics').margin}"))
+                        
+                        percent = int(100 - float(current_price) / (float(old_price) / 100))
+                        #print(old_price)
+                        #print(current_price)
+                        #print(percent)
+                        description = item_sp.find('div', 'product-info-section-inner small-reg').text.strip('\n').replace('\n\n', '\n')
+                        #print(description)
+                        if old_price:
+                            description = description[:700] + f'\n\n<s>{old_price} руб.</s> -{percent}% {current_price} руб.'
                         try:
-                            num = image_links.index(url) + 1
-                            img_path = f"database/images/Asics/{subcategory}/{i}_{title.replace(' ', '_').replace('/', '_')}_{num}.png"
-                            if not os.path.exists(img_path):
-                                async with session.get(url, ssl=False) as response:
-                                    f = await aiofiles.open(img_path, mode='wb')
-                                    await f.write(await response.read())
-                                    await f.close()
-                            images +=  img_path + '\n'
+                            sizes = ''
+                            sizes_tag = item_sp.find('ul', 'variants__list variants__list--size js-mens-size').find_all('li')
+                            for size in sizes_tag:
+                                if size.get('data-instock') == 'true':
+                                    sizes += size.text.replace('\n', '').strip(' ') + ', '
+                            sizes = sizes.strip(', ')
+                            description += '\n\nРазмеры:\n' + sizes
+                            #print(sizes)
                         except:
-                            continue
-                    items.append([title, description, current_price, images, sizes, article, item_url])
-                    #logging.info([title, description, current_price, images, sizes, article, item_url])
+                            pass
+                        article = item_url.split('/')[-1].split('.')[0]
+                        print(article)
+
+                        image_links = [a.get('href') for a in item_sp.find('div', 'product-thumbnails').find_all('a')]
+                        # изображения
+                        if not os.path.exists(f"database/images/Asics"):
+                            os.mkdir(f"database/images/Asics")
+
+                        if not os.path.exists(f"database/images/Asics/{subcategory}"):
+                            os.mkdir(f"database/images/Asics/{subcategory}")
+
+                        i = item_links.index(item_url) + 1
+                        images = ''
+                        
+                        for url in image_links[:10]:
+                            try:
+                                num = image_links.index(url) + 1
+                                img_path = f"database/images/Asics/{subcategory}/{i}_{title.replace(' ', '_').replace('/', '_')}_{num}.png"
+                                if not os.path.exists(img_path):
+                                    async with session.get(url, ssl=False) as response:
+                                        f = await aiofiles.open(img_path, mode='wb')
+                                        await f.write(await response.read())
+                                        await f.close()
+                                images +=  img_path + '\n'
+                            except:
+                                continue
+                        items.append([title, description, current_price, images, sizes, article, item_url])
+                        #logging.info([title, description, current_price, images, sizes, article, item_url])
+                except Exception as ex:
+                    logging.warning(ex)
+
         for item in items:
             try:
                 if not crud.product_exists(article=item[5]):
