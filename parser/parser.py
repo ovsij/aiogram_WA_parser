@@ -1005,17 +1005,17 @@ async def get_golcegabbana():
 
     for subcategory, subcat_url in subcategories.items():
         # logging
-        url = 'https://dolcegabbanaprivatesales.com/account/login/'
-        s = requests.Session()
-        r = s.get(url)
-        csrf_token = r.cookies['_secure_session_id']#Cookie _secure_session_id
-        data = {
-            'login': os.getenv('DGLogin'),
-            'password': os.getenv('DGPassword'),
-            'csrfmiddlewaretoken': csrf_token
-        }
-        d = s.post(url, data=data, headers=dict(Referer=url))
-        dd = s.get('https://dolcegabbanaprivatesales.com/collections/dresses-jumpsuits')
+        #url = 'https://dolcegabbanaprivatesales.com/account/login/'
+        #s = requests.Session()
+        #r = s.get(url)
+        #csrf_token = r.cookies['_secure_session_id']#Cookie _secure_session_id
+        #data = {
+        #    'login': os.getenv('DGLogin'),
+        #    'password': os.getenv('DGPassword'),
+        #    'csrfmiddlewaretoken': csrf_token
+        #}
+        #d = s.post(url, data=data, headers=dict(Referer=url))
+        #dd = s.get('https://dolcegabbanaprivatesales.com/collections/dresses-jumpsuits')
 
 
         logging.info(f'Starting Dolce&Gabanna: {subcategory}')
