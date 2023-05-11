@@ -44,9 +44,10 @@ from bot.loader import dp, bot
 
 
 def euro_cost():
-    webpage = requests.get('https://ligovka.ru/pda/')
+    webpage = requests.get('https://www.push52.ru')
     soup = bs(webpage.text, 'html.parser')
-    course = soup.find('section', 'main_courses').find_all('div', 'currency_contaner')[1].find_all('tr')[1].find_all('td')[2].text
+    course = soup.find('div', {'id' : 'body_CurrencyBoard1_eurrub'}).find('span', 'sell').text.replace(',', '.')
+    print(course)
     return float(course)
 
 
@@ -1124,7 +1125,7 @@ async def get_coach():
         'Мужские аксессуары' : 'https://it.coach.com/api/get-shop/outlet/uomo/accessori{}&__v__=0vd2xlsFnzxBsryah6o6X',
     }
     for subcategory, subcat_url in subcategories.items():
-        print(f'Starting COACH: {subcategory}')
+        logging.info(f'Starting COACH: {subcategory}')
         async with aiohttp.ClientSession(trust_env=True) as session:
             items = []
             for i in range(1, 100):
@@ -1201,7 +1202,6 @@ async def get_coach():
                             except:
                                 continue
                         products.append([title, description, current_price, images, list_sizes, article, item_url])
-                        #print([title, description, current_price, images, list_sizes, article, item_url])
                 except Exception as ex:
                     logging.warning(ex)
         for product in products:
@@ -1236,3 +1236,122 @@ async def get_coach():
         print(f'Canceled COACH {subcategory} added {len(products)} products')
         logging.info(f'Canceled COACH {subcategory} added {len(products)} products') 
     await bot.send_message(227184505, f'COACH закончил парсинг')
+
+
+async def get_asics():
+    subcategories = {
+        'Мужская обувь' : 'https://outlet.asics.com/it/en-it/mens-shoes/c/ao10200000/?sz=96&start={}',
+        'Мужская одежда' : 'https://outlet.asics.com/it/en-it/mens-clothing/c/ao10300000/?sz=96&start={}',
+        'Мужские аксесуары' : 'https://outlet.asics.com/it/en-it/womens-accessories/c/ao20400000/?sz=96&start={}',
+        'Женская обувь' : 'https://outlet.asics.com/it/en-it/womens-shoes/c/ao20200000/?sz=96&start={}',
+        'Женская одежда' : 'https://outlet.asics.com/it/en-it/womens-clothing/c/ao20300000/?sz=96&start={}',
+        'Женские аксессуары' : 'https://outlet.asics.com/it/en-it/womens-accessories/c/ao20400000/?sz=96&start={}',
+        'Детская обувь' : 'https://outlet.asics.com/it/en-it/kids-shoes/c/ao30200000/?sz=96&start={}',
+    }
+    for subcategory, url in subcategories.items():
+        logging.info(f'Starting Asics: {subcategory}')
+        headers = {'User-Agent': 'Mozilla/5.0'}
+        async with aiohttp.ClientSession(headers=headers, trust_env=True) as session:
+            item_links = []
+            for i in range(0, 10):
+                async with session.get(url.format(96 * i), ssl=False) as response:
+                    webpage = await response.read()
+                    soup = bs(webpage, 'html.parser')
+                    links = [link.find('a', 'product-tile__link js-product-tile').get('href') for link in soup.find_all('li', ['grid-tile new-row ', 'grid-tile'])]
+                    if len(links) > 0:
+                        item_links += links
+                    else:
+                        break
+
+            items = []
+            euro_costs = euro_cost()
+            for item_url in item_links[:5]:
+                async with session.get(item_url, ssl=False) as response:
+                    item_wp = await response.read()
+                    item_sp = bs(item_wp, 'html.parser')
+                    title = item_sp.find('div', 'pdp-top__product-name large-bold').text.replace('\n', '').strip(' ')
+                    #print(title)
+                    color = item_sp.find_all('span', 'variants__header variants__header--light small-reg')[0].text
+                    #print(color)
+                    old_price = int((float(item_sp.find('span', 'price-standard outlet-pricing').text.replace('\n', '').strip(' ').strip(' €').replace(',00', ' ').replace(',', '.')) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Asics').margin}"))
+                    current_price = int((float(item_sp.find('span', 'price-sales price-sales-discount').text.replace('\n', '').strip(' ').strip(' €').replace(',00', ' ').replace(',', '.')) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Asics').margin}"))
+                    
+                    percent = int(100 - float(current_price) / (float(old_price) / 100))
+                    #print(old_price)
+                    #print(current_price)
+                    #print(percent)
+                    description = item_sp.find('div', 'product-info-section-inner small-reg').text.strip('\n').replace('\n\n', '\n')
+                    #print(description)
+                    if old_price:
+                        description = description[:700] + f'\n\n<s>{old_price} руб.</s> -{percent}% {current_price} руб.'
+                    try:
+                        sizes = ''
+                        sizes_tag = item_sp.find('ul', 'variants__list variants__list--size js-mens-size').find_all('li')
+                        for size in sizes_tag:
+                            if size.get('data-instock') == 'true':
+                                sizes += size.text.replace('\n', '').strip(' ') + ', '
+                        sizes = sizes.strip(', ')
+                        description += '\n\nРазмеры:\n' + sizes
+                        #print(sizes)
+                    except:
+                        pass
+                    article = item_url.split('/')[-1].split('.')[0]
+                    print(article)
+
+                    image_links = [a.get('href') for a in item_sp.find('div', 'product-thumbnails').find_all('a')]
+                    # изображения
+                    if not os.path.exists(f"database/images/Asics"):
+                        os.mkdir(f"database/images/Asics")
+
+                    if not os.path.exists(f"database/images/Asics/{subcategory}"):
+                        os.mkdir(f"database/images/Asics/{subcategory}")
+
+                    i = item_links.index(item_url) + 1
+                    images = ''
+                    
+                    for url in image_links[:10]:
+                        try:
+                            num = image_links.index(url) + 1
+                            img_path = f"database/images/Asics/{subcategory}/{i}_{title.replace(' ', '_').replace('/', '_')}_{num}.png"
+                            if not os.path.exists(img_path):
+                                async with session.get(url, ssl=False) as response:
+                                    f = await aiofiles.open(img_path, mode='wb')
+                                    await f.write(await response.read())
+                                    await f.close()
+                            images +=  img_path + '\n'
+                        except:
+                            continue
+                    items.append([title, description, current_price, images, sizes, article, item_url])
+                    #logging.info([title, description, current_price, images, sizes, article, item_url])
+        for item in items:
+            try:
+                if not crud.product_exists(article=item[5]):
+                    prod = crud.create_product(
+                    name=item[0],
+                    category='Asics',
+                    subcategory=subcategory,
+                    description=item[1],
+                    sizes=item[4],
+                    price=item[2],
+                    image=item[3],
+                    article=item[5],
+                    url=item[6])
+                else:
+                    prod = crud.get_product(article=item[5])
+                    if not prod.deleted and not prod.edited:
+                        crud.update_product(
+                            product_id=prod.id,
+                            name=item[0],
+                            description=item[1],
+                            sizes=item[4],
+                            price=item[2],
+                            image=item[3],
+                            article=item[5],
+                            url=item[6]
+                        )
+            except Exception as ex:
+                logging.warning(ex)
+
+        print(f'Canceled Asics {subcategory} added {len(items)} products')
+        logging.info(f'Canceled Asics {subcategory} added {len(items)} products') 
+    await bot.send_message(227184505, f'Asics закончил парсинг')

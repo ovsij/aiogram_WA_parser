@@ -19,5 +19,7 @@ with db_session:
         Category(name='Dolce&Gabanna', phone='dolcegabanna', margin=30)
     if not Category.exists(name='COACH'):
         Category(name='COACH', phone='coach', margin=30)
+    if not Category.exists(name='Asics'):
+        Category(name='Asics', phone='asics', margin=30)
 
 

@@ -37,6 +37,8 @@ async def main():
     tasks.add(task5)
     #task6 = asyncio.create_task(get_coach())
     #tasks.add(task6)
+    task7 = asyncio.create_task(get_asics())
+    tasks.add(task7)
     
     L = await asyncio.gather(*tasks)
     await asyncio.sleep(10)
