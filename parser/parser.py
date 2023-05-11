@@ -560,12 +560,12 @@ async def get_valentino():
         except:
             not_deleted_items = []
         #print(not_deleted_items)
-        euro_cost = euro_cost()
+        euro_costs = euro_cost()
         for item in items:
             try:
                 if item[0] in not_deleted_items:
                     continue
-                price = int((item[5] * (euro_cost + 1)) * float(f'1.{crud.get_category(name="VALENTINO").margin}')) if item[5] else None
+                price = int((item[5] * (euro_costs + 1)) * float(f'1.{crud.get_category(name="VALENTINO").margin}')) if item[5] else None
                 prod = crud.create_product(
                     name=item[0],
                     category=item[1],
@@ -718,14 +718,14 @@ async def get_lesilla():
             except:
                 not_deleted_items = []
             #print(not_deleted_items)
-            euro_cost = euro_cost()
+            euro_costs = euro_cost()
             for item in items:
                 try:
-                    price = int((item[5] * (euro_cost + 1)) * float(f'1.{crud.get_category(name="LeSILLA").margin}')) if item[5] else None
+                    price = int((item[5] * (euro_costs + 1)) * float(f'1.{crud.get_category(name="LeSILLA").margin}')) if item[5] else None
                     description = item[4].replace('€ ', ' ')
                     for i in re.findall(r'\d*[.]\d\d', item[4]):
                         if i:
-                            price_rub = str(int((float(i) * (euro_cost + 1)) / 100 * crud.get_category(name='LeSILLA').margin))
+                            price_rub = str(int((float(i) * (euro_costs + 1)) / 100 * crud.get_category(name='LeSILLA').margin))
                             description = description.replace(i, '<s>' + price_rub + ' руб.</s>  ')
                     description = f'Color: {item[7]}\n\n' + description.replace(f'<s>{price_rub} руб.</s>', f'{price_rub} руб.')
                     if item[0] + ' ' + item[7] in not_deleted_items:
@@ -793,7 +793,7 @@ async def get_nike_subcategory(session, url, subcategory):
             except:
                 break
     items = []  
-    euro_cost = euro_cost()
+    euro_costs = euro_cost()
     for prod in products:
         try:
             item_url = 'https://www.nike.com/' + prod['url']
@@ -807,10 +807,10 @@ async def get_nike_subcategory(session, url, subcategory):
             # артикул
             article = prod['url'].split('/')[-1]
             # цена  
-            price = int((prod['curprice'] * (euro_cost + 1)) * float(f"1.{crud.get_category(name='NIKE').margin}")) if prod['curprice'] else None
+            price = int((prod['curprice'] * (euro_costs + 1)) * float(f"1.{crud.get_category(name='NIKE').margin}")) if prod['curprice'] else None
             
             # описание
-            fullPrice = int((prod['fullPrice'] * (euro_cost + 1)) * float(f"1.{crud.get_category(name='NIKE').margin}")) if prod['fullPrice'] else None
+            fullPrice = int((prod['fullPrice'] * (euro_costs + 1)) * float(f"1.{crud.get_category(name='NIKE').margin}")) if prod['fullPrice'] else None
             percent = int(100 - (price/fullPrice * 100))
             description = f"Color: {prod['colorDescription']}\n\n"
             description += f'<s>{fullPrice} руб.</s> -{percent}% {price} руб. \n\n'
@@ -1016,7 +1016,7 @@ async def get_golcegabbana():
                     items_urls += items
         
         items = []
-        euro_cost = euro_cost()
+        euro_costs = euro_cost()
         for url in items_urls:
             try:
                 async with aiohttp.ClientSession(trust_env=True) as session:
@@ -1028,11 +1028,11 @@ async def get_golcegabbana():
                         #print(title)
                         old_price = soup.find('s', 'product__price--strike').text.strip('\n').strip(' ').strip('\n').strip(' ').strip('\n').strip(' ').strip('€').replace('.', '').replace(',', '.')
                         #print(old_price)
-                        old_price = int((float(old_price) * (euro_cost + 1)) * float(f"1.{crud.get_category(name='Dolce&Gabanna').margin}"))
+                        old_price = int((float(old_price) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Dolce&Gabanna').margin}"))
                         #print(old_price)
                         current_price = soup.find('span', 'product__price--sale').text.strip('\n').strip(' ').strip('€').replace('.', '').replace(',', '.').strip('\n').strip(' ')
                         #print(current_price)
-                        current_price = int((float(current_price) * (euro_cost + 1)) * float(f"1.{crud.get_category(name='Dolce&Gabanna').margin}"))
+                        current_price = int((float(current_price) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Dolce&Gabanna').margin}"))
                         #print(current_price)
                         percent = int(100 - float(current_price)/(float(old_price)/100))
                         #print(percent)
@@ -1136,7 +1136,7 @@ async def get_coach():
                     except:
                         break
             products = []
-            euro_cost = euro_cost()
+            euro_costs = euro_cost()
             for item in items:
                 #print(item)
                 try:
@@ -1148,9 +1148,9 @@ async def get_coach():
                         color = color_item['text']
                         #print(color)
                         
-                        current_price = int((float(item['prices']['currentPrice']) * (euro_cost + 1)) * float(f"1.{crud.get_category(name='COACH').margin}"))
+                        current_price = int((float(item['prices']['currentPrice']) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='COACH').margin}"))
                         try:
-                            old_price = int((float(item['prices']['regularPrice']) * (euro_cost + 1)) * float(f"1.{crud.get_category(name='COACH').margin}"))
+                            old_price = int((float(item['prices']['regularPrice']) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='COACH').margin}"))
                             percent = int(100 - float(current_price)/(float(old_price)/100))
                         except:
                             old_price = False
