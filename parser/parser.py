@@ -1017,7 +1017,7 @@ async def get_golcegabbana():
         d = s.post(url, data=data, headers=dict(Referer=url))
         dd = s.get('https://dolcegabbanaprivatesales.com/collections/dresses-jumpsuits')
 
-        
+
         logging.info(f'Starting Dolce&Gabanna: {subcategory}')
         async with aiohttp.ClientSession(trust_env=True) as session:
             items_urls = []
@@ -1041,7 +1041,7 @@ async def get_golcegabbana():
                         webpage = await response.text()
                         soup = bs(webpage, 'html.parser')
                         title = soup.find('h1', 'product__title').text
-                        logging.info(title)
+                        
                         old_price = soup.find('s', 'product__price--strike').text.strip('\n').strip(' ').strip('\n').strip(' ').strip('\n').strip(' ').strip('€').replace('.', '').replace(',', '.')
                         #print(old_price)
                         old_price = int((float(old_price) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Dolce&Gabanna').margin}"))
@@ -1093,10 +1093,12 @@ async def get_golcegabbana():
                                 images +=  img_path + '\n'
                             except:
                                 continue
+                        
                         if len(images) < 1:
                             continue
                         #print(images)
                         items.append([title, description, current_price, images, list_sizes, article, item_url])
+                        logging.info(title)
                         #print([title, description, current_price, images, list_sizes, article])
             except Exception as ex:
                 logging.warning(ex)
