@@ -1265,7 +1265,7 @@ async def get_asics():
 
             items = []
             euro_costs = euro_cost()
-            for item_url in item_links[:5]:
+            for item_url in item_links:
                 async with session.get(item_url, ssl=False) as response:
                     item_wp = await response.read()
                     item_sp = bs(item_wp, 'html.parser')
