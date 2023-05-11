@@ -47,7 +47,6 @@ def euro_cost():
     webpage = requests.get('https://www.push52.ru')
     soup = bs(webpage.text, 'html.parser')
     course = soup.find('div', {'id' : 'body_CurrencyBoard1_eurrub'}).find('span', 'sell').text.replace(',', '.')
-    print(course)
     return float(course)
 
 
@@ -1026,7 +1025,7 @@ async def get_golcegabbana():
                         webpage = await response.text()
                         soup = bs(webpage, 'html.parser')
                         title = soup.find('h1', 'product__title').text
-                        #print(title)
+                        logging.info(title)
                         old_price = soup.find('s', 'product__price--strike').text.strip('\n').strip(' ').strip('\n').strip(' ').strip('\n').strip(' ').strip('€').replace('.', '').replace(',', '.')
                         #print(old_price)
                         old_price = int((float(old_price) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Dolce&Gabanna').margin}"))
