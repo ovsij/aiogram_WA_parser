@@ -158,7 +158,7 @@ def create_product(
     if category_exists(name=category):
         category = Category.get(name=category)
     else:
-        category = Category(name=category)
+        category = Category(name=category,  phone=category.lower(), margin=30)
     if subcategory:
         if subcategory_exists(name=subcategory, category=category.name):
             subcategory = SubCategory.get(name=subcategory, category=category)

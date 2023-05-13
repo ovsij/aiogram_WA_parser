@@ -1121,10 +1121,10 @@ async def get_golcegabbana():
                     image=item[3],
                     article=item[5],
                     url=item[6])
-                print(prod)
+                #print(prod)
             except Exception as ex:
                 logging.warning(ex)
-        print(f'Canceled {subcategory} added {len(items)} products')
+        print(f'Canceled DG {subcategory} added {len(items)} products')
         logging.info(f'Canceled DG {subcategory} added {len(items)} products') 
     await bot.send_message(227184505, f'Dolce&Gabanna закончил парсинг')
 
@@ -1315,7 +1315,7 @@ async def get_asics():
                         except:
                             pass
                         article = item_url.split('/')[-1].split('.')[0]
-                        print(article)
+                        #print(article)
 
                         image_links = [a.get('href') for a in item_sp.find('div', 'product-thumbnails').find_all('a')]
                         # изображения
@@ -1377,3 +1377,107 @@ async def get_asics():
         print(f'Canceled Asics {subcategory} added {len(items)} products')
         logging.info(f'Canceled Asics {subcategory} added {len(items)} products') 
     await bot.send_message(227184505, f'Asics закончил парсинг')
+
+
+async def get_newbalance():
+    subcategories = {
+        'Мужская обувь' : 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=50262-11&start={}&sz={}',
+        #'Мужская одежда' : 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=50262-12&start={}&sz={}',
+
+    }
+    for subcategory, url in subcategories.items():
+        logging.info(f'Starting Newbalance: {subcategory}')
+        headers = {'User-Agent': 'Mozilla/5.0'}
+        async with aiohttp.ClientSession(headers=headers, trust_env=True) as session:
+            item_links = []
+            for i in range(0, 1):
+                async with session.get(url.format(0, 500), ssl=False) as response:
+                    webpage = await response.read()
+                    soup = bs(webpage, 'html.parser')
+                    item_links += ['https://www.newbalance.it/' + item.find('a').get('href') for item in soup.find_all('div', 'image-container')]
+            items = []
+            for item_url in item_links[:5]:
+                async with session.get(item_url, ssl=False) as response:
+                    item_webpage = await response.read()
+                    soup = bs(item_webpage, 'html.parser')
+                    article = item_url.split('-')[-1].split('.')[0]
+                    title = soup.find('h1', 'product-name hidden-sm-down').text
+                    #print(title)
+                    current_price = soup.find('span', 'sales font-body-large').text.strip('\r\n        ').strip('€').replace(',00', '')
+                    #print(current_price)
+                    old_price = soup.find('span', 'strike-through list col-12 p-0 m-0 sales font-body-large').find('span', 'value').get('content')
+                    #print(old_price)
+                    percent = int(100 - float(current_price) / (float(old_price) / 100))
+                    #print(percent)
+                    description = soup.find('div', 'col-12 value content short-description px-0 pt-6 pt-lg-4 pb-3').text.strip('\n\nDescrizione').strip('\n\n').strip(' ').strip('\n').strip(' ')
+                    
+                    try:
+                        size_list = ''
+                        sizes = soup.find('div', 'select-attribute-grid attribute-grid-5').find_all('span')
+                        for size in sizes:
+                            if 'selectable' in size.get('class'):
+                                size_list += size.text.strip('\n').strip(' ').strip('\n').strip(' ') + ', '
+                        size_list = size_list.strip(', ')
+                        #print(size_list)
+                        description += '\n\nРазмеры:\n' + size_list
+                    except:
+                        pass
+                    #print(description)
+                    image_links = [image.find('img').get('data-src') for image in soup.find('div', 'carousel-inner carousel-desktop').find_all('div', ['carousel-item zoom-image-js active', 'carousel-item zoom-image-js false'])]
+                    # изображения
+                    if not os.path.exists(f"database/images/Newbalance"):
+                        os.mkdir(f"database/images/Newbalance")
+
+                    if not os.path.exists(f"database/images/Newbalance/{subcategory}"):
+                        os.mkdir(f"database/images/Newbalance/{subcategory}")
+
+                    i = item_links.index(item_url) + 1
+                    images = ''
+                    
+                    for url in image_links[:10]:
+                        try:
+                            num = image_links.index(url) + 1
+                            img_path = f"database/images/Newbalance/{subcategory}/{i}_{title.replace(' ', '_').replace('/', '_')}_{num}.png"
+                            if not os.path.exists(img_path):
+                                async with session.get(url, ssl=False) as response:
+                                    f = await aiofiles.open(img_path, mode='wb')
+                                    await f.write(await response.read())
+                                    await f.close()
+                            images +=  img_path + '\n'
+                        except:
+                            continue
+                    items.append([title, description, current_price, images, sizes, article, item_url])
+                    print([title, description, current_price, images, sizes, article, item_url])
+        for item in items:
+            try:
+                if not crud.product_exists(article=item[5]):
+                    prod = crud.create_product(
+                    name=item[0],
+                    category='Newbalance',
+                    subcategory=subcategory,
+                    description=item[1],
+                    sizes=item[4],
+                    price=item[2],
+                    image=item[3],
+                    article=item[5],
+                    url=item[6])
+                else:
+                    prod = crud.get_product(article=item[5])
+                    if not prod.deleted and not prod.edited:
+                        crud.update_product(
+                            product_id=prod.id,
+                            name=item[0],
+                            description=item[1],
+                            sizes=item[4],
+                            price=item[2],
+                            image=item[3],
+                            article=item[5],
+                            url=item[6]
+                        )
+            except Exception as ex:
+                logging.warning(ex)
+
+        print(f'Canceled Newbalance {subcategory} added {len(items)} products')
+        logging.info(f'Canceled Newbalance {subcategory} added {len(items)} products') 
+    await bot.send_message(227184505, f'Newbalance закончил парсинг')
+                    
