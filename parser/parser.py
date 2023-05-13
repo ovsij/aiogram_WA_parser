@@ -1403,14 +1403,16 @@ async def get_newbalance():
                     article = item_url.split('-')[-1].split('.')[0]
                     title = soup.find('h1', 'product-name hidden-sm-down').text
                     #print(title)
-                    current_price = soup.find('span', 'sales font-body-large').text.strip('\r\n        ').strip('€').replace(',00', '')
+                    current_price = int((float(soup.find('span', 'sales font-body-large').text.strip('\r\n        ').strip('€').replace(',00', '')) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Asics').margin}"))
                     #print(current_price)
-                    old_price = soup.find('span', 'strike-through list col-12 p-0 m-0 sales font-body-large').find('span', 'value').get('content')
+                    old_price = int((float(soup.find('span', 'strike-through list col-12 p-0 m-0 sales font-body-large').find('span', 'value').get('content')) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Asics').margin}"))
                     #print(old_price)
                     percent = int(100 - float(current_price) / (float(old_price) / 100))
                     #print(percent)
                     description = soup.find('div', 'col-12 value content short-description px-0 pt-6 pt-lg-4 pb-3').text.strip('\n\nDescrizione').strip('\n\n').strip(' ').strip('\n').strip(' ')
                     
+                    if old_price:
+                        description = description[:700] + f'\n\n<s>{old_price} руб.</s> -{percent}% {current_price} руб.'
                     try:
                         size_list = ''
                         sizes = soup.find('div', 'select-attribute-grid attribute-grid-5').find_all('span')
