@@ -1406,7 +1406,10 @@ async def get_newbalance():
                     #print(title)
                     current_price = int((float(soup.find('span', 'sales font-body-large').text.strip('\r\n        ').strip('€').replace(',00', '').replace(',', '.')) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Asics').margin}"))
                     #print(current_price)
-                    old_price = int((float(soup.find('span', 'strike-through list col-12 p-0 m-0 sales font-body-large').find('span', 'value').get('content')) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Asics').margin}"))
+                    try:
+                        old_price = int((float(soup.find('span', 'strike-through list col-12 p-0 m-0 sales font-body-large').find('span', 'value').get('content')) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Asics').margin}"))
+                    except:
+                        pass
                     #print(old_price)
                     percent = int(100 - float(current_price) / (float(old_price) / 100))
                     #print(percent)
@@ -1450,7 +1453,7 @@ async def get_newbalance():
                         except:
                             continue
                     items.append([title, description, current_price, images, size_list, article, item_url])
-                    print([title, description, current_price, images, size_list, article, item_url])
+                    #print([title, description, current_price, images, size_list, article, item_url])
         for item in items:
             try:
                 if not crud.product_exists(article=item[5]):
