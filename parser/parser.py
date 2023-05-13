@@ -1446,8 +1446,8 @@ async def get_newbalance():
                             images +=  img_path + '\n'
                         except:
                             continue
-                    items.append([title, description, current_price, images, sizes, article, item_url])
-                    print([title, description, current_price, images, sizes, article, item_url])
+                    items.append([title, description, current_price, images, size_list, article, item_url])
+                    print([title, description, current_price, images, size_list, article, item_url])
         for item in items:
             try:
                 if not crud.product_exists(article=item[5]):
