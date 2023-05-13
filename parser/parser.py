@@ -1396,6 +1396,7 @@ async def get_newbalance():
                     soup = bs(webpage, 'html.parser')
                     item_links += ['https://www.newbalance.it/' + item.find('a').get('href') for item in soup.find_all('div', 'image-container')]
             items = []
+            euro_costs = euro_cost()
             for item_url in item_links[:5]:
                 async with session.get(item_url, ssl=False) as response:
                     item_webpage = await response.read()
