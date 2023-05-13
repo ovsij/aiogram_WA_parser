@@ -755,7 +755,7 @@ def image_func(image):
     except:
         return 0
 
-async def get_nike_subcategory(session, url, subcategory):
+async def get_nike_subcategory(session, url, subcategory, category):
     if subcategory == 'Детские аскессуары':
         async with session.get('https://www.nike.com/it/w/bambini-outlet-accessori-3yaepzawwpwzv4dh', ssl=False) as response:
             webpage = await response.text()
@@ -807,10 +807,10 @@ async def get_nike_subcategory(session, url, subcategory):
             # артикул
             article = prod['url'].split('/')[-1]
             # цена  
-            price = int((prod['curprice'] * (euro_costs + 1)) * float(f"1.{crud.get_category(name='NIKE').margin}")) if prod['curprice'] else None
+            price = int((prod['curprice'] * (euro_costs + 1)) * float(f"1.{crud.get_category(name=category).margin}")) if prod['curprice'] else None
             
             # описание
-            fullPrice = int((prod['fullPrice'] * (euro_costs + 1)) * float(f"1.{crud.get_category(name='NIKE').margin}")) if prod['fullPrice'] else None
+            fullPrice = int((prod['fullPrice'] * (euro_costs + 1)) * float(f"1.{crud.get_category(name=category).margin}")) if prod['fullPrice'] else None
             percent = int(100 - (price/fullPrice * 100))
             description = f"Color: {prod['colorDescription']}\n\n"
             description += f'<s>{fullPrice} руб.</s> -{percent}% {price} руб. \n\n'
@@ -833,11 +833,11 @@ async def get_nike_subcategory(session, url, subcategory):
                 sizes = 'Sizes: ONE SIZE\n'
             description += sizes
             # изображения
-            if not os.path.exists(f"database/images/NIKE"):
-                os.mkdir(f"database/images/NIKE")
+            if not os.path.exists(f"database/images/{category}"):
+                os.mkdir(f"database/images/{category}")
 
-            if not os.path.exists(f"database/images/NIKE/{subcategory}"):
-                os.mkdir(f"database/images/NIKE/{subcategory}")
+            if not os.path.exists(f"database/images/{category}/{subcategory}"):
+                os.mkdir(f"database/images/{category}/{subcategory}")
             
             image_links = [image_func(image) for image in item_webpage['objects'][0]['publishedContent']['nodes'][0]['nodes']]
             if 0 in image_links:
@@ -847,7 +847,7 @@ async def get_nike_subcategory(session, url, subcategory):
             for url in image_links[:10]:
                 try:
                     num = image_links.index(url) + 1
-                    img_path = f"database/images/NIKE/{subcategory}/{i}_{name.replace(' ', '_').replace('/', '_')}_{num}.png"
+                    img_path = f"database/images/{category}/{subcategory}/{i}_{name.replace(' ', '_').replace('/', '_')}_{num}.png"
                     images +=  img_path + '\n'
                     if os.path.exists(img_path):
                         continue
