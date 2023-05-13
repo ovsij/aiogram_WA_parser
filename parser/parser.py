@@ -1382,7 +1382,7 @@ async def get_asics():
 async def get_newbalance():
     subcategories = {
         'Мужская обувь' : 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=50262-11&start={}&sz={}',
-        #'Мужская одежда' : 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=50262-12&start={}&sz={}',
+        'Мужская одежда' : 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=50262-12&start={}&sz={}',
 
     }
     for subcategory, url in subcategories.items():
@@ -1397,7 +1397,7 @@ async def get_newbalance():
                     item_links += ['https://www.newbalance.it/' + item.find('a').get('href') for item in soup.find_all('div', 'image-container')]
             items = []
             euro_costs = euro_cost()
-            for item_url in item_links[:5]:
+            for item_url in item_links:
                 async with session.get(item_url, ssl=False) as response:
                     item_webpage = await response.read()
                     soup = bs(item_webpage, 'html.parser')
