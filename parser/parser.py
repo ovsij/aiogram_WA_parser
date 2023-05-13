@@ -880,7 +880,7 @@ async def get_nike_outlet():
     for name, url in urls.items():
         logging.info(f'Starting NIKE outlet: {name}')
         async with aiohttp.ClientSession(trust_env=True) as session:
-            items = await get_nike_subcategory(session, url, name)
+            items = await get_nike_subcategory(session, url, name, 'NIKE Outlet')
             # сохраняем товары [name, description, price, images]
             crud.del_products(subcategory=name, category='NIKE Outlet')
             try:
@@ -922,7 +922,7 @@ async def get_nike():
     for name, url in urls.items():
         logging.info(f'Starting NIKE: {name}')
         async with aiohttp.ClientSession(trust_env=True) as session:
-            items = await get_nike_subcategory(session, url, name)
+            items = await get_nike_subcategory(session, url, name, 'NIKE')
             # сохраняем товары [name, description, price, images]
             crud.del_products(subcategory=name, category='NIKE')
             try:
