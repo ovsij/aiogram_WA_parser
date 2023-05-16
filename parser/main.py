@@ -39,9 +39,10 @@ async def main():
         #tasks.add(task6)
         #task7 = asyncio.create_task(get_asics())
         #tasks.add(task7)
-        task8 = asyncio.create_task(get_newbalance())
-        tasks.add(task8)
-    
+        #task8 = asyncio.create_task(get_newbalance())
+        #tasks.add(task8)
+        task9 = asyncio.create_task(get_underarmour())
+        tasks.add(task9)
     
         L = await asyncio.gather(*tasks)
         await asyncio.sleep(10)

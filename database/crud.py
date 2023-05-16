@@ -336,7 +336,10 @@ def get_category(id : int = None, name : str = None):
     if id:
         return Category[id]
     if name:
-        return Category.get(name=name)
+        if Category.exists(name=name):
+            return Category.get(name=name)
+        else:
+            return Category(name=name, phone=name.lower(), margin=30)
     else:
         return select(c for c in Category)[:]
 

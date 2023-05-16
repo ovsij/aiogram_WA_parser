@@ -122,7 +122,7 @@ async def p():
 if __name__ == '__main__':
     from handlers import dp
     loop = asyncio.get_event_loop()
-    loop.create_task(get_newbalance())
+    #loop.create_task(get_underarmour())
     #loop.create_task(scheduled_catalogs(0))
     #loop.create_task(send_mes(5))
     #loop.create_task(scheduled_valentino(7200))

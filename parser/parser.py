@@ -44,10 +44,19 @@ from bot.loader import dp, bot
 
 
 def euro_cost():
-    webpage = requests.get('https://www.push52.ru')
-    soup = bs(webpage.text, 'html.parser')
-    course = soup.find('div', {'id' : 'body_CurrencyBoard1_eurrub'}).find('span', 'sell').text.replace(',', '.')
-    return float(course)
+    try:
+        webpage = requests.get('https://www.push52.ru')
+        soup = bs(webpage.text, 'html.parser')
+        course = soup.find('div', {'id' : 'body_CurrencyBoard1_eurrub'}).find('span', 'sell').text.replace(',', '.')
+        return float(course)
+    except:
+        try:
+            webpage = requests.get('https://www.push52.ru')
+            soup = bs(webpage.text, 'html.parser')
+            course = soup.find_all('div', 'currency_contaner')[1].find_all('tr')[0].find_all('td')[2].text
+            return float(course)
+        except:
+            print('pass')
 
 
 # функция парсит товары 
@@ -1041,20 +1050,24 @@ async def get_golcegabbana():
                         webpage = await response.text()
                         soup = bs(webpage, 'html.parser')
                         title = soup.find('h1', 'product__title').text
-                        
-                        old_price = soup.find('s', 'product__price--strike').text.strip('\n').strip(' ').strip('\n').strip(' ').strip('\n').strip(' ').strip('€').replace('.', '').replace(',', '.')
-                        #print(old_price)
-                        old_price = int((float(old_price) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Dolce&Gabanna').margin}"))
-                        #print(old_price)
+                        try:
+                            old_price = soup.find('s', 'product__price--strike').text.strip('\n').strip(' ').strip('\n').strip(' ').strip('\n').strip(' ').strip('€').replace('.', '').replace(',', '.')
+                            #print(old_price)
+                            old_price = int((float(old_price) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Dolce&Gabanna').margin}"))
+                            #print(old_price)
+                        except:
+                            old_price = None
                         current_price = soup.find('span', 'product__price--sale').text.strip('\n').strip(' ').strip('€').replace('.', '').replace(',', '.').strip('\n').strip(' ')
                         #print(current_price)
                         current_price = int((float(current_price) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Dolce&Gabanna').margin}"))
                         #print(current_price)
-                        percent = int(100 - float(current_price)/(float(old_price)/100))
+                        
                         #print(percent)
                         description = soup.find('div', 'product-description rte').text.strip('\n').strip(' ').strip('\n')
-                        description = description[:700] + f'\n\n<s>{old_price} руб.</s> -{percent}% {current_price} руб.'
-                        
+                        if old_price:
+                            percent = int(100 - float(current_price)/(float(old_price)/100))
+                            description = description[:700] + f'\n\n<s>{old_price} руб.</s> -{percent}% {current_price} руб.'
+                            
                         #print(description)
                         sizes = [size.text.replace('\n', '').strip(' ') for size in soup.find_all('div', 'variant-field')]
                         try:
@@ -1172,7 +1185,7 @@ async def get_coach():
                             old_price = int((float(item['prices']['regularPrice']) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='COACH').margin}"))
                             percent = int(100 - float(current_price)/(float(old_price)/100))
                         except:
-                            old_price = False
+                            old_price = None
                         
                         #print(price)
                         async with session.get(f"https://it.coach.com/api/get-suggestions-products?ids={item['id'].replace(' ', '+')}%2CCF925+B4%2FWN%2CCE897+LJN++S%2CCG798+BLK++XL&locale=it_IT&__v__=0vd2xlsFnzxBsryah6o6X", ssl=False) as response:
@@ -1292,7 +1305,10 @@ async def get_asics():
                         #print(title)
                         color = item_sp.find_all('span', 'variants__header variants__header--light small-reg')[0].text
                         #print(color)
-                        old_price = int((float(item_sp.find('span', 'price-standard outlet-pricing').text.replace('\n', '').strip(' ').strip(' €').replace(',00', ' ').replace(',', '.')) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Asics').margin}"))
+                        try:
+                            old_price = int((float(item_sp.find('span', 'price-standard outlet-pricing').text.replace('\n', '').strip(' ').strip(' €').replace(',00', ' ').replace(',', '.')) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Asics').margin}"))
+                        except:
+                            old_price = None
                         current_price = int((float(item_sp.find('span', 'price-sales price-sales-discount').text.replace('\n', '').strip(' ').strip(' €').replace(',00', ' ').replace(',', '.')) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Asics').margin}"))
                         
                         percent = int(100 - float(current_price) / (float(old_price) / 100))
@@ -1381,8 +1397,8 @@ async def get_asics():
 
 async def get_newbalance():
     subcategories = {
-        #'Мужская обувь' : 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=50262-11&start={}&sz={}',
-        #'Мужская одежда' : 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=50262-12&start={}&sz={}',
+        'Мужская обувь' : 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=50262-11&start={}&sz={}',
+        'Мужская одежда' : 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=50262-12&start={}&sz={}',
         #'Мужские аксессуары' : 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=50262-13&start={}&sz={}',
         'Женская обувь' : 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=50262-21&start={}&sz={}',
         'Женская одежда' : 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=50262-22&start={}&sz={}',
@@ -1412,10 +1428,11 @@ async def get_newbalance():
                     #print(current_price)
                     try:
                         old_price = int((float(soup.find('span', 'strike-through list col-12 p-0 m-0 sales font-body-large').find('span', 'value').get('content')) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Asics').margin}"))
+                        percent = int(100 - float(current_price) / (float(old_price) / 100))
                     except:
-                        pass
+                        old_price = None
                     #print(old_price)
-                    percent = int(100 - float(current_price) / (float(old_price) / 100))
+                    
                     #print(percent)
                     description = soup.find('div', 'col-12 value content short-description px-0 pt-6 pt-lg-4 pb-3').text.strip('\n\nDescrizione').strip('\n\n').strip(' ').strip('\n').strip(' ')
                     
@@ -1457,7 +1474,7 @@ async def get_newbalance():
                         except:
                             continue
                     items.append([title, description, current_price, images, size_list, article, item_url])
-                    print([title, description, current_price, images, size_list, article, item_url])
+                    #print([title, description, current_price, images, size_list, article, item_url])
         for item in items:
             try:
                 if not crud.product_exists(article=item[5]):
@@ -1487,7 +1504,137 @@ async def get_newbalance():
             except Exception as ex:
                 logging.warning(ex)
 
-        print(f'Canceled Newbalance {subcategory} added {len(items)} products')
+        #print(f'Canceled Newbalance {subcategory} added {len(items)} products')
         logging.info(f'Canceled Newbalance {subcategory} added {len(items)} products') 
     await bot.send_message(227184505, f'Newbalance закончил парсинг')
+
+
+async def get_underarmour():
+    subcategories = {
+        'Мужская одежда (верх)': 'https://www.underarmour.it/en-it/c/mens/clothing/tops/?start=0&sz=1000',
+        'Мужская одежда (низ)': 'https://www.underarmour.it/en-it/c/mens/clothing/bottoms/?start=0&sz=1000',
+        'Мужская обувь': 'https://www.underarmour.it/en-it/c/mens/shoes/?start=0&sz=1000',
+        'Мужская верхняя одежда': 'https://www.underarmour.it/en-it/c/mens/clothing/outerwear/?start=0&sz=1000',
+        'Мужское белье': 'https://www.underarmour.it/en-it/c/mens/clothing/underwear/?start=0&sz=1000',
+        'Мужские спортивные костюмы': 'https://www.underarmour.it/en-it/men-tracksuits/?start=0&sz=1000',
+        'Женская одежда (верх)': 'https://www.underarmour.it/en-it/c/womens/clothing/tops/?start=0&sz=1000',
+        'Женские бюстгальтеры': 'https://www.underarmour.it/en-it/c/womens/clothing/sports-bras/?start=0&sz=1000',
+        'Женская одежда (низ)': 'https://www.underarmour.it/en-it/c/womens/clothing/bottoms/?start=0&sz=1000',
+        'Женская обувь': 'https://www.underarmour.it/en-it/c/womens/shoes/?start=0&sz=1000',
+        'Женская верхняя одежда': 'https://www.underarmour.it/en-it/c/womens/clothing/outerwear/?start=0&sz=1000',
+        'Женское белье': 'https://www.underarmour.it/en-it/c/womens/clothing-underwear/?start=0&sz=1000',
+        'Мальчики одежда (верх)': 'https://www.underarmour.it/en-it/c/boys/clothing/tops/?start=0&sz=1000',
+        'Мальчики одежда (низ)': 'https://www.underarmour.it/en-it/c/boys/clothing/bottoms/?start=0&sz=1000',
+        'Мальчики обувь': 'https://www.underarmour.it/en-it/c/boys/shoes/?start=0&sz=1000',
+        'Мальчики аксессуары': 'https://www.underarmour.it/en-it/c/boys/accessories/?start=0&sz=1000',
+        'Мальчики спортивные костюмы': 'https://www.underarmour.it/en-it/c/boys/clothing/one-piece/?start=0&sz=1000',
+        'Девочки одежда (верх)': 'https://www.underarmour.it/en-it/c/girls/clothing/tops/?start=0&sz=1000',
+        'Девочки одежда (низ)': 'https://www.underarmour.it/en-it/c/girls/clothing/bottoms/?start=0&sz=1000',
+        'Девочки обувь': 'https://www.underarmour.it/en-it/c/girls/shoes/?start=0&sz=1000',
+        'Девочки аксессуары': 'https://www.underarmour.it/en-it/c/girls/accessories/?start=0&sz=1000',
+        'Девочки спортивные костюмы': 'https://www.underarmour.it/en-it/c/girls/clothing/one-piece/?start=0&sz=1000',
+        'Девочки бюстгальтеры': 'https://www.underarmour.it/en-it/c/girls/clothing/sports-bras/?start=0&sz=1000',
+    }
+    for subcategory, url in subcategories.items():
+        logging.info(f'Starting Underarmour: {subcategory}')
+        headers = {'User-Agent': 'Mozilla/5.0'}
+        async with aiohttp.ClientSession(headers=headers, trust_env=True) as session:
+            item_links = []
+            for i in range(0, 1):
+                async with session.get(url, ssl=False) as response:
+                    webpage = await response.text()
+                    soup = bs(webpage, 'html.parser')
+                    item_urls = [{'title' : item.text, 'url': 'https://www.underarmour.it' + item.get('href')} for item in soup.find_all('a', 'b-tile-name')]
+            items = []
+            euro_costs = euro_cost()
+            for item_url in item_urls:
+                async with session.get(item_url['url'], ssl=False) as response:
+                    item_webpage = await response.read()
+                    item_soup = bs(item_webpage, 'html.parser')
+                    try:
+                        current_price = int((float(item_soup.find('span', 'b-price-value highlighted bfx-price m-actual').text.strip('\n').strip('€').replace(',', '.')) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Underarmour').margin}"))
+                    except:
+                        current_price = int((float(item_soup.find('span', 'b-price-value bfx-price').text.strip('\n').strip('€').replace(',', '.')) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Underarmour').margin}"))
+
+                    print([current_price])
+                    try:
+                        old_price = int((float(item_soup.find('span', 'b-price-value m-strikethrough bfx-price highlighted').text.strip('\n').strip('€').replace(',', '.')) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Underarmour').margin}"))
+                        print([old_price])
+                        percent = int(100 - float(current_price) / (float(old_price) / 100))
+                    except:
+                        old_price = None
+                    description = item_soup.find('ul', 't-tabs_data').text.strip('\n')
+                    if old_price:
+                        description = description[:700] + f'\n\n<s>{old_price} руб.</s> -{percent}% {current_price} руб.'
+                    print(description)
+                    sizes = ''
+                    try:
+                        sizes_lst = [a.text.strip('\n') for a in item_soup.find('ul', 'js-input_field input-select form-control b-swatches_sizes').find_all('a')]
+                        for size in sizes_lst:
+                            sizes += size + ', '
+                        sizes = sizes.strip(', ')
+                        print(sizes)
+                        description += '\n\nРазмеры:\n' + sizes
+                    except:
+                        pass
+                    image_links = [image.find('img').get('src') for image in item_soup.find_all('div', 'b-product_carousel-slide js-product_carousel-slide swiper-slide')]
+                    #print(image_links)
+                    # изображения
+                    if not os.path.exists(f"database/images/Underarmour"):
+                        os.mkdir(f"database/images/Underarmour")
+
+                    if not os.path.exists(f"database/images/Underarmour/{subcategory}"):
+                        os.mkdir(f"database/images/Underarmour/{subcategory}")
+
+                    i = item_urls.index(item_url) + 1
+                    images = ''
                     
+                    for url in image_links[:10]:
+                        try:
+                            num = image_links.index(url) + 1
+                            img_path = f"database/images/Underarmour/{subcategory}/{i}_{item_url['title'].replace(' ', '_').replace('/', '_')}_{num}.png"
+                            if not os.path.exists(img_path):
+                                async with session.get(url, ssl=False) as response:
+                                    f = await aiofiles.open(img_path, mode='wb')
+                                    await f.write(await response.read())
+                                    await f.close()
+                            images +=  img_path + '\n'
+                        except:
+                            continue
+                    article = item_url['url'].split('.html')[0].split('/')[-1] + '-' + item_url['url'].split('color=')[1].split('&')[0]
+                    print(article)
+                    items.append([item_url['title'], description, current_price, images, sizes, article, item_url['url']])
+                    #print([title, description, current_price, images, size_list, article, item_url])
+        for item in items:
+            try:
+                if not crud.product_exists(article=item[5]):
+                    prod = crud.create_product(
+                    name=item[0],
+                    category='Underarmour',
+                    subcategory=subcategory,
+                    description=item[1],
+                    sizes=item[4],
+                    price=item[2],
+                    image=item[3],
+                    article=item[5],
+                    url=item[6])
+                else:
+                    prod = crud.get_product(article=item[5])
+                    if not prod.deleted and not prod.edited:
+                        crud.update_product(
+                            product_id=prod.id,
+                            name=item[0],
+                            description=item[1],
+                            sizes=item[4],
+                            price=item[2],
+                            image=item[3],
+                            article=item[5],
+                            url=item[6]
+                        )
+            except Exception as ex:
+                logging.warning(ex)
+
+        #print(f'Canceled Newbalance {subcategory} added {len(items)} products')
+        logging.info(f'Canceled Underarmour {subcategory} added {len(items)} products') 
+    await bot.send_message(227184505, f'Underarmour закончил парсинг')
+
