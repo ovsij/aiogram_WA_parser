@@ -1120,7 +1120,7 @@ async def get_golcegabbana():
             not_deleted_items = [product.article for product in crud.get_product(category_id=crud.get_category(name='Dolce&Gabanna').id, subcategory_id=crud.get_subcategory(name=subcategory).id)]
         except:
             not_deleted_items = []
-        loggind.info(items)
+        logging.info(items)
         for item in items:
             try:
                 if item[5] in not_deleted_items:
