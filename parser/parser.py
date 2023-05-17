@@ -1042,14 +1042,16 @@ async def get_golcegabbana():
         
         items = []
         euro_costs = euro_cost()
-        for url in items_urls:
+        for url in items_urls[:5]:
             try:
                 async with aiohttp.ClientSession(trust_env=True) as session:
                     async with session.get('https://dolcegabbanaprivatesales.com' + url, ssl=False) as response:
                         item_url = 'https://dolcegabbanaprivatesales.com' + url
                         webpage = await response.text()
+                        print(response.status)
                         soup = bs(webpage, 'html.parser')
                         title = soup.find('h1', 'product__title').text
+                        
                         try:
                             old_price = soup.find('s', 'product__price--strike').text.strip('\n').strip(' ').strip('\n').strip(' ').strip('\n').strip(' ').strip('€').replace('.', '').replace(',', '.')
                             #print(old_price)
@@ -1111,15 +1113,15 @@ async def get_golcegabbana():
                             continue
                         #print(images)
                         items.append([title, description, current_price, images, list_sizes, article, item_url])
-                        #logging.info(title)
+                        logging.info(title)
                         #print([title, description, current_price, images, list_sizes, article])
             except Exception as ex:
                 logging.warning(ex)
-        crud.del_products(subcategory=subcategory, category='Dolce&Gabanna')
-        try:
-            not_deleted_items = [product.article for product in crud.get_product(category_id=crud.get_category(name='Dolce&Gabanna').id, subcategory_id=crud.get_subcategory(name=subcategory).id)]
-        except:
-            not_deleted_items = []
+        #crud.del_products(subcategory=subcategory, category='Dolce&Gabanna')
+        #try:
+        #    not_deleted_items = [product.article for product in crud.get_product(category_id=crud.get_category(name='Dolce&Gabanna').id, subcategory_id=crud.get_subcategory(name=subcategory).id)]
+        #except:
+        #    not_deleted_items = []
         logging.info(items)
         for item in items:
             try:
