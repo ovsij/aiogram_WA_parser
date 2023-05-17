@@ -1556,28 +1556,28 @@ async def get_underarmour():
                         item_webpage = await response.read()
                         item_soup = bs(item_webpage, 'html.parser')
                         try:
-                            current_price = int((float(item_soup.find('span', 'b-price-value highlighted bfx-price m-actual').text.strip('\n').strip('€').replace(',', '.')) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Underarmour').margin}"))
+                            current_price = int((float(item_soup.find('span', 'b-price-value highlighted bfx-price m-actual').text.strip(' ').strip('\n').strip(' ').strip('€').replace(',', '.')) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Underarmour').margin}"))
                         except:
-                            current_price = int((float(item_soup.find('span', 'b-price-value bfx-price').text.strip('\n').strip('€').replace(',', '.')) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Underarmour').margin}"))
+                            current_price = int((float(item_soup.find('span', 'b-price-value bfx-price').text.strip(' ').strip('\n').strip(' ').strip('€').replace(',', '.')) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Underarmour').margin}"))
 
-                        print([current_price])
+                        #print([current_price])
                         try:
-                            old_price = int((float(item_soup.find('span', 'b-price-value m-strikethrough bfx-price highlighted').text.strip('\n').strip('€').replace(',', '.')) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Underarmour').margin}"))
-                            print([old_price])
+                            old_price = int((float(item_soup.find('span', 'b-price-value m-strikethrough bfx-price highlighted').text.strip(' ').strip('\n').strip(' ').strip('€').replace(',', '.')) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Underarmour').margin}"))
+                            #print([old_price])
                             percent = int(100 - float(current_price) / (float(old_price) / 100))
                         except:
                             old_price = None
                         description = item_soup.find('ul', 't-tabs_data').text.strip('\n')
                         if old_price:
                             description = description[:700] + f'\n\n<s>{old_price} руб.</s> -{percent}% {current_price} руб.'
-                        print(description)
+                        #print(description)
                         sizes = ''
                         try:
                             sizes_lst = [a.text.strip('\n') for a in item_soup.find('ul', 'js-input_field input-select form-control b-swatches_sizes').find_all('a')]
                             for size in sizes_lst:
                                 sizes += size + ', '
                             sizes = sizes.strip(', ')
-                            print(sizes)
+                            #print(sizes)
                             description += '\n\nРазмеры:\n' + sizes
                         except:
                             pass
@@ -1606,7 +1606,7 @@ async def get_underarmour():
                             except:
                                 continue
                         article = item_url['url'].split('.html')[0].split('/')[-1] + '-' + item_url['url'].split('color=')[1].split('&')[0]
-                        print(article)
+                        #print(article)
                         items.append([item_url['title'], description, current_price, images, sizes, article, item_url['url']])
                         #print([title, description, current_price, images, size_list, article, item_url])
                 except Exception as ex:
