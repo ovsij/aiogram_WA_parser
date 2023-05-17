@@ -1034,6 +1034,7 @@ async def get_golcegabbana():
                 url = subcat_url + f'?page={i}'
                 async with session.get(url, ssl=False) as response:
                     webpage = await response.text()
+                    print(response.status)
                     soup = bs(webpage, 'html.parser')
                     items = [item.find('a').get('href') for item in soup.find_all('div', 'product-item small--one-half medium--one-half large-up--one-quarter')]
                     if len(items) == 0:
