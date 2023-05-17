@@ -1126,7 +1126,7 @@ async def get_golcegabbana():
                 if not crud.product_exists(article=item[5]):
                     prod = crud.create_product(
                     name=item[0],
-                    category='Asics',
+                    category='Dolce&Gabanna',
                     subcategory=subcategory,
                     description=item[1],
                     sizes=item[4],
