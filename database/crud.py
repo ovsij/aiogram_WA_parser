@@ -119,13 +119,13 @@ def update_product(
     url : str = None) -> Product:
     product_to_upd = Product[product_id]
     if category_exists(name=category):
-        category = Category.get(name=category)
+        new_category = Category.get(name=category)
     else:
-        category = Category(name=category,  phone=category.lower(), margin=30)
+        new_category = Category(name=category,  phone=category.lower(), margin=30)
     if name:
         product_to_upd.name = name
     if category:
-        product_to_upd.category = category
+        product_to_upd.category = new_category
     if description:
         product_to_upd.description = description
     if price:
