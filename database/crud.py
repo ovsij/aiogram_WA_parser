@@ -106,7 +106,7 @@ def cart_exists(tg_id : str, product_id : int):
 @db_session()
 def update_product(
     product_id : int,
-    category : Category = None,
+    category : str = None,
     name : str = None, 
     description : str = None, 
     price : float = None, 
@@ -118,6 +118,10 @@ def update_product(
     edited : bool = None,
     url : str = None) -> Product:
     product_to_upd = Product[product_id]
+    if category_exists(name=category):
+        category = Category.get(name=category)
+    else:
+        category = Category(name=category,  phone=category.lower(), margin=30)
     if name:
         product_to_upd.name = name
     if category:
