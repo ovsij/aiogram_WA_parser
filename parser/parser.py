@@ -1040,11 +1040,13 @@ async def get_golcegabbana():
                     if len(items) == 0:
                         break
                     items_urls += items
+                await asyncio.sleep(2)
         
         items = []
         euro_costs = euro_cost()
         for url in items_urls[:5]:
             try:
+                await asyncio.sleep(2)
                 async with aiohttp.ClientSession(trust_env=True) as session:
                     async with session.get('https://dolcegabbanaprivatesales.com' + url, ssl=False) as response:
                         item_url = 'https://dolcegabbanaprivatesales.com' + url
