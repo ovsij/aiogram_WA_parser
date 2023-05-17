@@ -1123,6 +1123,35 @@ async def get_golcegabbana():
         logging.info(items)
         for item in items:
             try:
+                if not crud.product_exists(article=item[5]):
+                    prod = crud.create_product(
+                    name=item[0],
+                    category='Asics',
+                    subcategory=subcategory,
+                    description=item[1],
+                    sizes=item[4],
+                    price=item[2],
+                    image=item[3],
+                    article=item[5],
+                    url=item[6])
+                else:
+                    prod = crud.get_product(article=item[5])
+                    if not prod.deleted and not prod.edited:
+                        crud.update_product(
+                            product_id=prod.id,
+                            name=item[0],
+                            description=item[1],
+                            sizes=item[4],
+                            price=item[2],
+                            image=item[3],
+                            article=item[5],
+                            url=item[6]
+                        )
+            except Exception as ex:
+                logging.warning(ex)
+        """
+        for item in items:
+            try:
                 if item[5] in not_deleted_items:
                     continue
                 prod = crud.create_product(
@@ -1138,6 +1167,7 @@ async def get_golcegabbana():
                 #print(prod)
             except Exception as ex:
                 logging.warning(ex)
+        """
         print(f'Canceled DG {subcategory} added {len(items)} products')
         logging.info(f'Canceled DG {subcategory} added {len(items)} products') 
     await bot.send_message(227184505, f'Dolce&Gabanna закончил парсинг')
