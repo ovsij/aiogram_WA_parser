@@ -64,7 +64,7 @@ class SubCategory(db.Entity):
     id = PrimaryKey(int, auto=True)
     name = Required(str)
     level = Required(int, default=1)
-    parentSubCategory = Required('SubCategory', nullable=True)
+    parentSubCategory = Optional('SubCategory', nullable=True)
     childSubCategory = Set('SubCategory', nullable=True)
     category = Required('Category')
     product = Set(Product)
