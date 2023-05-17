@@ -1111,7 +1111,7 @@ async def get_golcegabbana():
                             continue
                         #print(images)
                         items.append([title, description, current_price, images, list_sizes, article, item_url])
-                        logging.info(title)
+                        #logging.info(title)
                         #print([title, description, current_price, images, list_sizes, article])
             except Exception as ex:
                 logging.warning(ex)
