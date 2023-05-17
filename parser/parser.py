@@ -1044,7 +1044,7 @@ async def get_golcegabbana():
         
         items = []
         euro_costs = euro_cost()
-        for url in items_urls[:5]:
+        for url in items_urls:
             try:
                 await asyncio.sleep(2)
                 async with aiohttp.ClientSession(trust_env=True) as session:
