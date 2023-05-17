@@ -1142,6 +1142,7 @@ async def get_golcegabbana():
                         crud.update_product(
                             product_id=prod.id,
                             name=item[0],
+                            category='Dolce&Gabanna',
                             description=item[1],
                             sizes=item[4],
                             price=item[2],
