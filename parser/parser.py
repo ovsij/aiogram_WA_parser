@@ -1418,63 +1418,66 @@ async def get_newbalance():
             items = []
             euro_costs = euro_cost()
             for item_url in item_links:
-                async with session.get(item_url, ssl=False) as response:
-                    item_webpage = await response.read()
-                    soup = bs(item_webpage, 'html.parser')
-                    article = item_url.split('-')[-1].split('.')[0]
-                    title = soup.find('h1', 'product-name hidden-sm-down').text
-                    #print(title)
-                    current_price = int((float(soup.find('span', 'sales font-body-large').text.strip('\r\n        ').strip('€').replace(',00', '').replace(',', '.')) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Asics').margin}"))
-                    #print(current_price)
-                    try:
-                        old_price = int((float(soup.find('span', 'strike-through list col-12 p-0 m-0 sales font-body-large').find('span', 'value').get('content')) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Asics').margin}"))
-                        percent = int(100 - float(current_price) / (float(old_price) / 100))
-                    except:
-                        old_price = None
-                    #print(old_price)
-                    
-                    #print(percent)
-                    description = soup.find('div', 'col-12 value content short-description px-0 pt-6 pt-lg-4 pb-3').text.strip('\n\nDescrizione').strip('\n\n').strip(' ').strip('\n').strip(' ')
-                    
-                    if old_price:
-                        description = description[:700] + f'\n\n<s>{old_price} руб.</s> -{percent}% {current_price} руб.'
-                    try:
-                        size_list = ''
-                        sizes = soup.find('div', 'select-attribute-grid attribute-grid-5').find_all('span')
-                        for size in sizes:
-                            if 'selectable' in size.get('class'):
-                                size_list += size.text.strip('\n').strip(' ').strip('\n').strip(' ') + ', '
-                        size_list = size_list.strip(', ')
-                        #print(size_list)
-                        description += '\n\nРазмеры:\n' + size_list
-                    except:
-                        pass
-                    #print(description)
-                    image_links = [image.find('img').get('data-src') for image in soup.find('div', 'carousel-inner carousel-desktop').find_all('div', ['carousel-item zoom-image-js active', 'carousel-item zoom-image-js false'])]
-                    # изображения
-                    if not os.path.exists(f"database/images/Newbalance"):
-                        os.mkdir(f"database/images/Newbalance")
-
-                    if not os.path.exists(f"database/images/Newbalance/{subcategory}"):
-                        os.mkdir(f"database/images/Newbalance/{subcategory}")
-
-                    i = item_links.index(item_url) + 1
-                    images = ''
-                    
-                    for url in image_links[:10]:
+                try:
+                    async with session.get(item_url, ssl=False) as response:
+                        item_webpage = await response.read()
+                        soup = bs(item_webpage, 'html.parser')
+                        article = item_url.split('-')[-1].split('.')[0]
+                        title = soup.find('h1', 'product-name hidden-sm-down').text
+                        #print(title)
+                        current_price = int((float(soup.find('span', 'sales font-body-large').text.strip('\r\n        ').strip('€').replace(',00', '').replace(',', '.')) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Asics').margin}"))
+                        #print(current_price)
                         try:
-                            num = image_links.index(url) + 1
-                            img_path = f"database/images/Newbalance/{subcategory}/{i}_{title.replace(' ', '_').replace('/', '_')}_{num}.png"
-                            if not os.path.exists(img_path):
-                                async with session.get(url, ssl=False) as response:
-                                    f = await aiofiles.open(img_path, mode='wb')
-                                    await f.write(await response.read())
-                                    await f.close()
-                            images +=  img_path + '\n'
+                            old_price = int((float(soup.find('span', 'strike-through list col-12 p-0 m-0 sales font-body-large').find('span', 'value').get('content')) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Asics').margin}"))
+                            percent = int(100 - float(current_price) / (float(old_price) / 100))
                         except:
-                            continue
-                    items.append([title, description, current_price, images, size_list, article, item_url])
-                    #print([title, description, current_price, images, size_list, article, item_url])
+                            old_price = None
+                        #print(old_price)
+                        
+                        #print(percent)
+                        description = soup.find('div', 'col-12 value content short-description px-0 pt-6 pt-lg-4 pb-3').text.strip('\n\nDescrizione').strip('\n\n').strip(' ').strip('\n').strip(' ')
+                        
+                        if old_price:
+                            description = description[:700] + f'\n\n<s>{old_price} руб.</s> -{percent}% {current_price} руб.'
+                        try:
+                            size_list = ''
+                            sizes = soup.find('div', 'select-attribute-grid attribute-grid-5').find_all('span')
+                            for size in sizes:
+                                if 'selectable' in size.get('class'):
+                                    size_list += size.text.strip('\n').strip(' ').strip('\n').strip(' ') + ', '
+                            size_list = size_list.strip(', ')
+                            #print(size_list)
+                            description += '\n\nРазмеры:\n' + size_list
+                        except:
+                            pass
+                        #print(description)
+                        image_links = [image.find('img').get('data-src') for image in soup.find('div', 'carousel-inner carousel-desktop').find_all('div', ['carousel-item zoom-image-js active', 'carousel-item zoom-image-js false'])]
+                        # изображения
+                        if not os.path.exists(f"database/images/Newbalance"):
+                            os.mkdir(f"database/images/Newbalance")
+
+                        if not os.path.exists(f"database/images/Newbalance/{subcategory}"):
+                            os.mkdir(f"database/images/Newbalance/{subcategory}")
+
+                        i = item_links.index(item_url) + 1
+                        images = ''
+                        
+                        for url in image_links[:10]:
+                            try:
+                                num = image_links.index(url) + 1
+                                img_path = f"database/images/Newbalance/{subcategory}/{i}_{title.replace(' ', '_').replace('/', '_')}_{num}.png"
+                                if not os.path.exists(img_path):
+                                    async with session.get(url, ssl=False) as response:
+                                        f = await aiofiles.open(img_path, mode='wb')
+                                        await f.write(await response.read())
+                                        await f.close()
+                                images +=  img_path + '\n'
+                            except:
+                                continue
+                        items.append([title, description, current_price, images, size_list, article, item_url])
+                        #print([title, description, current_price, images, size_list, article, item_url])
+                except Exception as ex:
+                    logging.warning(ex)
         for item in items:
             try:
                 if not crud.product_exists(article=item[5]):
@@ -1548,63 +1551,66 @@ async def get_underarmour():
             items = []
             euro_costs = euro_cost()
             for item_url in item_urls:
-                async with session.get(item_url['url'], ssl=False) as response:
-                    item_webpage = await response.read()
-                    item_soup = bs(item_webpage, 'html.parser')
-                    try:
-                        current_price = int((float(item_soup.find('span', 'b-price-value highlighted bfx-price m-actual').text.strip('\n').strip('€').replace(',', '.')) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Underarmour').margin}"))
-                    except:
-                        current_price = int((float(item_soup.find('span', 'b-price-value bfx-price').text.strip('\n').strip('€').replace(',', '.')) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Underarmour').margin}"))
-
-                    print([current_price])
-                    try:
-                        old_price = int((float(item_soup.find('span', 'b-price-value m-strikethrough bfx-price highlighted').text.strip('\n').strip('€').replace(',', '.')) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Underarmour').margin}"))
-                        print([old_price])
-                        percent = int(100 - float(current_price) / (float(old_price) / 100))
-                    except:
-                        old_price = None
-                    description = item_soup.find('ul', 't-tabs_data').text.strip('\n')
-                    if old_price:
-                        description = description[:700] + f'\n\n<s>{old_price} руб.</s> -{percent}% {current_price} руб.'
-                    print(description)
-                    sizes = ''
-                    try:
-                        sizes_lst = [a.text.strip('\n') for a in item_soup.find('ul', 'js-input_field input-select form-control b-swatches_sizes').find_all('a')]
-                        for size in sizes_lst:
-                            sizes += size + ', '
-                        sizes = sizes.strip(', ')
-                        print(sizes)
-                        description += '\n\nРазмеры:\n' + sizes
-                    except:
-                        pass
-                    image_links = [image.find('img').get('src') for image in item_soup.find_all('div', 'b-product_carousel-slide js-product_carousel-slide swiper-slide')]
-                    #print(image_links)
-                    # изображения
-                    if not os.path.exists(f"database/images/Underarmour"):
-                        os.mkdir(f"database/images/Underarmour")
-
-                    if not os.path.exists(f"database/images/Underarmour/{subcategory}"):
-                        os.mkdir(f"database/images/Underarmour/{subcategory}")
-
-                    i = item_urls.index(item_url) + 1
-                    images = ''
-                    
-                    for url in image_links[:10]:
+                try:
+                    async with session.get(item_url['url'], ssl=False) as response:
+                        item_webpage = await response.read()
+                        item_soup = bs(item_webpage, 'html.parser')
                         try:
-                            num = image_links.index(url) + 1
-                            img_path = f"database/images/Underarmour/{subcategory}/{i}_{item_url['title'].replace(' ', '_').replace('/', '_')}_{num}.png"
-                            if not os.path.exists(img_path):
-                                async with session.get(url, ssl=False) as response:
-                                    f = await aiofiles.open(img_path, mode='wb')
-                                    await f.write(await response.read())
-                                    await f.close()
-                            images +=  img_path + '\n'
+                            current_price = int((float(item_soup.find('span', 'b-price-value highlighted bfx-price m-actual').text.strip('\n').strip('€').replace(',', '.')) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Underarmour').margin}"))
                         except:
-                            continue
-                    article = item_url['url'].split('.html')[0].split('/')[-1] + '-' + item_url['url'].split('color=')[1].split('&')[0]
-                    print(article)
-                    items.append([item_url['title'], description, current_price, images, sizes, article, item_url['url']])
-                    #print([title, description, current_price, images, size_list, article, item_url])
+                            current_price = int((float(item_soup.find('span', 'b-price-value bfx-price').text.strip('\n').strip('€').replace(',', '.')) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Underarmour').margin}"))
+
+                        print([current_price])
+                        try:
+                            old_price = int((float(item_soup.find('span', 'b-price-value m-strikethrough bfx-price highlighted').text.strip('\n').strip('€').replace(',', '.')) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Underarmour').margin}"))
+                            print([old_price])
+                            percent = int(100 - float(current_price) / (float(old_price) / 100))
+                        except:
+                            old_price = None
+                        description = item_soup.find('ul', 't-tabs_data').text.strip('\n')
+                        if old_price:
+                            description = description[:700] + f'\n\n<s>{old_price} руб.</s> -{percent}% {current_price} руб.'
+                        print(description)
+                        sizes = ''
+                        try:
+                            sizes_lst = [a.text.strip('\n') for a in item_soup.find('ul', 'js-input_field input-select form-control b-swatches_sizes').find_all('a')]
+                            for size in sizes_lst:
+                                sizes += size + ', '
+                            sizes = sizes.strip(', ')
+                            print(sizes)
+                            description += '\n\nРазмеры:\n' + sizes
+                        except:
+                            pass
+                        image_links = [image.find('img').get('src') for image in item_soup.find_all('div', 'b-product_carousel-slide js-product_carousel-slide swiper-slide')]
+                        #print(image_links)
+                        # изображения
+                        if not os.path.exists(f"database/images/Underarmour"):
+                            os.mkdir(f"database/images/Underarmour")
+
+                        if not os.path.exists(f"database/images/Underarmour/{subcategory}"):
+                            os.mkdir(f"database/images/Underarmour/{subcategory}")
+
+                        i = item_urls.index(item_url) + 1
+                        images = ''
+                        
+                        for url in image_links[:10]:
+                            try:
+                                num = image_links.index(url) + 1
+                                img_path = f"database/images/Underarmour/{subcategory}/{i}_{item_url['title'].replace(' ', '_').replace('/', '_')}_{num}.png"
+                                if not os.path.exists(img_path):
+                                    async with session.get(url, ssl=False) as response:
+                                        f = await aiofiles.open(img_path, mode='wb')
+                                        await f.write(await response.read())
+                                        await f.close()
+                                images +=  img_path + '\n'
+                            except:
+                                continue
+                        article = item_url['url'].split('.html')[0].split('/')[-1] + '-' + item_url['url'].split('color=')[1].split('&')[0]
+                        print(article)
+                        items.append([item_url['title'], description, current_price, images, sizes, article, item_url['url']])
+                        #print([title, description, current_price, images, size_list, article, item_url])
+                except Exception as ex:
+                    logging.warning(ex)
         for item in items:
             try:
                 if not crud.product_exists(article=item[5]):
