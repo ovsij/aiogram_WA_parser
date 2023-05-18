@@ -562,20 +562,22 @@ async def get_valentino():
         
         items = await get_valentino_catalog(url + category_url, subcategory)
         #print(items)
-        crud.del_products(subcategory=subcategory, category='VALENTINO')
+        #crud.del_products(subcategory=subcategory, category='VALENTINO')
         #print(crud.get_product(category_id=crud.get_category(name='VALENTINO').id, subcategory_id=1))
-        try:
-            not_deleted_items = [product.name for product in crud.get_product(category_id=crud.get_category(name='VALENTINO').id, subcategory_id=crud.get_subcategory(name=subcategory).id)]
-        except:
-            not_deleted_items = []
+        #try:
+        #    not_deleted_items = [product.name for product in crud.get_product(category_id=crud.get_category(name='VALENTINO').id, subcategory_id=crud.get_subcategory(name=subcategory).id)]
+        #except:
+        #    not_deleted_items = []
         #print(not_deleted_items)
         euro_costs = euro_cost()
         for item in items:
+
             try:
-                if item[0] in not_deleted_items:
-                    continue
                 price = int((item[5] * (euro_costs + 1)) * float(f'1.{crud.get_category(name="VALENTINO").margin}')) if item[5] else None
-                prod = crud.create_product(
+                
+                
+                if not crud.product_exists(article=item[8]):
+                    prod = crud.create_product(
                     name=item[0],
                     category=item[1],
                     subcategory=item[2],
@@ -585,6 +587,21 @@ async def get_valentino():
                     image=item[6],
                     article=item[8],
                     url=item[9])
+                else:
+                    prod = crud.get_product(article=item[8])
+                    if not prod.deleted and not prod.edited:
+                        crud.update_product(
+                            product_id=prod.id,
+                            name=item[0],
+                            category=item[1],
+                            description=item[4],
+                            sizes=item[7],
+                            price=price,
+                            image=item[6],
+                            article=item[8],
+                            url=item[9]
+                        )
+
             except Exception as ex:
                 print(ex)
         logging.info(f'Canceled VALENTINO {subcategory} added {len(items)} products') 
@@ -739,7 +756,7 @@ async def get_lesilla():
                     description = f'Color: {item[7]}\n\n' + description.replace(f'<s>{price_rub} руб.</s>', f'{price_rub} руб.')
                     #if item[0] + ' ' + item[7] in not_deleted_items:
                     #    continue
-                    if not crud.product_exists(article=item[5]):
+                    if not crud.product_exists(article=item[9]):
                         prod = crud.create_product(
                         name=item[0],
                         category='LeSILLA',
@@ -751,7 +768,7 @@ async def get_lesilla():
                         article=item[9],
                         url=item[10])
                     else:
-                        prod = crud.get_product(article=item[5])
+                        prod = crud.get_product(article=item[9])
                         if not prod.deleted and not prod.edited:
                             crud.update_product(
                                 product_id=prod.id,
