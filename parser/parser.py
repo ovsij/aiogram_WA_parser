@@ -527,9 +527,9 @@ async def get_valentino_catalog(url, subcategory):
                 back_xpath = '//*[@id="main-wrapper"]/div[1]/div[1]'
                 back_el = await session.wait_for_element(10, back_xpath, SelectorType.xpath)
                 await back_el.click()
-
-                item = [name, 'VALENTINO', subcategory, 'valentino', description, price, images, list_sizes, article, url]
-                items.append(item)
+                if price:
+                    item = [name, 'VALENTINO', subcategory, 'valentino', description, price, images, list_sizes, article, url]
+                    items.append(item)
                 #logging.info(item)
                 #print(item)
             except Exception as ex:

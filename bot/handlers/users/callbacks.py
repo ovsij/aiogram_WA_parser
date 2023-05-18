@@ -374,13 +374,6 @@ async def btn_callback(callback_query: types.CallbackQuery):
             reply_markup=reply_markup
         )
 
-    if code[1] == 'delallfromcart':
-        clean_cart(callback_query.from_user)
-        text, reply_markup = await inline_kb_cart(callback_query.from_user)
-        await callback_query.message.edit_text(
-            text=text,
-            reply_markup=reply_markup
-        )
     
     if code[1] == 'cart':
         if code[-1] == 'cart':
