@@ -721,11 +721,11 @@ async def get_lesilla():
                     items.append(await get_item(session, prodict_url, name, i))
                 except:
                     continue
-            crud.del_products(subcategory=name, category='LeSILLA')
-            try:
-                not_deleted_items = [product.name + product.description.split('Color:')[1].split('\n\n')[0] for product in crud.get_product(category_id=crud.get_category(name='LeSILLA').id, subcategory_id=crud.get_subcategory(name=name).id)]
-            except:
-                not_deleted_items = []
+            #crud.del_products(subcategory=name, category='LeSILLA')
+            #try:
+            #    not_deleted_items = [product.name + product.description.split('Color:')[1].split('\n\n')[0] for product in crud.get_product(category_id=crud.get_category(name='LeSILLA').id, subcategory_id=crud.get_subcategory(name=name).id)]
+            #except:
+            #    not_deleted_items = []
             #print(not_deleted_items)
             euro_costs = euro_cost()
             for item in items:
@@ -737,21 +737,36 @@ async def get_lesilla():
                             price_rub = str(int((float(i) * (euro_costs + 1)) / 100 * crud.get_category(name='LeSILLA').margin))
                             description = description.replace(i, '<s>' + price_rub + ' руб.</s>  ')
                     description = f'Color: {item[7]}\n\n' + description.replace(f'<s>{price_rub} руб.</s>', f'{price_rub} руб.')
-                    if item[0] + ' ' + item[7] in not_deleted_items:
-                        continue
-                    prod = crud.create_product(
+                    #if item[0] + ' ' + item[7] in not_deleted_items:
+                    #    continue
+                    if not crud.product_exists(article=item[5]):
+                        prod = crud.create_product(
                         name=item[0],
-                        category=item[1],
-                        subcategory=item[2],
+                        category='LeSILLA',
+                        subcategory=name,
                         description=description,
-                        sizes=item[8],
+                        sizes=item[7],
                         price=price,
                         image=item[6],
                         article=item[9],
                         url=item[10])
-                    #print(prod.name)
+                    else:
+                        prod = crud.get_product(article=item[5])
+                        if not prod.deleted and not prod.edited:
+                            crud.update_product(
+                                product_id=prod.id,
+                                name=item[0],
+                                category='LeSILLA',
+                                description=description,
+                                sizes=item[7],
+                                price=price,
+                                image=item[6],
+                                article=item[9],
+                                url=item[10]
+                            )
                 except Exception as ex:
                     logging.warning(ex)
+                
             logging.info(f'Canceled LeSILLA {name} added {len(items)} products')
         await bot.send_message(227184505, f'LeSILLA закончил парсинг')
         return items
@@ -891,26 +906,39 @@ async def get_nike_outlet():
         async with aiohttp.ClientSession(trust_env=True) as session:
             items = await get_nike_subcategory(session, url, name, 'NIKE Outlet')
             # сохраняем товары [name, description, price, images]
-            crud.del_products(subcategory=name, category='NIKE Outlet')
-            try:
-                not_deleted_items = [product.name + product.description.split('Color:')[1].split('\n\n')[0] for product in crud.get_product(category_id=crud.get_category(name='NIKE Outlet').id, subcategory_id=crud.get_subcategory(name=name).id)]
-            except:
-                not_deleted_items = []
+            #crud.del_products(subcategory=name, category='NIKE Outlet')
+            #try:
+            #    not_deleted_items = [product.name + product.description.split('Color:')[1].split('\n\n')[0] for product in crud.get_product(category_id=crud.get_category(name='NIKE Outlet').id, subcategory_id=crud.get_subcategory(name=name).id)]
+            #except:
+            #    not_deleted_items = []
             #print(not_deleted_items)
             for item in items:
                 try:
-                    if item[0] + ' ' + item[4] in not_deleted_items:
-                        continue
-                    prod = crud.create_product(
+                    if not crud.product_exists(article=item[5]):
+                        prod = crud.create_product(
                         name=item[0],
                         category='NIKE Outlet',
                         subcategory=name,
                         description=item[1],
-                        sizes=item[5],
+                        sizes=item[4],
                         price=item[2],
                         image=item[3],
-                        article=item[6] + '-outlet', #чтобы не задваивались с обычным найком
-                        url=item[7])
+                        article=item[5],
+                        url=item[6])
+                    else:
+                        prod = crud.get_product(article=item[5])
+                        if not prod.deleted and not prod.edited:
+                            crud.update_product(
+                                product_id=prod.id,
+                                name=item[0],
+                                category='NIKE Outlet',
+                                description=item[1],
+                                sizes=item[4],
+                                price=item[2],
+                                image=item[3],
+                                article=item[5],
+                                url=item[6]
+                            )
                 except Exception as ex:
                     logging.warning(ex)
             logging.info(f'Canceled NIKE outlet {name} added {len(items)} products') 
@@ -933,26 +961,39 @@ async def get_nike():
         async with aiohttp.ClientSession(trust_env=True) as session:
             items = await get_nike_subcategory(session, url, name, 'NIKE')
             # сохраняем товары [name, description, price, images]
-            crud.del_products(subcategory=name, category='NIKE')
-            try:
-                not_deleted_items = [product.name + product.description.split('Color:')[1].split('\n\n')[0] for product in crud.get_product(category_id=crud.get_category(name='NIKE').id, subcategory_id=crud.get_subcategory(name=name).id)]
-            except:
-                not_deleted_items = []
+            #crud.del_products(subcategory=name, category='NIKE')
+            #try:
+            #    not_deleted_items = [product.name + product.description.split('Color:')[1].split('\n\n')[0] for product in crud.get_product(category_id=crud.get_category(name='NIKE').id, subcategory_id=crud.get_subcategory(name=name).id)]
+            #except:
+            #    not_deleted_items = []
             #print(not_deleted_items)
             for item in items:
                 try:
-                    if item[0] + ' ' + item[4] in not_deleted_items:
-                        continue
-                    prod = crud.create_product(
+                    if not crud.product_exists(article=item[5]):
+                        prod = crud.create_product(
                         name=item[0],
                         category='NIKE',
                         subcategory=name,
                         description=item[1],
-                        sizes=item[5],
+                        sizes=item[4],
                         price=item[2],
                         image=item[3],
-                        article=item[6],
-                        url=item[7])
+                        article=item[5],
+                        url=item[6])
+                    else:
+                        prod = crud.get_product(article=item[5])
+                        if not prod.deleted and not prod.edited:
+                            crud.update_product(
+                                product_id=prod.id,
+                                name=item[0],
+                                category='NIKE',
+                                description=item[1],
+                                sizes=item[4],
+                                price=item[2],
+                                image=item[3],
+                                article=item[5],
+                                url=item[6]
+                            )
                 except Exception as ex:
                     logging.warning(ex)
             logging.info(f'Canceled NIKE {name} added {len(items)} products') 
