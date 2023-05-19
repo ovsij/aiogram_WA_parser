@@ -557,8 +557,7 @@ async def get_valentino():
     
     for subcategory, category_url in categories.items():
         logging.info(f'Start VALENTINO {subcategory}')
-        if not crud.subcategory_exists(name=subcategory, category='VALENTINO'):
-            crud.create_subcategory(name=subcategory, category='VALENTINO')
+        
         
         items = await get_valentino_catalog(url + category_url, subcategory)
         #print(items)
