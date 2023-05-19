@@ -490,10 +490,10 @@ async def get_valentino_catalog(url, subcategory):
                 
                 description = ''
             
-                try:
-                    description = soup.find('div', 'sc-bOSxlg eTpxmk').text
-                except:
-                    pass
+                #try:
+                    #description = soup.find('div', 'sc-bOSxlg eTpxmk').text
+                #except:
+                #    pass
                 #print(description)
 
                 #sizes_el = await session.get_element('//*[@id="main"]/div/div[2]/div[3]/div[2]/div', SelectorType.xpath)
@@ -640,10 +640,11 @@ async def get_item(session, url, subcategory, i):
 
     name = soup.find('h2', 'MuiTypography-root MuiTypography-h1 e18vcbt23 css-c60yiy').text
     #logging.info(f'Start: {name}')
-    try:
-        description = soup.find('div', 'MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-8 Grid-description e14xbgjz2 css-f1obvg').find('p').text
-    except:    
-        description = soup.find('div', 'MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-8 Grid-description e14xbgjz2 css-f1obvg').find('div', 'RichContent-Html-Root Magento-PageBuilder-Html MuiBox-root css-ykpcgv').text
+    description = ''
+    #try:
+    #    description = soup.find('div', 'MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-8 Grid-description e14xbgjz2 css-f1obvg').find('p').text
+    #except:    
+    #    description = soup.find('div', 'MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-8 Grid-description e14xbgjz2 css-f1obvg').find('div', 'RichContent-Html-Root Magento-PageBuilder-Html MuiBox-root css-ykpcgv').text
   
     try:
         price = float(soup.find('span', 'price css-g6gm48 e15t2uci1').text.strip('€ '))
@@ -1109,7 +1110,6 @@ async def get_golcegabbana():
                     async with session.get('https://dolcegabbanaprivatesales.com' + url, ssl=False) as response:
                         item_url = 'https://dolcegabbanaprivatesales.com' + url
                         webpage = await response.text()
-                        print(response.status)
                         soup = bs(webpage, 'html.parser')
                         title = soup.find('h1', 'product__title').text
                         
@@ -1126,7 +1126,8 @@ async def get_golcegabbana():
                         #print(current_price)
                         
                         #print(percent)
-                        description = soup.find('div', 'product-description rte').text.strip('\n').strip(' ').strip('\n')
+                        description = ''
+                        #description = soup.find('div', 'product-description rte').text.strip('\n').strip(' ').strip('\n')
                         if old_price:
                             percent = int(100 - float(current_price)/(float(old_price)/100))
                             description = description[:700] + f'\n\n<s>{old_price} руб.</s> -{percent}% {current_price} руб.'
@@ -1286,7 +1287,8 @@ async def get_coach():
                         async with session.get(f"https://it.coach.com/api/get-suggestions-products?ids={item['id'].replace(' ', '+')}%2CCF925+B4%2FWN%2CCE897+LJN++S%2CCG798+BLK++XL&locale=it_IT&__v__=0vd2xlsFnzxBsryah6o6X", ssl=False) as response:
                             item_webpage = await response.json()
                         #print(soup)
-                        description = item_webpage['productsData'][0]['longDescription'].replace('<li>', '').replace('</li>', '').replace('<ul>', '').replace('</ul>', '')
+                        description = ''
+                        #description = item_webpage['productsData'][0]['longDescription'].replace('<li>', '').replace('</li>', '').replace('<ul>', '').replace('</ul>', '')
                         if old_price:
                             description = description[:700] + f'\n\n<s>{old_price} руб.</s> -{percent}% {current_price} руб.'
                         list_sizes = ''
@@ -1410,7 +1412,8 @@ async def get_asics():
                         #print(old_price)
                         #print(current_price)
                         #print(percent)
-                        description = item_sp.find('div', 'product-info-section-inner small-reg').text.strip('\n').replace('\n\n', '\n')
+                        description = ''
+                        #description = item_sp.find('div', 'product-info-section-inner small-reg').text.strip('\n').replace('\n\n', '\n')
                         #print(description)
                         if old_price:
                             description = description[:700] + f'\n\n<s>{old_price} руб.</s> -{percent}% {current_price} руб.'
@@ -1530,7 +1533,8 @@ async def get_newbalance():
                         #print(old_price)
                         
                         #print(percent)
-                        description = soup.find('div', 'col-12 value content short-description px-0 pt-6 pt-lg-4 pb-3').text.strip('\n\nDescrizione').strip('\n\n').strip(' ').strip('\n').strip(' ')
+                        description = ''
+                        #description = soup.find('div', 'col-12 value content short-description px-0 pt-6 pt-lg-4 pb-3').text.strip('\n\nDescrizione').strip('\n\n').strip(' ').strip('\n').strip(' ')
                         
                         if old_price:
                             description = description[:700] + f'\n\n<s>{old_price} руб.</s> -{percent}% {current_price} руб.'
@@ -1662,7 +1666,8 @@ async def get_underarmour():
                             percent = int(100 - float(current_price) / (float(old_price) / 100))
                         except:
                             old_price = None
-                        description = item_soup.find('ul', 't-tabs_data').text.strip('\n')
+                        #description = item_soup.find('ul', 't-tabs_data').text.strip('\n')
+                        description = ''
                         if old_price:
                             description = description[:700] + f'\n\n<s>{old_price} руб.</s> -{percent}% {current_price} руб.'
                         #print(description)
