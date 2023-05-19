@@ -191,7 +191,7 @@ def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : in
     sort = f'{sort}_' if sort else ''
     page_0 = 0 if back else page[1]
     page_5 = 5 if back else page[1] + 5
-    page_10 = 10 if back else page[1] + 10
+    page_25 = 25 if back else page[1] + 25
     text_and_data = [
         [emojize(f'{filter_size_emoji} Фильтр по размеру', language='alias'), f'btn_sf_{category}_{sub_category}{sizes_code}{prices_code}_n'],
         [emojize(f'{filter_price_emoji} Фильтр по цене', language='alias'), f'btn_pf_{category}_{sub_category}{sizes_code}{prices_code}_n'],
@@ -200,7 +200,7 @@ def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : in
         [emojize('Открыть списком', language='alias'), f'btn_subcategory_{category}_{sub_category}_1'],
         [emojize(':shopping_cart: Перейти в корзину', language='alias'), 'btn_cart_0-5'],
         [emojize(':arrow_down_small: Eще 5 товаров :arrow_down_small:', language='alias'), f'btn_ls_{category}_{sub_category}{sizes_code}{prices_code}_{sort}{page_0}-{page_5}'],
-        [emojize(':arrow_down_small: Eще 10 товаров :arrow_down_small:', language='alias'), f'btn_ls_{category}_{sub_category}{sizes_code}{prices_code}_{sort}{page_0}-{page_10}'],
+        [emojize(':arrow_down_small: Eще 25 товаров :arrow_down_small:', language='alias'), f'btn_ls_{category}_{sub_category}{sizes_code}{prices_code}_{sort}{page_0}-{page_25}'],
         btn_back(f'category_{category}_1')
     ]
     schema = [1, 1, 1, 1, 1, 1, 1, 1, 1]
