@@ -135,6 +135,7 @@ async def btn_callback(callback_query: types.CallbackQuery):
                         text = 'Выберите действие: ',
                         reply_markup=item['reply_markup']
                     )
+                    await asyncio.sleep(0.5)
                 except:
                     pass
 
