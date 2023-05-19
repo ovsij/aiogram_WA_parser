@@ -1386,7 +1386,7 @@ async def get_asics():
             for i in range(0, 10):
                 async with session.get(url.format(96 * i), ssl=False) as response:
                     webpage = await response.read()
-                    logging.info('Asics ' + response.status)
+                    logging.info(f'Asics  {response.status}')
                     soup = bs(webpage, 'html.parser')
                     links = [link.find('a', 'product-tile__link js-product-tile').get('href') for link in soup.find_all('li', ['grid-tile new-row ', 'grid-tile'])]
                     if len(links) > 0:
@@ -1400,7 +1400,7 @@ async def get_asics():
                 try:
                     await asyncio.sleep(2)
                     async with session.get(item_url, ssl=False) as response:
-                        logging.info('Asics item ' + response.status)
+                        logging.info(f'Asics item {response.status}')
                         item_wp = await response.read()
                         item_sp = bs(item_wp, 'html.parser')
                         title = item_sp.find('div', 'pdp-top__product-name large-bold').text.replace('\n', '').strip(' ')
