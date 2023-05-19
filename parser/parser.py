@@ -782,7 +782,7 @@ async def get_lesilla():
                                 url=item[10]
                             )
                 except Exception as ex:
-                    logging.warning(ex)
+                    logging.warning(f'LeSILLA db - {ex}')
                 
             logging.info(f'Canceled LeSILLA {name} added {len(items)} products')
         await bot.send_message(227184505, f'LeSILLA закончил парсинг')
@@ -903,7 +903,7 @@ async def get_nike_subcategory(session, url, subcategory, category):
                 continue
             items.append([name, description, price, images, prod['colorDescription'], list_sizes, article, item_url])
         except Exception as ex:
-            logging.warning(ex)
+            logging.warning(f'{category} pr - {ex}')
     return items
 
 async def get_nike_outlet():
@@ -957,7 +957,7 @@ async def get_nike_outlet():
                                 url=item[6]
                             )
                 except Exception as ex:
-                    logging.warning(ex)
+                    logging.warning(f'NIKE outlet db - {ex}')
             logging.info(f'Canceled NIKE outlet {name} added {len(items)} products') 
     await bot.send_message(227184505, f'NIKE outlet закончил парсинг')
 
@@ -1012,7 +1012,7 @@ async def get_nike():
                                 url=item[6]
                             )
                 except Exception as ex:
-                    logging.warning(ex)
+                    logging.warning(f'NIKE db - {ex}')
             logging.info(f'Canceled NIKE {name} added {len(items)} products') 
     await bot.send_message(227184505, f'NIKE закончил парсинг')
 
@@ -1092,7 +1092,7 @@ async def get_golcegabbana():
                 url = subcat_url + f'?page={i}'
                 async with session.get(url, ssl=False) as response:
                     webpage = await response.text()
-                    print(response.status)
+                    #print(response.status)
                     soup = bs(webpage, 'html.parser')
                     items = [item.find('a').get('href') for item in soup.find_all('div', 'product-item small--one-half medium--one-half large-up--one-quarter')]
                     if len(items) == 0:
@@ -1174,16 +1174,16 @@ async def get_golcegabbana():
                             continue
                         #print(images)
                         items.append([title, description, current_price, images, list_sizes, article, item_url])
-                        logging.info(title)
+                        #logging.info(title)
                         #print([title, description, current_price, images, list_sizes, article])
             except Exception as ex:
-                logging.warning(ex)
+                logging.warning(f'Dolce&Gabanna pr - {ex}')
         #crud.del_products(subcategory=subcategory, category='Dolce&Gabanna')
         #try:
         #    not_deleted_items = [product.article for product in crud.get_product(category_id=crud.get_category(name='Dolce&Gabanna').id, subcategory_id=crud.get_subcategory(name=subcategory).id)]
         #except:
         #    not_deleted_items = []
-        logging.info(items)
+        #logging.info(items)
         for item in items:
             try:
                 if not crud.product_exists(article=item[5]):
@@ -1212,7 +1212,7 @@ async def get_golcegabbana():
                             url=item[6]
                         )
             except Exception as ex:
-                logging.warning(ex)
+                logging.warning(f'Dolce&Gabanna db - {ex}')
         """
         for item in items:
             try:
@@ -1330,7 +1330,7 @@ async def get_coach():
                                 continue
                         products.append([title, description, current_price, images, list_sizes, article, item_url])
                 except Exception as ex:
-                    logging.warning(ex)
+                    logging.warning(f'COACH pr - {ex}')
         for product in products:
             try:
                 if not crud.product_exists(article=product[5]):
@@ -1358,7 +1358,7 @@ async def get_coach():
                             url=product[6]
                         )
             except Exception as ex:
-                logging.warning(ex)
+                logging.warning(f'COACH db - {ex}')
 
         print(f'Canceled COACH {subcategory} added {len(products)} products')
         logging.info(f'Canceled COACH {subcategory} added {len(products)} products') 
@@ -1456,7 +1456,7 @@ async def get_asics():
                         items.append([title, description, current_price, images, sizes, article, item_url])
                         #logging.info([title, description, current_price, images, sizes, article, item_url])
                 except Exception as ex:
-                    logging.warning(ex)
+                    logging.warning(f'Asics pr - {ex}')
 
         for item in items:
             try:
@@ -1485,7 +1485,7 @@ async def get_asics():
                             url=item[6]
                         )
             except Exception as ex:
-                logging.warning(ex)
+                logging.warning(f'Asics db - {ex}')
 
         print(f'Canceled Asics {subcategory} added {len(items)} products')
         logging.info(f'Canceled Asics {subcategory} added {len(items)} products') 
@@ -1575,7 +1575,7 @@ async def get_newbalance():
                         items.append([title, description, current_price, images, size_list, article, item_url])
                         #print([title, description, current_price, images, size_list, article, item_url])
                 except Exception as ex:
-                    logging.warning(ex)
+                    logging.warning(f' Newbalance pr - {ex}')
         for item in items:
             try:
                 if not crud.product_exists(article=item[5]):
@@ -1603,7 +1603,7 @@ async def get_newbalance():
                             url=item[6]
                         )
             except Exception as ex:
-                logging.warning(ex)
+                logging.warning(f' Newbalance db - {ex}')
 
         #print(f'Canceled Newbalance {subcategory} added {len(items)} products')
         logging.info(f'Canceled Newbalance {subcategory} added {len(items)} products') 
@@ -1709,7 +1709,7 @@ async def get_underarmour():
                         items.append([item_url['title'], description, current_price, images, sizes, article, item_url['url']])
                         #print([title, description, current_price, images, size_list, article, item_url])
                 except Exception as ex:
-                    logging.warning(ex)
+                    logging.warning(f' Underarmour pr - {ex}')
         for item in items:
             try:
                 if not crud.product_exists(article=item[5]):
@@ -1737,7 +1737,7 @@ async def get_underarmour():
                             url=item[6]
                         )
             except Exception as ex:
-                logging.warning(ex)
+                logging.warning(f' Underarmour db - {ex}')
 
         #print(f'Canceled Newbalance {subcategory} added {len(items)} products')
         logging.info(f'Canceled Underarmour {subcategory} added {len(items)} products') 
