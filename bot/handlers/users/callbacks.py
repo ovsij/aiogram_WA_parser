@@ -114,7 +114,7 @@ async def btn_callback(callback_query: types.CallbackQuery):
                 sort=code[6]
             )
             
-        await callback_query.message.delete()
+        #await callback_query.message.delete()
         for item in textReply_markup:
             if not item['images']:
                 await bot.send_message(
@@ -123,18 +123,20 @@ async def btn_callback(callback_query: types.CallbackQuery):
                     reply_markup=item['reply_markup']
                 )
             else:
-                images = item['images'].split('\n')
-                photo = [types.InputMedia(media=open(img, 'rb'), caption=item['text']) if images.index(img) == 0 else types.InputMedia(media=open(img, 'rb')) for img in images]
-                await bot.send_media_group(
-                    callback_query.message.chat.id, 
-                    media=photo,
-                    #reply_markup=item['reply_markup']
-                )
-                await bot.send_message(
-                    callback_query.message.chat.id,
-                    text = 'Выберите действие: ',
-                    reply_markup=item['reply_markup']
-                )
+                try:
+                    images = item['images'].split('\n')
+                    photo = [types.InputMedia(media=open(img, 'rb'), caption=item['text']) if images.index(img) == 0 else types.InputMedia(media=open(img, 'rb')) for img in images]
+                    await bot.send_media_group(
+                        callback_query.message.chat.id, 
+                        media=photo,
+                    )
+                    await bot.send_message(
+                        callback_query.message.chat.id,
+                        text = 'Выберите действие: ',
+                        reply_markup=item['reply_markup']
+                    )
+                except:
+                    pass
 
     if code[1] == 'sf':
         # если выбраны размеры выводится это
