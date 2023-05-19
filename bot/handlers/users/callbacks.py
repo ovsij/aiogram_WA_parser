@@ -114,7 +114,7 @@ async def btn_callback(callback_query: types.CallbackQuery):
                 sort=code[6]
             )
             
-        #await callback_query.message.delete()
+        await callback_query.message.delete()
         for item in textReply_markup:
             if not item['images']:
                 await bot.send_message(
