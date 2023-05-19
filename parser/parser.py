@@ -735,6 +735,7 @@ async def get_lesilla():
             for prodict_url in product_urls:
                 i = product_urls.index(prodict_url) + 1
                 try:
+                    await asyncio.sleep(2)
                     items.append(await get_item(session, prodict_url, name, i))
                 except:
                     continue
@@ -837,6 +838,7 @@ async def get_nike_subcategory(session, url, subcategory, category):
     euro_costs = euro_cost()
     for prod in products:
         try:
+            await asyncio.sleep(2)
             item_url = 'https://www.nike.com/' + prod['url']
             #try:
             headers = {'User-Agent': 'Mozilla/5.0'}
@@ -1267,6 +1269,7 @@ async def get_coach():
             for item in items:
                 #print(item)
                 try:
+                    await asyncio.sleep(2)
                     for color_item in item['colors']:
                         item_url = 'https://it.coach.com/it_IT' + item['url']
                         #print(item_url)
@@ -1394,6 +1397,7 @@ async def get_asics():
             euro_costs = euro_cost()
             for item_url in item_links:
                 try:
+                    await asyncio.sleep(2)
                     async with session.get(item_url, ssl=False) as response:
                         item_wp = await response.read()
                         item_sp = bs(item_wp, 'html.parser')
@@ -1516,6 +1520,7 @@ async def get_newbalance():
             euro_costs = euro_cost()
             for item_url in item_links:
                 try:
+                    await asyncio.sleep(2)
                     async with session.get(item_url, ssl=False) as response:
                         item_webpage = await response.read()
                         soup = bs(item_webpage, 'html.parser')
@@ -1650,6 +1655,7 @@ async def get_underarmour():
             euro_costs = euro_cost()
             for item_url in item_urls:
                 try:
+                    await asyncio.sleep(2)
                     async with session.get(item_url['url'], ssl=False) as response:
                         item_webpage = await response.read()
                         item_soup = bs(item_webpage, 'html.parser')
