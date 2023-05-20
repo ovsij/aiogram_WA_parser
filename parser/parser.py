@@ -1676,7 +1676,7 @@ async def get_underarmour():
                     item_urls = [{'title' : item.text, 'url': 'https://www.underarmour.it' + item.get('href')} for item in soup.find_all('a', 'b-tile-name')]
             items = []
             euro_costs = euro_cost()
-            for item_url in item_urls[:2]:
+            for item_url in item_urls:
                 try:
                     await asyncio.sleep(2)
                     async with session.get(item_url['url'], ssl=False) as response:
