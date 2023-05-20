@@ -69,7 +69,14 @@ async def btn_callback(callback_query: types.CallbackQuery):
             )
     
     if code[1] == 'category':
-        text, reply_markup = inline_kb_subcategories(tg_id=str(callback_query.from_user.id), category=int(code[2]), page=int(code[-1]))
+        try:
+            subcategory = int(code[3].split('-')[0])
+            level = int(code[3].split('-')[1]) + 1
+        except:
+            subcategory = None
+            level = 1
+        
+        text, reply_markup = inline_kb_subcategories(tg_id=str(callback_query.from_user.id), category=int(code[2]), subcategory=subcategory, level=level, page=int(code[-1]))
         try:
             await callback_query.message.edit_text(
                 text=text,

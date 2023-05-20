@@ -184,26 +184,41 @@ def create_product(
     return product
 
 @db_session()
-def create_products(items):
+def create_products(category : str, subcategory : str, items : list):
+    # удаляем старые товары
+    all_articles = [item[5] for item in items]
+    for product in get_product(category_id=category, subcategory_id=subcategory, sort='n'):
+        if product.article not in all_articles:
+            product.delete()
+    # создаем новые/обновляем товары
     for item in items:
-        if category_exists(name=category):
-            category = Category.get(name=item[1])
-        else:
-            category = Category(name=item[1])
-        if subcategory:
-            if subcategory_exists(name=item[2], category=category.name):
-                subcategory = SubCategory.get(name=item[2], category=category)
+        try:
+            if not crud.product_exists(article=item[5]):
+                prod = crud.create_product(
+                name=item[0],
+                category=category,
+                subcategory=subcategory,
+                description=item[1],
+                sizes=item[4],
+                price=item[2],
+                image=item[3],
+                article=item[5],
+                url=item[6])
             else:
-                subcategory = SubCategory(name=item[2], category=item[1])
-        Product(
-        name=item[0],
-        category=category,
-        subcategory=subcategory,
-        #catalog=Catalog.get(phone=item[3]),
-        description=item[4],
-        price=item[5],
-        image=item[6]
-    )
+                prod = crud.get_product(article=item[5])
+                if not prod.deleted and not prod.edited:
+                    crud.update_product(
+                        product_id=prod.id,
+                        name=item[0],
+                        description=item[1],
+                        sizes=item[4],
+                        price=item[2],
+                        image=item[3],
+                        article=item[5],
+                        url=item[6]
+                    )
+        except Exception as ex:
+            logging.warning(f'{category} db - {ex}')
 
 @db_session()
 def get_categories():
@@ -361,17 +376,29 @@ def category_exists(name : str):
 
 #SubCategory
 @db_session()
-def create_subcategory(name : str, category : str):
-    return SubCategory(name=name, category=Category.get(name=category))
+def create_subcategory(name : str, category : str, parent_subcategory : int = None, level : int = None):
+    if Category.exists(name=category):
+        category = Category.get(name=category)
+    else:
+        category = Category(name=category, phone=category.lower(), margin=30)
+    if not parent_subcategory:
+        return SubCategory(name=name, category=category)
+    else:
+        return SubCategory(name=name, category=category, parentSubCategory=parent_subcategory, level=level)
 
 @db_session()
-def get_subcategory(id : int = None, name : str = None, category_id : int = None):
+def get_subcategory(id : int = None, name : str = None, category_id : int = None, level : int = None, parent_subcategory : int = None):
     if id:
         return SubCategory[id]
     if name:
         return SubCategory.get(name=name, category=Category[category_id])
-    if category_id:
+    if category_id and not level:
         return select(sc for sc in SubCategory if sc.category == Category[category_id])[:]
+    if level:
+        if parent_subcategory:
+            return select(sc for sc in SubCategory if sc.category == Category[category_id] and sc.level == level and sc.parentSubCategory.id == parent_subcategory)[:]
+        else:
+            return select(sc for sc in SubCategory if sc.category == Category[category_id] and sc.level == level)[:]
 
 @db_session()
 def delete_subcategory(id : int = None, name : str = None, category_id : int = None):
@@ -382,7 +409,11 @@ def delete_subcategory(id : int = None, name : str = None, category_id : int = N
 
 @db_session()
 def subcategory_exists(name : str, category : str):
-    return SubCategory.exists(name=name, category=Category.get(name=category))
+    category=Category.get(name=category)
+    if category:
+        return SubCategory.exists(name=name, category=category)
+    else:
+        return False
 
 
 # Promocode

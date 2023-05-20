@@ -5,8 +5,9 @@ db.bind(provider='sqlite', filename='database.sqlite', create_db=True)
 db.generate_mapping(create_tables=True)
 
 
-"""
+
 with db_session:
+    """
     if not Category.exists(name='VALENTINO'):
         Category(name='VALENTINO', phone='valentino', margin=30)
     if not Category.exists(name='LeSILLA'):
@@ -21,6 +22,9 @@ with db_session:
         Category(name='COACH', phone='coach', margin=30)
     if not Category.exists(name='Asics'):
         Category(name='Asics', phone='asics', margin=30)
-"""
+    if not Category.exists(name='Underarmour'):
+        Category(name='Underarmour', phone='underarmour', margin=30)
+    """
+
 
 

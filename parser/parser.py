@@ -1618,44 +1618,65 @@ async def get_newbalance():
 
 
 async def get_underarmour():
-    subcategories = {
-        'Мужская одежда (верх)': 'https://www.underarmour.it/en-it/c/mens/clothing/tops/?start=0&sz=1000',
-        'Мужская одежда (низ)': 'https://www.underarmour.it/en-it/c/mens/clothing/bottoms/?start=0&sz=1000',
-        'Мужская обувь': 'https://www.underarmour.it/en-it/c/mens/shoes/?start=0&sz=1000',
-        'Мужская верхняя одежда': 'https://www.underarmour.it/en-it/c/mens/clothing/outerwear/?start=0&sz=1000',
-        'Мужское белье': 'https://www.underarmour.it/en-it/c/mens/clothing/underwear/?start=0&sz=1000',
-        'Мужские спортивные костюмы': 'https://www.underarmour.it/en-it/men-tracksuits/?start=0&sz=1000',
-        'Женская одежда (верх)': 'https://www.underarmour.it/en-it/c/womens/clothing/tops/?start=0&sz=1000',
-        'Женские бюстгальтеры': 'https://www.underarmour.it/en-it/c/womens/clothing/sports-bras/?start=0&sz=1000',
-        'Женская одежда (низ)': 'https://www.underarmour.it/en-it/c/womens/clothing/bottoms/?start=0&sz=1000',
-        'Женская обувь': 'https://www.underarmour.it/en-it/c/womens/shoes/?start=0&sz=1000',
-        'Женская верхняя одежда': 'https://www.underarmour.it/en-it/c/womens/clothing/outerwear/?start=0&sz=1000',
-        'Женское белье': 'https://www.underarmour.it/en-it/c/womens/clothing-underwear/?start=0&sz=1000',
-        'Мальчики одежда (верх)': 'https://www.underarmour.it/en-it/c/boys/clothing/tops/?start=0&sz=1000',
-        'Мальчики одежда (низ)': 'https://www.underarmour.it/en-it/c/boys/clothing/bottoms/?start=0&sz=1000',
-        'Мальчики обувь': 'https://www.underarmour.it/en-it/c/boys/shoes/?start=0&sz=1000',
-        'Мальчики аксессуары': 'https://www.underarmour.it/en-it/c/boys/accessories/?start=0&sz=1000',
-        'Мальчики спортивные костюмы': 'https://www.underarmour.it/en-it/c/boys/clothing/one-piece/?start=0&sz=1000',
-        'Девочки одежда (верх)': 'https://www.underarmour.it/en-it/c/girls/clothing/tops/?start=0&sz=1000',
-        'Девочки одежда (низ)': 'https://www.underarmour.it/en-it/c/girls/clothing/bottoms/?start=0&sz=1000',
-        'Девочки обувь': 'https://www.underarmour.it/en-it/c/girls/shoes/?start=0&sz=1000',
-        'Девочки аксессуары': 'https://www.underarmour.it/en-it/c/girls/accessories/?start=0&sz=1000',
-        'Девочки спортивные костюмы': 'https://www.underarmour.it/en-it/c/girls/clothing/one-piece/?start=0&sz=1000',
-        'Девочки бюстгальтеры': 'https://www.underarmour.it/en-it/c/girls/clothing/sports-bras/?start=0&sz=1000',
-    }
-    for subcategory, url in subcategories.items():
-        logging.info(f'Starting Underarmour: {subcategory}')
+    cat_name = 'Underarmour'
+    subcategories = [
+        ['Мужчины'],
+        ['Мужская одежда', 'Мужчины', 2],
+        ['Одежда (верх)', 'Мужская одежда', 3, 'https://www.underarmour.it/en-it/c/mens/clothing/tops/?start=0&sz=1000'],
+        ['Одежда (низ)', 'Мужская одежда', 3, 'https://www.underarmour.it/en-it/c/mens/clothing/bottoms/?start=0&sz=1000'],
+        ['Мужская обувь', 'Мужчины', 2],
+        ['Мужская обувь', 'Мужчины', 3, 'https://www.underarmour.it/en-it/c/mens/shoes/?start=0&sz=1000'],
+        ['Мужская верхняя одежда', 'Мужская одежда', 3, 'https://www.underarmour.it/en-it/c/mens/clothing/outerwear/?start=0&sz=1000'],
+        ['Мужское белье', 'Мужская одежда', 3, 'https://www.underarmour.it/en-it/c/mens/clothing/underwear/?start=0&sz=1000'],
+        ['Мужские спортивные костюмы', 'Мужская одежда', 3, 'https://www.underarmour.it/en-it/men-tracksuits/?start=0&sz=1000'],
+        ['Женщины'],
+        ['Женская одежда', 'Женщины', 2],
+        ['Женская обувь', 'Женщины', 2],
+        ['Женская одежда (верх)', 'Женская одежда', 3, 'https://www.underarmour.it/en-it/c/womens/clothing/tops/?start=0&sz=1000'],
+        ['Женские бюстгальтеры', 'Женская одежда', 3, 'https://www.underarmour.it/en-it/c/womens/clothing/sports-bras/?start=0&sz=1000'],
+        ['Женская одежда (низ)', 'Женская одежда', 3, 'https://www.underarmour.it/en-it/c/womens/clothing/bottoms/?start=0&sz=1000'],
+        ['Женская верхняя одежда', 'Женская одежда', 3, 'https://www.underarmour.it/en-it/c/womens/clothing/outerwear/?start=0&sz=1000'],
+        ['Женское белье', 'Женская одежда', 3, 'https://www.underarmour.it/en-it/c/womens/clothing-underwear/?start=0&sz=1000'],
+        ['Женская обувь', 'Женщины', 3, 'https://www.underarmour.it/en-it/c/womens/shoes/?start=0&sz=1000'],
+        ['Дети'],
+        ['Мальчики', 'Дети', 2],
+        ['Мальчики одежда', 'Мальчики', 3],
+        ['Мальчики одежда (верх)', 'Мальчики одежда', 4, 'https://www.underarmour.it/en-it/c/boys/clothing/tops/?start=0&sz=1000'],
+        ['Мальчики одежда (низ)', 'Мальчики одежда', 4, 'https://www.underarmour.it/en-it/c/boys/clothing/bottoms/?start=0&sz=1000'],
+        ['Мальчики аксессуары', 'Мальчики одежда', 4, 'https://www.underarmour.it/en-it/c/boys/accessories/?start=0&sz=1000'],
+        ['Мальчики спортивные костюмы', 'Мальчики одежда', 4, 'https://www.underarmour.it/en-it/c/boys/clothing/one-piece/?start=0&sz=1000'],
+        ['Мальчики обувь', 'Мальчики', 3, 'https://www.underarmour.it/en-it/c/boys/shoes/?start=0&sz=1000'],
+        ['Девочки', 'Дети', 2],
+        ['Девочки одежда', 'Девочки', 3],
+        ['Девочки одежда (верх)', 'Девочки одежда', 4, 'https://www.underarmour.it/en-it/c/girls/clothing/tops/?start=0&sz=1000'],
+        ['Девочки одежда (низ)', 'Девочки одежда', 4, 'https://www.underarmour.it/en-it/c/girls/clothing/bottoms/?start=0&sz=1000'],
+        ['Девочки аксессуары', 'Девочки одежда', 4, 'https://www.underarmour.it/en-it/c/girls/accessories/?start=0&sz=1000'],
+        ['Девочки спортивные костюмы', 'Девочки одежда', 4, 'https://www.underarmour.it/en-it/c/girls/clothing/one-piece/?start=0&sz=1000'],
+        ['Девочки бюстгальтеры', 'Девочки одежда', 4, 'https://www.underarmour.it/en-it/c/girls/clothing/sports-bras/?start=0&sz=1000'],
+        ['Девочки обувь', 'Девочки', 3, 'https://www.underarmour.it/en-it/c/girls/shoes/?start=0&sz=1000'],
+
+    ]
+    for subcategory in subcategories:
+        if not str(subcategory[-1]).startswith('http'):
+            if len(subcategory) == 1:
+                crud.create_subcategory(name=subcategory[0], category=cat_name) if not crud.subcategory_exists(name=subcategory[0], category=cat_name) else 0
+            else:
+                if not crud.subcategory_exists(name=subcategory[0], category=cat_name):
+                    parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=crud.get_category(name=cat_name).id)
+                    crud.create_subcategory(name=subcategory[0], category=cat_name, parent_subcategory=parent_subcategory.id, level=subcategory[2])
+            continue
+        logging.info(f'Starting {cat_name}: {subcategory[0]}')
         headers = {'User-Agent': 'Mozilla/5.0'}
         async with aiohttp.ClientSession(headers=headers, trust_env=True) as session:
             item_links = []
             for i in range(0, 1):
-                async with session.get(url, ssl=False) as response:
+                async with session.get(subcategory[-1], ssl=False) as response:
                     webpage = await response.text()
                     soup = bs(webpage, 'html.parser')
                     item_urls = [{'title' : item.text, 'url': 'https://www.underarmour.it' + item.get('href')} for item in soup.find_all('a', 'b-tile-name')]
             items = []
             euro_costs = euro_cost()
-            for item_url in item_urls:
+            for item_url in item_urls[:2]:
                 try:
                     await asyncio.sleep(2)
                     async with session.get(item_url['url'], ssl=False) as response:
@@ -1691,11 +1712,11 @@ async def get_underarmour():
                         image_links = [image.find('img').get('src') for image in item_soup.find_all('div', 'b-product_carousel-slide js-product_carousel-slide swiper-slide')]
                         #print(image_links)
                         # изображения
-                        if not os.path.exists(f"database/images/Underarmour"):
-                            os.mkdir(f"database/images/Underarmour")
+                        if not os.path.exists(f"database/images/{cat_name}"):
+                            os.mkdir(f"database/images/{cat_name}")
 
-                        if not os.path.exists(f"database/images/Underarmour/{subcategory}"):
-                            os.mkdir(f"database/images/Underarmour/{subcategory}")
+                        if not os.path.exists(f"database/images/{cat_name}/{subcategory[0]}"):
+                            os.mkdir(f"database/images/{cat_name}/{subcategory[0]}")
 
                         i = item_urls.index(item_url) + 1
                         images = ''
@@ -1703,7 +1724,7 @@ async def get_underarmour():
                         for url in image_links[:10]:
                             try:
                                 num = image_links.index(url) + 1
-                                img_path = f"database/images/Underarmour/{subcategory}/{i}_{item_url['title'].replace(' ', '_').replace('/', '_')}_{num}.png"
+                                img_path = f"database/images/{cat_name}/{subcategory[0]}/{i}_{item_url['title'].replace(' ', '_').replace('/', '_')}_{num}.png"
                                 if not os.path.exists(img_path):
                                     async with session.get(url, ssl=False) as response:
                                         f = await aiofiles.open(img_path, mode='wb')
@@ -1717,37 +1738,14 @@ async def get_underarmour():
                         items.append([item_url['title'], description, current_price, images, sizes, article, item_url['url']])
                         #print([title, description, current_price, images, size_list, article, item_url])
                 except Exception as ex:
-                    logging.warning(f' Underarmour pr - {ex}')
-        for item in items:
-            try:
-                if not crud.product_exists(article=item[5]):
-                    prod = crud.create_product(
-                    name=item[0],
-                    category='Underarmour',
-                    subcategory=subcategory,
-                    description=item[1],
-                    sizes=item[4],
-                    price=item[2],
-                    image=item[3],
-                    article=item[5],
-                    url=item[6])
-                else:
-                    prod = crud.get_product(article=item[5])
-                    if not prod.deleted and not prod.edited:
-                        crud.update_product(
-                            product_id=prod.id,
-                            name=item[0],
-                            description=item[1],
-                            sizes=item[4],
-                            price=item[2],
-                            image=item[3],
-                            article=item[5],
-                            url=item[6]
-                        )
-            except Exception as ex:
-                logging.warning(f' Underarmour db - {ex}')
+                    logging.warning(f'{cat_name} pr - {ex}')
+        
+        if not crud.subcategory_exists(name=subcategory[0], category=cat_name):
+            parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=crud.get_category(name=cat_name).id)
+            crud.create_subcategory(name=subcategory[0], category=cat_name, parent_subcategory=parent_subcategory.id, level=subcategory[2])
+        
+        crud.create_products(category=cat_name, subcategory=subcategory[0], items=items)
 
-        #print(f'Canceled Newbalance {subcategory} added {len(items)} products')
-        logging.info(f'Canceled Underarmour {subcategory} added {len(items)} products') 
-    await bot.send_message(227184505, f'Underarmour закончил парсинг')
+        logging.info(f'Canceled {cat_name} {subcategory[0]} added {len(items)} products') 
+    await bot.send_message(227184505, f'{cat_name} закончил парсинг')
 

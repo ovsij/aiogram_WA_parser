@@ -60,6 +60,7 @@ def inline_kb_categories(tg_id : str, page : int = 1):
         text_and_data.append(btn_back('menu'))
         schema.append(1)
         inline_kb = InlineConstructor.create_kb(text_and_data, schema)
+        
         return text, inline_kb
     else:
         text += '\n\n К сожалению, на данный момент в каталоге ничего нет'
@@ -72,48 +73,113 @@ def inline_kb_categories(tg_id : str, page : int = 1):
         schema.append(1)
         inline_kb = InlineConstructor.create_kb(text_and_data, schema)
         return text, inline_kb
-    
-def inline_kb_subcategories(tg_id : str, category : int = None, page : int = 1):
+
+@db_session()
+def inline_kb_subcategories(tg_id : str, category : int = None, subcategory : int = None, level : int = 1, page : int = 1):
     #выводит названия суб-категорий, если их нет выводит продукты
     category_name = get_category(id=category).name
     text = f'КАТАЛОГ\n\n{category_name}'
-    sub_categories = get_subcategory(category_id=category)
+    #if level == 1:
+    #    sub_categories = get_subcategory(category_id=category)
+    #else:
+    #    sub_categories = get_subcategory(parent_subcategory=parent_subcategory)
     text_and_data = []
     schema = []
-    if sub_categories:
-        for sc in sub_categories:
-            text_and_data.append([f'{sc.name}', f'btn_ls_{category}_{sc.id}_s=_p=_n_0-5'])
+    subcategories = get_subcategory(category_id=category, parent_subcategory=subcategory, level=level)
+    for subcat in subcategories:
+        if subcat.childSubCategory:
+            text_and_data.append([f'{subcat.name}', f'btn_category_{category}_{subcat.id}-{subcat.level}_1'])
             schema.append(1)
-        if len(sub_categories) > 30:
-            text_and_data, schema = btn_prevnext(len(sub_categories), text_and_data, schema, page, name=f'category_{category}')
-
-        if get_category(id=category).name == 'LeSILLA':
-            text_and_data.append([emojize(':scissors: Таблица размеров', language='alias'), f'btn_sizes_{category}'])
+        else:
+            text_and_data.append([f'{subcat.name}', f'btn_ls_{category}_{subcat.id}_s=_p=_n_0-5'])
             schema.append(1)
-
-        if tg_id in os.getenv('ADMINS'):# and get_category(id=category).custom:
-            text_and_data.append([f'Удалить категорию {category_name}', f'btn_deletecategory_{category}'])
-            schema.append(1)
-            text_and_data.append(['Добавить подкатегорию', f'btn_addsubcategory_{category}'])
-            schema.append(1)
-        text_and_data.append(btn_back(f'catalog_1'))
+    
+    if get_category(id=category).name == 'LeSILLA' and level == 1:
+        text_and_data.append([emojize(':scissors: Таблица размеров', language='alias'), f'btn_sizes_{category}'])
         schema.append(1)
-        
-        inline_kb = InlineConstructor.create_kb(text_and_data, schema)
-        return text, inline_kb
+    
+    if tg_id in os.getenv('ADMINS'):# and get_category(id=category).custom:
+        text_and_data.append([f'Удалить категорию {category_name}', f'btn_deletecategory_{category}'])
+        schema.append(1)
+        text_and_data.append(['Добавить подкатегорию', f'btn_addsubcategory_{category}'])
+        schema.append(1)
+
+    
+    if level == 1:
+        text_and_data.append(btn_back(f'catalog_1'))
+    elif level == 2:
+        text_and_data.append(btn_back(f'category_{category}_1'))
     else:
-        text_and_data = []
-        if tg_id in os.getenv('ADMINS'):
-            text_and_data.append([f'Удалить категорию {category_name}', f'btn_deletecategory_{category}'])
+        parent_subcategory = get_subcategory(id=subcategory).parentSubCategory
+        text_and_data.append(btn_back(f'category_{category}_{parent_subcategory.id}-{parent_subcategory.level}_1'))
+        
+    schema.append(1)
+    inline_kb = InlineConstructor.create_kb(text_and_data, schema)
+    return text, inline_kb
+
+    """
+    if level == 1:
+        sub_categories = get_subcategory(category_id=category, level=1)
+        if sub_categories:
+            for sc in sub_categories:
+                all_sc = get_subcategory(category_id=category)
+                if sc.id in [s.parentSubCategory.id for s in get_subcategory(category_id=category) if s.parentSubCategory]:
+                    text_and_data.append([f'{sc.name}', f'btn_category_{category}_{sc.id}-{sc.level + 1}_1'])
+                    schema.append(1)
+                else:
+                    text_and_data.append([f'{sc.name}', f'btn_ls_{category}_{sc.id}_s=_p=_n_0-5'])
+                    schema.append(1)
+            if len(sub_categories) > 30:
+                text_and_data, schema = btn_prevnext(len(sub_categories), text_and_data, schema, page, name=f'category_{category}')
+
+            if get_category(id=category).name == 'LeSILLA':
+                text_and_data.append([emojize(':scissors: Таблица размеров', language='alias'), f'btn_sizes_{category}'])
+                schema.append(1)
+
+            if tg_id in os.getenv('ADMINS'):# and get_category(id=category).custom:
+                text_and_data.append([f'Удалить категорию {category_name}', f'btn_deletecategory_{category}'])
+                schema.append(1)
+                text_and_data.append(['Добавить подкатегорию', f'btn_addsubcategory_{category}'])
+                schema.append(1)
+            text_and_data.append(btn_back(f'catalog_1'))
             schema.append(1)
-            text_and_data.append(['Добавить подкатегорию', f'btn_addsubcategory_{category}'])
+            
+            inline_kb = InlineConstructor.create_kb(text_and_data, schema)
+            return text, inline_kb
+        else:
+            text_and_data = []
+            if tg_id in os.getenv('ADMINS'):
+                text_and_data.append([f'Удалить категорию {category_name}', f'btn_deletecategory_{category}'])
+                schema.append(1)
+                text_and_data.append(['Добавить подкатегорию', f'btn_addsubcategory_{category}'])
+                schema.append(1)
+            text_and_data.append(btn_back(f'catalog_1'))
             schema.append(1)
-        text_and_data.append(btn_back(f'catalog_1'))
+            text = 'К сожалению, в данной категории пока ничего нет'
+            print(text_and_data)
+            inline_kb = InlineConstructor.create_kb(text_and_data, schema)
+            return text, inline_kb
+            #return inline_kb_listproducts(tg_id=tg_id, category=category, page=page)
+    else:
+        sub_categories = get_subcategory(parent_subcategory=parent_subcategory)
+        for subcat in sub_categories:
+            all_sc = get_subcategory(category_id=category)
+            if subcat.id in [s.parentSubCategory.id for s in get_subcategory(category_id=category) if s.parentSubCategory]:
+                text_and_data.append([f'{subcat.name}', f'btn_category_{category}_{subcat.id}-{subcat.level + 1}_1'])
+                schema.append(1)
+            else:
+                text_and_data.append([f'{subcat.name}', f'btn_ls_{category}_{subcat.id}_s=_p=_n_0-5'])
+                schema.append(1)
+        
+        text_and_data.append(btn_back(f'category_{category}_{parent_subcategory}-{level - 1}_1'))
         schema.append(1)
-        text = 'К сожалению, в данной категории пока ничего нет'
+        parent_subcategory = get_subcategory(id=parent_subcategory)
+        text += f'\n\n{parent_subcategory.name}'
+        print(text_and_data)
         inline_kb = InlineConstructor.create_kb(text_and_data, schema)
         return text, inline_kb
-        #return inline_kb_listproducts(tg_id=tg_id, category=category, page=page)
+    """
+        
 
 def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : int = None, sizes : str = None, prices : str = None, page : list = [0, 5], back : bool = False, sort : str = None):
     textInline_kb = []
@@ -192,6 +258,7 @@ def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : in
     page_0 = 0 if back else page[1]
     page_5 = 5 if back else page[1] + 5
     page_25 = 25 if back else page[1] + 25
+    subcategory = get_subcategory(id=sub_category)
     text_and_data = [
         [emojize(f'{filter_size_emoji} Фильтр по размеру', language='alias'), f'btn_sf_{category}_{sub_category}{sizes_code}{prices_code}_n'],
         [emojize(f'{filter_price_emoji} Фильтр по цене', language='alias'), f'btn_pf_{category}_{sub_category}{sizes_code}{prices_code}_n'],
@@ -201,7 +268,7 @@ def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : in
         [emojize(':shopping_cart: Перейти в корзину', language='alias'), 'btn_cart_0-5'],
         [emojize(':arrow_down_small: Eще 5 товаров :arrow_down_small:', language='alias'), f'btn_ls_{category}_{sub_category}{sizes_code}{prices_code}_{sort}{page_0}-{page_5}'],
         [emojize(':arrow_down_small: Eще 25 товаров :arrow_down_small:', language='alias'), f'btn_ls_{category}_{sub_category}{sizes_code}{prices_code}_{sort}{page_0}-{page_25}'],
-        btn_back(f'category_{category}_1')
+        btn_back(f'category_{category}_{subcategory.parentSubCategory.id}-{subcategory.level - 1}_1')
     ]
     schema = [1, 1, 1, 1, 1, 1, 1, 1, 1]
     if tg_id in os.getenv('ADMINS') and get_category(id=category).custom:
