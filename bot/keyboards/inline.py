@@ -103,7 +103,6 @@ def inline_kb_subcategories(tg_id : str, category : int = None, subcategory : in
         schema.append(1)
         text_and_data.append(['Добавить подкатегорию', f'btn_addsubcategory_{category}'])
         schema.append(1)
-
     
     if level == 1:
         text_and_data.append(btn_back(f'catalog_1'))
@@ -259,6 +258,7 @@ def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : in
     page_5 = 5 if back else page[1] + 5
     page_25 = 25 if back else page[1] + 25
     subcategory = get_subcategory(id=sub_category)
+    back_btn = btn_back(f'category_{category}_{subcategory.parentSubCategory.id}-{subcategory.level - 1}_1') if subcategory.parentSubCategory else btn_back(f'category_{category}_1')
     text_and_data = [
         [emojize(f'{filter_size_emoji} Фильтр по размеру', language='alias'), f'btn_sf_{category}_{sub_category}{sizes_code}{prices_code}_n'],
         [emojize(f'{filter_price_emoji} Фильтр по цене', language='alias'), f'btn_pf_{category}_{sub_category}{sizes_code}{prices_code}_n'],
@@ -268,7 +268,7 @@ def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : in
         [emojize(':shopping_cart: Перейти в корзину', language='alias'), 'btn_cart_0-5'],
         [emojize(':arrow_down_small: Eще 5 товаров :arrow_down_small:', language='alias'), f'btn_ls_{category}_{sub_category}{sizes_code}{prices_code}_{sort}{page_0}-{page_5}'],
         [emojize(':arrow_down_small: Eще 25 товаров :arrow_down_small:', language='alias'), f'btn_ls_{category}_{sub_category}{sizes_code}{prices_code}_{sort}{page_0}-{page_25}'],
-        btn_back(f'category_{category}_{subcategory.parentSubCategory.id}-{subcategory.level - 1}_1')
+        back_btn
     ]
     schema = [1, 1, 1, 1, 1, 1, 1, 1, 1]
     if tg_id in os.getenv('ADMINS') and get_category(id=category).custom:

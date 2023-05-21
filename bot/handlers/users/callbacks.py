@@ -30,7 +30,7 @@ async def exception_handler(update: types.Update, exception: exceptions.RetryAft
 # обработчик кнопок
 @dp.callback_query_handler(lambda c: c.data.startswith('btn'))
 async def btn_callback(callback_query: types.CallbackQuery):
-    if datetime.now() - get_user(tg_id=str(callback_query.from_user.id)).last_usage < timedelta(seconds=1):
+    if datetime.now() - get_user(tg_id=str(callback_query.from_user.id)).last_usage < timedelta(seconds=0.5):
         return
     update_user(tg_id=str(callback_query.from_user.id), last_usage=True)
     code = callback_query.data.split('_')
