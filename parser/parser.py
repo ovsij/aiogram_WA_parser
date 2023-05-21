@@ -1622,8 +1622,8 @@ async def get_underarmour():
     subcategories = [
         ['Мужчины'],
         ['Мужская одежда', 'Мужчины', 2],
-        ['Одежда (верх)', 'Мужская одежда', 3, 'https://www.underarmour.it/en-it/c/mens/clothing/tops/?start=0&sz=1000'],
-        ['Одежда (низ)', 'Мужская одежда', 3, 'https://www.underarmour.it/en-it/c/mens/clothing/bottoms/?start=0&sz=1000'],
+        ['Мужская oдежда (верх)', 'Мужская одежда', 3, 'https://www.underarmour.it/en-it/c/mens/clothing/tops/?start=0&sz=1000'],
+        ['Мужская одежда (низ)', 'Мужская одежда', 3, 'https://www.underarmour.it/en-it/c/mens/clothing/bottoms/?start=0&sz=1000'],
         ['Мужская обувь', 'Мужчины', 2],
         ['Мужская обувь', 'Мужчины', 3, 'https://www.underarmour.it/en-it/c/mens/shoes/?start=0&sz=1000'],
         ['Мужская верхняя одежда', 'Мужская одежда', 3, 'https://www.underarmour.it/en-it/c/mens/clothing/outerwear/?start=0&sz=1000'],
