@@ -187,13 +187,16 @@ def create_product(
 def create_products(category : str, subcategory : str, items : list):
     # удаляем старые товары
     all_articles = [item[5] for item in items]
+    print(all_articles)
     for product in get_product(category_id=category, subcategory_id=subcategory, sort='n'):
         if product.article not in all_articles:
+            print('delete')
             product.delete()
     # создаем новые/обновляем товары
     for item in items:
         try:
             if not crud.product_exists(article=item[5]):
+                
                 prod = crud.create_product(
                 name=item[0],
                 category=category,
@@ -204,6 +207,7 @@ def create_products(category : str, subcategory : str, items : list):
                 image=item[3],
                 article=item[5],
                 url=item[6])
+                print(f'create {prod}')
             else:
                 prod = crud.get_product(article=item[5])
                 if not prod.deleted and not prod.edited:
@@ -217,6 +221,7 @@ def create_products(category : str, subcategory : str, items : list):
                         article=item[5],
                         url=item[6]
                     )
+                    print(f'update {prod}')
         except Exception as ex:
             logging.warning(f'{category} db - {ex}')
 

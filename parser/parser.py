@@ -1136,8 +1136,8 @@ async def get_golcegabbana():
                         #print(description)
                         sizes = [size.text.replace('\n', '').strip(' ') for size in soup.find_all('div', 'variant-field')]
                         try:
-                            if sizes[0] > 100:
-                                sizes = [size/100 for size in sizes]
+                            if int(sizes[0]) > 100:
+                                sizes = [str(int(size)/100) for size in sizes]
                         except:
                             pass
                         list_sizes = ''
@@ -1754,90 +1754,90 @@ async def get_pleinoutlet():
         #https://www.pleinoutlet.com/it/en/search?cgid=men-clothing-leather&pmin=1.00&prefn1=hasPicture&prefv1=true&start=0&sz=1000
         ['Мужчины'],
         ['Мужская одежда', 'Мужчины', 2],
-        ['Кожаные куртки мужские', 'Мужская одежда', 3, 'https://www.pleinoutlet.com/it/en/men/clothing/jackets/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'],
+        ['Верхняя одежда мужская', 'Мужская одежда', 3, 'https://www.pleinoutlet.com/it/en/men/clothing/jackets/?pmin=1.00&prefn1=hasPicture&prefv1=true&sz=150'],
         ['Кожаные куртки мужские', 'Мужская одежда', 3, 'https://www.pleinoutlet.com/it/en/search?cgid=men-clothing-leather&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Блейзеры мужские', 'Мужская одежда', 3, 'https://www.pleinoutlet.com/it/en/men/clothing/blazers/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Трикотаж мужской', 'Мужская одежда', 3, 'https://www.pleinoutlet.com/it/en/men/clothing/knitwear/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Поло мужские', 'Мужская одежда', 3, 'https://www.pleinoutlet.com/it/en/men/clothing/polos/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Футболки мужские', 'Мужская одежда', 3, 'https://www.pleinoutlet.com/it/en/men/clothing/t-shirts/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Рубашки мужские', 'Мужская одежда', 3, 'https://www.pleinoutlet.com/it/en/men/clothing/shirts/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Беговая одежда мужская', 'Мужская одежда', 3, 'https://www.pleinoutlet.com/it/en/men/clothing/sportswear/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Джинсы мужские', 'Мужская одежда', 3, 'https://www.pleinoutlet.com/it/en/men/clothing/jeans/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Блейзеры мужские', 'Мужская одежда', 3, 'https://www.pleinoutlet.com/it/en/men/clothing/blazers/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Трикотаж мужской', 'Мужская одежда', 3, 'https://www.pleinoutlet.com/it/en/men/clothing/knitwear/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Поло мужские', 'Мужская одежда', 3, 'https://www.pleinoutlet.com/it/en/men/clothing/polos/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Футболки мужские', 'Мужская одежда', 3, 'https://www.pleinoutlet.com/it/en/men/clothing/t-shirts/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Рубашки мужские', 'Мужская одежда', 3, 'https://www.pleinoutlet.com/it/en/men/clothing/shirts/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Беговая одежда мужская', 'Мужская одежда', 3, 'https://www.pleinoutlet.com/it/en/men/clothing/sportswear/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Джинсы мужские', 'Мужская одежда', 3, 'https://www.pleinoutlet.com/it/en/men/clothing/jeans/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
         ['Брюки и шорты мужские', 'Мужская одежда', 3, 'https://www.pleinoutlet.com/it/en/search?cgid=men-clothing-trousers_and_shorts&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Костюмы мужские', 'Мужская одежда', 3, 'https://www.pleinoutlet.com/it/en/men/clothing/suits/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Нижнее белье мужское', 'Мужская одежда', 3, 'https://www.pleinoutlet.com/it/en/men/clothing/underwear/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Пляжная одежда мужская', 'Мужская одежда', 3, 'https://www.pleinoutlet.com/it/en/men/clothing/beachwear/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'],
+        ['Костюмы мужские', 'Мужская одежда', 3, 'https://www.pleinoutlet.com/it/en/men/clothing/suits/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Нижнее белье мужское', 'Мужская одежда', 3, 'https://www.pleinoutlet.com/it/en/men/clothing/underwear/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Пляжная одежда мужская', 'Мужская одежда', 3, 'https://www.pleinoutlet.com/it/en/men/clothing/beachwear/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'],
         ['Мужская обувь', 'Мужчины', 3],
-        ['Кросовки мужские', 'Мужская обувь', 3, 'https://www.pleinoutlet.com/it/en/men/shoes/sneakers/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Сапоги мужские', 'Мужская обувь', 3, 'https://www.pleinoutlet.com/it/en/men/shoes/boots/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Туфли мужские', 'Мужская обувь', 3, 'https://www.pleinoutlet.com/it/en/men/shoes/classics/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Обувь на плоской подошве мужская', 'Мужская обувь', 3, 'https://www.pleinoutlet.com/it/en/men/shoes/flats/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Сандалии мужские', 'Мужская обувь', 3, 'https://www.pleinoutlet.com/it/en/men/shoes/sandals/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Кросовки мужские', 'Мужская обувь', 3, 'https://www.pleinoutlet.com/it/en/men/shoes/sneakers/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Сапоги мужские', 'Мужская обувь', 3, 'https://www.pleinoutlet.com/it/en/men/shoes/boots/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Туфли мужские', 'Мужская обувь', 3, 'https://www.pleinoutlet.com/it/en/men/shoes/classics/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Обувь на плоской подошве мужская', 'Мужская обувь', 3, 'https://www.pleinoutlet.com/it/en/men/shoes/flats/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Сандалии мужские', 'Мужская обувь', 3, 'https://www.pleinoutlet.com/it/en/men/shoes/sandals/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
         ['Мужские сумки', 'Мужчины', 2],
         ['Рюкзаки мужские', 'Мужские сумки', 3, 'https://www.pleinoutlet.com/it/en/men/bags/backpacks/'], 
-        ['Наплечные сумки мужские', 'Мужские сумки', 3, 'https://www.pleinoutlet.com/it/en/men/bags/shoulder-bags/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Мешочки мужские', 'Мужские сумки', 3, 'https://www.pleinoutlet.com/it/en/men/bags/pouches/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Сумки для путешествий мужские', 'Мужские сумки', 3, 'https://www.pleinoutlet.com/it/en/men/bags/travel-bags/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Другие сумки мужские', 'Мужские сумки', 3, 'https://www.pleinoutlet.com/it/en/men/bags/other-bags/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Наплечные сумки мужские', 'Мужские сумки', 3, 'https://www.pleinoutlet.com/it/en/men/bags/shoulder-bags/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Мешочки мужские', 'Мужские сумки', 3, 'https://www.pleinoutlet.com/it/en/men/bags/pouches/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Сумки для путешествий мужские', 'Мужские сумки', 3, 'https://www.pleinoutlet.com/it/en/men/bags/travel-bags/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Другие сумки мужские', 'Мужские сумки', 3, 'https://www.pleinoutlet.com/it/en/men/bags/other-bags/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
         ['Мужские аксессуары', 'Мужчины', 3],
-        ['Ремни мужские', 'Мужские аксессуары', 3, 'https://www.pleinoutlet.com/it/en/men/accessories/belts/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Очки мужские', 'Мужские аксессуары', 3, 'https://www.pleinoutlet.com/it/en/men/accessories/eyewear/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Часы мужские', 'Мужские аксессуары', 3, 'https://www.pleinoutlet.com/it/en/men/accessories/watches/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Небольшие кожаные изделия мужские', 'Мужские аксессуары', 3, 'https://www.pleinoutlet.com/it/en/men/accessories/small-leather-goods/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Шляпы мужские', 'Мужские аксессуары', 3, 'https://www.pleinoutlet.com/it/en/men/accessories/hats/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Шарфы мужские', 'Мужские аксессуары', 3, 'https://www.pleinoutlet.com/it/en/men/accessories/scarves/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Брелки мужские', 'Мужские аксессуары', 3, 'https://www.pleinoutlet.com/it/en/men/accessories/keychains/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Другие аксессуары мужские', 'Мужские аксессуары', 3, 'https://www.pleinoutlet.com/it/en/men/accessories/other-accessories/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'],
+        ['Ремни мужские', 'Мужские аксессуары', 3, 'https://www.pleinoutlet.com/it/en/men/accessories/belts/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Очки мужские', 'Мужские аксессуары', 3, 'https://www.pleinoutlet.com/it/en/men/accessories/eyewear/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Часы мужские', 'Мужские аксессуары', 3, 'https://www.pleinoutlet.com/it/en/men/accessories/watches/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Небольшие кожаные изделия мужские', 'Мужские аксессуары', 3, 'https://www.pleinoutlet.com/it/en/men/accessories/small-leather-goods/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Шляпы мужские', 'Мужские аксессуары', 3, 'https://www.pleinoutlet.com/it/en/men/accessories/hats/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Шарфы мужские', 'Мужские аксессуары', 3, 'https://www.pleinoutlet.com/it/en/men/accessories/scarves/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Брелки мужские', 'Мужские аксессуары', 3, 'https://www.pleinoutlet.com/it/en/men/accessories/keychains/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Другие аксессуары мужские', 'Мужские аксессуары', 3, 'https://www.pleinoutlet.com/it/en/men/accessories/other-accessories/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'],
         ['Женщины'],
         ['Женская одежда', 'Женщины', 2],
-        ['Верхняя одежда женская', 'Женская одежда', 3, 'https://www.pleinoutlet.com/it/en/women/clothing/jackets/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Кожаные куртки женские', 'Женская одежда', 3, 'https://www.pleinoutlet.com/it/en/search?cgid=women-clothing-leather&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Блейзеры женские', 'Женская одежда', 3, 'https://www.pleinoutlet.com/it/en/women/clothing/blazers/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Платья и юбки женские', 'Женская одежда', 3, 'https://www.pleinoutlet.com/it/en/search?cgid=women-clothing-dresses_and_skirts&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Трикотаж женский', 'Женская одежда', 3, 'https://www.pleinoutlet.com/it/en/women/clothing/knitwear/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Футболки женские', 'Женская одежда', 3, 'https://www.pleinoutlet.com/it/en/women/clothing/t-shirts/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Топы женские', 'Женская одежда', 3, 'https://www.pleinoutlet.com/it/en/women/clothing/tops/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Одежда для бега женская', 'Женская одежда', 3, 'https://www.pleinoutlet.com/it/en/women/clothing/sportswear/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Джинсы женские', 'Женская одежда', 3, 'https://www.pleinoutlet.com/it/en/women/clothing/jeans/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'],
+        ['Верхняя одежда женская', 'Женская одежда', 3, 'https://www.pleinoutlet.com/it/en/women/clothing/jackets/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Кожаные куртки женские', 'Женская одежда', 3, 'https://www.pleinoutlet.com/it/en/search?cgid=women-clothing-leather?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Блейзеры женские', 'Женская одежда', 3, 'https://www.pleinoutlet.com/it/en/women/clothing/blazers/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Платья и юбки женские', 'Женская одежда', 3, 'https://www.pleinoutlet.com/it/en/search?cgid=women-clothing-dresses_and_skirts?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Трикотаж женский', 'Женская одежда', 3, 'https://www.pleinoutlet.com/it/en/women/clothing/knitwear/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Футболки женские', 'Женская одежда', 3, 'https://www.pleinoutlet.com/it/en/women/clothing/t-shirts/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Топы женские', 'Женская одежда', 3, 'https://www.pleinoutlet.com/it/en/women/clothing/tops/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Одежда для бега женская', 'Женская одежда', 3, 'https://www.pleinoutlet.com/it/en/women/clothing/sportswear/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Джинсы женские', 'Женская одежда', 3, 'https://www.pleinoutlet.com/it/en/women/clothing/jeans/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'],
         ['Брюки и шорты женские', 'Женская одежда', 3, 'https://www.pleinoutlet.com/it/en/search?cgid=women-clothing-trousers_and_shorts&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Костюмы женские', 'Женская одежда', 3, 'https://www.pleinoutlet.com/it/en/women/clothing/suits/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Пляжная одежда женская', 'Женская одежда', 3, 'https://www.pleinoutlet.com/it/en/women/clothing/beachwear/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Нижнее белье  женское', 'Женская одежда', 3, 'https://www.pleinoutlet.com/it/en/women/clothing/underwear/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Костюмы женские', 'Женская одежда', 3, 'https://www.pleinoutlet.com/it/en/women/clothing/suits/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Пляжная одежда женская', 'Женская одежда', 3, 'https://www.pleinoutlet.com/it/en/women/clothing/beachwear/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Нижнее белье  женское', 'Женская одежда', 3, 'https://www.pleinoutlet.com/it/en/women/clothing/underwear/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
         ['Женская обувь', 'Женщины', 2],
-        ['Кросовки женские', 'Женская обувь', 3, 'https://www.pleinoutlet.com/it/en/women/shoes/sneakers/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Сапоги женские', 'Женская обувь', 3, 'https://www.pleinoutlet.com/it/en/women/shoes/boots/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Туфли на высоком каблуке', 'Женская обувь', 3, 'https://www.pleinoutlet.com/it/en/women/shoes/pumps/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Туфли женские', 'Женская обувь', 3, 'https://www.pleinoutlet.com/it/en/women/shoes/classics/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Обувь на плоской подошве женская', 'Женская обувь', 3, 'https://www.pleinoutlet.com/it/en/women/shoes/flats/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Сандалии женские', 'Женская обувь', 3, 'https://www.pleinoutlet.com/it/en/women/shoes/sandals/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Кросовки женские', 'Женская обувь', 3, 'https://www.pleinoutlet.com/it/en/women/shoes/sneakers/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Сапоги женские', 'Женская обувь', 3, 'https://www.pleinoutlet.com/it/en/women/shoes/boots/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Туфли на высоком каблуке', 'Женская обувь', 3, 'https://www.pleinoutlet.com/it/en/women/shoes/pumps/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Туфли женские', 'Женская обувь', 3, 'https://www.pleinoutlet.com/it/en/women/shoes/classics/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Обувь на плоской подошве женская', 'Женская обувь', 3, 'https://www.pleinoutlet.com/it/en/women/shoes/flats/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Сандалии женские', 'Женская обувь', 3, 'https://www.pleinoutlet.com/it/en/women/shoes/sandals/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
         ['Женские сумки', 'Женщины', 2],
-        ['Клачи женские', 'Женские сумки', 3, 'https://www.pleinoutlet.com/it/en/women/bags/clutches/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Сумки женские', 'Женские сумки', 3, 'https://www.pleinoutlet.com/it/en/women/bags/tote-bags/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Наплечные сумки женские', 'Женские сумки', 3, 'https://www.pleinoutlet.com/it/en/women/bags/shoulder-bags/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Рюкзаки женские', 'Женские сумки', 3, 'https://www.pleinoutlet.com/it/en/women/bags/backpacks/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Портфели женские', 'Женские сумки', 3, 'https://www.pleinoutlet.com/it/en/women/bags/pouches-and-portfolios/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Другие женские сумки', 'Женские сумки', 3, 'https://www.pleinoutlet.com/it/en/women/bags/other-bags/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Клачи женские', 'Женские сумки', 3, 'https://www.pleinoutlet.com/it/en/women/bags/clutches/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Сумки женские', 'Женские сумки', 3, 'https://www.pleinoutlet.com/it/en/women/bags/tote-bags/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Наплечные сумки женские', 'Женские сумки', 3, 'https://www.pleinoutlet.com/it/en/women/bags/shoulder-bags/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Рюкзаки женские', 'Женские сумки', 3, 'https://www.pleinoutlet.com/it/en/women/bags/backpacks/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Портфели женские', 'Женские сумки', 3, 'https://www.pleinoutlet.com/it/en/women/bags/pouches-and-portfolios/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Другие женские сумки', 'Женские сумки', 3, 'https://www.pleinoutlet.com/it/en/women/bags/other-bags/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
         ['Женские аксессуары', 'Женщины', 2],
-        ['Ремни женские', 'Женские аксессуары', 3, 'https://www.pleinoutlet.com/it/en/women/accessories/belts/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Очки женские', 'Женские аксессуары', 3, 'https://www.pleinoutlet.com/it/en/women/accessories/eyewear/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Ювелирные украшения женские', 'Женские аксессуары', 3, 'https://www.pleinoutlet.com/it/en/women/accessories/jewelry/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Небольшие кожаные изделия женские', 'Женские аксессуары', 3, 'https://www.pleinoutlet.com/it/en/women/accessories/small-leather-goods/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Шляпы женские', 'Женские аксессуары', 3, 'https://www.pleinoutlet.com/it/en/women/accessories/hats-/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Шарфы женские', 'Женские аксессуары', 3, 'https://www.pleinoutlet.com/it/en/women/accessories/scarves/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Перчатки женские', 'Женские аксессуары', 3, 'https://www.pleinoutlet.com/it/en/women/accessories/gloves/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Брелки женские', 'Женские аксессуары', 3, 'https://www.pleinoutlet.com/it/en/women/accessories/keychains/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Другие женские аксессуары', 'Женские аксессуары', 3, 'https://www.pleinoutlet.com/it/en/women/accessories/other-accessories/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'],
+        ['Ремни женские', 'Женские аксессуары', 3, 'https://www.pleinoutlet.com/it/en/women/accessories/belts/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Очки женские', 'Женские аксессуары', 3, 'https://www.pleinoutlet.com/it/en/women/accessories/eyewear/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Ювелирные украшения женские', 'Женские аксессуары', 3, 'https://www.pleinoutlet.com/it/en/women/accessories/jewelry/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Небольшие кожаные изделия женские', 'Женские аксессуары', 3, 'https://www.pleinoutlet.com/it/en/women/accessories/small-leather-goods/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Шляпы женские', 'Женские аксессуары', 3, 'https://www.pleinoutlet.com/it/en/women/accessories/hats-/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Шарфы женские', 'Женские аксессуары', 3, 'https://www.pleinoutlet.com/it/en/women/accessories/scarves/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Перчатки женские', 'Женские аксессуары', 3, 'https://www.pleinoutlet.com/it/en/women/accessories/gloves/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Брелки женские', 'Женские аксессуары', 3, 'https://www.pleinoutlet.com/it/en/women/accessories/keychains/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Другие женские аксессуары', 'Женские аксессуары', 3, 'https://www.pleinoutlet.com/it/en/women/accessories/other-accessories/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'],
         ['Дети'],
         ['Мальчики', 'Дети', 2],
-        ['Одежда для мальчиков', 'Мальчики', 3, 'https://www.pleinoutlet.com/it/en/kids/boys/clothing/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Обувь для мальчиков', 'Мальчики', 3, 'https://www.pleinoutlet.com/it/en/kids/boys/shoes/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Аксессуары для мальчиков', 'Мальчики', 3, 'https://www.pleinoutlet.com/it/en/kids/boys/accessories/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'],
-        ['Для младенцев мальчиков', 'Мальчики', 3, 'https://www.pleinoutlet.com/it/en/search?cgid=kids-boys-baby&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Одежда для мальчиков', 'Мальчики', 3, 'https://www.pleinoutlet.com/it/en/kids/boys/clothing/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Обувь для мальчиков', 'Мальчики', 3, 'https://www.pleinoutlet.com/it/en/kids/boys/shoes/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Аксессуары для мальчиков', 'Мальчики', 3, 'https://www.pleinoutlet.com/it/en/kids/boys/accessories/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'],
+        ['Для младенцев мальчиков', 'Мальчики', 3, 'https://www.pleinoutlet.com/it/en/search?cgid=kids-boys-baby?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
         ['Девочки', 'Дети', 2],
-        ['Одежда для девочек', 'Девочки', 3, 'https://www.pleinoutlet.com/it/en/kids/girls/clothing/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Обувь для девочек', 'Девочки', 3, 'https://www.pleinoutlet.com/it/en/kids/girls/shoes/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Аксессуары для девочек', 'Девочки', 3, 'https://www.pleinoutlet.com/it/en/kids/girls/accessories/&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Для младенцев девочек', 'Девочки', 3, 'https://www.pleinoutlet.com/it/en/search?cgid=kids-girls-baby&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax']
+        ['Одежда для девочек', 'Девочки', 3, 'https://www.pleinoutlet.com/it/en/kids/girls/clothing/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Обувь для девочек', 'Девочки', 3, 'https://www.pleinoutlet.com/it/en/kids/girls/shoes/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Аксессуары для девочек', 'Девочки', 3, 'https://www.pleinoutlet.com/it/en/kids/girls/accessories/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
+        ['Для младенцев девочек', 'Девочки', 3, 'https://www.pleinoutlet.com/it/en/search?cgid=kids-girls-baby?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax']
     ]
     
     for subcategory in subcategories:
@@ -1864,7 +1864,7 @@ async def get_pleinoutlet():
                         continue
             items = []
             euro_costs = euro_cost()
-            for item in items_urls[:1]:
+            for item in items_urls:
                 async with session.get(item['url'], ssl=False) as response:
                     try:
                         item_webpage = await response.read()
@@ -1916,8 +1916,9 @@ async def get_pleinoutlet():
                             except:
                                 continue
                         items.append([item['title'], description, current_price, images, sizes, article, item['url']])
-                    except:
-                        pass
+                    except Exception as ex:
+                        print(ex)
+                        
         if not crud.subcategory_exists(name=subcategory[0], category=cat_name):
             parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=crud.get_category(name=cat_name).id)
             crud.create_subcategory(name=subcategory[0], category=cat_name, parent_subcategory=parent_subcategory.id, level=subcategory[2])
