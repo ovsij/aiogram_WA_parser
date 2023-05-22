@@ -35,6 +35,7 @@ async def bot_start(message: types.Message):
 @dp.message_handler(commands=['stop'], state=Form.add_category)
 @dp.message_handler(commands=['stop'], state=Form.promocode_user)
 @dp.message_handler(commands=['stop'], state=Form.add_catalog)
+@dp.message_handler(commands=['stop'], state=Form.user_phone)
 async def bot_start(message: types.Message, state: FSMContext):
     await state.finish()
     text, reply_markup = inline_kb_menu(message.from_user)

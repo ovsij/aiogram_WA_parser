@@ -1929,3 +1929,13 @@ async def get_pleinoutlet():
     await bot.send_message(227184505, f'{cat_name} закончил парсинг')
 
 
+async def get_monnalisa():
+    cat_name = 'Nonnalisa'
+    subcategories = [
+        ['Девочки'],
+        ['0-18 месяцев', 'Девочки', 2],
+        ['Одежда', '0-18 месяцев', 3],
+        ['Платья и комбинезоны 0-18', 'https://www.monnalisa.com/en-it/girl/0-18-months/clothing/dresses-jumpsuits/?sz=24', 4]
+        ['Мужская одежда', 'Мужчины', 2],
+        ['Верхняя одежда мужская', 'Мужская одежда', 3, 'https://www.pleinoutlet.com/it/en/men/clothing/jackets/?pmin=1.00&prefn1=hasPicture&prefv1=true&sz=150'],
+    ]

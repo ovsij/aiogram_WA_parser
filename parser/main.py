@@ -41,8 +41,8 @@ async def main():
         #tasks.add(task7)
         #task8 = asyncio.create_task(get_newbalance())
         #tasks.add(task8)
-        task9 = asyncio.create_task(get_underarmour())
-        tasks.add(task9)
+        #task9 = asyncio.create_task(get_underarmour())
+        #tasks.add(task9)
         task10 = asyncio.create_task(get_pleinoutlet())
         tasks.add(task10)
         
