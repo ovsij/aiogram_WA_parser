@@ -1841,8 +1841,7 @@ async def get_pleinoutlet():
     ]
     
     for subcategory in subcategories:
-        if subcategory[0] != 'Туфли на высоком каблуке':
-            continue
+        
         if not str(subcategory[-1]).startswith('http'):
             if len(subcategory) == 1:
                 crud.create_subcategory(name=subcategory[0], category=cat_name) if not crud.subcategory_exists(name=subcategory[0], category=cat_name) else 0
@@ -1886,13 +1885,13 @@ async def get_pleinoutlet():
                         try:
                             sizes = ''
                             for size in [li.text.strip('\n') for li in item_soup.find_all('li', 'b-swatches-item selectable variation-group-value')]:
-                                sizes += size + ', '
-                            sizes = sizes.strip(', ').replace('Last 1 left', '').replace('\n', '').strip(' ')
+                                sizes += size.replace('Last 1 left', '').replace('\n', '').strip(' ') + ', '
+                            sizes = sizes.strip(', ')
                             description += '\n\nРазмеры:\n' + sizes
-                            print([sizes])
+                            #print([sizes])
                         except:
                             pass
-
+                        #print([sizes])
                         image_links = [img.get('src') for img in item_soup.find('div', 'b-pdp-thumbnails').find_all('img')]
                         #print(image_links)
                         # изображения
