@@ -214,7 +214,7 @@ def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : in
         description = product.description
         description = '' if not product.description else product.description
         price = 'Не указана' if not product.price else product.price
-        dct['text'] = f'{product.name}\n\nАртикул: {product.article}\n{description}\n\nЦена: {price} руб.'
+        dct['text'] = f'{product.name}\n\n{description}\n\nЦена: {price} руб.'
         promocode = get_promocode(tg_id=tg_id, category_id=category)
     
         if promocode and price != 'Не указана':
