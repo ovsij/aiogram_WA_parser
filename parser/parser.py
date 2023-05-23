@@ -1841,7 +1841,8 @@ async def get_pleinoutlet():
     ]
     
     for subcategory in subcategories:
-        
+        if subcategory[0] != 'Туфли на высоком каблуке':
+            continue
         if not str(subcategory[-1]).startswith('http'):
             if len(subcategory) == 1:
                 crud.create_subcategory(name=subcategory[0], category=cat_name) if not crud.subcategory_exists(name=subcategory[0], category=cat_name) else 0
