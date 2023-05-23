@@ -1841,6 +1841,8 @@ async def get_pleinoutlet():
     ]
     
     for subcategory in subcategories:
+        if subcategory[0] != 'Туфли на высоком каблуке':
+            continue
         if not str(subcategory[-1]).startswith('http'):
             if len(subcategory) == 1:
                 crud.create_subcategory(name=subcategory[0], category=cat_name) if not crud.subcategory_exists(name=subcategory[0], category=cat_name) else 0
@@ -1885,9 +1887,9 @@ async def get_pleinoutlet():
                             sizes = ''
                             for size in [li.text.strip('\n') for li in item_soup.find_all('li', 'b-swatches-item selectable variation-group-value')]:
                                 sizes += size + ', '
-                            sizes = sizes.strip(', ').strip('Last 1 left').strip(' ')
+                            sizes = sizes.strip(', ').replace('Last 1 left', '').replace('\n', '').strip(' ')
                             description += '\n\nРазмеры:\n' + sizes
-                            #print(sizes)
+                            print([sizes])
                         except:
                             pass
 
@@ -1932,10 +1934,124 @@ async def get_pleinoutlet():
 async def get_monnalisa():
     cat_name = 'Nonnalisa'
     subcategories = [
+        #
         ['Девочки'],
-        ['0-18 месяцев', 'Девочки', 2],
-        ['Одежда', '0-18 месяцев', 3],
-        ['Платья и комбинезоны 0-18', 'https://www.monnalisa.com/en-it/girl/0-18-months/clothing/dresses-jumpsuits/?sz=24', 4]
-        ['Мужская одежда', 'Мужчины', 2],
-        ['Верхняя одежда мужская', 'Мужская одежда', 3, 'https://www.pleinoutlet.com/it/en/men/clothing/jackets/?pmin=1.00&prefn1=hasPicture&prefv1=true&sz=150'],
+        ['Девочки 0-18 месяцев', 'Девочки', 2],
+        ['Одежда для девочек 0-18 месяцев', 'Девочки 0-18 месяцев', 3],
+        ['Платья и комбинезоны для девочек 0-18', 'Одежда для девочек 0-18 месяцев', 4, 'https://www.monnalisa.com/en-it/girl/0-18-months/clothing/dresses-jumpsuits/?sz=24'],
+        ['Пляжная одежда для девочек 0-18', 'Одежда для девочек 0-18 месяцев', 4, 'https://www.monnalisa.com/en-it/girl/0-18-months/clothing/beachwear/?sz=24'],
+        ['Пальто и куртки для девочек 0-18', 'Одежда для девочек 0-18 месяцев', 4, 'https://www.monnalisa.com/en-it/girl/0-18-months/clothing/coats-jackets/?sz=24'],
+        ['Юбки для девочек 0-18', 'Одежда для девочек 0-18 месяцев', 4, 'https://www.monnalisa.com/en-it/girl/0-18-months/clothing/skirts/?sz=24'],
+        ['Штаны и легинцы для девочек 0-18', 'Одежда для девочек 0-18 месяцев', 4, 'https://www.monnalisa.com/en-it/girl/0-18-months/clothing/leggings-pants/?sz=24'],
+        ['Свитеры и кардигары для девочек 0-18', 'Одежда для девочек 0-18 месяцев', 4, 'https://www.monnalisa.com/en-it/girl/0-18-months/clothing/cardigans-sweaters/?sz=24'],
+        ['Рубашки и футболки для девочек 0-18', 'Одежда для девочек 0-18 месяцев', 4, 'https://www.monnalisa.com/en-it/girl/0-18-months/clothing/tops--t-shirts-shirts/?sz=24'],
+        ['Аксессуары для девочек 0-18 месяцев', 'Девочки 0-18 месяцев', 3, 'https://www.monnalisa.com/en-it/girl/0-18-months/accessories/?sz=24'],
+        ['Косметика для девочек 0-18 месяцев', 'Девочки 0-18 месяцев', 3, 'https://www.monnalisa.com/en-it/girl/0-18-months/beauty-skin/'],
+        ['Обувь для девочек 0-18 месяцев', 'Девочки 0-18 месяцев', 3],
+        ['Обувь для ходьбы девочки 0-18', 'Обувь для девочек 0-18 месяцев', 4, 'https://www.monnalisa.com/en-it/girl/0-18-months/shoes/pre-walker-shoes/?sz=24'],
+        ['Балетки для девочек 0-18', 'Обувь для девочек 0-18 месяцев', 4, 'https://www.monnalisa.com/en-it/girl/0-18-months/shoes/ballerinas/?sz=24'],
+        ['Сандалии для девочек 0-18', 'Обувь для девочек 0-18 месяцев', 4, 'https://www.monnalisa.com/en-it/girl/0-18-months/shoes/sandals/?sz=24'],
+        ['Кросовки для девочек 0-18', 'Обувь для девочек 0-18 месяцев', 4, 'https://www.monnalisa.com/en-it/girl/0-18-months/shoes/sneakers/?sz=24'],
+        ['Сапоги для девочек 0-18', 'Обувь для девочек 0-18 месяцев', 4, 'https://www.monnalisa.com/en-it/girl/0-18-months/shoes/boots/?sz=24'],
+        
+        ['Новорожденные девочки', 'Девочки 0-18 месяцев', 3],
+        ['Аксессуары для новорожденых девочек', 'Девочки 0-18 месяцев', 4, 'https://www.monnalisa.com/en-it/girl/0-18-months/shoes/sandals/?sz=24'],
+        ['Боди и комбинезоны для новорожденых девочек', 'Девочки 0-18 месяцев', 4, 'https://www.monnalisa.com/en-it/girl/0-18-months/shoes/sandals/?sz=24'],
+        ['Постельные принадлежности для новорожденых девочек', 'Девочки 0-18 месяцев', 4, 'https://www.monnalisa.com/en-it/girl/0-18-months/shoes/sandals/?sz=24'],
+        
+        #
+        ['Девочки 2-12 лет', 'Девочки', 2],
+        ['Одежда для девочек 2-12 лет', 'Девочки 2-12 лет', 3],
+        ['Платья и комбинезоны для девочек 2-12', 'Одежда для девочек 2-12 лет', 4, 'https://www.monnalisa.com/en-it/girl/2-12-years/clothing/dresses-jumpsuits/?sz=24'],
+        ['Пляжная одежда для девочек 2-12', 'Одежда для девочек 2-12 лет', 4, 'https://www.monnalisa.com/en-it/girl/2-12-years/clothing/beachwear/?sz=24'],
+        ['Пальто и куртки для девочек 2-12', 'Одежда для девочек 2-12 лет', 4, 'https://www.monnalisa.com/en-it/girl/2-12-years/clothing/coats-jackets/?sz=24'],
+        ['Юбки для девочек 2-12', 'Одежда для девочек 2-12 лет', 4, 'https://www.monnalisa.com/en-it/girl/2-12-years/clothing/skirts/?sz=24'],
+        ['Штаны и легинцы для девочек 2-12', 'Одежда для девочек 2-12 лет', 4, 'https://www.monnalisa.com/en-it/girl/2-12-years/clothing/leggings-pants/?sz=24'],
+        ['Свитеры и кардигары для девочек 2-12', 'Одежда для девочек 2-12 лет', 4, 'https://www.monnalisa.com/en-it/girl/2-12-years/clothing/cardigans-sweaters/?sz=24'],
+        ['Рубашки и футболки для девочек 2-12', 'Одежда для девочек 2-12 лет', 4, 'https://www.monnalisa.com/en-it/girl/2-12-years/clothing/tops--t-shirts-shirts/?sz=24'],
+        
+        ['Аксессуары для девочек 2-12 лет', 'Девочки 2-12 лет', 3, 'https://www.monnalisa.com/en-it/girl/2-12-years/accessories/?sz=24'],
+        ['Косметика для девочек 2-12 лет', 'Девочки 2-12 лет', 3, 'https://www.monnalisa.com/en-it/girl/2-12-years/beauty-skin/'],
+        
+        ['Обувь для девочек 2-12 лет', 'Девочки 2-12 лет', 3],
+        ['Балетки для девочек 2-12', 'Обувь для девочек 2-12 лет', 4, 'https://www.monnalisa.com/en-it/girl/2-12-years/shoes/ballerinas/?sz=24'],
+        ['Сандалии для девочек 2-12', 'Обувь для девочек 2-12 лет', 4, 'https://www.monnalisa.com/en-it/girl/2-12-years/shoes/sandals/?sz=24'],
+        ['Кросовки для девочек 2-12', 'Обувь для девочек 2-12 лет', 4, 'https://www.monnalisa.com/en-it/girl/2-12-years/shoes/sneakers/?sz=24'],
+        ['Сапоги для девочек 2-12', 'Обувь для девочек 2-12 лет', 4, 'https://www.monnalisa.com/en-it/girl/2-12-years/shoes/boots/?sz=24'],
+        
+        #
+        ['Девочки 13-16 лет', 'Девочки', 2],
+        ['Одежда для девочек 13-16 лет', 'Девочки 13-16 лет', 3],
+        ['Платья и комбинезоны для девочек 13-16', 'Одежда для девочек 13-16 лет', 4, 'https://www.monnalisa.com/en-it/girl/13-16-years/clothing/dresses-jumpsuits/?sz=24'],
+        ['Пляжная одежда для девочек 13-16', 'Одежда для девочек 13-16 лет', 4, 'https://www.monnalisa.com/en-it/girl/13-16-years/clothing/beachwear/?sz=24'],
+        ['Пальто и куртки для девочек 13-16', 'Одежда для девочек 13-16 лет', 4, 'https://www.monnalisa.com/en-it/girl/13-16-years/clothing/coats-jackets/?sz=24'],
+        ['Юбки для девочек 13-16', 'Одежда для девочек 13-16 лет', 4, 'https://www.monnalisa.com/en-it/girl/13-16-years/clothing/skirts/?sz=24'],
+        ['Штаны и легинцы для девочек 13-16', 'Одежда для девочек 13-16 лет', 4, 'https://www.monnalisa.com/en-it/girl/13-16-years/clothing/leggings-pants/?sz=24'],
+        ['Свитеры и кардигары для девочек 13-16', 'Одежда для девочек 13-16 лет', 4, 'https://www.monnalisa.com/en-it/girl/13-16-years/clothing/cardigans-sweaters/?sz=24'],
+        ['Рубашки и футболки для девочек 13-16', 'Одежда для девочек 13-16 лет', 4, 'https://www.monnalisa.com/en-it/girl/13-16-years/clothing/tops--t-shirts-shirts/?sz=24'],
+        
+        ['Аксессуары для девочек 13-16 лет', 'Девочки 13-16 лет', 3, 'https://www.monnalisa.com/en-it/girl/13-16-years/accessories/?sz=24'],
+        ['Косметика для девочек 13-16 лет', 'Девочки 13-16 лет', 3, 'https://www.monnalisa.com/en-it/girl/13-16-years/beauty-skin/'],
+        
+        ['Обувь для девочек 13-16 лет', 'Девочки 13-16 лет', 3],
+        ['Балетки для девочек 13-16', 'Обувь для девочек 13-16 лет', 4, 'https://www.monnalisa.com/en-it/girl/13-16-years/shoes/ballerinas/?sz=24'],
+        ['Сандалии для девочек 13-16', 'Обувь для девочек 13-16 лет', 4, 'https://www.monnalisa.com/en-it/girl/13-16-years/shoes/sandals/?sz=24'],
+        ['Кросовки для девочек 13-16', 'Обувь для девочек 13-16 лет', 4, 'https://www.monnalisa.com/en-it/girl/13-16-years/shoes/sneakers/?sz=24'],
+        ['Сапоги для девочек 13-16', 'Обувь для девочек 13-16 лет', 4, 'https://www.monnalisa.com/en-it/girl/13-16-years/shoes/boots/?sz=24'],
+        
+        #
+        ['Мальчики'],
+        ['Мальчики 0-18 месяцев', 'Мальчики', 2],
+        ['Одежда для мальчиков 0-18 месяцев', 'Мальчики 0-18 месяцев', 3],
+        ['Пляжная одежда для мальчиков 0-18', 'Одежда для мальчиков 0-18 месяцев', 4, 'https://www.monnalisa.com/en-it/boy/0-18-months/clothing/beachwear/?sz=24'],
+        ['Пальто и куртки для мальчиков 0-18', 'Одежда для мальчиков 0-18 месяцев', 4, 'https://www.monnalisa.com/en-it/boy/0-18-months/clothing/coats-jackets/?sz=24'],
+        ['Штаны для мальчиков 0-18', 'Одежда для мальчиков 0-18 месяцев', 4, 'https://www.monnalisa.com/en-it/boy/0-18-months/clothing/pants/?sz=24'],
+        ['Свитеры и кардигары для мальчиков 0-18', 'Одежда для мальчиков 0-18 месяцев', 4, 'https://www.monnalisa.com/en-it/boy/0-18-months/clothing/cardigans-sweaters/?sz=24'],
+        ['Рубашки и футболки для мальчиков 0-18', 'Одежда для мальчиков 0-18 месяцев', 4, 'https://www.monnalisa.com/en-it/boy/0-18-months/clothing/t-shirts-shirts/?sz=24'],
+        
+        ['Аксессуары для мальчиков 0-18 месяцев', 'Мальчики 0-18 месяцев', 3, 'https://www.monnalisa.com/en-it/boy/0-18-months/accessories/?sz=24'],
+        ['Косметика для мальчиков 0-18 месяцев', 'Мальчики 0-18 месяцев', 3, 'https://www.monnalisa.com/en-it/boy/0-18-months/beauty-skin/'],
+        ['Обувь для мальчиков 0-18 месяцев', 'Мальчики 0-18 месяцев', 3],
+        ['Обувь для ходьбы мальчики 0-18', 'Обувь для мальчиков 0-18 месяцев', 4, 'https://www.monnalisa.com/en-it/boy/0-18-months/shoes/pre-walker-shoes/?sz=24'],
+        ['Балетки для мальчиков 0-18', 'Обувь для мальчиков 0-18 месяцев', 4, 'https://www.monnalisa.com/en-it/boy/0-18-months/shoes/ballerinas/?sz=24'],
+        ['Сандалии для мальчиков 0-18', 'Обувь для мальчиков 0-18 месяцев', 4, 'https://www.monnalisa.com/en-it/boy/0-18-months/shoes/sandals/?sz=24'],
+        ['Кросовки для мальчиков 0-18', 'Обувь для мальчиков 0-18 месяцев', 4, 'https://www.monnalisa.com/en-it/boy/0-18-months/shoes/sneakers/?sz=24'],
+        ['Сапоги для мальчиков 0-18', 'Обувь для мальчиков 0-18 месяцев', 4, 'https://www.monnalisa.com/en-it/boy/0-18-months/shoes/boots/?sz=24'],
+        
+        ['Новорожденные мальчики', 'Мальчики 0-18 месяцев', 3],
+        ['Аксессуары для новорожденых мальчиков', 'Мальчики 0-18 месяцев', 4, 'https://www.monnalisa.com/en-it/boy/0-18-months/shoes/sandals/?sz=24'],
+        ['Боди и комбинезоны для новорожденых мальчиков', 'Мальчики 0-18 месяцев', 4, 'https://www.monnalisa.com/en-it/boy/0-18-months/shoes/sandals/?sz=24'],
+        ['Постельные принадлежности для новорожденых мальчиков', 'Мальчики 0-18 месяцев', 4, 'https://www.monnalisa.com/en-it/boy/0-18-months/shoes/sandals/?sz=24'],
+        
+        #
+        ['Мальчики 2-14 лет', 'Мальчики', 2],
+        ['Одежда для мальчиков 2-14', 'Мальчики 2-12 лет', 3],
+        ['Пляжная одежда для мальчиков 2-14', 'Одежда для мальчиков 2-14', 4, 'https://www.monnalisa.com/en-it/boy/2-14-years/clothing/beachwear/?sz=24'],
+        ['Пальто и куртки для мальчиков 2-14', 'Одежда для мальчиков 2-14', 4, 'https://www.monnalisa.com/en-it/boy/2-14-years/clothing/coats-jackets/?sz=24'],
+        ['Штаны для мальчиков 2-14', 'Одежда для мальчиков 2-14', 4, 'https://www.monnalisa.com/en-it/boy/2-14-years/clothing/pants/?sz=24'],
+        ['Свитеры и кардигары для мальчиков 2-14', 'Одежда для мальчиков 2-14', 4, 'https://www.monnalisa.com/en-it/boy/2-14-years/clothing/cardigans-sweaters/?sz=24'],
+        ['Рубашки и футболки для мальчиков 2-14', 'Одежда для мальчиков 2-14', 4, 'https://www.monnalisa.com/en-it/boy/2-14-years/clothing/tops--t-shirts-shirts/?sz=24'],
+        
+        ['Аксессуары для мальчиков 2-14', 'Мальчики 2-14 лет', 3, 'https://www.monnalisa.com/en-it/boy/2-14-years/accessories/?sz=24'],
+        ['Косметика для мальчиков 2-14', 'Мальчики 2-14 лет', 3, 'https://www.monnalisa.com/en-it/boy/2-14-years/beauty-skin/'],
+        
+        ['Обувь для мальчиков 2-14', 'Мальчики 2-14 лет', 3],
+        ['Балетки для мальчиков 2-14', 'Обувь для мальчиков 2-14 лет', 4, 'https://www.monnalisa.com/en-it/boy/2-14-years/shoes/ballerinas/?sz=24'],
+        ['Сандалии для мальчиков 2-14', 'Обувь для мальчиков 2-14 лет', 4, 'https://www.monnalisa.com/en-it/boy/2-14-years/shoes/sandals/?sz=24'],
+        ['Кросовки для мальчиков 2-14', 'Обувь для мальчиков 2-14 лет', 4, 'https://www.monnalisa.com/en-it/boy/2-14-years/shoes/sneakers/?sz=24'],
+        ['Сапоги для мальчиков 2-14', 'Обувь для мальчиков 2-14 лет', 4, 'https://www.monnalisa.com/en-it/boy/2-14-years/shoes/boots/?sz=24'],
+        
+        #
+        ['Аутлет'],
+        ['Девочки', 'Аутлет', 2],
+        ['Одежда для девочек аутлет', 'Девочки', 3],
+        ['Аксессуары для девочек аутлет', 'Девочки', 3],
+        ['Обувь для девочек аутлет', 'Девочки', 3],
+        ['Новорожденные девочки аутлет', 'Девочки', 3],
+
+        ['Мальчики', 'Аутлет', 2],
+        ['Одежда для мальчиков аутлет', 'Девочки', 3],
+        ['Аксессуары для мальчиков аутлет', 'Девочки', 3],
+        ['Обувь для мальчиков аутлет', 'Девочки', 3],
+        ['Новорожденные мальчики аутлет', 'Девочки', 3],
     ]
