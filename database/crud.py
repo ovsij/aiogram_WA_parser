@@ -187,10 +187,11 @@ def create_product(
 def create_products(category : str, subcategory : str, items : list):
     # удаляем старые товары
     all_articles = [item[5] for item in items]
-    print(all_articles)
-    for product in get_product(category_id=category, subcategory_id=subcategory, sort='n'):
+    subcategory_ = SubCategory.get(name=subcategory)
+    category_ = Category.get(name=category)
+    for product in get_product(category_id=category_.id, subcategory_id=subcategory_.id, sort='n'):
         if product.article not in all_articles:
-            print('delete')
+            logging.info('delete')
             product.delete()
     # создаем новые/обновляем товары
     for item in items:

@@ -1842,7 +1842,7 @@ async def get_pleinoutlet():
     
     for subcategory in subcategories:
         if subcategory[0] != 'Туфли на высоком каблуке':
-            continue
+            continue 
         if not str(subcategory[-1]).startswith('http'):
             if len(subcategory) == 1:
                 crud.create_subcategory(name=subcategory[0], category=cat_name) if not crud.subcategory_exists(name=subcategory[0], category=cat_name) else 0
@@ -2045,12 +2045,18 @@ async def get_monnalisa():
         ['Аутлет'],
         ['Девочки', 'Аутлет', 2],
         ['Одежда для девочек аутлет', 'Девочки', 3],
+        ['Платья и комбинезоны для девочек аутлет', 'Одежда для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/clothing/dresses-jumpsuits/'],
+        ['Пляжная одежда для девочек аутлет', 'Одежда для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/clothing/beachwear/?prefn1=gender&prefv1=Girl&sz=100'],
+        ['Пальто и куртки для девочек аутлет', 'Одежда для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/clothing/coats-jackets/?prefn1=gender&prefv1=Girl&sz=24'],
+        
         ['Аксессуары для девочек аутлет', 'Девочки', 3],
         ['Обувь для девочек аутлет', 'Девочки', 3],
         ['Новорожденные девочки аутлет', 'Девочки', 3],
 
         ['Мальчики', 'Аутлет', 2],
         ['Одежда для мальчиков аутлет', 'Девочки', 3],
+        ['Пляжная одежда для мальчиков аутлет', 'Одежда для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/clothing/beachwear/?prefn1=gender&prefv1=Boy&sz=24'],
+        ['Пальто и куртки для мальчиков аутлет', 'Одежда для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/clothing/coats-jackets/?prefn1=gender&prefv1=Boy&sz=24'],
         ['Аксессуары для мальчиков аутлет', 'Девочки', 3],
         ['Обувь для мальчиков аутлет', 'Девочки', 3],
         ['Новорожденные мальчики аутлет', 'Девочки', 3],
