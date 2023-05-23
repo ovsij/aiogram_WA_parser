@@ -43,8 +43,10 @@ async def main():
         #tasks.add(task8)
         #task9 = asyncio.create_task(get_underarmour())
         #tasks.add(task9)
-        task10 = asyncio.create_task(get_pleinoutlet())
-        tasks.add(task10)
+        #task10 = asyncio.create_task(get_pleinoutlet())
+        #tasks.add(task10)
+        #task11 = asyncio.create_task(get_monnalisa())
+        #tasks.add(task11)
         
     
         L = await asyncio.gather(*tasks)
