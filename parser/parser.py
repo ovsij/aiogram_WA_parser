@@ -2133,12 +2133,12 @@ async def get_monnalisa():
                     item_soup = bs(item_webpage, 'html.parser')
 
                     print(item['title'])
-                    current_price = int((float(item_soup.find('div', 'col-12 prices pt-0 pt-lg-2 order-1 order-lg-0').find('div', 'sales extra-large').text.strip('\n').replace('€ ', '').replace(',', '')) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Monnalisa').margin}"))
+                    current_price = int((float(item_soup.find('div', 'col-12 prices pt-0 pt-lg-2 order-1 order-lg-0').find('div', 'sales extra-large').text.strip('\n').replace('€ ', '').replace(',', '.')) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Monnalisa').margin}"))
                     
                     #print([current_price])
                     description = ''
                     try:
-                        old_price = int((float(item_soup.find('div', 'col-12 prices pt-0 pt-lg-2 order-1 order-lg-0').find('span', 'value small').get('content').replace(',', '')) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Monnalisa').margin}"))
+                        old_price = int((float(item_soup.find('div', 'col-12 prices pt-0 pt-lg-2 order-1 order-lg-0').find('span', 'value small').get('content').replace(',', '.')) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Monnalisa').margin}"))
                         percent = int(100 - float(current_price) / (float(old_price) / 100))
                         description = f'\n\n<s>{old_price} руб.</s> -{percent}% {current_price} руб.'
                         
