@@ -2098,9 +2098,9 @@ async def get_monnalisa():
         ['Сапоги для мальчиков аутлет', 'Обувь для мальчиков аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/shoes/boots/?prefn1=gender&prefv1=Boy&sz=1000'],
 
         ['Новорожденные мальчики аутлет', 'Мальчики аутлет', 3],
-        ['Аксессуары для новорожденных мальчиков аутлет', 'Новорожденные мальчики аутлет', 3, 'https://www.monnalisa.com/en-it/outlet/newborn/baby-accessories/?prefn1=gender&prefv1=Boy&sz=1000'],
-        ['Боди и комбинезоны для новорожденных мальчиков аутлет', 'Новорожденные мальчики аутлет', 3, 'https://www.monnalisa.com/en-it/outlet/newborn/bodyvests--rompers-baby-sets/?prefn1=gender&prefv1=Boy&sz=1000'],
-        ['Постельное белье для новорожденных мальчиков аутлет', 'Новорожденные мальчики аутлет', 3, 'https://www.monnalisa.com/en-it/outlet/newborn/bedding/?prefn1=gender&prefv1=Boy&sz=1000'],
+        ['Аксессуары для новорожденных мальчиков аутлет', 'Новорожденные мальчики аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/newborn/baby-accessories/?prefn1=gender&prefv1=Boy&sz=1000'],
+        ['Боди и комбинезоны для новорожденных мальчиков аутлет', 'Новорожденные мальчики аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/newborn/bodyvests--rompers-baby-sets/?prefn1=gender&prefv1=Boy&sz=1000'],
+        ['Постельное белье для новорожденных мальчиков аутлет', 'Новорожденные мальчики аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/newborn/bedding/?prefn1=gender&prefv1=Boy&sz=1000'],
     ]
     for subcategory in subcategories:
         if not str(subcategory[-1]).startswith('http'):
@@ -2126,7 +2126,7 @@ async def get_monnalisa():
             print(len(items_urls))
             items = []
             euro_costs = euro_cost()
-            for item in items_urls:
+            for item in items_urls[:5]:
                 # item['url']
                 async with session.get(item['url'], ssl=False) as response:
                     item_webpage = await response.text()
@@ -2153,12 +2153,12 @@ async def get_monnalisa():
                         description += '\n\nРазмеры:\n' + sizes
                     except:
                         pass
-                    print(description)
+                    #print(description)
                     article = item['url'].split('-')[-1].strip('.html')
-                    print(article)
+                    #print(article)
 
                     image_links = [img.find('img').get('data-src') for img in item_soup.find('div', 'row gallery-container').find_all('div', 'image-container')][:]
-                    print(image_links)
+                    #print(image_links)
                     # изображения
                     if not os.path.exists(f"database/images/{cat_name}"):
                         os.mkdir(f"database/images/{cat_name}")
