@@ -2041,31 +2041,30 @@ async def get_monnalisa():
         ['Аутлет'],
         ['Девочки аутлет', 'Аутлет', 2],
         ['Одежда для девочек аутлет', 'Девочки аутлет', 3],
-        ['Платья и комбинезоны для девочек аутлет', 'Одежда для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/clothing/dresses-jumpsuits/&sz=1000'],
+        ['Платья и комбинезоны для девочек аутлет', 'Одежда для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/clothing/dresses-jumpsuits/?sz=1000'],
         ['Пляжная одежда для девочек аутлет', 'Одежда для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/clothing/beachwear/?prefn1=gender&prefv1=Girl&sz=1000'],
         ['Пальто и куртки для девочек аутлет', 'Одежда для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/clothing/coats-jackets/?prefn1=gender&prefv1=Girl&sz=1000'],
         ['Кардиганы и свитеры для девочек аутлет', 'Одежда для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/clothing/cardigans-sweaters/?prefn1=gender&prefv1=Girl&sz=1000'],
-        ['Футболки и рубашки для девочек аутлет', 'Одежда для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/clothing/tops--t-shirts-shirts/&sz=1000'],
-        ['Юбки аутлет', 'Одежда для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/clothing/skirts/&sz=1000'],
-        ['Штаны и леггинсы аутлет', 'Одежда для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/clothing/leggings-pants/&sz=1000'],
+        ['Футболки и рубашки для девочек аутлет', 'Одежда для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/clothing/tops--t-shirts-shirts/?sz=1000'],
+        ['Юбки аутлет', 'Одежда для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/clothing/skirts/?sz=1000'],
+        ['Штаны и леггинсы аутлет', 'Одежда для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/clothing/leggings-pants/?sz=1000'],
         
         ['Аксессуары для девочек аутлет', 'Девочки аутлет', 3],
-        ['Аксессуары для волос аутлет', 'Аксессуары для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/accessories/hair-accessories/&sz=1000'],
+        ['Аксессуары для волос аутлет', 'Аксессуары для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/accessories/hair-accessories/?sz=1000'],
         ['Шляпы для девочек аутлет', 'Аксессуары для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/accessories/hats/?prefn1=gender&prefv1=Girl&sz=1000'],
         ['Солнечные очки для девочек аутлет', 'Аксессуары для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/accessories/sunglasses/?prefn1=gender&prefv1=Girl&sz=1000'],
-        ['Ювелирные украшения для девочек аутлет', 'Аксессуары для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/accessories/jewelry/&sz=1000'],
-        ['Сумки и рюкзаки для девочек аутлет', 'Аксессуары для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/accessories/bags-backpacks/&sz=1000'],
+        ['Ювелирные украшения для девочек аутлет', 'Аксессуары для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/accessories/jewelry/?sz=1000'],
+        ['Сумки и рюкзаки для девочек аутлет', 'Аксессуары для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/accessories/bags-backpacks/?sz=1000'],
         ['Шарфы для девочек аутлет', 'Аксессуары для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/accessories/scarves-foulards/?prefn1=gender&prefv1=Girl&sz=1000'],
-        ['Перчатки для девочек аутлет', 'Аксессуары для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/accessories/gloves/&sz=1000'],
-        ['Фэшн для девочек аутлет', 'Аксессуары для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/accessories/fashion-extra/&sz=1000'],
-        ['Ремни для девочек аутлет', 'Аксессуары для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/accessories/belts/&sz=1000'],
-        ['Ремни для девочек аутлет', 'Аксессуары для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/accessories/belts/&sz=1000'],
+        ['Перчатки для девочек аутлет', 'Аксессуары для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/accessories/gloves/?sz=1000'],
+        ['Фэшн для девочек аутлет', 'Аксессуары для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/accessories/fashion-extra/?sz=1000'],
+        ['Ремни для девочек аутлет', 'Аксессуары для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/girl/accessories/belts/?sz=1000'],
         ['Носки для девочек аутлет', 'Аксессуары для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/accessories/socks/?prefn1=gender&prefv1=Girl&sz=1000'],
-        ['Носки и колготки для девочек аутлет', 'Аксессуары для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/accessories/socks-tights/&sz=1000'],
+        ['Носки и колготки для девочек аутлет', 'Аксессуары для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/accessories/socks-tights/?sz=1000'],
 
         ['Обувь для девочек аутлет', 'Девочки аутлет', 3],
         ['Pre-Walker shoes для девочек аутлет', 'Обувь для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/shoes/pre-walker-shoes/?prefn1=gender&prefv1=Girl&sz=1000'],
-        ['Балетки для девочек аутлет', 'Обувь для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/shoes/ballerinas/&sz=1000'],
+        ['Балетки для девочек аутлет', 'Обувь для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/girl/shoes/ballerinas/?sz=1000'],
         ['Шлепки для девочек аутлет', 'Обувь для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/shoes/slides/?prefn1=gender&prefv1=Girl&sz=1000'],
         ['Сандалии для девочек аутлет', 'Обувь для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/shoes/sandals/?prefn1=gender&prefv1=Girl&sz=1000'],
         ['Кросовки для девочек аутлет', 'Обувь для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/shoes/sneakers/?prefn1=gender&prefv1=Girl&sz=1000'],
@@ -2081,14 +2080,14 @@ async def get_monnalisa():
         ['Пляжная одежда для мальчиков аутлет', 'Одежда для мальчиков аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/clothing/beachwear/?prefn1=gender&prefv1=Boy&sz=1000'],
         ['Пальто и куртки для мальчиков аутлет', 'Одежда для мальчиков аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/clothing/coats-jackets/?prefn1=gender&prefv1=Boy&sz=1000'],
         ['Кардиганы и свитеры для мальчиков аутлет', 'Одежда для мальчиков аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/clothing/cardigans-sweaters/?prefn1=gender&prefv1=Boy&sz=1000'],
-        ['Футболки и рубашки для мальчиков аутлет', 'Одежда для мальчиков аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/clothing/t-shirts-shirts/&sz=1000'],
+        ['Футболки и рубашки для мальчиков аутлет', 'Одежда для мальчиков аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/clothing/t-shirts-shirts/?sz=1000'],
         ['Штаны аутлет', 'Одежда для мальчиков аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/clothing/pants/'],
         
         ['Аксессуары для мальчиков аутлет', 'Мальчики аутлет', 3],
         ['Шляпы для мальчиков аутлет', 'Аксессуары для мальчиков аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/accessories/hats/?prefn1=gender&prefv1=Boy&sz=1000'],
         ['Солнечные очки для мальчиков аутлет', 'Аксессуары для мальчиков аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/accessories/sunglasses/?prefn1=gender&prefv1=Boy&sz=1000'],
         ['Шарфы для мальчиков аутлет', 'Аксессуары для мальчиков аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/accessories/scarves-foulards/?prefn1=gender&prefv1=Boy&sz=1000'],
-        ['Рюкзаки для мальчиков аутлет', 'Аксессуары для мальчиков аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/accessories/backpacks/&sz=1000'],
+        ['Рюкзаки для мальчиков аутлет', 'Аксессуары для мальчиков аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/accessories/backpacks/?sz=1000'],
         ['Носки для мальчиков аутлет', 'Аксессуары для мальчиков аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/accessories/socks/?prefn1=gender&prefv1=Boy&sz=1000'],
 
         ['Обувь для мальчиков аутлет', 'Мальчики аутлет', 3],
@@ -2127,7 +2126,7 @@ async def get_monnalisa():
             print(len(items_urls))
             items = []
             euro_costs = euro_cost()
-            for item in items_urls[:1]:
+            for item in items_urls:
                 # item['url']
                 async with session.get(item['url'], ssl=False) as response:
                     item_webpage = await response.text()
