@@ -2126,7 +2126,7 @@ async def get_monnalisa():
             print(len(items_urls))
             items = []
             euro_costs = euro_cost()
-            for item in items_urls[:5]:
+            for item in items_urls:
                 # item['url']
                 async with session.get(item['url'], ssl=False) as response:
                     item_webpage = await response.text()
