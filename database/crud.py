@@ -195,10 +195,10 @@ def create_products(category : str, subcategory : str, items : list):
             logging.info('delete')
             product.delete()
     # создаем новые/обновляем товары
+    all_articles = []
     for item in items:
         try:
-            if not crud.product_exists(article=item[5]):
-                
+            if not crud.product_exists(article=item[5], subcategory=subcategory_):
                 prod = crud.create_product(
                 name=item[0],
                 category=category,
@@ -209,9 +209,10 @@ def create_products(category : str, subcategory : str, items : list):
                 image=item[3],
                 article=item[5],
                 url=item[6])
+                commit()
                 print(f'create {prod}')
             else:
-                prod = crud.get_product(article=item[5])
+                prod = crud.get_product(article=item[5], subcategory_id = subcategory_.id)
                 if not prod.deleted and not prod.edited:
                     crud.update_product(
                         product_id=prod.id,
@@ -303,11 +304,12 @@ def get_product(
                     
         return filter_products
     if article:
-        return Product.get(article=article)
+        subcategory = SubCategory[subcategory_id]
+        return Product.get(article=article, subcategory=subcategory)
 
 @db_session()     
-def product_exists(article : str):
-    return Product.exists(article=article)
+def product_exists(article : str, subcategory : SubCategory):
+    return Product.exists(subcategory = subcategory, article=article)
 
 @db_session()
 def get_products_by_category(category : int):

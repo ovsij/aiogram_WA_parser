@@ -2072,9 +2072,9 @@ async def get_monnalisa():
         ['Сапоги для девочек аутлет', 'Обувь для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/shoes/boots/?prefn1=gender&prefv1=Girl&sz=1000'],
         
         ['Новорожденные девочки аутлет', 'Девочки аутлет', 3],
-        ['Аксессуары для новорожденных девочек аутлет', 'Новорожденные девочки аутлет', 3, 'https://www.monnalisa.com/en-it/outlet/newborn/baby-accessories/?prefn1=gender&prefv1=Girl&sz=1000'],
-        ['Боди и комбинезоны для новорожденных девочек аутлет', 'Новорожденные девочки аутлет', 3, 'https://www.monnalisa.com/en-it/outlet/newborn/bodyvests--rompers-baby-sets/?prefn1=gender&prefv1=Girl&sz=1000'],
-        ['Постельное белье для новорожденных девочек аутлет', 'Новорожденные девочки аутлет', 3, 'https://www.monnalisa.com/en-it/outlet/newborn/bedding/?prefn1=gender&prefv1=Girl&sz=1000'],
+        ['Аксессуары для новорожденных девочек аутлет', 'Новорожденные девочки аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/newborn/baby-accessories/?prefn1=gender&prefv1=Girl&sz=1000'],
+        ['Боди и комбинезоны для новорожденных девочек аутлет', 'Новорожденные девочки аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/newborn/bodyvests--rompers-baby-sets/?prefn1=gender&prefv1=Girl&sz=1000'],
+        ['Постельное белье для новорожденных девочек аутлет', 'Новорожденные девочки аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/newborn/bedding/?prefn1=gender&prefv1=Girl&sz=1000'],
 
         ['Мальчики аутлет', 'Аутлет', 2],
         ['Одежда для мальчиков аутлет', 'Мальчики аутлет', 3],
@@ -2182,7 +2182,8 @@ async def get_monnalisa():
                             images +=  img_path + '\n'
                         except:
                             continue
-                    items.append([item['title'], description, current_price, images, sizes, article, item['url']])
+                    title = item['title'].replace('<br>', ' ')
+                    items.append([title, description, current_price, images, sizes, article, item['url']])
                         
         if not crud.subcategory_exists(name=subcategory[0], category=cat_name):
             parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=crud.get_category(name=cat_name).id)
