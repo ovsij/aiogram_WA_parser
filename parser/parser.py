@@ -909,6 +909,7 @@ async def get_nike_subcategory(session, url, subcategory, category):
             logging.warning(f'{category} pr - {ex}')
     return items
 
+@db_session()
 async def get_nike_outlet():
     urls = {
         'Мужская обувь': '5b21a62a-0503-400c-8336-3ccfbff2a684%2C16633190-45e5-4830-a068-232ac7aea82c%2C0f64ecc7-d624-4e91-b171-b83a03dd8550',
