@@ -1020,60 +1020,82 @@ async def get_nike():
     await bot.send_message(227184505, f'NIKE закончил парсинг')
 
 async def get_golcegabbana():
-    subcategories = {
-        'Женские платья' : 'https://dolcegabbanaprivatesales.com/collections/dresses-jumpsuits',
-        'Женские топы' : 'https://dolcegabbanaprivatesales.com/collections/top',
-        'Женские юбки' : 'https://dolcegabbanaprivatesales.com/collections/skirt',
-        'Женские брюки и шорты' : 'https://dolcegabbanaprivatesales.com/collections/pants',
-        'Женские пиджаки' : 'https://dolcegabbanaprivatesales.com/collections/jacket',
-        'Женские пальто' : 'https://dolcegabbanaprivatesales.com/collections/coat',
-        'Женские рубашки' : 'https://dolcegabbanaprivatesales.com/collections/shirts-woman',
-        'Женские джерси' : 'https://dolcegabbanaprivatesales.com/collections/jersey',
-        'Женские спортивные комтюмы' : 'https://dolcegabbanaprivatesales.com/collections/sportswear-1',
-        'Женский трикотаж' : 'https://dolcegabbanaprivatesales.com/collections/knitwear',
-        'Женские мини-сумки' : 'https://dolcegabbanaprivatesales.com/collections/mini-bags',
-        'Женские кросовки' : 'https://dolcegabbanaprivatesales.com/collections/sneakers-woman',
-        'Женские туфли' : 'https://dolcegabbanaprivatesales.com/collections/elegant-woman',
-        'Женская бижутерия' : 'https://dolcegabbanaprivatesales.com/collections/bijoux',
-        'Женские платки' : 'https://dolcegabbanaprivatesales.com/collections/foulard',
-        'Женские кожаные изделия' : 'https://dolcegabbanaprivatesales.com/collections/small-leather-goods-woman',
-        'Женские очки' : 'https://dolcegabbanaprivatesales.com/collections/eyewear-woman',
-        'Женские вязаные аксессуары' : 'https://dolcegabbanaprivatesales.com/collections/knit-accessories',
-        'Женские ремни' : 'https://dolcegabbanaprivatesales.com/collections/belts',
-        'Женские бюстгальтеры' : 'https://dolcegabbanaprivatesales.com/collections/bra',
-        'Мужские брюки и шорты' : 'https://dolcegabbanaprivatesales.com/collections/pants-man',
-        'Мужские пиджаки' : 'https://dolcegabbanaprivatesales.com/collections/jacket-1',
-        'Мужские джинсы' : 'https://dolcegabbanaprivatesales.com/collections/denim-tc',
-        'Мужской трикотаж' : 'https://dolcegabbanaprivatesales.com/collections/knitwear-1',
-        'Мужская верхняя одежда' : 'https://dolcegabbanaprivatesales.com/collections/outerwear',
-        'Мужские рубашки' : 'https://dolcegabbanaprivatesales.com/collections/shirts',
-        'Мужские джерси' : 'https://dolcegabbanaprivatesales.com/collections/jersey-man',
-        'Мужские рюкзаки' : 'https://dolcegabbanaprivatesales.com/collections/backpacks-man',
-        'Мужские тапочки' : 'https://dolcegabbanaprivatesales.com/collections/rubber',
-        'Мужские кросовки' : 'https://dolcegabbanaprivatesales.com/collections/sneakers',
-        'Мужские туфли' : 'https://dolcegabbanaprivatesales.com/collections/elegant',
-        'Мужские эспадрильи' : 'https://dolcegabbanaprivatesales.com/collections/espadrilles-woman',
-        'Мужские маленькие кожаные изделия' : 'https://dolcegabbanaprivatesales.com/collections/small-leather-goods',
-        'Мужская бижутерия' : 'https://dolcegabbanaprivatesales.com/collections/bijoux-man',
-        'Мужские текстильные аксессуары' : 'https://dolcegabbanaprivatesales.com/collections/textile-accessories',
-        'Мужские очки' : 'https://dolcegabbanaprivatesales.com/collections/eyewear',
-        'Мужские ремни' : 'https://dolcegabbanaprivatesales.com/collections/belts-1',
-        'Мужские вязанные аксессуары' : 'https://dolcegabbanaprivatesales.com/collections/knit-accessories-man',
-        'Мужские коданые изделия' : 'https://dolcegabbanaprivatesales.com/collections/leather-man',
-        'Мужские плавки' : 'https://dolcegabbanaprivatesales.com/collections/beachwear-1',
-        'Для младенцев (девоки)' : 'https://dolcegabbanaprivatesales.com/collections/app-newborn-female',
-        'Для младенцев (мальчики)' : 'https://dolcegabbanaprivatesales.com/collections/apparel-newborn-male',
-        'Для малышей (девочки)' : 'https://dolcegabbanaprivatesales.com/collections/baby-female-1',
-        'Для малышей (мальчики)' : 'https://dolcegabbanaprivatesales.com/collections/baby-male',
-        'Для детей 2-12 лет' : 'https://dolcegabbanaprivatesales.com/collections/baby-2-12-years',
-        'Для новорожденных (3-30 месяцев)' : 'https://dolcegabbanaprivatesales.com/collections/kids-apparel',
-        'Детские аксессуары' : 'https://dolcegabbanaprivatesales.com/collections/kids-accessories',
-        'Детские кожаные изделия' : 'https://dolcegabbanaprivatesales.com/collections/baby-leather',
-        'Детская обувь' : 'https://dolcegabbanaprivatesales.com/collections/baby-shoes',
-    }
-    
+    subcategories = [
+        ['Женщины'],
+        ['Женская одежда', 'Женщины', 2],
+        ['Платья женские', 'Женская одежда', 3, 'https://dolcegabbanaprivatesales.com/collections/dresses-jumpsuits'],
+        ['Топы женские', 'Женская одежда', 3, 'https://dolcegabbanaprivatesales.com/collections/top'],
+        ['Юбки женские', 'Женская одежда', 3, 'https://dolcegabbanaprivatesales.com/collections/skirt'],
+        ['Брюки и шорты женские', 'Женская одежда', 3, 'https://dolcegabbanaprivatesales.com/collections/pants'],
+        ['Пиджаки женские', 'Женская одежда', 3, 'https://dolcegabbanaprivatesales.com/collections/jacket'],
+        ['Пальто женские', 'Женская одежда', 3, 'https://dolcegabbanaprivatesales.com/collections/coat'],
+        ['Рубашки женские', 'Женская одежда', 3, 'https://dolcegabbanaprivatesales.com/collections/shirts-woman'],
+        ['Джерси женские', 'Женская одежда', 3, 'https://dolcegabbanaprivatesales.com/collections/jersey'],
+        ['Спортивные комтюмы женские', 'Женская одежда', 3, 'https://dolcegabbanaprivatesales.com/collections/sportswear-1'],
+        ['Трикотаж женский', 'Женская одежда', 3, 'https://dolcegabbanaprivatesales.com/collections/knitwear'],
+        ['Бюстгальтеры женские', 'Женская одежда', 3, 'https://dolcegabbanaprivatesales.com/collections/bra'],
 
-    for subcategory, subcat_url in subcategories.items():
+        ['Женская обувь', 'Женщины', 2],
+        ['Кросовки женские', 'Женская обувь', 3, 'https://dolcegabbanaprivatesales.com/collections/sneakers-woman'],
+        ['Туфли женские', 'Женская обувь', 3, 'https://dolcegabbanaprivatesales.com/collections/elegant-woman'],
+
+        ['Женские аксессуары', 'Женщины', 2],
+        ['Бижутерия женская', 'Женские аксессуары', 3, 'https://dolcegabbanaprivatesales.com/collections/bijoux'],
+        ['Платки женские', 'Женские аксессуары', 3, 'https://dolcegabbanaprivatesales.com/collections/foulard'],
+        ['Кожаные изделия женские', 'Женские аксессуары', 3, 'https://dolcegabbanaprivatesales.com/collections/small-leather-goods-woman'],
+        ['Очки женские', 'Женские аксессуары', 3, 'https://dolcegabbanaprivatesales.com/collections/eyewear-woman'],
+        ['Вязаные аксессуары женские', 'Женские аксессуары', 3, 'https://dolcegabbanaprivatesales.com/collections/knit-accessories'],
+        ['Ремни женские', 'Женские аксессуары', 3, 'https://dolcegabbanaprivatesales.com/collections/belts'],
+        ['Мини-сумки женские', 'Женские аксессуары', 3, 'https://dolcegabbanaprivatesales.com/collections/mini-bags'],
+        
+        ['Мужчины'],
+        ['Мужская одежда', 'Мужчины', 2],
+        ['Брюки и шорты мужские', 'Мужская одежда', 3, 'https://dolcegabbanaprivatesales.com/collections/pants-man'],
+        ['Пиджаки мужские', 'Мужская одежда', 3, 'https://dolcegabbanaprivatesales.com/collections/jacket-1'],
+        ['Джинсы мужские', 'Мужская одежда', 3, 'https://dolcegabbanaprivatesales.com/collections/denim-tc'],
+        ['Трикотаж мужской', 'Мужская одежда', 3, 'https://dolcegabbanaprivatesales.com/collections/knitwear-1'],
+        ['Верхняя одежда мужская', 'Мужская одежда', 3, 'https://dolcegabbanaprivatesales.com/collections/outerwear'],
+        ['Рубашки мужские', 'Мужская одежда', 3, 'https://dolcegabbanaprivatesales.com/collections/shirts'],
+        ['Джерси мужские', 'Мужская одежда', 3, 'https://dolcegabbanaprivatesales.com/collections/jersey-man'],
+        ['Плавки мужские', 'Мужская одежда', 3, 'https://dolcegabbanaprivatesales.com/collections/beachwear-1'],
+        
+        ['Мужская обувь', 'Мужчины', 2],
+        ['Тапочки мужские', 'Мужская обувь', 3, 'https://dolcegabbanaprivatesales.com/collections/rubber'],
+        ['Кросовки мужские', 'Мужская обувь', 3, 'https://dolcegabbanaprivatesales.com/collections/sneakers'],
+        ['Туфли мужские', 'Мужская обувь', 3, 'https://dolcegabbanaprivatesales.com/collections/elegant'],
+        ['Эспадрильи мужские', 'Мужская обувь', 3, 'https://dolcegabbanaprivatesales.com/collections/espadrilles-woman'],
+        
+        ['Мужские аксессуары', 'Мужчины', 2],
+        ['Рюкзаки мужские', 'Мужские аксессуары', 3, 'https://dolcegabbanaprivatesales.com/collections/backpacks-man'],
+        ['Маленькие кожаные изделия мужские', 'Мужские аксессуары', 3, 'https://dolcegabbanaprivatesales.com/collections/small-leather-goods'],
+        ['Бижутерия мужская', 'Мужские аксессуары', 3, 'https://dolcegabbanaprivatesales.com/collections/bijoux-man'],
+        ['Текстильные аксессуары мужские', 'Мужские аксессуары', 3, 'https://dolcegabbanaprivatesales.com/collections/textile-accessories'],
+        ['Очки мужские', 'Мужские аксессуары', 3, 'https://dolcegabbanaprivatesales.com/collections/eyewear'],
+        ['Ремни мужские', 'Мужские аксессуары', 3, 'https://dolcegabbanaprivatesales.com/collections/belts-1'],
+        ['Вязанные аксессуары мужские', 'Мужские аксессуары', 3, 'https://dolcegabbanaprivatesales.com/collections/knit-accessories-man'],
+        ['Кожаные изделия мужские', 'Мужские аксессуары', 3, 'https://dolcegabbanaprivatesales.com/collections/leather-man'],
+        
+        ['Дети'],
+        ['Для младенцев (девоки)', 'Дети', 2, 'https://dolcegabbanaprivatesales.com/collections/app-newborn-female'],
+        ['Для младенцев (мальчики)', 'Дети', 2, 'https://dolcegabbanaprivatesales.com/collections/apparel-newborn-male'],
+        ['Для малышей (девочки)', 'Дети', 2, 'https://dolcegabbanaprivatesales.com/collections/baby-female-1'],
+        ['Для малышей (мальчики)', 'Дети', 2, 'https://dolcegabbanaprivatesales.com/collections/baby-male'],
+        ['Для детей 2-12 лет', 'Дети', 2, 'https://dolcegabbanaprivatesales.com/collections/baby-2-12-years'],
+        ['Для новорожденных (3-30 месяцев)', 'Дети', 2, 'https://dolcegabbanaprivatesales.com/collections/kids-apparel'],
+        ['Детские аксессуары', 'Дети', 2, 'https://dolcegabbanaprivatesales.com/collections/kids-accessories'],
+        ['Детские кожаные изделия', 'Дети', 2, 'https://dolcegabbanaprivatesales.com/collections/baby-leather'],
+        ['Детская обувь', 'Дети', 2, 'https://dolcegabbanaprivatesales.com/collections/baby-shoes']
+    ]
+    cat_name = 'Dolce&Gabanna'
+    for subcategory in subcategories:
+        if not str(subcategory[-1]).startswith('http'):
+            if len(subcategory) == 1:
+                crud.create_subcategory(name=subcategory[0], category=cat_name) if not crud.subcategory_exists(name=subcategory[0], category=cat_name) else 0
+            else:
+                if not crud.subcategory_exists(name=subcategory[0], category=cat_name):
+                    parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=crud.get_category(name=cat_name).id)
+                    crud.create_subcategory(name=subcategory[0], category=cat_name, parent_subcategory=parent_subcategory.id, level=subcategory[2])
+            continue
         # logging
         #url = 'https://dolcegabbanaprivatesales.com/account/login/'
         #s = requests.Session()
@@ -1088,11 +1110,11 @@ async def get_golcegabbana():
         #dd = s.get('https://dolcegabbanaprivatesales.com/collections/dresses-jumpsuits')
 
 
-        logging.info(f'Starting Dolce&Gabanna: {subcategory}')
+        logging.info(f'Starting Dolce&Gabanna: {subcategory[0]}')
         async with aiohttp.ClientSession(trust_env=True) as session:
             items_urls = []
             for i in range(1, 100):
-                url = subcat_url + f'?page={i}'
+                url = subcategory[-1] + f'?page={i}'
                 async with session.get(url, ssl=False) as response:
                     webpage = await response.text()
                     #print(response.status)
@@ -1153,8 +1175,8 @@ async def get_golcegabbana():
                         if not os.path.exists(f"database/images/Dolce&Gabanna"):
                             os.mkdir(f"database/images/Dolce&Gabanna")
 
-                        if not os.path.exists(f"database/images/Dolce&Gabanna/{subcategory}"):
-                            os.mkdir(f"database/images/Dolce&Gabanna/{subcategory}")
+                        if not os.path.exists(f"database/images/Dolce&Gabanna/{subcategory[0]}"):
+                            os.mkdir(f"database/images/Dolce&Gabanna/{subcategory[0]}")
                         image_links = ['https:' + photo.find('img', {'style': "display: none;"}).get('data-src') for photo in soup.find_all('div', ['product__photo', 'product__photo media--hidden'])]
                         
                         i = items_urls.index(url) + 1
@@ -1163,7 +1185,7 @@ async def get_golcegabbana():
                         for url in image_links[:10]:
                             try:
                                 num = image_links.index(url) + 1
-                                img_path = f"database/images/Dolce&Gabanna/{subcategory}/{i}_{title.replace(' ', '_').replace('/', '_')}_{num}.png"
+                                img_path = f"database/images/Dolce&Gabanna/{subcategory[0]}/{i}_{title.replace(' ', '_').replace('/', '_')}_{num}.png"
                                 if not os.path.exists(img_path):
                                     async with session.get(url, ssl=False) as response:
                                         f = await aiofiles.open(img_path, mode='wb')
@@ -1187,57 +1209,15 @@ async def get_golcegabbana():
         #except:
         #    not_deleted_items = []
         #logging.info(items)
-        for item in items:
-            try:
-                if not crud.product_exists(article=item[5]):
-                    prod = crud.create_product(
-                    name=item[0],
-                    category='Dolce&Gabanna',
-                    subcategory=subcategory,
-                    description=item[1],
-                    sizes=item[4],
-                    price=item[2],
-                    image=item[3],
-                    article=item[5],
-                    url=item[6])
-                else:
-                    prod = crud.get_product(article=item[5])
-                    if not prod.deleted and not prod.edited:
-                        crud.update_product(
-                            product_id=prod.id,
-                            name=item[0],
-                            category='Dolce&Gabanna',
-                            description=item[1],
-                            sizes=item[4],
-                            price=item[2],
-                            image=item[3],
-                            article=item[5],
-                            url=item[6]
-                        )
-            except Exception as ex:
-                logging.warning(f'Dolce&Gabanna db - {ex}')
-        """
-        for item in items:
-            try:
-                if item[5] in not_deleted_items:
-                    continue
-                prod = crud.create_product(
-                    name=item[0],
-                    category='Dolce&Gabanna',
-                    subcategory=subcategory,
-                    description=item[1],
-                    sizes=item[4],
-                    price=item[2],
-                    image=item[3],
-                    article=item[5],
-                    url=item[6])
-                #print(prod)
-            except Exception as ex:
-                logging.warning(ex)
-        """
-        print(f'Canceled DG {subcategory} added {len(items)} products')
-        logging.info(f'Canceled DG {subcategory} added {len(items)} products') 
-    await bot.send_message(227184505, f'Dolce&Gabanna закончил парсинг')
+        if not crud.subcategory_exists(name=subcategory[0], category=cat_name):
+            parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=crud.get_category(name=cat_name).id)
+            crud.create_subcategory(name=subcategory[0], category=cat_name, parent_subcategory=parent_subcategory.id, level=subcategory[2])
+        
+        crud.create_products(category=cat_name, subcategory=subcategory[0], items=items)
+
+        logging.info(f'Canceled {cat_name} {subcategory[0]} added {len(items)} products') 
+    await bot.send_message(227184505, f'{cat_name} закончил парсинг')
+
 
 async def get_coach():
     subcategories = {
