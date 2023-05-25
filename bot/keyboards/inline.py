@@ -98,7 +98,7 @@ def inline_kb_subcategories(tg_id : str, category : int = None, subcategory : in
         text_and_data.append([emojize(':scissors: Таблица размеров', language='alias'), f'btn_sizes_{category}'])
         schema.append(1)
     
-    if tg_id in os.getenv('ADMINS') and get_category(id=category).custom:
+    if tg_id in os.getenv('ADMINS'):# and get_category(id=category).custom:
         text_and_data.append([f'Удалить категорию {category_name}', f'btn_deletecategory_{category}'])
         schema.append(1)
         text_and_data.append(['Добавить подкатегорию', f'btn_addsubcategory_{category}'])
@@ -271,7 +271,7 @@ def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : in
         back_btn
     ]
     schema = [1, 1, 1, 1, 1, 1, 1, 1, 1]
-    if tg_id in os.getenv('ADMINS'):# and get_category(id=category).custom:
+    if tg_id in os.getenv('ADMINS') and get_category(id=category).custom:
         text_and_data.insert(7, ['Добавить товар', f'btn_addproduct_{category}_{sub_category}'])
         schema.append(1)
         text_and_data.insert(8, [f'Удалить подкатегорию {get_subcategory(id=sub_category).name}', f'btn_deletesubcategory_{category}_{sub_category}'])
