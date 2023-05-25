@@ -20,6 +20,8 @@ import time
 import sys
 import urllib.request
 
+from database.db import *
+
 from database import crud
 from bot.loader import dp, bot
 
