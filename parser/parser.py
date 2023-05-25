@@ -947,7 +947,7 @@ async def get_nike_outlet():
                         article=item[5],
                         url=item[6])
                     else:
-                        prod = crud.get_product(article=item[5])
+                        prod = crud.get_product(article=item[5], subcategory_id=subcategory.id)
                         if not prod.deleted and not prod.edited:
                             crud.update_product(
                                 product_id=prod.id,
