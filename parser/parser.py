@@ -934,7 +934,8 @@ async def get_nike_outlet():
             #print(not_deleted_items)
             for item in items:
                 try:
-                    if not crud.product_exists(article=item[5]):
+                    subcategory = crud.get_subcategory(name=name, category='NIKE Outlet')
+                    if not crud.product_exists(article=item[5], subcategory=subcategory):
                         prod = crud.create_product(
                         name=item[0],
                         category='NIKE Outlet',
