@@ -49,8 +49,8 @@ class Cart(db.Entity):
 class Product(db.Entity):
     id = PrimaryKey(int, auto=True)
     name = Optional(str)
-    category = Optional('Category')
-    subcategory = Optional('SubCategory')
+    category = Required('Category')
+    subcategory = Required('SubCategory')
     description = Optional(str, nullable=True)
     sizes = Optional(str, nullable=True)
     price = Optional(int)
