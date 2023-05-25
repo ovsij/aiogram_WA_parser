@@ -903,6 +903,7 @@ async def get_nike_subcategory(session, url, subcategory, category):
                     continue
             if len(images) < 1:
                 continue
+            print(item_url)
             items.append([name, description, price, images, prod['colorDescription'], list_sizes, article, item_url])
         except Exception as ex:
             logging.warning(f'{category} pr - {ex}')
@@ -2126,7 +2127,7 @@ async def get_monnalisa():
             print(len(items_urls))
             items = []
             euro_costs = euro_cost()
-            for item in items_urls:
+            for item in items_urls[:5]:
                 # item['url']
                 async with session.get(item['url'], ssl=False) as response:
                     item_webpage = await response.text()
