@@ -31,8 +31,8 @@ async def main():
         #tasks.add(task2)
         #task3 = asyncio.create_task(get_nike())
         #tasks.add(task3)
-        #task4 = asyncio.create_task(get_nike_outlet())
-        #tasks.add(task4)
+        task4 = asyncio.create_task(get_nike_outlet())
+        tasks.add(task4)
         #task5 = asyncio.create_task(get_golcegabbana())
         #tasks.add(task5)
         #task6 = asyncio.create_task(get_coach())
@@ -45,8 +45,8 @@ async def main():
         #tasks.add(task9)
         #task10 = asyncio.create_task(get_pleinoutlet())
         #tasks.add(task10)
-        task11 = asyncio.create_task(get_monnalisa())
-        tasks.add(task11)
+        #task11 = asyncio.create_task(get_monnalisa())
+        #tasks.add(task11)
         
     
         L = await asyncio.gather(*tasks)
