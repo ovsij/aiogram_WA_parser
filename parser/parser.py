@@ -1434,7 +1434,7 @@ async def get_coach():
                         break
             products = []
             euro_costs = euro_cost()
-            for item in items[:3]:
+            for item in items:
                 try:
                     await asyncio.sleep(2)
                     for color_item in item['colors']:
