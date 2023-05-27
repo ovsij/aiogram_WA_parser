@@ -197,10 +197,10 @@ def create_products(category : str, subcategory : str, items : list):
             product.delete()
         else:
             all_images += product.image.split('\n')
+            
     for root, dirs, files in os.walk(f"database/images/{category}/{subcategory}/"):
         for filename in files:
             if f"database/images/{category}/{subcategory}/{filename}" not in all_images:
-                print(filename)
                 os.remove(f"database/images/{category}/{subcategory}/{filename}")
     # создаем новые/обновляем товары
     all_articles = []
@@ -218,7 +218,7 @@ def create_products(category : str, subcategory : str, items : list):
                 article=item[5],
                 url=item[6])
                 commit()
-                print(f'create {prod}')
+                #print(f'create {prod}')
             else:
                 prod = crud.get_product(article=item[5], subcategory_id = subcategory_.id)
                 if not prod.deleted and not prod.edited:
@@ -233,8 +233,7 @@ def create_products(category : str, subcategory : str, items : list):
                         url=item[6]
                     )
                     commit()
-                    print(f'update {prod}')
-
+                    #print(f'update {prod}')
         except Exception as ex:
             logging.warning(f'{category} db - {ex}')
 

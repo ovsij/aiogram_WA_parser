@@ -914,94 +914,93 @@ async def get_nike_subcategory(session, url, subcategory, category):
 
 
 
-@db_session()
+#@db_session()
 async def get_nike():
     subcategories = [
         ['Мужчины'],
         ['Обувь мужская', 'Мужчины', 2],
-        ['Повседневная обувь мужская', 'Обувь мужская', 3, '498ac76f-4c2c-4b55-bbdc-dd37011887b1%2C16633190-45e5-4830-a068-232ac7aea82c%2C0f64ecc7-d624-4e91-b171-b83a03dd8550'],#193af413-39b0-4d7e-ae34-558821381d3f%2C16633190-45e5-4830-a068-232ac7aea82c%2C0f64ecc7-d624-4e91-b171-b83a03dd8550
-        #['Джордан кросовки мужские', 'Обувь мужская', 3, '498ac76f-4c2c-4b55-bbdc-dd37011887b1%2C16633190-45e5-4830-a068-232ac7aea82c%2C0f64ecc7-d624-4e91-b171-b83a03dd8550'],
-        ['Беговые кросовки мужские', 'Обувь мужская', 3, '498ac76f-4c2c-4b55-bbdc-dd37011887b1%2C16633190-45e5-4830-a068-232ac7aea82c%2C0f64ecc7-d624-4e91-b171-b83a03dd8550'],
-        ['Футбольные бутсы мужские', 'Обувь мужская', 3, ''],
-        ['Баскетбольные кросовки мужские', 'Обувь мужская', 3, ''],
-        ['Для фитнеса кросовки мужские', 'Обувь мужская', 3, ''],
-        ['Для скейтбординга кросовки мужские', 'Обувь мужская', 3, ''],
-        ['Персонализированные кросовки мужские', 'Обувь мужская', 3, ''],
+        ['Повседневная обувь мужская', 'Обувь мужская', 3, '193af413-39b0-4d7e-ae34-558821381d3f%2C16633190-45e5-4830-a068-232ac7aea82c%2C0f64ecc7-d624-4e91-b171-b83a03dd8550'],
+        ['Jordan кросовки мужские', 'Обувь мужская', 3, '498ac76f-4c2c-4b55-bbdc-dd37011887b1%2C16633190-45e5-4830-a068-232ac7aea82c%2C0f64ecc7-d624-4e91-b171-b83a03dd8550'],
+        ['Беговые кросовки мужские', 'Обувь мужская', 3, '49db2f3e-c999-48c2-b5b4-9296635ae75e%2C16633190-45e5-4830-a068-232ac7aea82c%2C0f64ecc7-d624-4e91-b171-b83a03dd8550'],
+        ['Футбольные бутсы мужские', 'Обувь мужская', 3, '219e4fa3-73ef-427b-8f93-9d8f51b93443%2C16633190-45e5-4830-a068-232ac7aea82c%2C0f64ecc7-d624-4e91-b171-b83a03dd8550'],
+        ['Баскетбольные кросовки мужские', 'Обувь мужская', 3, '4f918ac7-2598-4b21-a46f-99c2db422867%2C16633190-45e5-4830-a068-232ac7aea82c%2C0f64ecc7-d624-4e91-b171-b83a03dd8550'],
+        ['Для фитнеса кросовки мужские', 'Обувь мужская', 3, '16633190-45e5-4830-a068-232ac7aea82c%2C7817e756-7721-4cfb-b404-04df79c685e4%2C0f64ecc7-d624-4e91-b171-b83a03dd8550'],
+        ['Для скейтбординга кросовки мужские', 'Обувь мужская', 3, 'https://www.nike.com/it/w/uomo-skateboard-scarpe-8mfrfznik1zy7ok'],
+        #['Персонализированные кросовки мужские', 'Обувь мужская', 3, '16633190-45e5-4830-a068-232ac7aea82c%2C92be6a0f-24dd-4e2e-87d0-5ce4ade3a923%2C0f64ecc7-d624-4e91-b171-b83a03dd8550'],
         ['Одежда мужская', 'Мужчины', 2],
-        ['Свитера и футболки мужские', 'Одежда мужская', 3, ''],
-        ['Толстовки мужские', 'Одежда мужская', 3, ''],
-        ['Шорты мужские', 'Одежда мужская', 3, ''],
-        ['Брюки и колготки мужские', 'Одежда мужская', 3, ''],
-        ['Комбинезоны мужские', 'Одежда мужская', 3, ''],
-        ['Ветровки мужские', 'Одежда мужская', 3, ''],
-        ['Форма мужская', 'Одежда мужская', 3, ''],
+        ['Свитера и футболки мужские', 'Одежда мужская', 3, 'de314d73-b9c5-4b15-93dd-0bef5257d3b4%2C0f64ecc7-d624-4e91-b171-b83a03dd8550'],
+        ['Толстовки мужские', 'Одежда мужская', 3, '9b674c8e-25c9-45c3-8635-c284c07d3d17%2C0f64ecc7-d624-4e91-b171-b83a03dd8550'],
+        ['Шорты мужские', 'Одежда мужская', 3, '4a388e98-5844-4fe7-8ed3-a2e6ee5e4333%2C0f64ecc7-d624-4e91-b171-b83a03dd8550'],
+        ['Брюки мужские', 'Одежда мужская', 3, '3b5dd430-2183-4019-97cb-5bd8735f10bf%2C0f64ecc7-d624-4e91-b171-b83a03dd8550'],
+        ['Спортивные костюмы мужские', 'Одежда мужская', 3, '2507cbc4-f51f-4df9-97f7-3c44b6616b0f%2C0f64ecc7-d624-4e91-b171-b83a03dd8550'],
+        ['Ветровки мужские', 'Одежда мужская', 3, '72ff5f48-1b58-4042-8d72-f8a1c057ee06%2C0f64ecc7-d624-4e91-b171-b83a03dd8550'],
+        ['Форма мужская', 'Одежда мужская', 3, '4b4f96dd-146c-4c8b-9b95-3d0b7c453387%2C0f64ecc7-d624-4e91-b171-b83a03dd8550'],
         ['Аксессуары мужские', 'Мужчины', 2],
-        ['Сумки и рюкзаки мужские', 'Аксессуары мужские', 3, ''],
-        ['Носки мужские', 'Аксессуары мужские', 3, ''],
+        ['Сумки и рюкзаки мужские', 'Аксессуары мужские', 3, 'e44edc49-f647-4594-a604-dd024d34bec1%2C0f64ecc7-d624-4e91-b171-b83a03dd8550'],
+        ['Носки мужские', 'Аксессуары мужские', 3, 'aff7f99d-b113-4fd1-8189-306dfb1aae50%2C0f64ecc7-d624-4e91-b171-b83a03dd8550'],
         
         ['Женщины'],
         ['Обувь женская', 'Женщины', 2],
-        ['Повседневная обувь женская', 'Обувь женская', 3, ''],
-        ['Jordan кросовки женские', 'Обувь женская', 3, ''],
-        ['Беговые кросовки женские', 'Обувь женская', 3, ''],
-        ['Для фитнеса кросовки женские', 'Обувь женская', 3, ''],
-        ['Персонализированные кросовки женские', 'Обувь женская', 3, ''],
-        ['Одежда женская', 'Женщины', 2, ''],
-        ['Свитера и футболки женские', 'Одежда женская', 3, ''],
-        ['Толстовки женские', 'Одежда женская', 3, ''],
-        ['Леггинцы женские', 'Одежда женская', 3, ''],
-        ['Шорты женские', 'Одежда женская', 3, ''],
-        ['Штаны женские', 'Одежда женская', 3, ''],
-        ['Спортивные костюмы женские', 'Одежда женская', 3, ''],
-        ['Ветровки женские', 'Одежда женская', 3, ''],
-        ['Бюстгальтеры женские', 'Одежда женская', 3, ''],
-        ['Юбки и патья женские', 'Одежда женская', 3, ''],
-        ['Купальники женские', 'Одежда женская', 3, ''],
-        ['Аксессуары женские', 'Женщины', 2, ''],
-        ['Рюкзаки и сумки женские', 'Аксессуары женские', 3, ''],
-        ['Носки женские', 'Аксессуары женские', 3, ''],
+        ['Повседневная обувь женская', 'Обувь женская', 3, '193af413-39b0-4d7e-ae34-558821381d3f%2C16633190-45e5-4830-a068-232ac7aea82c%2C7baf216c-acc6-4452-9e07-39c2ca77ba32'],
+        ['Jordan кросовки женские', 'Обувь женская', 3, '498ac76f-4c2c-4b55-bbdc-dd37011887b1%2C16633190-45e5-4830-a068-232ac7aea82c%2C0f64ecc7-d624-4e91-b171-b83a03dd8550'],
+        ['Беговые кросовки женские', 'Обувь женская', 3, '49db2f3e-c999-48c2-b5b4-9296635ae75e%2C16633190-45e5-4830-a068-232ac7aea82c%2C7baf216c-acc6-4452-9e07-39c2ca77ba32'],
+        ['Для фитнеса кросовки женские', 'Обувь женская', 3, '16633190-45e5-4830-a068-232ac7aea82c%2C7817e756-7721-4cfb-b404-04df79c685e4%2C7baf216c-acc6-4452-9e07-39c2ca77ba32'],
+        #['Персонализированные кросовки женские', 'Обувь женская', 3, '16633190-45e5-4830-a068-232ac7aea82c%2C92be6a0f-24dd-4e2e-87d0-5ce4ade3a923%2C7baf216c-acc6-4452-9e07-39c2ca77ba32'],
+        ['Одежда женская', 'Женщины', 2],
+        ['Свитера и футболки женские', 'Одежда женская', 3, 'de314d73-b9c5-4b15-93dd-0bef5257d3b4%2C7baf216c-acc6-4452-9e07-39c2ca77ba32'],
+        ['Толстовки женские', 'Одежда женская', 3, '9b674c8e-25c9-45c3-8635-c284c07d3d17%2C7baf216c-acc6-4452-9e07-39c2ca77ba32'],
+        ['Леггинцы женские', 'Одежда женская', 3, '34374691-44fa-4fb7-a8d2-6ac5764eed1b%2C7baf216c-acc6-4452-9e07-39c2ca77ba32)'],
+        ['Шорты женские', 'Одежда женская', 3, '4a388e98-5844-4fe7-8ed3-a2e6ee5e4333%2C7baf216c-acc6-4452-9e07-39c2ca77ba32'],
+        ['Брюки женские', 'Одежда женская', 3, '3b5dd430-2183-4019-97cb-5bd8735f10bf%2C7baf216c-acc6-4452-9e07-39c2ca77ba32'],
+        ['Спортивные костюмы женские', 'Одежда женская', 3, '3c1b1cc3-bb3f-4f2a-8ada-2724d2f7ad9d%2C7baf216c-acc6-4452-9e07-39c2ca77ba32'],
+        ['Ветровки женские', 'Одежда женская', 3, '72ff5f48-1b58-4042-8d72-f8a1c057ee06%2C7baf216c-acc6-4452-9e07-39c2ca77ba32'],
+        ['Бюстгальтеры женские', 'Одежда женская', 3, '5c15f4bd-dc38-4ec7-85a5-5ace48b5c335%2C7baf216c-acc6-4452-9e07-39c2ca77ba32'],
+        ['Юбки и патья женские', 'Одежда женская', 3, 'cd7ee063-a9d4-43ea-a126-ef74582fdb7f%2C7baf216c-acc6-4452-9e07-39c2ca77ba32'],
+        ['Купальники женские', 'Одежда женская', 3, 'https://www.nike.com/it/w/donna-costumi-e-accessori-da-mare-5e1x6zq3un'],
+        ['Аксессуары женские', 'Женщины', 2],
+        ['Рюкзаки и сумки женские', 'Аксессуары женские', 3, 'e44edc49-f647-4594-a604-dd024d34bec1%2C7baf216c-acc6-4452-9e07-39c2ca77ba32'],
+        ['Носки женские', 'Аксессуары женские', 3, 'aff7f99d-b113-4fd1-8189-306dfb1aae50%2C7baf216c-acc6-4452-9e07-39c2ca77ba32'],
         
         ['Дети'],
         ['Обувь детская', 'Дети', 2],
-        ['Повседневная обувь детская', 'Обувь детская', 3, ''],
-        ['Кросовки Jordan детские', 'Обувь детская', 3, ''],
-        ['Футбольные бутсы детские', 'Обувь детская', 3, ''],
-        ['Беговые кросовки детские', 'Обувь детская', 3, ''],
-        ['Баскетбольные кросовки детские', 'Обувь детская', 3, ''],
+        ['Повседневная обувь детская', 'Обувь детская', 3, '193af413-39b0-4d7e-ae34-558821381d3f%2C16633190-45e5-4830-a068-232ac7aea82c%2C145ce13c-5740-49bd-b2fd-0f67214765b3)'],
+        ['Кросовки Jordan детские', 'Обувь детская', 3, '498ac76f-4c2c-4b55-bbdc-dd37011887b1%2C16633190-45e5-4830-a068-232ac7aea82c%2C145ce13c-5740-49bd-b2fd-0f67214765b3'],
+        ['Футбольные бутсы детские', 'Обувь детская', 3, '219e4fa3-73ef-427b-8f93-9d8f51b93443%2C16633190-45e5-4830-a068-232ac7aea82c%2C145ce13c-5740-49bd-b2fd-0f67214765b3'],
+        ['Беговые кросовки детские', 'Обувь детская', 3, '49db2f3e-c999-48c2-b5b4-9296635ae75e%2C16633190-45e5-4830-a068-232ac7aea82c%2C145ce13c-5740-49bd-b2fd-0f67214765b3'],
+        ['Баскетбольные кросовки детские', 'Обувь детская', 3, 'https://www.nike.com/it/w/bambini-basket-scarpe-3glsmzv4dhzy7ok'],
         ['Одежда детская', 'Дети', 2],
-        ['Свитера и футболки детские', 'Одежда детская', 3, ''],
-        ['Толстовки детские', 'Одежда детская', 3, ''],
-        ['Комбинезоны детские', 'Одежда детская', 3, ''],
-        ['Шорты детские', 'Одежда детская', 3, ''],
-        ['Спортивная одежда детская', 'Одежда детская', 3, ''],
-        ['Брюки и леггинцы детские', 'Одежда детская', 3, ''],
-        ['Куртки детские', 'Одежда детская', 3, ''],
-        ['Форма детская', 'Одежда детская', 3, ''],
-        ['Бюстгальтеры детские', 'Одежда детская', 3, ''],
-        ['Юбки и платья детские', 'Одежда детская', 3, ''],
+        ['Свитера и футболки детские', 'Одежда детская', 3, 'de314d73-b9c5-4b15-93dd-0bef5257d3b4%2C145ce13c-5740-49bd-b2fd-0f67214765b3'],
+        ['Толстовки детские', 'Одежда детская', 3, '145ce13c-5740-49bd-b2fd-0f67214765b3%2C9b674c8e-25c9-45c3-8635-c284c07d3d17'],
+        ['Спортивные костюмы детские', 'Одежда детская', 3, '2507cbc4-f51f-4df9-97f7-3c44b6616b0f%2C145ce13c-5740-49bd-b2fd-0f67214765b3'],
+        ['Шорты детские', 'Одежда детская', 3, '4a388e98-5844-4fe7-8ed3-a2e6ee5e4333%2C145ce13c-5740-49bd-b2fd-0f67214765b3'],
+        ['Брюки и леггинцы детские', 'Одежда детская', 3, '3b5dd430-2183-4019-97cb-5bd8735f10bf%2C145ce13c-5740-49bd-b2fd-0f67214765b3'],
+        ['Куртки детские', 'Одежда детская', 3, '72ff5f48-1b58-4042-8d72-f8a1c057ee06%2C145ce13c-5740-49bd-b2fd-0f67214765b3'],
+        ['Форма детская', 'Одежда детская', 3, '4b4f96dd-146c-4c8b-9b95-3d0b7c453387%2C145ce13c-5740-49bd-b2fd-0f67214765b3'],
+        ['Бюстгальтеры детские', 'Одежда детская', 3, 'https://www.nike.com/it/w/bambina-reggiseni-sportivi-3aqegz40qgm'],
+        ['Юбки и платья детские', 'Одежда детская', 3, 'https://www.nike.com/it/w/bambini-gonne-abiti-8y3qpzv4dh'],
         ['Аскессуары детские', 'Дети', 2],
-        ['Рюкзаки и сумки детские', 'Аскессуары детские', 3, ''],
-        ['Носки детские', 'Аскессуары детские', 3, ''],
+        ['Рюкзаки и сумки детские', 'Аскессуары детские', 3, 'https://www.nike.com/it/w/bambini-borse-zaini-9xy71zv4dh'],
+        ['Головные уборы детские', 'Аскессуары детские', 3, 'https://www.nike.com/it/w/bambini-cappelli-berretti-52r49zv4dh'],
 
         ###
         ['Аутлет'],
         ['Мужчины аутлет', 'Аутлет', 2],
-        ['Обувь мужская аутлет', 'Мужчины аутлет', 3, ''],        
-        ['Одежда мужская аутлет', 'Мужчины аутлет', 3, ''],
-        ['Аксессуары мужские аутлет', 'Мужчины аутлет', 3, ''],
+        ['Обувь мужская аутлет', 'Мужчины аутлет', 3, '5b21a62a-0503-400c-8336-3ccfbff2a684%2C16633190-45e5-4830-a068-232ac7aea82c%2C0f64ecc7-d624-4e91-b171-b83a03dd8550'],        
+        ['Одежда мужская аутлет', 'Мужчины аутлет', 3, '5b21a62a-0503-400c-8336-3ccfbff2a684%2Ca00f0bb2-648b-4853-9559-4cd943b7d6c6%2C0f64ecc7-d624-4e91-b171-b83a03dd8550'],
+        ['Аксессуары мужские аутлет', 'Мужчины аутлет', 3, 'fa863563-4508-416d-bae9-a53188c04937%2C5b21a62a-0503-400c-8336-3ccfbff2a684%2C0f64ecc7-d624-4e91-b171-b83a03dd8550'],
 
-        ['Женщины аутлет'],
-        ['Обувь женская аутлет', 'Женщины аутлет', 3, ''],
-        ['Одежда женская аутлет', 'Женщины аутлет', 3, ''],
-        ['Аксессуары женские аутлет', 'Женщины аутлет', 3, ''],
+        ['Женщины аутлет', 'Аутлет', 2],
+        ['Обувь женская аутлет', 'Женщины аутлет', 3, '5b21a62a-0503-400c-8336-3ccfbff2a684%2C16633190-45e5-4830-a068-232ac7aea82c%2C7baf216c-acc6-4452-9e07-39c2ca77ba32'],
+        ['Одежда женская аутлет', 'Женщины аутлет', 3, '5b21a62a-0503-400c-8336-3ccfbff2a684%2Ca00f0bb2-648b-4853-9559-4cd943b7d6c6%2C7baf216c-acc6-4452-9e07-39c2ca77ba32'],
+        ['Аксессуары женские аутлет', 'Женщины аутлет', 3, 'fa863563-4508-416d-bae9-a53188c04937%2C5b21a62a-0503-400c-8336-3ccfbff2a684%2C7baf216c-acc6-4452-9e07-39c2ca77ba32'],
 
-        ['Дети аутлет'], 
-        ['Обувь детская аутлет', 'Дети аутлет', 3, ''],
-        ['Одежда детская аутлет', 'Дети аутлет', 3, ''],
-        ['Аскессуары детские аутлет', 'Дети аутлет', 3, ''],
+        ['Дети аутлет', 'Аутлет', 2], 
+        ['Обувь детская аутлет', 'Дети аутлет', 3, '5b21a62a-0503-400c-8336-3ccfbff2a684%2C16633190-45e5-4830-a068-232ac7aea82c%2C145ce13c-5740-49bd-b2fd-0f67214765b3'],
+        ['Одежда детская аутлет', 'Дети аутлет', 3, '5b21a62a-0503-400c-8336-3ccfbff2a684%2C145ce13c-5740-49bd-b2fd-0f67214765b3%2Ca00f0bb2-648b-4853-9559-4cd943b7d6c6'],
+        ['Аскессуары детские аутлет', 'Дети аутлет', 3, 'https://www.nike.com/it/w/bambini-outlet-3yaepzv4dh'],
     ]
     cat_name = 'NIKE'
-    for subcategory in subcategories[:5]:
+    for subcategory in subcategories:
         if len(subcategory) == 1:
             s = crud.create_subcategory(name=subcategory[0], category=cat_name) if not crud.subcategory_exists(name=subcategory[0], category=cat_name) else 0
             continue
@@ -1010,26 +1009,53 @@ async def get_nike():
                 parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=crud.get_category(name=cat_name).id)
                 crud.create_subcategory(name=subcategory[0], category=cat_name, parent_subcategory=parent_subcategory.id, level=subcategory[2])
             continue
-        
-        
+
         logging.info(f'Starting NIKE: {subcategory[0]}')
         async with aiohttp.ClientSession(trust_env=True) as session:
-            main_url = 'https://api.nike.com/cic/browse/v2?queryid=products&country=it&endpoint=%2Fproduct_feed%2Frollup_threads%2Fv2%3Ffilter%3Dmarketplace(IT)%26filter%3Dlanguage(it)%26filter%3DemployeePrice(true)%26filter%3DattributeIds({})%26anchor%3D{}%26consumerChannelId%3Dd9a5bc42-4b9c-4976-858a-f159cf99c647%26count%3D{}&language=en&localizedRangeStr=%7BlowestPrice%7D-%7BhighestPrice%7D'
-            products = []
-            for i in [60 * i for i in range(0, 20)]:
-                #try:
-                headers = {'User-Agent': 'Mozilla/5.0'}
-                async with session.get(main_url.format(subcategory[-1], i, 60), headers=headers, ssl=False) as response:
-                    webpage = await response.json()
-                    print('ok')
-                    prod = webpage['data']['products']['products']
-                    products += [{'title' : p['title'], 'url': p['url'].replace('{countryLang}', 'it'), 'curprice': p['price']['currentPrice'], 'fullPrice': p['price']['fullPrice'], 'colorDescription': p['colorDescription']} for p in prod]
-                #except:
-                #    break
-            
+            if subcategory[-1].startswith('http'):
+                async with session.get(subcategory[-1], ssl=False) as response:
+                    webpage = await response.text()
+                    soup = bs(webpage, 'html.parser')
+                    items = [item.find('figure').find('a').get('href') for item in soup.find_all('div', 'product-card__body')]
+                    products = []
+                    for item in items:
+                        dct = {}
+                        headers = {'User-Agent': 'Mozilla/5.0'}
+                        prod_url = f'https://api.nike.com/product_feed/threads/v2?filter=language(it)&filter=marketplace(IT)&filter=channelId(d9a5bc42-4b9c-4976-858a-f159cf99c647)&filter=productInfo.merchProduct.styleColor({item.split("/")[-1]})'
+                        async with session.get(prod_url, headers=headers, ssl=False) as response:
+                            item_webpage = await response.json()
+                            color = ''
+                            for c in [color['name'] for color in item_webpage['objects'][0]['productInfo'][0]['productContent']['colors']]:
+                                color += c + ' / '
+                            color = color.rstrip(' / ')
+                            description = f"Color: {color}\n\n"
+                            fullPrice = item_webpage['objects'][0]['productInfo'][0]['merchPrice']['fullPrice']
+                            currentPrice = item_webpage['objects'][0]['productInfo'][0]['merchPrice']['currentPrice']
+                            dct['title'] = item_webpage['objects'][0]['productInfo'][0]['productContent']['fullTitle']
+                            if dct['title'] == 'Gift card Nike':
+                                continue
+                            dct['url'] = item
+                            dct['curprice'] = currentPrice
+                            dct['fullPrice'] = fullPrice
+                            dct['colorDescription'] = color
+                            products.append(dct)
+        
+            else:
+                main_url = 'https://api.nike.com/cic/browse/v2?queryid=products&country=it&endpoint=%2Fproduct_feed%2Frollup_threads%2Fv2%3Ffilter%3Dmarketplace(IT)%26filter%3Dlanguage(it)%26filter%3DemployeePrice(true)%26filter%3DattributeIds({})%26anchor%3D{}%26consumerChannelId%3Dd9a5bc42-4b9c-4976-858a-f159cf99c647%26count%3D{}&language=en&localizedRangeStr=%7BlowestPrice%7D-%7BhighestPrice%7D'
+                products = []
+                for i in [60 * i for i in range(0, 20)]:
+                    try:
+                        headers = {'User-Agent': 'Mozilla/5.0'}
+                        async with session.get(main_url.format(subcategory[-1], i, 60), headers=headers, ssl=False) as response:
+                            webpage = await response.json()
+                            prod = webpage['data']['products']['products']
+                            products += [{'title' : p['title'], 'url': p['url'].replace('{countryLang}', 'it'), 'curprice': p['price']['currentPrice'], 'fullPrice': p['price']['fullPrice'], 'colorDescription': p['colorDescription']} for p in prod]
+                    except:
+                        break
+                
             items = []  
             euro_costs = euro_cost()
-            for prod in products[:5]:
+            for prod in products:
                 try:
                     #await asyncio.sleep(2)
                     item_url = 'https://www.nike.com/' + prod['url']
@@ -1037,19 +1063,16 @@ async def get_nike():
                     
                     prod_url = f'https://api.nike.com/product_feed/threads/v2?filter=language(it)&filter=marketplace(IT)&filter=channelId(d9a5bc42-4b9c-4976-858a-f159cf99c647)&filter=productInfo.merchProduct.styleColor({prod["url"].split("/")[-1]})'
                     headers = {'User-Agent': 'Mozilla/5.0'}
-                    print(prod_url)
                     async with session.get(prod_url, headers=headers, ssl=False) as response:
                         item_webpage = await response.json()
                         
-                    print('ok2')
                     # название товара
                     name = prod['title']
-                    print(name)
+                    #print(name)
                     # артикул
                     article = prod['url'].split('/')[-1]
                     # цена  
                     price = int((prod['curprice'] * (euro_costs + 1)) * float(f"1.{crud.get_category(name=cat_name).margin}")) if prod['curprice'] else None
-                    print(price)
                     # описание
                     fullPrice = int((prod['fullPrice'] * (euro_costs + 1)) * float(f"1.{crud.get_category(name=cat_name).margin}")) if prod['fullPrice'] else None
                     percent = int(100 - (price/fullPrice * 100))
@@ -1058,22 +1081,25 @@ async def get_nike():
                         description += f'<s>{fullPrice} руб.</s> -{percent}% {price} руб. \n\n'
 
                     # размеры
-                    skus = item_webpage['objects'][0]['productInfo'][0]['skus']
-                    availableSkus = {}
-                    for av_sky in item_webpage['objects'][0]['productInfo'][0]['availableSkus']:
-                        availableSkus[av_sky['id']] = av_sky['available']
-                    sizes = 'Sizes: \n'
-                    list_sizes = ''
-                    for sku in skus:
-                        if availableSkus[sku['id']]:
-                            sizes += f'<b>{sku["countrySpecifications"][0]["localizedSize"]}</b> '
-                            list_sizes += sku["countrySpecifications"][0]["localizedSize"] + ', '
-                        else:
-                            sizes += f'<s>{sku["countrySpecifications"][0]["localizedSize"]}</s> '
-                    list_sizes = list_sizes.strip(', ')
-                    if 'TAGLIA UNICA' in sizes:
-                        sizes = 'Sizes: ONE SIZE\n'
-                    description += sizes
+                    try:
+                        skus = item_webpage['objects'][0]['productInfo'][0]['skus']
+                        availableSkus = {}
+                        for av_sky in item_webpage['objects'][0]['productInfo'][0]['availableSkus']:
+                            availableSkus[av_sky['id']] = av_sky['available']
+                        sizes = 'Sizes: \n'
+                        list_sizes = ''
+                        for sku in skus:
+                            if availableSkus[sku['id']]:
+                                sizes += f'<b>{sku["countrySpecifications"][0]["localizedSize"]}</b> '
+                                list_sizes += sku["countrySpecifications"][0]["localizedSize"] + ', '
+                            else:
+                                sizes += f'<s>{sku["countrySpecifications"][0]["localizedSize"]}</s> '
+                        list_sizes = list_sizes.strip(', ')
+                        if 'TAGLIA UNICA' in sizes:
+                            sizes = 'Sizes: ONE SIZE\n'
+                        description += sizes
+                    except:
+                        pass
                     
                     image_links = [image_func(image) for image in item_webpage['objects'][0]['publishedContent']['nodes'][0]['nodes']]
                     # изображения
@@ -1089,8 +1115,8 @@ async def get_nike():
                     i = products.index(prod) + 1
                     images = ''
                     #print(image_links)
-                    print('ok')
                     for url in image_links[:10]:
+                        #print(url)
                         try:
                             num = image_links.index(url) + 1
                             img_path = f"database/images/{cat_name}/{subcategory[0]}/{i}_{name.replace(' ', '_').replace('/', '_')}_{num}.png"
@@ -1107,17 +1133,18 @@ async def get_nike():
                             continue
                     if len(images) < 1:
                         continue
-                    items.append([name, description, price, images, prod['colorDescription'], list_sizes, article, item_url])
+                    items.append([name, description, price, images, list_sizes, article, item_url])
                 except Exception as ex:
                     logging.warning(f'{cat_name} pr - {ex}')
-        #if not crud.subcategory_exists(name=subcategory[0], category=cat_name):
-        #    parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=crud.get_category(name=cat_name).id)
-        #    crud.create_subcategory(name=subcategory[0], category=cat_name, parent_subcategory=parent_subcategory.id, level=subcategory[2])
         
-        #crud.create_products(category=cat_name, subcategory=subcategory[0], items=items)
-        logging.info(f'Canceled NIKE {subcategory[0]} added {len(items)} products')
+        if not crud.subcategory_exists(name=subcategory[0], category=cat_name):
+            parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=crud.get_category(name=cat_name).id)
+            crud.create_subcategory(name=subcategory[0], category=cat_name, parent_subcategory=parent_subcategory.id, level=subcategory[2])
+        
+        crud.create_products(category=cat_name, subcategory=subcategory[0], items=items)
+        logging.info(f'Canceled {cat_name} {subcategory[0]} added {len(items)} products')
 
-    await bot.send_message(227184505, f'NIKE закончил парсинг')
+    await bot.send_message(227184505, f'{cat_name} закончил парсинг')
 
 async def get_nike11():
     urls = {
