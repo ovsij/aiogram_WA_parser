@@ -919,9 +919,9 @@ async def get_nike():
     subcategories = [
         ['Мужчины'],
         ['Обувь мужская', 'Мужчины', 2],
-        ['Повседневная обувь мужская', 'Обувь мужская', 3, '193af413-39b0-4d7e-ae34-558821381d3f%2C16633190-45e5-4830-a068-232ac7aea82c%2C0f64ecc7-d624-4e91-b171-b83a03dd8550'],
-        ['Jordan кросовки мужские', 'Обувь мужская', 3, ''],
-        ['Беговые кросовки мужские', 'Обувь мужская', 3, ''],
+        ['Повседневная обувь мужская', 'Обувь мужская', 3, '498ac76f-4c2c-4b55-bbdc-dd37011887b1%2C16633190-45e5-4830-a068-232ac7aea82c%2C0f64ecc7-d624-4e91-b171-b83a03dd8550'],#193af413-39b0-4d7e-ae34-558821381d3f%2C16633190-45e5-4830-a068-232ac7aea82c%2C0f64ecc7-d624-4e91-b171-b83a03dd8550
+        #['Джордан кросовки мужские', 'Обувь мужская', 3, '498ac76f-4c2c-4b55-bbdc-dd37011887b1%2C16633190-45e5-4830-a068-232ac7aea82c%2C0f64ecc7-d624-4e91-b171-b83a03dd8550'],
+        ['Беговые кросовки мужские', 'Обувь мужская', 3, '498ac76f-4c2c-4b55-bbdc-dd37011887b1%2C16633190-45e5-4830-a068-232ac7aea82c%2C0f64ecc7-d624-4e91-b171-b83a03dd8550'],
         ['Футбольные бутсы мужские', 'Обувь мужская', 3, ''],
         ['Баскетбольные кросовки мужские', 'Обувь мужская', 3, ''],
         ['Для фитнеса кросовки мужские', 'Обувь мужская', 3, ''],
@@ -1001,37 +1001,32 @@ async def get_nike():
         ['Аскессуары детские аутлет', 'Дети аутлет', 3, ''],
     ]
     cat_name = 'NIKE'
-    for subcategory in subcategories[:3]:
-        print(subcategory)
-        print(isinstance(subcategory[-1], str))
-        #if not isinstance(subcategory[-1], str) and len(subcategory) == 1:
+    for subcategory in subcategories[:5]:
         if len(subcategory) == 1:
-            crud.create_subcategory(name=subcategory[0], category=cat_name) if not crud.subcategory_exists(name=subcategory[0], category=cat_name) else 0
+            s = crud.create_subcategory(name=subcategory[0], category=cat_name) if not crud.subcategory_exists(name=subcategory[0], category=cat_name) else 0
             continue
         elif not isinstance(subcategory[-1], str):
             if not crud.subcategory_exists(name=subcategory[0], category=cat_name):
                 parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=crud.get_category(name=cat_name).id)
                 crud.create_subcategory(name=subcategory[0], category=cat_name, parent_subcategory=parent_subcategory.id, level=subcategory[2])
             continue
+        
+        
         logging.info(f'Starting NIKE: {subcategory[0]}')
         async with aiohttp.ClientSession(trust_env=True) as session:
-            #main_url = 'https://api.nike.com/cic/browse/v2?queryid=products&anonymousId=08A180A3B5AAD6BC6470F1A020095EDD&country=it&endpoint=%2Fproduct_feed%2Frollup_threads%2Fv2%3Ffilter%3Dmarketplace(IT)%26filter%3Dlanguage(it)%26filter%3DemployeePrice(true)%26filter%3DattributeIds({})%26anchor%3D{}%26consumerChannelId%3Dd9a5bc42-4b9c-4976-858a-f159cf99c647%26count%3D{}&language=en&localizedRangeStr=%7BlowestPrice%7D-%7BhighestPrice%7D'
-            main_url = 'https://api.nike.com/cic/browse/v2?queryid=products&anonymousId=DC94EECD86851390B6FEBCBD413222D2&country=it&endpoint=%2Fproduct_feed%2Frollup_threads%2Fv2%3Ffilter%3Dmarketplace(IT)%26filter%3Dlanguage(it)%26filter%3DemployeePrice(true)%26filter%3DattributeIds({})%26anchor%3D{}%26consumerChannelId%3Dd9a5bc42-4b9c-4976-858a-f159cf99c647%26count%3D{}&language=it&localizedRangeStr=%7BlowestPrice%7D-%7BhighestPrice%7D'
+            main_url = 'https://api.nike.com/cic/browse/v2?queryid=products&country=it&endpoint=%2Fproduct_feed%2Frollup_threads%2Fv2%3Ffilter%3Dmarketplace(IT)%26filter%3Dlanguage(it)%26filter%3DemployeePrice(true)%26filter%3DattributeIds({})%26anchor%3D{}%26consumerChannelId%3Dd9a5bc42-4b9c-4976-858a-f159cf99c647%26count%3D{}&language=en&localizedRangeStr=%7BlowestPrice%7D-%7BhighestPrice%7D'
             products = []
             for i in [60 * i for i in range(0, 20)]:
-                try:
-                    print(i)
-                    print(main_url.format(subcategory[-1], i, 60))
-                    headers = {'User-Agent': 'Mozilla/5.0'}
-                    async with session.get(main_url.format(subcategory[-1], i, 60)) as response:
-                        webpage = await response.json()
-                        print(await response.json())
+                #try:
+                headers = {'User-Agent': 'Mozilla/5.0'}
+                async with session.get(main_url.format(subcategory[-1], i, 60), headers=headers, ssl=False) as response:
+                    webpage = await response.json()
+                    print('ok')
                     prod = webpage['data']['products']['products']
-
                     products += [{'title' : p['title'], 'url': p['url'].replace('{countryLang}', 'it'), 'curprice': p['price']['currentPrice'], 'fullPrice': p['price']['fullPrice'], 'colorDescription': p['colorDescription']} for p in prod]
-                except:
-                    break
-            print(products)
+                #except:
+                #    break
+            
             items = []  
             euro_costs = euro_cost()
             for prod in products[:5]:
@@ -1041,89 +1036,90 @@ async def get_nike():
                     #try:
                     
                     prod_url = f'https://api.nike.com/product_feed/threads/v2?filter=language(it)&filter=marketplace(IT)&filter=channelId(d9a5bc42-4b9c-4976-858a-f159cf99c647)&filter=productInfo.merchProduct.styleColor({prod["url"].split("/")[-1]})'
-                    async with session.get(prod_url, ssl=False) as response:
+                    headers = {'User-Agent': 'Mozilla/5.0'}
+                    print(prod_url)
+                    async with session.get(prod_url, headers=headers, ssl=False) as response:
                         item_webpage = await response.json()
-                        # название товара
-                        name = prod['title']
-                        # артикул
-                        article = prod['url'].split('/')[-1]
-                        # цена  
-                        price = int((prod['curprice'] * (euro_costs + 1)) * float(f"1.{crud.get_category(name=cat_name).margin}")) if prod['curprice'] else None
-                        print(price)
-                        # описание
-                        fullPrice = int((prod['fullPrice'] * (euro_costs + 1)) * float(f"1.{crud.get_category(name=cat_name).margin}")) if prod['fullPrice'] else None
-                        percent = int(100 - (price/fullPrice * 100))
-                        description = f"Color: {prod['colorDescription']}\n\n"
+                        
+                    print('ok2')
+                    # название товара
+                    name = prod['title']
+                    print(name)
+                    # артикул
+                    article = prod['url'].split('/')[-1]
+                    # цена  
+                    price = int((prod['curprice'] * (euro_costs + 1)) * float(f"1.{crud.get_category(name=cat_name).margin}")) if prod['curprice'] else None
+                    print(price)
+                    # описание
+                    fullPrice = int((prod['fullPrice'] * (euro_costs + 1)) * float(f"1.{crud.get_category(name=cat_name).margin}")) if prod['fullPrice'] else None
+                    percent = int(100 - (price/fullPrice * 100))
+                    description = f"Color: {prod['colorDescription']}\n\n"
+                    if fullPrice > price:
                         description += f'<s>{fullPrice} руб.</s> -{percent}% {price} руб. \n\n'
 
-                        # размеры
-                        skus = item_webpage['objects'][0]['productInfo'][0]['skus']
-                        availableSkus = {}
-                        for av_sky in item_webpage['objects'][0]['productInfo'][0]['availableSkus']:
-                            availableSkus[av_sky['id']] = av_sky['available']
-                        sizes = 'Sizes: \n'
-                        list_sizes = ''
-                        for sku in skus:
-                            if availableSkus[sku['id']]:
-                                sizes += f'<b>{sku["countrySpecifications"][0]["localizedSize"]}</b> '
-                                list_sizes += sku["countrySpecifications"][0]["localizedSize"] + ', '
-                            else:
-                                sizes += f'<s>{sku["countrySpecifications"][0]["localizedSize"]}</s> '
-                        list_sizes = list_sizes.strip(', ')
-                        if 'TAGLIA UNICA' in sizes:
-                            sizes = 'Sizes: ONE SIZE\n'
-                        description += sizes
-                        
-                        image_links = [image_func(image) for image in item_webpage['objects'][0]['publishedContent']['nodes'][0]['nodes']]
-                        print('ok')
-                        # изображения
-                        if not os.path.exists(f"database/images/{cat_name}"):
-                            os.mkdir(f"database/images/{cat_name}")
+                    # размеры
+                    skus = item_webpage['objects'][0]['productInfo'][0]['skus']
+                    availableSkus = {}
+                    for av_sky in item_webpage['objects'][0]['productInfo'][0]['availableSkus']:
+                        availableSkus[av_sky['id']] = av_sky['available']
+                    sizes = 'Sizes: \n'
+                    list_sizes = ''
+                    for sku in skus:
+                        if availableSkus[sku['id']]:
+                            sizes += f'<b>{sku["countrySpecifications"][0]["localizedSize"]}</b> '
+                            list_sizes += sku["countrySpecifications"][0]["localizedSize"] + ', '
+                        else:
+                            sizes += f'<s>{sku["countrySpecifications"][0]["localizedSize"]}</s> '
+                    list_sizes = list_sizes.strip(', ')
+                    if 'TAGLIA UNICA' in sizes:
+                        sizes = 'Sizes: ONE SIZE\n'
+                    description += sizes
+                    
+                    image_links = [image_func(image) for image in item_webpage['objects'][0]['publishedContent']['nodes'][0]['nodes']]
+                    # изображения
+                    if not os.path.exists(f"database/images/{cat_name}"):
+                        os.mkdir(f"database/images/{cat_name}")
 
-                        if not os.path.exists(f"database/images/{cat_name}/{subcategory[0]}"):
-                            os.mkdir(f"database/images/{cat_name}/{subcategory[0]}")
-                        if 0 in image_links:
-                            image_links.remove(0)
+                    if not os.path.exists(f"database/images/{cat_name}/{subcategory[0]}"):
+                        os.mkdir(f"database/images/{cat_name}/{subcategory[0]}")
+                    
+                    if 0 in image_links:
+                        image_links.remove(0)
 
-                        i = products.index(prod) + 1
-                        images = ''
-                        
-                        for url in image_links[:10]:
-                            print(url)
-                            try:
-                                num = image_links.index(url) + 1
-                                img_path = f"database/images/{cat_name}/{subcategory[0]}/{i}_{name.replace(' ', '_').replace('/', '_')}_{num}.png"
-                                images +=  img_path + '\n'
-                                if os.path.exists(img_path):
-                                    continue
-                                resp = requests.get(url)
-                                with open(img_path, 'wb') as file:
-                                    file.write(resp.content)
-                                #async with session.get(url, ssl=False) as response:
-                                #    print(url)
-                                #    #image = await response.content
-                                #    f = await aiofiles.open(img_path, mode='wb')
-                                #    await f.write(await response.read())
-                                #    await f.close()
-                            except:
+                    i = products.index(prod) + 1
+                    images = ''
+                    #print(image_links)
+                    print('ok')
+                    for url in image_links[:10]:
+                        try:
+                            num = image_links.index(url) + 1
+                            img_path = f"database/images/{cat_name}/{subcategory[0]}/{i}_{name.replace(' ', '_').replace('/', '_')}_{num}.png"
+                            images +=  img_path + '\n'
+                            if os.path.exists(img_path):
                                 continue
-                        #if len(images) < 1:
-                        #    continue
-                        
-                        print(item_url)
-                        items.append([name, description, price, images, prod['colorDescription'], list_sizes, article, item_url])
+                            async with session.get(url, ssl=False) as response:
+                                #image = await response.content
+                                f = await aiofiles.open(img_path, mode='wb')
+                                await f.write(await response.read())
+                                await f.close()
+                            
+                        except:
+                            continue
+                    if len(images) < 1:
+                        continue
+                    items.append([name, description, price, images, prod['colorDescription'], list_sizes, article, item_url])
                 except Exception as ex:
                     logging.warning(f'{cat_name} pr - {ex}')
-        if not crud.subcategory_exists(name=subcategory[0], category=cat_name):
-            parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=crud.get_category(name=cat_name).id)
-            crud.create_subcategory(name=subcategory[0], category=cat_name, parent_subcategory=parent_subcategory.id, level=subcategory[2])
+        #if not crud.subcategory_exists(name=subcategory[0], category=cat_name):
+        #    parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=crud.get_category(name=cat_name).id)
+        #    crud.create_subcategory(name=subcategory[0], category=cat_name, parent_subcategory=parent_subcategory.id, level=subcategory[2])
         
-        crud.create_products(category=cat_name, subcategory=subcategory[0], items=items)
+        #crud.create_products(category=cat_name, subcategory=subcategory[0], items=items)
         logging.info(f'Canceled NIKE {subcategory[0]} added {len(items)} products')
 
     await bot.send_message(227184505, f'NIKE закончил парсинг')
-    
-async def get_nike():
+
+async def get_nike11():
     urls = {
         'Мужская обувь' : '16633190-45e5-4830-a068-232ac7aea82c%2C0f64ecc7-d624-4e91-b171-b83a03dd8550',
         #'Мужская одежда': 'a00f0bb2-648b-4853-9559-4cd943b7d6c6%2C0f64ecc7-d624-4e91-b171-b83a03dd8550',

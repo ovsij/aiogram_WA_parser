@@ -197,8 +197,6 @@ def create_products(category : str, subcategory : str, items : list):
             product.delete()
         else:
             all_images += product.image.split('\n')
-            print(product.image.split('\n'))
-    print(all_images)
     for root, dirs, files in os.walk(f"database/images/{category}/{subcategory}/"):
         for filename in files:
             if f"database/images/{category}/{subcategory}/{filename}" not in all_images:
@@ -234,7 +232,9 @@ def create_products(category : str, subcategory : str, items : list):
                         article=item[5],
                         url=item[6]
                     )
+                    commit()
                     print(f'update {prod}')
+
         except Exception as ex:
             logging.warning(f'{category} db - {ex}')
 
