@@ -912,116 +912,212 @@ async def get_nike_subcategory(session, url, subcategory, category):
     return items
 
 @db_session()
-async def get_nike_outlet():
-    urls = {
-        'Мужская обувь': '5b21a62a-0503-400c-8336-3ccfbff2a684%2C16633190-45e5-4830-a068-232ac7aea82c%2C0f64ecc7-d624-4e91-b171-b83a03dd8550',
-        #'Мужская одежда': '5b21a62a-0503-400c-8336-3ccfbff2a684%2Ca00f0bb2-648b-4853-9559-4cd943b7d6c6%2C0f64ecc7-d624-4e91-b171-b83a03dd8550',
-        #'Мужские аксессуары': 'fa863563-4508-416d-bae9-a53188c04937%2C5b21a62a-0503-400c-8336-3ccfbff2a684%2C0f64ecc7-d624-4e91-b171-b83a03dd8550',
-        #'Женская обувь': '5b21a62a-0503-400c-8336-3ccfbff2a684%2C16633190-45e5-4830-a068-232ac7aea82c%2C7baf216c-acc6-4452-9e07-39c2ca77ba32',
-        #'Женская одежда': '5b21a62a-0503-400c-8336-3ccfbff2a684%2Ca00f0bb2-648b-4853-9559-4cd943b7d6c6%2C7baf216c-acc6-4452-9e07-39c2ca77ba32',
-        #'Женские аксессуары': 'fa863563-4508-416d-bae9-a53188c04937%2C5b21a62a-0503-400c-8336-3ccfbff2a684%2C7baf216c-acc6-4452-9e07-39c2ca77ba32',
-        #'Детская обувь': '5b21a62a-0503-400c-8336-3ccfbff2a684%2C16633190-45e5-4830-a068-232ac7aea82c%2C145ce13c-5740-49bd-b2fd-0f67214765b3',
-        #'Детская одежда': '5b21a62a-0503-400c-8336-3ccfbff2a684%2C145ce13c-5740-49bd-b2fd-0f67214765b3%2Ca00f0bb2-648b-4853-9559-4cd943b7d6c6',
-        #'Детские аскессуары': 'https://www.nike.com/it/w/bambini-outlet-3yaepzv4dh',
-    }
-    for name, url in urls.items():
-        logging.info(f'Starting NIKE outlet: {name}')
-        async with aiohttp.ClientSession(trust_env=True) as session:
-            items = await get_nike_subcategory(session, url, name, 'NIKE Outlet')
-            # сохраняем товары [name, description, price, images]
-            #crud.del_products(subcategory=name, category='NIKE Outlet')
-            #try:
-            #    not_deleted_items = [product.name + product.description.split('Color:')[1].split('\n\n')[0] for product in crud.get_product(category_id=crud.get_category(name='NIKE Outlet').id, subcategory_id=crud.get_subcategory(name=name).id)]
-            #except:
-            #    not_deleted_items = []
-            #print(not_deleted_items)
-            for item in items:
-                try:
-                    category = crud.get_category(name='NIKE Outlet')
-                    subcategory = crud.get_subcategory(name=name, category_id=category.id)
-                    if not crud.product_exists(article=item[5], subcategory=subcategory):
-                        prod = crud.create_product(
-                        name=item[0],
-                        category='NIKE Outlet',
-                        subcategory=name,
-                        description=item[1],
-                        sizes=item[4],
-                        price=item[2],
-                        image=item[3],
-                        article=item[5],
-                        url=item[6])
-                    else:
-                        prod = crud.get_product(article=item[5], subcategory_id=subcategory.id)
-                        if not prod.deleted and not prod.edited:
-                            crud.update_product(
-                                product_id=prod.id,
-                                name=item[0],
-                                category='NIKE Outlet',
-                                description=item[1],
-                                sizes=item[4],
-                                price=item[2],
-                                image=item[3],
-                                article=item[5],
-                                url=item[6]
-                            )
-                except Exception as ex:
-                    logging.warning(f'NIKE outlet db - {ex}')
-            logging.info(f'Canceled NIKE outlet {name} added {len(items)} products') 
-    await bot.send_message(227184505, f'NIKE outlet закончил парсинг')
-
 async def get_nike():
-    urls = {
-        'Мужская обувь' : '16633190-45e5-4830-a068-232ac7aea82c%2C0f64ecc7-d624-4e91-b171-b83a03dd8550',
-        #'Мужская одежда': 'a00f0bb2-648b-4853-9559-4cd943b7d6c6%2C0f64ecc7-d624-4e91-b171-b83a03dd8550',
-        #'Мужские аксессуары': 'fa863563-4508-416d-bae9-a53188c04937%2C0f64ecc7-d624-4e91-b171-b83a03dd8550',
-        #Женская обувь': '16633190-45e5-4830-a068-232ac7aea82c%2C7baf216c-acc6-4452-9e07-39c2ca77ba32',
-        #'Женская одежда': 'a00f0bb2-648b-4853-9559-4cd943b7d6c6%2C7baf216c-acc6-4452-9e07-39c2ca77ba32',
-        #'Женские аксессуары': 'fa863563-4508-416d-bae9-a53188c04937%2C7baf216c-acc6-4452-9e07-39c2ca77ba32',
-        #'Детская обувь': '16633190-45e5-4830-a068-232ac7aea82c%2C145ce13c-5740-49bd-b2fd-0f67214765b3',
-        #'Детская одежда': '145ce13c-5740-49bd-b2fd-0f67214765b3%2Ca00f0bb2-648b-4853-9559-4cd943b7d6c6',
-        #'Детские аскессуары': 'fa863563-4508-416d-bae9-a53188c04937%2C145ce13c-5740-49bd-b2fd-0f67214765b3',
-    }
-    for name, url in urls.items():
-        logging.info(f'Starting NIKE: {name}')
+    subcategories = [
+        ['Мужчины'],
+        ['Обувь мужская', 'Мужчины', 2],
+        ['Повседневная обувь мужская', 'Обувь мужская', 3, '193af413-39b0-4d7e-ae34-558821381d3f%2C16633190-45e5-4830-a068-232ac7aea82c%2C0f64ecc7-d624-4e91-b171-b83a03dd8550'],
+        ['Jordan кросовки мужские', 'Обувь мужская', 3, ''],
+        ['Беговые кросовки мужские', 'Обувь мужская', 3, ''],
+        ['Футбольные бутсы мужские', 'Обувь мужская', 3, ''],
+        ['Баскетбольные кросовки мужские', 'Обувь мужская', 3, ''],
+        ['Для фитнеса кросовки мужские', 'Обувь мужская', 3, ''],
+        ['Для скейтбординга кросовки мужские', 'Обувь мужская', 3, ''],
+        ['Персонализированные кросовки мужские', 'Обувь мужская', 3, ''],
+        ['Одежда мужская', 'Мужчины', 2],
+        ['Свитера и футболки мужские', 'Одежда мужская', 3, ''],
+        ['Толстовки мужские', 'Одежда мужская', 3, ''],
+        ['Шорты мужские', 'Одежда мужская', 3, ''],
+        ['Брюки и колготки мужские', 'Одежда мужская', 3, ''],
+        ['Комбинезоны мужские', 'Одежда мужская', 3, ''],
+        ['Ветровки мужские', 'Одежда мужская', 3, ''],
+        ['Форма мужская', 'Одежда мужская', 3, ''],
+        ['Аксессуары мужские', 'Мужчины', 2],
+        ['Сумки и рюкзаки мужские', 'Аксессуары мужские', 3, ''],
+        ['Носки мужские', 'Аксессуары мужские', 3, ''],
+        
+        ['Женщины'],
+        ['Обувь женская', 'Женщины', 2],
+        ['Повседневная обувь женская', 'Обувь женская', 3, ''],
+        ['Jordan кросовки женские', 'Обувь женская', 3, ''],
+        ['Беговые кросовки женские', 'Обувь женская', 3, ''],
+        ['Для фитнеса кросовки женские', 'Обувь женская', 3, ''],
+        ['Персонализированные кросовки женские', 'Обувь женская', 3, ''],
+        ['Одежда женская', 'Женщины', 2, ''],
+        ['Свитера и футболки женские', 'Одежда женская', 3, ''],
+        ['Толстовки женские', 'Одежда женская', 3, ''],
+        ['Леггинцы женские', 'Одежда женская', 3, ''],
+        ['Шорты женские', 'Одежда женская', 3, ''],
+        ['Штаны женские', 'Одежда женская', 3, ''],
+        ['Спортивные костюмы женские', 'Одежда женская', 3, ''],
+        ['Ветровки женские', 'Одежда женская', 3, ''],
+        ['Бюстгальтеры женские', 'Одежда женская', 3, ''],
+        ['Юбки и патья женские', 'Одежда женская', 3, ''],
+        ['Купальники женские', 'Одежда женская', 3, ''],
+        ['Аксессуары женские', 'Женщины', 2, ''],
+        ['Рюкзаки и сумки женские', 'Аксессуары женские', 3, ''],
+        ['Носки женские', 'Аксессуары женские', 3, ''],
+        
+        ['Дети'],
+        ['Обувь детская', 'Дети', 2],
+        ['Повседневная обувь детская', 'Обувь детская', 3, ''],
+        ['Кросовки Jordan детские', 'Обувь детская', 3, ''],
+        ['Футбольные бутсы детские', 'Обувь детская', 3, ''],
+        ['Беговые кросовки детские', 'Обувь детская', 3, ''],
+        ['Баскетбольные кросовки детские', 'Обувь детская', 3, ''],
+        ['Одежда детская', 'Дети', 2],
+        ['Свитера и футболки детские', 'Одежда детская', 3, ''],
+        ['Толстовки детские', 'Одежда детская', 3, ''],
+        ['Комбинезоны детские', 'Одежда детская', 3, ''],
+        ['Шорты детские', 'Одежда детская', 3, ''],
+        ['Спортивная одежда детская', 'Одежда детская', 3, ''],
+        ['Брюки и леггинцы детские', 'Одежда детская', 3, ''],
+        ['Куртки детские', 'Одежда детская', 3, ''],
+        ['Форма детская', 'Одежда детская', 3, ''],
+        ['Бюстгальтеры детские', 'Одежда детская', 3, ''],
+        ['Юбки и платья детские', 'Одежда детская', 3, ''],
+        ['Аскессуары детские', 'Дети', 2],
+        ['Рюкзаки и сумки детские', 'Аскессуары детские', 3, ''],
+        ['Носки детские', 'Аскессуары детские', 3, ''],
+
+        ###
+        ['Аутлет'],
+        ['Мужчины аутлет', 'Аутлет', 2],
+        ['Обувь мужская аутлет', 'Мужчины аутлет', 3, ''],        
+        ['Одежда мужская аутлет', 'Мужчины аутлет', 3, ''],
+        ['Аксессуары мужские аутлет', 'Мужчины аутлет', 3, ''],
+
+        ['Женщины аутлет'],
+        ['Обувь женская аутлет', 'Женщины аутлет', 3, ''],
+        ['Одежда женская аутлет', 'Женщины аутлет', 3, ''],
+        ['Аксессуары женские аутлет', 'Женщины аутлет', 3, ''],
+
+        ['Дети аутлет'], 
+        ['Обувь детская аутлет', 'Дети аутлет', 3, ''],
+        ['Одежда детская аутлет', 'Дети аутлет', 3, ''],
+        ['Аскессуары детские аутлет', 'Дети аутлет', 3, ''],
+    ]
+    cat_name = 'NIKE'
+    for subcategory in subcategories[:3]:
+        print(subcategory)
+        print(isinstance(subcategory[-1], str))
+        #if not isinstance(subcategory[-1], str) and len(subcategory) == 1:
+        if len(subcategory) == 1:
+            crud.create_subcategory(name=subcategory[0], category=cat_name) if not crud.subcategory_exists(name=subcategory[0], category=cat_name) else 0
+            continue
+        elif not isinstance(subcategory[-1], str):
+            if not crud.subcategory_exists(name=subcategory[0], category=cat_name):
+                parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=crud.get_category(name=cat_name).id)
+                crud.create_subcategory(name=subcategory[0], category=cat_name, parent_subcategory=parent_subcategory.id, level=subcategory[2])
+            continue
+        logging.info(f'Starting NIKE: {subcategory[0]}')
         async with aiohttp.ClientSession(trust_env=True) as session:
-            items = await get_nike_subcategory(session, url, name, 'NIKE')
-            # сохраняем товары [name, description, price, images]
-            #crud.del_products(subcategory=name, category='NIKE')
-            #try:
-            #    not_deleted_items = [product.name + product.description.split('Color:')[1].split('\n\n')[0] for product in crud.get_product(category_id=crud.get_category(name='NIKE').id, subcategory_id=crud.get_subcategory(name=name).id)]
-            #except:
-            #    not_deleted_items = []
-            #print(not_deleted_items)
-            for item in items:
+            #main_url = 'https://api.nike.com/cic/browse/v2?queryid=products&anonymousId=08A180A3B5AAD6BC6470F1A020095EDD&country=it&endpoint=%2Fproduct_feed%2Frollup_threads%2Fv2%3Ffilter%3Dmarketplace(IT)%26filter%3Dlanguage(it)%26filter%3DemployeePrice(true)%26filter%3DattributeIds({})%26anchor%3D{}%26consumerChannelId%3Dd9a5bc42-4b9c-4976-858a-f159cf99c647%26count%3D{}&language=en&localizedRangeStr=%7BlowestPrice%7D-%7BhighestPrice%7D'
+            main_url = 'https://api.nike.com/cic/browse/v2?queryid=products&anonymousId=DC94EECD86851390B6FEBCBD413222D2&country=it&endpoint=%2Fproduct_feed%2Frollup_threads%2Fv2%3Ffilter%3Dmarketplace(IT)%26filter%3Dlanguage(it)%26filter%3DemployeePrice(true)%26filter%3DattributeIds({})%26anchor%3D{}%26consumerChannelId%3Dd9a5bc42-4b9c-4976-858a-f159cf99c647%26count%3D{}&language=it&localizedRangeStr=%7BlowestPrice%7D-%7BhighestPrice%7D'
+            products = []
+            for i in [60 * i for i in range(0, 20)]:
                 try:
-                    if not crud.product_exists(article=item[5]):
-                        prod = crud.create_product(
-                        name=item[0],
-                        category='NIKE',
-                        subcategory=name,
-                        description=item[1],
-                        sizes=item[4],
-                        price=item[2],
-                        image=item[3],
-                        article=item[5],
-                        url=item[6])
-                    else:
-                        prod = crud.get_product(article=item[5])
-                        if not prod.deleted and not prod.edited:
-                            crud.update_product(
-                                product_id=prod.id,
-                                name=item[0],
-                                category='NIKE',
-                                description=item[1],
-                                sizes=item[4],
-                                price=item[2],
-                                image=item[3],
-                                article=item[5],
-                                url=item[6]
-                            )
+                    print(i)
+                    print(main_url.format(subcategory[-1], i, 60))
+                    headers = {'User-Agent': 'Mozilla/5.0'}
+                    async with session.get(main_url.format(subcategory[-1], i, 60)) as response:
+                        webpage = await response.json()
+                        print(await response.json())
+                    prod = webpage['data']['products']['products']
+
+                    products += [{'title' : p['title'], 'url': p['url'].replace('{countryLang}', 'it'), 'curprice': p['price']['currentPrice'], 'fullPrice': p['price']['fullPrice'], 'colorDescription': p['colorDescription']} for p in prod]
+                except:
+                    break
+            print(products)
+            items = []  
+            euro_costs = euro_cost()
+            for prod in products[:5]:
+                try:
+                    #await asyncio.sleep(2)
+                    item_url = 'https://www.nike.com/' + prod['url']
+                    #try:
+                    
+                    prod_url = f'https://api.nike.com/product_feed/threads/v2?filter=language(it)&filter=marketplace(IT)&filter=channelId(d9a5bc42-4b9c-4976-858a-f159cf99c647)&filter=productInfo.merchProduct.styleColor({prod["url"].split("/")[-1]})'
+                    async with session.get(prod_url, ssl=False) as response:
+                        item_webpage = await response.json()
+                        # название товара
+                        name = prod['title']
+                        # артикул
+                        article = prod['url'].split('/')[-1]
+                        # цена  
+                        price = int((prod['curprice'] * (euro_costs + 1)) * float(f"1.{crud.get_category(name=cat_name).margin}")) if prod['curprice'] else None
+                        print(price)
+                        # описание
+                        fullPrice = int((prod['fullPrice'] * (euro_costs + 1)) * float(f"1.{crud.get_category(name=cat_name).margin}")) if prod['fullPrice'] else None
+                        percent = int(100 - (price/fullPrice * 100))
+                        description = f"Color: {prod['colorDescription']}\n\n"
+                        description += f'<s>{fullPrice} руб.</s> -{percent}% {price} руб. \n\n'
+
+                        # размеры
+                        skus = item_webpage['objects'][0]['productInfo'][0]['skus']
+                        availableSkus = {}
+                        for av_sky in item_webpage['objects'][0]['productInfo'][0]['availableSkus']:
+                            availableSkus[av_sky['id']] = av_sky['available']
+                        sizes = 'Sizes: \n'
+                        list_sizes = ''
+                        for sku in skus:
+                            if availableSkus[sku['id']]:
+                                sizes += f'<b>{sku["countrySpecifications"][0]["localizedSize"]}</b> '
+                                list_sizes += sku["countrySpecifications"][0]["localizedSize"] + ', '
+                            else:
+                                sizes += f'<s>{sku["countrySpecifications"][0]["localizedSize"]}</s> '
+                        list_sizes = list_sizes.strip(', ')
+                        if 'TAGLIA UNICA' in sizes:
+                            sizes = 'Sizes: ONE SIZE\n'
+                        description += sizes
+                        
+                        image_links = [image_func(image) for image in item_webpage['objects'][0]['publishedContent']['nodes'][0]['nodes']]
+                        print('ok')
+                        # изображения
+                        if not os.path.exists(f"database/images/{cat_name}"):
+                            os.mkdir(f"database/images/{cat_name}")
+
+                        if not os.path.exists(f"database/images/{cat_name}/{subcategory[0]}"):
+                            os.mkdir(f"database/images/{cat_name}/{subcategory[0]}")
+                        if 0 in image_links:
+                            image_links.remove(0)
+
+                        i = products.index(prod) + 1
+                        images = ''
+                        
+                        for url in image_links[:10]:
+                            print(url)
+                            try:
+                                num = image_links.index(url) + 1
+                                img_path = f"database/images/{cat_name}/{subcategory[0]}/{i}_{name.replace(' ', '_').replace('/', '_')}_{num}.png"
+                                images +=  img_path + '\n'
+                                if os.path.exists(img_path):
+                                    continue
+                                resp = requests.get(url)
+                                with open(img_path, 'wb') as file:
+                                    file.write(resp.content)
+                                #async with session.get(url, ssl=False) as response:
+                                #    print(url)
+                                #    #image = await response.content
+                                #    f = await aiofiles.open(img_path, mode='wb')
+                                #    await f.write(await response.read())
+                                #    await f.close()
+                            except:
+                                continue
+                        #if len(images) < 1:
+                        #    continue
+                        
+                        print(item_url)
+                        items.append([name, description, price, images, prod['colorDescription'], list_sizes, article, item_url])
                 except Exception as ex:
-                    logging.warning(f'NIKE db - {ex}')
-            logging.info(f'Canceled NIKE {name} added {len(items)} products') 
+                    logging.warning(f'{cat_name} pr - {ex}')
+        if not crud.subcategory_exists(name=subcategory[0], category=cat_name):
+            parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=crud.get_category(name=cat_name).id)
+            crud.create_subcategory(name=subcategory[0], category=cat_name, parent_subcategory=parent_subcategory.id, level=subcategory[2])
+        
+        crud.create_products(category=cat_name, subcategory=subcategory[0], items=items)
+        logging.info(f'Canceled NIKE {subcategory[0]} added {len(items)} products')
+
     await bot.send_message(227184505, f'NIKE закончил парсинг')
 
 async def get_golcegabbana():
@@ -2088,7 +2184,7 @@ async def get_monnalisa():
         ['Боди и комбинезоны для новорожденных мальчиков аутлет', 'Новорожденные мальчики аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/newborn/bodyvests--rompers-baby-sets/?prefn1=gender&prefv1=Boy&sz=1000'],
         ['Постельное белье для новорожденных мальчиков аутлет', 'Новорожденные мальчики аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/newborn/bedding/?prefn1=gender&prefv1=Boy&sz=1000'],
     ]
-    for subcategory in subcategories:
+    for subcategory in subcategories[:4]:
         if not str(subcategory[-1]).startswith('http'):
             if len(subcategory) == 1:
                 crud.create_subcategory(name=subcategory[0], category=cat_name) if not crud.subcategory_exists(name=subcategory[0], category=cat_name) else 0
@@ -2109,16 +2205,15 @@ async def get_monnalisa():
                     items_urls = [{'title': a.get('title'), 'url': 'https://www.monnalisa.com' + a.get('href')} for a in soup.find_all('a', 'link larger')]
             #for item in items_urls:
             #    print(item)
-            print(len(items_urls))
             items = []
             euro_costs = euro_cost()
-            for item in items_urls:
+            for item in items_urls[:5]:
                 # item['url']
                 async with session.get(item['url'], ssl=False) as response:
                     item_webpage = await response.text()
                     item_soup = bs(item_webpage, 'html.parser')
 
-                    print(item['title'])
+                    #print(item['title'])
                     current_price = int((float(item_soup.find('div', 'col-12 prices pt-0 pt-lg-2 order-1 order-lg-0').find('div', 'sales extra-large').text.strip('\n').replace('€ ', '').replace(',', '.')) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Monnalisa').margin}"))
                     
                     #print([current_price])
