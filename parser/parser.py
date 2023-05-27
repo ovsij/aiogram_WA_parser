@@ -1128,7 +1128,6 @@ async def get_nike():
                                 f = await aiofiles.open(img_path, mode='wb')
                                 await f.write(await response.read())
                                 await f.close()
-                            
                         except:
                             continue
                     if len(images) < 1:
