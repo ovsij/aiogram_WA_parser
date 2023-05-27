@@ -1145,22 +1145,6 @@ async def get_nike():
 
     await bot.send_message(227184505, f'{cat_name} закончил парсинг')
 
-async def get_nike11():
-    urls = {
-        'Мужская обувь' : '16633190-45e5-4830-a068-232ac7aea82c%2C0f64ecc7-d624-4e91-b171-b83a03dd8550',
-        #'Мужская одежда': 'a00f0bb2-648b-4853-9559-4cd943b7d6c6%2C0f64ecc7-d624-4e91-b171-b83a03dd8550',
-        #'Мужские аксессуары': 'fa863563-4508-416d-bae9-a53188c04937%2C0f64ecc7-d624-4e91-b171-b83a03dd8550',
-        #Женская обувь': '16633190-45e5-4830-a068-232ac7aea82c%2C7baf216c-acc6-4452-9e07-39c2ca77ba32',
-        #'Женская одежда': 'a00f0bb2-648b-4853-9559-4cd943b7d6c6%2C7baf216c-acc6-4452-9e07-39c2ca77ba32',
-        #'Женские аксессуары': 'fa863563-4508-416d-bae9-a53188c04937%2C7baf216c-acc6-4452-9e07-39c2ca77ba32',
-        #'Детская обувь': '16633190-45e5-4830-a068-232ac7aea82c%2C145ce13c-5740-49bd-b2fd-0f67214765b3',
-        #'Детская одежда': '145ce13c-5740-49bd-b2fd-0f67214765b3%2Ca00f0bb2-648b-4853-9559-4cd943b7d6c6',
-        #'Детские аскессуары': 'fa863563-4508-416d-bae9-a53188c04937%2C145ce13c-5740-49bd-b2fd-0f67214765b3',
-    }
-    for name, url in urls.items():
-        logging.info(f'Starting NIKE: {name}')
-        async with aiohttp.ClientSession(trust_env=True) as session:
-            items = await get_nike_subcategory(session, url, name, 'NIKE')
 
 async def get_golcegabbana():
     subcategories = [
@@ -1363,26 +1347,86 @@ async def get_golcegabbana():
 
 
 async def get_coach():
-    subcategories = {
-        'Женские сумки' : 'https://it.coach.com/api/get-shop/outlet/donna/borse{}&__v__=0vd2xlsFnzxBsryah6o6X',
-        'Женская одежда' : 'https://it.coach.com/api/get-shop/outlet/donna/pret-a-porter{}&__v__=0vd2xlsFnzxBsryah6o6X',            
-        #'Женские кожаные изеделия' : 'https://it.coach.com/api/get-shop/outlet/donna/piccoli-accessori-in-pelle{}&__v__=0vd2xlsFnzxBsryah6o6X',
-        'Женская обувь' : 'https://it.coach.com/api/get-shop/outlet/donna/calzature{}&__v__=0vd2xlsFnzxBsryah6o6X',
-        'Женские аксессуары' : 'https://it.coach.com/api/get-shop/outlet/donna/accessori{}&__v__=0vd2xlsFnzxBsryah6o6X',
-        #'Женские ювелирные издения' : 'https://it.coach.com/api/get-shop/outlet/donna/accessori/gioielli{}&__v__=0vd2xlsFnzxBsryah6o6X',
-        'Мужская одежда' : 'https://it.coach.com/api/get-shop/outlet/uomo/pret-a-porter{}&__v__=0vd2xlsFnzxBsryah6o6X',
-        'Мужские сумки' : 'https://it.coach.com/api/get-shop/outlet/uomo/borse{}&__v__=0vd2xlsFnzxBsryah6o6X',
-        'Мужские кошельки' : 'https://it.coach.com/api/get-shop/outlet/uomo/portafogli{}&__v__=0vd2xlsFnzxBsryah6o6X',
-        'Мужская обувь' : 'https://it.coach.com/api/get-shop/outlet/uomo/calzature{}&__v__=0vd2xlsFnzxBsryah6o6X',
-        'Мужские аксессуары' : 'https://it.coach.com/api/get-shop/outlet/uomo/accessori{}&__v__=0vd2xlsFnzxBsryah6o6X',
-    }
-    for subcategory, subcat_url in subcategories.items():
-        logging.info(f'Starting COACH: {subcategory}')
+    subcategories = [
+        ['Женщины'],
+        ['Сумки женские', 'Женщины', 2],
+        ['Наплечные сумки женские', 'Сумки женские', 3, 'https://it.coach.com/api/get-shop/donna/borse/tracolle{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Cумки через плечо женские', 'Сумки женские', 3, 'https://it.coach.com/api/shop/donna/borse/borse-a-tracolla{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Satchels женские', 'Сумки женские', 3, 'https://it.coach.com/api/shop/donna/borse/borse-a-secchiello{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Большие сумки женские', 'Сумки женские', 3, 'https://it.coach.com/api/shop/donna/borse/borse-larghe{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Клатчи женские', 'Сумки женские', 3, 'https://it.coach.com/api/shop/donna/borse/pochette{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Рюкзаки женские', 'Сумки женские', 3, 'https://it.coach.com/api/shop/donna/borse/zaini{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Фирменные сумки женские', 'Сумки женские', 3, 'https://it.coach.com/api/shop/donna/borse/borse-signature{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Кожаные изделия женские', 'Женщины', 2],
+        ['Наплечные кошельки женские', 'Кожаные изделия женские', 3, 'https://it.coach.com/api/shop/donna/piccoli-accessori-in-pelle/portafogli-con-tracolla{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Большие кошельки женские', 'Кожаные изделия женские', 3, 'https://it.coach.com/api/shop/donna/piccoli-accessori-in-pelle/portafogli-grandi{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Маленькие кошельки женские', 'Кожаные изделия женские', 3, 'https://it.coach.com/api/shop/donna/piccoli-accessori-in-pelle/portafogli-piccoli{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Наручные саше женские', 'Кожаные изделия женские', 3, 'https://it.coach.com/api/shop/donna/piccoli-accessori-in-pelle/bustine-da-polso{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Кардходлеры женские', 'Кожаные изделия женские', 3, 'https://it.coach.com/api/shop/donna/piccoli-accessori-in-pelle/porta-carte-di-credito{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Одежда женская', 'Женщины', 2],
+        ['Пальто и куртки женские', 'Одежда женская', 3, 'https://it.coach.com/api/shop/donna/pret-a-porter/cappotti-e-giacche{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Рубашки и свитеры женские', 'Одежда женская', 3, 'https://it.coach.com/api/shop/donna/pret-a-porter/maglioni-e-felpe-con-cappuccio{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Топы и футболки женские', 'Одежда женская', 3, 'https://it.coach.com/api/shop/donna/pret-a-porter/top-e-magliette{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Платья женские', 'Одежда женская', 3, 'https://it.coach.com/api/shop/donna/pret-a-porter/abiti{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Шорты и юбки женские', 'Одежда женская', 3, 'https://it.coach.com/api/shop/donna/pret-a-porter/pantaloni{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Обувь женская', 'Женщины', 2],
+        ['Сандалии женские', 'Обувь женская', 3, 'https://it.coach.com/api/shop/donna/calzature/sandali{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Балетки женские', 'Обувь женская', 3, 'https://it.coach.com/api/shop/donna/calzature/ballerine{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Туфли на каблуке женские', 'Обувь женская', 3, 'https://it.coach.com/api/shop/donna/calzature/scarpe-con-tacco{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Кросовки женские', 'Обувь женская', 3, 'https://it.coach.com/api/shop/donna/calzature/trainer{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Ботинки женские', 'Обувь женская', 3, 'https://it.coach.com/api/shop/donna/calzature/stivali{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Аксессуары женские', 'Женщины', 2],
+        ['Драгоценности женские', 'Аксессуары женские', 3, 'https://it.coach.com/api/shop/donna/accessori/gioielli{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Ремни женские', 'Аксессуары женские', 3, 'https://it.coach.com/api/shop/donna/accessori/cinture{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Часы женские', 'Аксессуары женские', 3, 'https://it.coach.com/api/shop/donna/accessori/orologi{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Шапки, шарфы и перчатки женские', 'Аксессуары женские', 3, 'https://it.coach.com/api/shop/donna/accessori/cappelli-sciarpe-e-guanti{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Кулоны и брелки женские', 'Аксессуары женские', 3, 'https://it.coach.com/api/shop/donna/accessori/ciondoli-per-borsa-e-portachiavi{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Туристические аксессуары женские', 'Аксессуары женские', 3, 'https://it.coach.com/api/shop/donna/accessori/accessori-tecnologici-e-da-viaggio{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Очки женские', 'Аксессуары женские', 3, 'https://it.coach.com/api/shop/donna/accessori/occhiali-da-sole{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Ремни для сумок женские', 'Аксессуары женские', 3, 'https://it.coach.com/api/shop/donna/accessori/tracolle-per-borsa{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Уход за продукцией (жен)', 'Аксессуары женские', 3, 'https://it.coach.com/api/shop/donna/accessori/cura-dei-prodotti{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Духи женские', 'Аксессуары женские', 3, 'https://it.coach.com/api/shop/donna/accessori/fragranza{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        
+        ['Мужчины'],
+        ['Сумки мужские', 'Мужчины', 2],
+        ['Фирменные сумки мужские', 'Сумки мужские', 3, 'https://it.coach.com/api/shop/donna/borse/borse-signature{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Рюкзаки мужские', 'Сумки мужские', 3, 'https://it.coach.com/api/shop/donna/borse/zaini{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Большие сумки мужские', 'Сумки мужские', 3, 'https://it.coach.com/api/shop/donna/borse/borse-larghe-e-borsoni{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Поясные сумки мужские', 'Сумки мужские', 3, 'https://it.coach.com/api/shop/donna/borse/borse-a-cintura{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Портфели мужские', 'Сумки мужские', 3, 'https://it.coach.com/api/shop/donna/borse/valigette{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Папки мужские', 'Сумки мужские', 3, 'https://it.coach.com/api/shop/donna/borse/cartelle{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Одежда мужская', 'Мужчины', 2],
+        ['Пальто и куртки мужские', 'Одежда мужская', 3, 'https://it.coach.com/api/shop/donna/pret-a-porter/cappotti-e-giacche{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Одежда (верх и низ) мужские', 'Одежда мужская', 3, 'https://it.coach.com/api/shop/donna/pret-a-porter/pezzi-di-sopra-e-sotto{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Обувь мужская', 'Мужчины', 2],
+        ['Сандалии мужские', 'Обувь мужская', 3, 'https://it.coach.com/api/shop/donna/calzature/sandali{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Повседневная обувь мужские', 'Обувь мужская', 3, 'https://it.coach.com/api/shop/donna/calzature/casual{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Ботинки мужские', 'Обувь мужская', 3, 'https://it.coach.com/api/shop/donna/calzature/stivali{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Аксессуары мужские', 'Мужчины', 2],
+        ['Маски мужские', 'Аксессуары мужские', 3, 'https://it.coach.com/api/shop/donna/accessori/mascherine{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Ремни мужские', 'Аксессуары мужские', 3, 'https://it.coach.com/api/shop/donna/accessori/cinture{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Брелоки мужские', 'Аксессуары мужские', 3, 'https://it.coach.com/api/shop/donna/accessori/portachiavi{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Солнечные очки мужские', 'Аксессуары мужские', 3, 'https://it.coach.com/api/shop/donna/accessori/occhiali-da-sole{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Туристические аксессуары мужские', 'Аксессуары мужские', 3, 'https://it.coach.com/api/shop/donna/accessori/accessori-tecnologici-e-da-viaggio{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Часы мужские', 'Аксессуары мужские', 3, 'https://it.coach.com/api/shop/donna/accessori/orologi{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],        ['Маски женские', 'Аксессуары женские', 3, 'https://it.coach.com/api/shop/donna/accessori/mascherine{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Духи мужские', 'Аксессуары мужские', 3, 'https://it.coach.com/api/shop/donna/accessori/fragranza{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ]
+    cat_name = 'COACH'
+    for subcategory in subcategories:
+        if not str(subcategory[-1]).startswith('http'):
+            if len(subcategory) == 1:
+                crud.create_subcategory(name=subcategory[0], category=cat_name) if not crud.subcategory_exists(name=subcategory[0], category=cat_name) else 0
+            else:
+                if not crud.subcategory_exists(name=subcategory[0], category=cat_name):
+                    parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=crud.get_category(name=cat_name).id)
+                    crud.create_subcategory(name=subcategory[0], category=cat_name, parent_subcategory=parent_subcategory.id, level=subcategory[2])
+            continue
+    
+        logging.info(f'Starting {cat_name}: {subcategory[0]}')
         async with aiohttp.ClientSession(trust_env=True) as session:
             items = []
             for i in range(1, 100):
-                url = subcat_url.format(f'?page={i}')
-                async with session.get(url, ssl=False) as response:
+                async with session.get(subcategory[-1].format(f'?page={i}'), ssl=False) as response:
                     webpage = await response.json()
                     try:
                         items += webpage['pageData']['products']
@@ -1390,15 +1434,14 @@ async def get_coach():
                         break
             products = []
             euro_costs = euro_cost()
-            for item in items:
-                #print(item)
+            for item in items[:3]:
                 try:
                     await asyncio.sleep(2)
                     for color_item in item['colors']:
                         item_url = 'https://it.coach.com/it_IT' + item['url']
                         #print(item_url)
                         title = item['name'] + ' ' + color_item['text']
-                        #print(title)
+                        print(title)
                         color = color_item['text']
                         #print(color)
                         
@@ -1431,22 +1474,21 @@ async def get_coach():
                         #print(description)
                         article = item['masterId'] + ' ' + color
                         #print(article)
-                    
-                        # изображения
-                        if not os.path.exists(f"database/images/COACH"):
-                            os.mkdir(f"database/images/COACH")
-
-                        if not os.path.exists(f"database/images/COACH/{subcategory}"):
-                            os.mkdir(f"database/images/COACH/{subcategory}")
                         image_links = [image['src'] for image in color_item['media']['full']]
-                        
+                        # изображения
+                        if not os.path.exists(f"database/images/{cat_name}"):
+                            os.mkdir(f"database/images/{cat_name}")
+
+                        if not os.path.exists(f"database/images/{cat_name}/{subcategory[0]}"):
+                            os.mkdir(f"database/images/{cat_name}/{subcategory[0]}")
+
                         i = items.index(item) + 1
                         images = ''
                         
                         for url in image_links[:10]:
                             try:
                                 num = image_links.index(url) + 1
-                                img_path = f"database/images/COACH/{subcategory}/{i}_{title.replace(' ', '_').replace('/', '_')}_{num}.png"
+                                img_path = f"database/images/{cat_name}/{subcategory[0]}/{i}_{title.replace(' ', '_').replace('/', '_')}_{num}.png"
                                 if not os.path.exists(img_path):
                                     async with session.get(url, ssl=False) as response:
                                         f = await aiofiles.open(img_path, mode='wb')
@@ -1457,51 +1499,46 @@ async def get_coach():
                                 continue
                         products.append([title, description, current_price, images, list_sizes, article, item_url])
                 except Exception as ex:
-                    logging.warning(f'COACH pr - {ex}')
-        for product in products:
-            try:
-                if not crud.product_exists(article=product[5]):
-                    prod = crud.create_product(
-                    name=product[0],
-                    category='COACH',
-                    subcategory=subcategory,
-                    description=product[1],
-                    sizes=product[4],
-                    price=product[2],
-                    image=product[3],
-                    article=product[5],
-                    url=product[6])
-                else:
-                    prod = crud.get_product(article=product[5])
-                    if not prod.deleted and not prod.edited:
-                        crud.update_product(
-                            product_id=prod.id,
-                            name=product[0],
-                            description=product[1],
-                            sizes=product[4],
-                            price=product[2],
-                            image=product[3],
-                            article=product[5],
-                            url=product[6]
-                        )
-            except Exception as ex:
-                logging.warning(f'COACH db - {ex}')
+                    logging.warning(f'{cat_name} pr - {ex}')
 
-        print(f'Canceled COACH {subcategory} added {len(products)} products')
-        logging.info(f'Canceled COACH {subcategory} added {len(products)} products') 
-    await bot.send_message(227184505, f'COACH закончил парсинг')
+        if not crud.subcategory_exists(name=subcategory[0], category=cat_name):
+            parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=crud.get_category(name=cat_name).id)
+            crud.create_subcategory(name=subcategory[0], category=cat_name, parent_subcategory=parent_subcategory.id, level=subcategory[2])
+        
+        crud.create_products(category=cat_name, subcategory=subcategory[0], items=products)
+
+        logging.info(f'Canceled {cat_name} {subcategory[0]} added {len(products)} products') 
+    await bot.send_message(227184505, f'{cat_name} закончил парсинг')
 
 
 async def get_asics():
-    subcategories = {
-        'Мужская обувь' : 'https://outlet.asics.com/it/en-it/mens-shoes/c/ao10200000/?sz=96&start={}',
-        'Мужская одежда' : 'https://outlet.asics.com/it/en-it/mens-clothing/c/ao10300000/?sz=96&start={}',
-        'Мужские аксесуары' : 'https://outlet.asics.com/it/en-it/womens-accessories/c/ao20400000/?sz=96&start={}',
-        'Женская обувь' : 'https://outlet.asics.com/it/en-it/womens-shoes/c/ao20200000/?sz=96&start={}',
-        'Женская одежда' : 'https://outlet.asics.com/it/en-it/womens-clothing/c/ao20300000/?sz=96&start={}',
-        'Женские аксессуары' : 'https://outlet.asics.com/it/en-it/womens-accessories/c/ao20400000/?sz=96&start={}',
-        'Детская обувь' : 'https://outlet.asics.com/it/en-it/kids-shoes/c/ao30200000/?sz=96&start={}',
-    }
+    subcategories = [
+        ['Мужчины'],
+        ['Обувь мужская', 'Мужчины', 2],
+        ['Беговые кросовки мужские', 'Мужская обувь', 3, 'https://outlet.asics.com/it/en-it/mens-running-shoes/c/ao10201000/?sz=96&start={}'],
+        ['Туристические кросовки мужские', 'Мужская обувь', 3, 'https://outlet.asics.com/it/en-it/mens-trail/c/ao10209000/?sz=96&start={}'],
+        ['Теннисные кросовки мужские', 'Мужская обувь', 3, 'https://outlet.asics.com/it/en-it/mens-tennis-shoes/c/ao10202000/?sz=96&start={}'],
+        ['Другие кросовки мужские', 'Мужская обувь', 3, 'https://outlet.asics.com/it/en-it/ao10206000/?sz=96&start={}'],
+        ['Повседневные кросовки мужские', 'Мужская обувь', 3, 'https://outlet.asics.com/it/en-it/ao10205000/?sz=96&start={}'],
+
+        ['Одежда мужская', 'Мужчины', 2],
+        ['Футболки мужские', 'Мужская одежда', 3, 'https://outlet.asics.com/it/en-it/mens-short-sleeve-shirts/c/ao10301000/?sz=96&start={}'],
+        ['Лонгсливы мужские', 'Мужская одежда', 3, 'https://outlet.asics.com/it/en-it/mens-long-sleeve-shirts/c/ao10302000/?sz=96&start={}'],
+        ['Куртки мужские', 'Мужская одежда', 3, 'https://outlet.asics.com/it/en-it/mens-jackets-vests/c/ao10307000/?sz=96&start={}'],
+        ['Леггинцы мужские', 'Мужская одежда', 3, 'https://outlet.asics.com/it/en-it/mens-tights-leggings/c/ao10304000/?sz=96&start={}'],
+        ['Шорты мужские', 'Мужская одежда', 3, 'https://outlet.asics.com/it/en-it/mens-shorts/c/ao10305000/?sz=96&start={}'],
+        ['Штаны мужские', 'Мужская одежда', 3, 'https://outlet.asics.com/it/en-it/mens-pants/c/ao10306000/?sz=96&start={}'],
+        
+        ['Аксессуары мужские', 'Мужчины', 2],
+        ['Сумки и рюкзаки мужские', 'Аксессуары мужские', 3, 'https://outlet.asics.com/it/en-it/womens-bags-packs/c/ao20402000/?sz=96&start={}'],
+        
+        ['Мужская одежда', 'https://outlet.asics.com/it/en-it/mens-clothing/c/ao10300000/?sz=96&start={}'],
+        ['Мужские аксесуары', 'https://outlet.asics.com/it/en-it/womens-accessories/c/ao20400000/?sz=96&start={}'],
+        ['Женская обувь', 'https://outlet.asics.com/it/en-it/womens-shoes/c/ao20200000/?sz=96&start={}'],
+        ['Женская одежда', 'https://outlet.asics.com/it/en-it/womens-clothing/c/ao20300000/?sz=96&start={}'],
+        ['Женские аксессуары', 'https://outlet.asics.com/it/en-it/womens-accessories/c/ao20400000/?sz=96&start={}'],
+        ['Детская обувь', 'https://outlet.asics.com/it/en-it/kids-shoes/c/ao30200000/?sz=96&start={}'],
+    ]
     for subcategory, url in subcategories.items():
         logging.info(f'Starting Asics: {subcategory}')
         headers = {'User-Agent': 'Mozilla/5.0'}
