@@ -832,6 +832,7 @@ async def get_nike_subcategory(session, url, subcategory, category):
             try:
                 async with session.get(main_url.format(url, i, 60), ssl=False) as response:
                     webpage = await response.json()
+                    print(webpage)
                 prod = webpage['data']['products']['products']
                 products += [{'title' : p['title'], 'url': p['url'].replace('{countryLang}', 'it'), 'curprice': p['price']['currentPrice'], 'fullPrice': p['price']['fullPrice'], 'colorDescription': p['colorDescription']} for p in prod]
             except:
@@ -910,6 +911,23 @@ async def get_nike_subcategory(session, url, subcategory, category):
         except Exception as ex:
             logging.warning(f'{category} pr - {ex}')
     return items
+
+async def get_nike():
+    urls = {
+        'Мужская обувь' : '16633190-45e5-4830-a068-232ac7aea82c%2C0f64ecc7-d624-4e91-b171-b83a03dd8550',
+        #'Мужская одежда': 'a00f0bb2-648b-4853-9559-4cd943b7d6c6%2C0f64ecc7-d624-4e91-b171-b83a03dd8550',
+        #'Мужские аксессуары': 'fa863563-4508-416d-bae9-a53188c04937%2C0f64ecc7-d624-4e91-b171-b83a03dd8550',
+        #Женская обувь': '16633190-45e5-4830-a068-232ac7aea82c%2C7baf216c-acc6-4452-9e07-39c2ca77ba32',
+        #'Женская одежда': 'a00f0bb2-648b-4853-9559-4cd943b7d6c6%2C7baf216c-acc6-4452-9e07-39c2ca77ba32',
+        #'Женские аксессуары': 'fa863563-4508-416d-bae9-a53188c04937%2C7baf216c-acc6-4452-9e07-39c2ca77ba32',
+        #'Детская обувь': '16633190-45e5-4830-a068-232ac7aea82c%2C145ce13c-5740-49bd-b2fd-0f67214765b3',
+        #'Детская одежда': '145ce13c-5740-49bd-b2fd-0f67214765b3%2Ca00f0bb2-648b-4853-9559-4cd943b7d6c6',
+        #'Детские аскессуары': 'fa863563-4508-416d-bae9-a53188c04937%2C145ce13c-5740-49bd-b2fd-0f67214765b3',
+    }
+    for name, url in urls.items():
+        logging.info(f'Starting NIKE: {name}')
+        async with aiohttp.ClientSession(trust_env=True) as session:
+            items = await get_nike_subcategory(session, url, name, 'NIKE')
 
 @db_session()
 async def get_nike():
