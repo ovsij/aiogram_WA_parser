@@ -193,7 +193,7 @@ def create_products(category : str, subcategory : str, items : list):
     all_images = []
     for product in get_product(category_id=category_.id, subcategory_id=subcategory_.id, sort='n'):
         if product.article not in all_articles:
-            logging.info('delete')
+            #logging.info('delete')
             product.delete()
         else:
             all_images += product.image.split('\n')
@@ -201,7 +201,7 @@ def create_products(category : str, subcategory : str, items : list):
     for root, dirs, files in os.walk(f"database/images/{category}/{subcategory}/"):
         for filename in files:
             if f"database/images/{category}/{subcategory}/{filename}" not in all_images:
-                logging.info('delete image')
+                #logging.info('delete image')
                 #os.remove(f"database/images/{category}/{subcategory}/{filename}")
     # создаем новые/обновляем товары
     all_articles = []
