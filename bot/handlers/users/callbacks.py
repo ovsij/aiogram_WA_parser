@@ -17,6 +17,7 @@ from database.db import *
 from database.models import *
 from keyboards.inline import *
 from keyboards.reply import *
+from keyboards.constructor import InlineConstructor
 from parser import parser
 
 import asyncio
@@ -618,9 +619,12 @@ async def btn_callback(callback_query: types.CallbackQuery):
 
     if code[1] == 'promocode':
         await Form.promocode_user.set()
+        reply_markup = InlineConstructor.create_kb([['Отмена','deny']], [1])
+
         Form.prev_message = await bot.send_message(
             callback_query.message.chat.id,
-            text='Для отмены этого действия введите команду /stop\n\nДля продолжения введите промокод:'
+            text='Для отмены этого действия нажмите на кнопку\n\nДля продолжения введите промокод:',
+            reply_markup=reply_markup
         )
 
     if code[1] == 'sizes':
@@ -1000,4 +1004,13 @@ async def denysending(callback_query: types.CallbackQuery, state: FSMContext):
             text=text + '\n\n Сообщение не разослано.', 
             reply_markup=reply_markup
             )
+
+# Отмена 
+@dp.callback_query_handler(lambda c: c.data == 'deny', state=Form.promocode_user)
+async def denysending(callback_query: types.CallbackQuery, state: FSMContext):
+    print(f'User {callback_query.from_user.id} open {callback_query.data}')
+
+    await state.finish()
+    await bot.delete_message(chat_id=callback_query.from_user.id, message_id=Form.prev_message.message_id)
+    
     
