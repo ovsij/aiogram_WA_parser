@@ -120,8 +120,11 @@ async def btn_callback(callback_query: types.CallbackQuery):
                 page=[int(p) for p in code[-1].split('-')],
                 sort=code[6]
             )
-            
-        await callback_query.message.delete()
+        try:
+            await callback_query.message.delete()
+        except:
+            pass
+        # последнее сообщение с кнопками
         for item in textReply_markup:
             if not item['images']:
                 await bot.send_message(
@@ -130,13 +133,16 @@ async def btn_callback(callback_query: types.CallbackQuery):
                     reply_markup=item['reply_markup']
                 )
             else:
+                
                 try:
+                    # карточка товара с фото
                     images = item['images'].split('\n')
                     photo = [types.InputMedia(media=open(img, 'rb'), caption=item['text']) if images.index(img) == 0 else types.InputMedia(media=open(img, 'rb')) for img in images]
                     await bot.send_media_group(
                         callback_query.message.chat.id, 
                         media=photo,
                     )
+                    # сообщение м кнопками под товаром "добавить в корзину" и тд
                     await bot.send_message(
                         callback_query.message.chat.id,
                         text = 'Выберите действие: ',
@@ -144,7 +150,7 @@ async def btn_callback(callback_query: types.CallbackQuery):
                     )
                     await asyncio.sleep(0.5)
                 except:
-                    pass
+                    continue
 
     if code[1] == 'sf':
         # если выбраны размеры выводится это

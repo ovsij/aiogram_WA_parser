@@ -1412,6 +1412,8 @@ async def get_coach():
         ]
     cat_name = 'COACH'
     for subcategory in subcategories:
+        if subcategory[0] != 'Большие сумки мужские':
+            continue
         if not str(subcategory[-1]).startswith('http'):
             if len(subcategory) == 1:
                 crud.create_subcategory(name=subcategory[0], category=cat_name) if not crud.subcategory_exists(name=subcategory[0], category=cat_name) else 0
@@ -1427,78 +1429,79 @@ async def get_coach():
             for i in range(1, 100):
                 async with session.get(subcategory[-1].format(f'?page={i}'), ssl=False) as response:
                     webpage = await response.json()
-                    try:
+                    if len(webpage['pageData']['products']) > 0:
                         items += webpage['pageData']['products']
-                    except:
+                    else:
                         break
+                    
             products = []
             euro_costs = euro_cost()
             for item in items:
-                try:
-                    await asyncio.sleep(2)
-                    for color_item in item['colors']:
-                        item_url = 'https://it.coach.com/it_IT' + item['url']
-                        #print(item_url)
-                        title = item['name'] + ' ' + color_item['text']
-                        print(title)
-                        color = color_item['text']
-                        #print(color)
-                        
-                        current_price = int((float(item['prices']['currentPrice']) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='COACH').margin}"))
-                        try:
-                            old_price = int((float(item['prices']['regularPrice']) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='COACH').margin}"))
-                            percent = int(100 - float(current_price)/(float(old_price)/100))
-                        except:
-                            old_price = None
-                        
-                        #print(price)
-                        async with session.get(f"https://it.coach.com/api/get-suggestions-products?ids={item['id'].replace(' ', '+')}%2CCF925+B4%2FWN%2CCE897+LJN++S%2CCG798+BLK++XL&locale=it_IT&__v__=0vd2xlsFnzxBsryah6o6X", ssl=False) as response:
-                            item_webpage = await response.json()
-                        #print(soup)
-                        description = ''
-                        #description = item_webpage['productsData'][0]['longDescription'].replace('<li>', '').replace('</li>', '').replace('<ul>', '').replace('</ul>', '')
-                        if old_price:
-                            description = description[:700] + f'\n\n<s>{old_price} руб.</s> -{percent}% {current_price} руб.'
+                #try:
+                await asyncio.sleep(2)
+                for color_item in item['colors']:
+                    item_url = 'https://it.coach.com/it_IT' + item['url']
+                    print(item_url)
+                    title = item['name'] + ' ' + color_item['text']
+                    print(title)
+                    color = color_item['text']
+                    #print(color)
+                    
+                    current_price = int((float(item['prices']['currentPrice']) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='COACH').margin}"))
+                    try:
+                        old_price = int((float(item['prices']['regularPrice']) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='COACH').margin}"))
+                        percent = int(100 - float(current_price)/(float(old_price)/100))
+                    except:
+                        old_price = None
+                    
+                    #print(price)
+                    async with session.get(f"https://it.coach.com/api/get-suggestions-products?ids={item['id'].replace(' ', '+')}%2CCF925+B4%2FWN%2CCE897+LJN++S%2CCG798+BLK++XL&locale=it_IT&__v__=0vd2xlsFnzxBsryah6o6X", ssl=False) as response:
+                        item_webpage = await response.json()
+                    #print(soup)
+                    description = ''
+                    #description = item_webpage['productsData'][0]['longDescription'].replace('<li>', '').replace('</li>', '').replace('<ul>', '').replace('</ul>', '')
+                    if old_price:
+                        description = description[:700] + f'\n\n<s>{old_price} руб.</s> -{percent}% {current_price} руб.'
+                    list_sizes = ''
+                    try:
+                        sizes = [size['value'] for size in item_webpage['productsData'][0]['variationGroup'][0]['variationAttributes'][1]['values'] if size['orderable']]
                         list_sizes = ''
+                        for size in sizes:
+                            list_sizes += size + ', '
+                        list_sizes = list_sizes.strip(', ')
+
+                        description += '\n\nРазмеры:\n' + list_sizes
+                    except:
+                        pass
+                    #print(description)
+                    article = item['masterId'] + ' ' + color
+                    #print(article)
+                    image_links = [image['src'] for image in color_item['media']['full']]
+                    # изображения
+                    if not os.path.exists(f"database/images/{cat_name}"):
+                        os.mkdir(f"database/images/{cat_name}")
+
+                    if not os.path.exists(f"database/images/{cat_name}/{subcategory[0]}"):
+                        os.mkdir(f"database/images/{cat_name}/{subcategory[0]}")
+
+                    i = items.index(item) + 1
+                    images = ''
+                    
+                    for url in image_links[:10]:
                         try:
-                            sizes = [size['value'] for size in item_webpage['productsData'][0]['variationGroup'][0]['variationAttributes'][1]['values'] if size['orderable']]
-                            list_sizes = ''
-                            for size in sizes:
-                                list_sizes += size + ', '
-                            list_sizes = list_sizes.strip(', ')
-
-                            description += '\n\nРазмеры:\n' + list_sizes
+                            num = image_links.index(url) + 1
+                            img_path = f"database/images/{cat_name}/{subcategory[0]}/{i}_{title.replace(' ', '_').replace('/', '_')}_{num}.png"
+                            if not os.path.exists(img_path):
+                                async with session.get(url, ssl=False) as response:
+                                    f = await aiofiles.open(img_path, mode='wb')
+                                    await f.write(await response.read())
+                                    await f.close()
+                            images +=  img_path + '\n'
                         except:
-                            pass
-                        #print(description)
-                        article = item['masterId'] + ' ' + color
-                        #print(article)
-                        image_links = [image['src'] for image in color_item['media']['full']]
-                        # изображения
-                        if not os.path.exists(f"database/images/{cat_name}"):
-                            os.mkdir(f"database/images/{cat_name}")
-
-                        if not os.path.exists(f"database/images/{cat_name}/{subcategory[0]}"):
-                            os.mkdir(f"database/images/{cat_name}/{subcategory[0]}")
-
-                        i = items.index(item) + 1
-                        images = ''
-                        
-                        for url in image_links[:10]:
-                            try:
-                                num = image_links.index(url) + 1
-                                img_path = f"database/images/{cat_name}/{subcategory[0]}/{i}_{title.replace(' ', '_').replace('/', '_')}_{num}.png"
-                                if not os.path.exists(img_path):
-                                    async with session.get(url, ssl=False) as response:
-                                        f = await aiofiles.open(img_path, mode='wb')
-                                        await f.write(await response.read())
-                                        await f.close()
-                                images +=  img_path + '\n'
-                            except:
-                                continue
-                        products.append([title, description, current_price, images, list_sizes, article, item_url])
-                except Exception as ex:
-                    logging.warning(f'{cat_name} pr - {ex}')
+                            continue
+                    products.append([title, description, current_price, images, list_sizes, article, item_url])
+                #except Exception as ex:
+                #    logging.warning(f'{cat_name} pr - {ex}')
 
         if not crud.subcategory_exists(name=subcategory[0], category=cat_name):
             parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=crud.get_category(name=cat_name).id)
@@ -1543,12 +1546,12 @@ async def get_asics():
         ['Одежда женская', 'Женщины', 2],
         ['Спортивные бюстгальтеры женские', 'Одежда женская', 3, 'https://outlet.asics.com/it/en-it/womens-sports-bras/c/ao20301000/?sz=96&start={}'],
         ['Безрукавки женские', 'Одежда женская', 3, 'https://outlet.asics.com/it/en-it/womens-tank-tops/c/ao20304000/?sz=96&start={}'],
-        ['Футболки женские', 'Одежда женская', 3, 'https://outlet.asics.com/it/en-it/mens-short-sleeve-shirts/c/ao10301000/?sz=96&start={}'],
-        ['Лонгсливы женские', 'Одежда женская', 3, 'https://outlet.asics.com/it/en-it/mens-long-sleeve-shirts/c/ao10302000/?sz=96&start={}'],
-        ['Куртки женские', 'Одежда женская', 3, 'https://outlet.asics.com/it/en-it/mens-jackets-vests/c/ao10307000/?sz=96&start={}'],
-        ['Шорты женские', 'Одежда женская', 3, 'https://outlet.asics.com/it/en-it/mens-shorts/c/ao10305000/?sz=96&start={}'],
-        ['Штаны женские', 'Одежда женская', 3, 'https://outlet.asics.com/it/en-it/mens-pants/c/ao10306000/?sz=96&start={}'],
-        ['Леггинцы женские', 'Одежда женская', 3, 'https://outlet.asics.com/it/en-it/mens-tights-leggings/c/ao10304000/?sz=96&start={}'],
+        ['Футболки женские', 'Одежда женская', 3, 'https://outlet.asics.com/it/en-it/womens-short-sleeve-shirts/c/ao20302000/?sz=96&start={}'],
+        ['Лонгсливы женские', 'Одежда женская', 3, 'https://outlet.asics.com/it/en-it/womens-long-sleeve-shirts/c/ao20303000/?sz=96&start={}'],
+        ['Куртки женские', 'Одежда женская', 3, 'https://outlet.asics.com/it/en-it/womens-jackets-vests/c/ao20308000/?sz=96&start={}'],
+        ['Шорты женские', 'Одежда женская', 3, 'https://outlet.asics.com/it/en-it/womens-shorts/c/ao20306000/?sz=96&start={}'],
+        ['Штаны женские', 'Одежда женская', 3, 'https://outlet.asics.com/it/en-it/womens-pants/c/ao20307000/?sz=96&start={}'],
+        ['Леггинцы женские', 'Одежда женская', 3, 'https://outlet.asics.com/it/en-it/womens-tights-leggings/c/ao20305000/?sz=96&start={}'],
         
         ['Аксессуары женские', 'Женщины', 2],
         ['Сумки и рюкзаки женские', 'Аксессуары женские', 3, 'https://outlet.asics.com/it/en-it/womens-bags-packs/c/ao20402000/?sz=96&start={}'],
