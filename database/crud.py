@@ -201,6 +201,7 @@ def create_products(category : str, subcategory : str, items : list):
     for root, dirs, files in os.walk(f"database/images/{category}/{subcategory}/"):
         for filename in files:
             if f"database/images/{category}/{subcategory}/{filename}" not in all_images:
+                pass
                 #logging.info('delete image')
                 #os.remove(f"database/images/{category}/{subcategory}/{filename}")
     # создаем новые/обновляем товары
