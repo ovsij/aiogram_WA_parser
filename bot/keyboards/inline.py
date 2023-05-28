@@ -181,6 +181,7 @@ def inline_kb_subcategories(tg_id : str, category : int = None, subcategory : in
         
 
 def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : int = None, sizes : str = None, prices : str = None, page : list = [0, 5], back : bool = False, sort : str = None):
+    subcategory = get_subcategory(id=sub_category)
     textInline_kb = []
     if sizes or prices:
         products = get_product(category_id=category, subcategory_id=sub_category, sizes=sizes, prices=prices, sort=sort)
@@ -194,8 +195,9 @@ def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : in
             schema.append(1)
             text_and_data.append(['Добавить товар', f'btn_addproduct_{category}_{sub_category}'])
             schema.append(1)
-
-        text_and_data.append(btn_back('menu'))
+        
+        back_btn = btn_back(f'category_{category}_{subcategory.parentSubCategory.id}-{subcategory.level - 1}_1') if subcategory.parentSubCategory else btn_back(f'category_{category}_1')
+        text_and_data.append(back_btn)
         schema.append(1)
 
         text = 'К сожалению, в данной подкатегории пока ничего нет'
@@ -257,7 +259,7 @@ def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : in
     page_0 = 0 if back else page[1]
     page_5 = 5 if back else page[1] + 5
     page_25 = 25 if back else page[1] + 25
-    subcategory = get_subcategory(id=sub_category)
+    
     back_btn = btn_back(f'category_{category}_{subcategory.parentSubCategory.id}-{subcategory.level - 1}_1') if subcategory.parentSubCategory else btn_back(f'category_{category}_1')
     text_and_data = [
         [emojize(f'{filter_size_emoji} Фильтр по размеру', language='alias'), f'btn_sf_{category}_{sub_category}{sizes_code}{prices_code}_n'],

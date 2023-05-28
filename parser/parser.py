@@ -1514,48 +1514,64 @@ async def get_asics():
     subcategories = [
         ['Мужчины'],
         ['Обувь мужская', 'Мужчины', 2],
-        ['Беговые кросовки мужские', 'Мужская обувь', 3, 'https://outlet.asics.com/it/en-it/mens-running-shoes/c/ao10201000/?sz=96&start={}'],
-        ['Туристические кросовки мужские', 'Мужская обувь', 3, 'https://outlet.asics.com/it/en-it/mens-trail/c/ao10209000/?sz=96&start={}'],
-        ['Теннисные кросовки мужские', 'Мужская обувь', 3, 'https://outlet.asics.com/it/en-it/mens-tennis-shoes/c/ao10202000/?sz=96&start={}'],
-        ['Другие кросовки мужские', 'Мужская обувь', 3, 'https://outlet.asics.com/it/en-it/ao10206000/?sz=96&start={}'],
-        ['Повседневные кросовки мужские', 'Мужская обувь', 3, 'https://outlet.asics.com/it/en-it/ao10205000/?sz=96&start={}'],
+        ['Беговые кросовки мужские', 'Обувь мужская', 3, 'https://outlet.asics.com/it/en-it/mens-running-shoes/c/ao10201000/?sz=96&start={}'],
+        ['Туристические кросовки мужские', 'Обувь мужская', 3, 'https://outlet.asics.com/it/en-it/mens-trail/c/ao10209000/?sz=96&start={}'],
+        ['Теннисные кросовки мужские', 'Обувь мужская', 3, 'https://outlet.asics.com/it/en-it/mens-tennis-shoes/c/ao10202000/?sz=96&start={}'],
+        ['Другие кросовки мужские', 'Обувь мужская', 3, 'https://outlet.asics.com/it/en-it/ao10206000/?sz=96&start={}'],
+        ['Повседневные кросовки мужские', 'Обувь мужская', 3, 'https://outlet.asics.com/it/en-it/ao10205000/?sz=96&start={}'],
 
         ['Одежда мужская', 'Мужчины', 2],
-        ['Футболки мужские', 'Мужская одежда', 3, 'https://outlet.asics.com/it/en-it/mens-short-sleeve-shirts/c/ao10301000/?sz=96&start={}'],
-        ['Лонгсливы мужские', 'Мужская одежда', 3, 'https://outlet.asics.com/it/en-it/mens-long-sleeve-shirts/c/ao10302000/?sz=96&start={}'],
-        ['Куртки мужские', 'Мужская одежда', 3, 'https://outlet.asics.com/it/en-it/mens-jackets-vests/c/ao10307000/?sz=96&start={}'],
-        ['Леггинцы мужские', 'Мужская одежда', 3, 'https://outlet.asics.com/it/en-it/mens-tights-leggings/c/ao10304000/?sz=96&start={}'],
-        ['Шорты мужские', 'Мужская одежда', 3, 'https://outlet.asics.com/it/en-it/mens-shorts/c/ao10305000/?sz=96&start={}'],
-        ['Штаны мужские', 'Мужская одежда', 3, 'https://outlet.asics.com/it/en-it/mens-pants/c/ao10306000/?sz=96&start={}'],
+        ['Футболки мужские', 'Одежда мужская', 3, 'https://outlet.asics.com/it/en-it/mens-short-sleeve-shirts/c/ao10301000/?sz=96&start={}'],
+        ['Лонгсливы мужские', 'Одежда мужская', 3, 'https://outlet.asics.com/it/en-it/mens-long-sleeve-shirts/c/ao10302000/?sz=96&start={}'],
+        ['Куртки мужские', 'Одежда мужская', 3, 'https://outlet.asics.com/it/en-it/mens-jackets-vests/c/ao10307000/?sz=96&start={}'],
+        ['Леггинцы мужские', 'Одежда мужская', 3, 'https://outlet.asics.com/it/en-it/mens-tights-leggings/c/ao10304000/?sz=96&start={}'],
+        ['Шорты мужские', 'Одежда мужская', 3, 'https://outlet.asics.com/it/en-it/mens-shorts/c/ao10305000/?sz=96&start={}'],
+        ['Штаны мужские', 'Одежда мужская', 3, 'https://outlet.asics.com/it/en-it/mens-pants/c/ao10306000/?sz=96&start={}'],
         
         ['Аксессуары мужские', 'Мужчины', 2],
         ['Сумки и рюкзаки мужские', 'Аксессуары мужские', 3, 'https://outlet.asics.com/it/en-it/womens-bags-packs/c/ao20402000/?sz=96&start={}'],
         ['Головные уборы и перчатки мужские', 'Аксессуары мужские', 3, 'https://outlet.asics.com/it/en-it/hats-and-gloves/c/ao100000081/?sz=96&start={}'],
         ['Носки мужские', 'Аксессуары мужские', 3, 'https://outlet.asics.com/it/en-it/mens-socks/c/ao10401000/?sz=96&start={}'],
 
-        ['Мужская одежда', 'https://outlet.asics.com/it/en-it/mens-clothing/c/ao10300000/?sz=96&start={}'],
-        ['Мужские аксесуары', 'https://outlet.asics.com/it/en-it/womens-accessories/c/ao20400000/?sz=96&start={}'],
-        ['Женская обувь', 'https://outlet.asics.com/it/en-it/womens-shoes/c/ao20200000/?sz=96&start={}'],
-        ['Женская одежда', 'https://outlet.asics.com/it/en-it/womens-clothing/c/ao20300000/?sz=96&start={}'],
-        ['Женские аксессуары', 'https://outlet.asics.com/it/en-it/womens-accessories/c/ao20400000/?sz=96&start={}'],
-        ['Детская обувь', 'https://outlet.asics.com/it/en-it/kids-shoes/c/ao30200000/?sz=96&start={}'],
-
-        ['Мужчины'],
-        ['Обувь мужская', 'Мужчины', 2],
-        ['Беговые кросовки мужские', 'Мужская обувь', 3, 'https://outlet.asics.com/it/en-it/mens-running-shoes/c/ao10201000/?sz=96&start={}'],
-        ['Туристические кросовки мужские', 'Мужская обувь', 3, 'https://outlet.asics.com/it/en-it/mens-trail/c/ao10209000/?sz=96&start={}'],
-        ['Теннисные кросовки мужские', 'Мужская обувь', 3, 'https://outlet.asics.com/it/en-it/mens-tennis-shoes/c/ao10202000/?sz=96&start={}'],
-        ['Другие кросовки мужские', 'Мужская обувь', 3, 'https://outlet.asics.com/it/en-it/ao10206000/?sz=96&start={}'],
-        ['Повседневные кросовки мужские', 'Мужская обувь', 3, 'https://outlet.asics.com/it/en-it/ao10205000/?sz=96&start={}'],
-
+        ['Женщины'],
+        ['Обувь женская', 'Женщины', 2],
+        ['Беговые кросовки женские', 'Обувь женская', 3, 'https://outlet.asics.com/it/en-it/womens-running-shoes/c/ao20201000/?sz=96&start={}'],
+        ['Туристические кросовки женские', 'Обувь женская', 3, 'https://outlet.asics.com/it/en-it/womens-trail/c/ao20208000/?sz=96&start={}'],
+        ['Теннисные кросовки женские', 'Обувь женская', 3, 'https://outlet.asics.com/it/en-it/womens-tennis-shoes/c/ao20202000/?sz=96&start={}'],
+        ['Другие кросовки женские', 'Обувь женская', 3, 'https://outlet.asics.com/it/en-it/ao20203000/?sz=96&start={}'],
+        ['Повседневные кросовки женские', 'Обувь женская', 3, 'https://outlet.asics.com/it/en-it/ao20205000/?sz=96&start={}'],
+        ['Одежда женская', 'Женщины', 2],
+        ['Спортивные бюстгальтеры женские', 'Одежда женская', 3, 'https://outlet.asics.com/it/en-it/womens-sports-bras/c/ao20301000/?sz=96&start={}'],
+        ['Безрукавки женские', 'Одежда женская', 3, 'https://outlet.asics.com/it/en-it/womens-tank-tops/c/ao20304000/?sz=96&start={}'],
+        ['Футболки женские', 'Одежда женская', 3, 'https://outlet.asics.com/it/en-it/mens-short-sleeve-shirts/c/ao10301000/?sz=96&start={}'],
+        ['Лонгсливы женские', 'Одежда женская', 3, 'https://outlet.asics.com/it/en-it/mens-long-sleeve-shirts/c/ao10302000/?sz=96&start={}'],
+        ['Куртки женские', 'Одежда женская', 3, 'https://outlet.asics.com/it/en-it/mens-jackets-vests/c/ao10307000/?sz=96&start={}'],
+        ['Шорты женские', 'Одежда женская', 3, 'https://outlet.asics.com/it/en-it/mens-shorts/c/ao10305000/?sz=96&start={}'],
+        ['Штаны женские', 'Одежда женская', 3, 'https://outlet.asics.com/it/en-it/mens-pants/c/ao10306000/?sz=96&start={}'],
+        ['Леггинцы женские', 'Одежда женская', 3, 'https://outlet.asics.com/it/en-it/mens-tights-leggings/c/ao10304000/?sz=96&start={}'],
+        
+        ['Аксессуары женские', 'Женщины', 2],
+        ['Сумки и рюкзаки женские', 'Аксессуары женские', 3, 'https://outlet.asics.com/it/en-it/womens-bags-packs/c/ao20402000/?sz=96&start={}'],
+        ['Головные уборы и перчатки женские', 'Аксессуары женские', 3, 'https://outlet.asics.com/it/en-it/womens-hats-headbands-beanies/c/ao20403000/?sz=96&start={}'],
+        ['Носки женские', 'Аксессуары женские', 3, 'https://outlet.asics.com/it/en-it/womens-socks/c/ao20401000/?sz=96&start={}'],
     ]
-    for subcategory, url in subcategories.items():
-        logging.info(f'Starting Asics: {subcategory}')
+    cat_name = 'Asics'
+    for subcategory in subcategories:
+        if not str(subcategory[-1]).startswith('http'):
+            if len(subcategory) == 1:
+                crud.create_subcategory(name=subcategory[0], category=cat_name) if not crud.subcategory_exists(name=subcategory[0], category=cat_name) else 0
+            else:
+                if not crud.subcategory_exists(name=subcategory[0], category=cat_name):
+                    parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=crud.get_category(name=cat_name).id)
+                    crud.create_subcategory(name=subcategory[0], category=cat_name, parent_subcategory=parent_subcategory.id, level=subcategory[2])
+            continue
+    
+        logging.info(f'Starting Asics: {subcategory[0]}')
         headers = {'User-Agent': 'Mozilla/5.0'}
         async with aiohttp.ClientSession(headers=headers, trust_env=True) as session:
             item_links = []
             for i in range(0, 10):
-                async with session.get(url.format(96 * i), ssl=False) as response:
+                async with session.get(subcategory[-1].format(96 * i), ssl=False) as response:
                     webpage = await response.read()
                     logging.info(f'Asics  {response.status}')
                     soup = bs(webpage, 'html.parser')
@@ -1571,7 +1587,6 @@ async def get_asics():
                 try:
                     await asyncio.sleep(2)
                     async with session.get(item_url, ssl=False) as response:
-                        logging.info(f'Asics item {response.status}')
                         item_wp = await response.read()
                         item_sp = bs(item_wp, 'html.parser')
                         title = item_sp.find('div', 'pdp-top__product-name large-bold').text.replace('\n', '').strip(' ')
@@ -1609,11 +1624,11 @@ async def get_asics():
 
                         image_links = [a.get('href') for a in item_sp.find('div', 'product-thumbnails').find_all('a')]
                         # изображения
-                        if not os.path.exists(f"database/images/Asics"):
-                            os.mkdir(f"database/images/Asics")
+                        if not os.path.exists(f"database/images/{cat_name}"):
+                            os.mkdir(f"database/images/{cat_name}")
 
-                        if not os.path.exists(f"database/images/Asics/{subcategory}"):
-                            os.mkdir(f"database/images/Asics/{subcategory}")
+                        if not os.path.exists(f"database/images/{cat_name}/{subcategory[0]}"):
+                            os.mkdir(f"database/images/{cat_name}/{subcategory[0]}")
 
                         i = item_links.index(item_url) + 1
                         images = ''
@@ -1621,7 +1636,7 @@ async def get_asics():
                         for url in image_links[:10]:
                             try:
                                 num = image_links.index(url) + 1
-                                img_path = f"database/images/Asics/{subcategory}/{i}_{title.replace(' ', '_').replace('/', '_')}_{num}.png"
+                                img_path = f"database/images/{cat_name}/{subcategory[0]}/{i}_{title.replace(' ', '_').replace('/', '_')}_{num}.png"
                                 if not os.path.exists(img_path):
                                     async with session.get(url, ssl=False) as response:
                                         f = await aiofiles.open(img_path, mode='wb')
@@ -1633,40 +1648,18 @@ async def get_asics():
                         items.append([title, description, current_price, images, sizes, article, item_url])
                         #logging.info([title, description, current_price, images, sizes, article, item_url])
                 except Exception as ex:
-                    logging.warning(f'Asics pr - {ex}')
+                    logging.warning(f'{cat_name} pr - {ex}')
+        # Добавление товаров
+        if not crud.subcategory_exists(name=subcategory[0], category=cat_name):
+            parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=crud.get_category(name=cat_name).id)
+            crud.create_subcategory(name=subcategory[0], category=cat_name, parent_subcategory=parent_subcategory.id, level=subcategory[2])
+        
+        crud.create_products(category=cat_name, subcategory=subcategory[0], items=items)
 
-        for item in items:
-            try:
-                if not crud.product_exists(article=item[5]):
-                    prod = crud.create_product(
-                    name=item[0],
-                    category='Asics',
-                    subcategory=subcategory,
-                    description=item[1],
-                    sizes=item[4],
-                    price=item[2],
-                    image=item[3],
-                    article=item[5],
-                    url=item[6])
-                else:
-                    prod = crud.get_product(article=item[5])
-                    if not prod.deleted and not prod.edited:
-                        crud.update_product(
-                            product_id=prod.id,
-                            name=item[0],
-                            description=item[1],
-                            sizes=item[4],
-                            price=item[2],
-                            image=item[3],
-                            article=item[5],
-                            url=item[6]
-                        )
-            except Exception as ex:
-                logging.warning(f'Asics db - {ex}')
+        logging.info(f'Canceled {cat_name} {subcategory[0]} added {len(items)} products') 
+    await bot.send_message(227184505, f'{cat_name} закончил парсинг')
 
-        print(f'Canceled Asics {subcategory} added {len(items)} products')
-        logging.info(f'Canceled Asics {subcategory} added {len(items)} products') 
-    await bot.send_message(227184505, f'Asics закончил парсинг')
+        
 
 
 async def get_newbalance():
