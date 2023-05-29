@@ -566,8 +566,8 @@ def inline_kb_createorder(tg_id : str, create : bool, order_id : int = None):
         sum = 0
         i = 1
         for product in products:
-            price = get_promoprice(product=product[0], tg_id=tg_id)
-            text += f'\n\n {i}. {product[0].name} ({product[1]}) - {price} руб.'
+            price = get_promoprice(product=product, tg_id=tg_id)
+            text += f'\n\n {i}. {product.name} ({product}) - {price} руб.'
             sum += price
             i += 1
         text += f'\n\nИтого: {sum} руб.'
