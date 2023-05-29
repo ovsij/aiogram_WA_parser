@@ -312,7 +312,8 @@ def inline_kb_sizefilter(category : int = None, sub_category : int = None, sizes
                 new_sizes.remove(size_)
                 for s in new_sizes:
                     sizes_code += s + '-'
-                sizes_code = sizes_code.strip('-')
+                sizes_code = sizes_code.lstrip('-')
+                sizes_code = sizes_code.rstrip('-')
                 text_and_data.append(
                     [emojize(f':white_check_mark: {size_}', language='alias'), f'btn_sf_{category}_{sub_category}_{sizes_code}_{prices_code}_n']
                 )
