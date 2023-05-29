@@ -350,7 +350,7 @@ def inline_kb_sizefilter(category : int = None, sub_category : int = None, sizes
     text_and_data.append([emojize(':arrow_backward: Назад', language='alias'), f'btn_ls_{category}_{sub_category}_s={next_size_code}_{prices_code}_{page[0]}-{page[1]}_back'])
     text_and_data.append([emojize(':arrow_down_small: Применить :arrow_down_small:', language='alias'), f'btn_ls_{category}_{sub_category}_s={next_size_code}_{prices_code}_n_0-5'])
     schema.append(2)
-    logging.info(text_and_data)
+    
     inline_kb = InlineConstructor.create_kb(text_and_data, schema)
     return text, inline_kb            
 
@@ -395,6 +395,7 @@ def inline_kb_pricefilter(category : int = None, sub_category : int = None, size
     text_and_data.append([emojize(':arrow_backward: Назад', language='alias'), f'btn_ls_{category}_{sub_category}_s={sizes_code}_p={prices_code}_n_{page[0]}-{page[1]}_back'])
     text_and_data.append([emojize(':arrow_down_small: Применить :arrow_down_small:', language='alias'), f'btn_ls_{category}_{sub_category}_s={sizes_code}_p={prices_code}_n_0-5'])
     schema.append(2)
+    logging.info(text_and_data)
     inline_kb = InlineConstructor.create_kb(text_and_data, schema)
     return text, inline_kb   
 
