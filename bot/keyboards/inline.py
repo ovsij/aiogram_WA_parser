@@ -521,26 +521,26 @@ async def inline_kb_cart(tg_id : str, page : list = [0, 5]):
     products = get_cart(tg_id=tg_id)
     for product in products[page[0]:page[1]]:
         dct = {}
-        description = '' if not product[0].description else product[0].description.split('\n\nSizes:')[0].split('\n\nРазмеры:')[0]
-        description += f"\n\nВыбранные размеры: {product[1].replace('-', ', ')}"
-        price = 'Не указана' if not product[0].price else f'{product[0].price} руб.'
-        dct['text'] = f'{product[0].name}\n\nАртикул: {product[0].article}\n{description}\n\nЦена: {price}'
+        description = '' if not product.description else product.description.split('\n\nSizes:')[0].split('\n\nРазмеры:')[0]
+        description += f"\n\nВыбранные размеры: {product.sizes.replace('-', ', ')}"
+        price = 'Не указана' if not product.price else f'{product.price} руб.'
+        dct['text'] = f'{product.name}\n\nАртикул: {product.article}\n{description}\n\nЦена: {price}'
         # применяем промокод
-        promocode = get_promocode(tg_id=tg_id, category_id=product[0].category.id)
+        promocode = get_promocode(tg_id=tg_id, category_id=product.category.id)
         if promocode and price != 'Не указана':
-            dct['text'] += f'\n\nСо скидкой по промокоду:\n{int(get_promoprice(product=product[0], tg_id=tg_id))} руб'
+            dct['text'] += f'\n\nСо скидкой по промокоду:\n{int(get_promoprice(product=product, tg_id=tg_id))} руб'
 
-        if cart_exists(tg_id=tg_id, product_id=product[0].id):
+        if cart_exists(tg_id=tg_id, product_id=product.id):
             text_and_data = [
-                [emojize('Удалить из корзины', language='alias'), f'btn_delfromcart_{product[0].id}']
+                [emojize('Удалить из корзины', language='alias'), f'btn_delfromcart_{product.id}']
             ]
         else:
             text_and_data = [
-                [emojize('Добавить в корзину', language='alias'), f'btn_tocart_{product[0].id}']
+                [emojize('Добавить в корзину', language='alias'), f'btn_tocart_{product.id}']
             ]
 
         dct['reply_markup'] = InlineConstructor.create_kb(text_and_data, [1])
-        dct['images'] = product[0].image
+        dct['images'] = product.image
         textInline_kb.append(dct)
 
     len_prodcts = page[1] if len(textInline_kb) >= 5 else len(products)
