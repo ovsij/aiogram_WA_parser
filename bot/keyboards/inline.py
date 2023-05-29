@@ -262,7 +262,6 @@ def inline_kb_sizefilter(category : int = None, sub_category : int = None, sizes
     all_sizes = []
     for product in get_product(category_id=category, subcategory_id=sub_category, sort=sort):
         all_sizes += str(product.sizes).split(', ')
-    print(all_sizes)
     try:
         _ = int(all_sizes)
         all_sizes = list(set(all_sizes))
@@ -277,7 +276,6 @@ def inline_kb_sizefilter(category : int = None, sub_category : int = None, sizes
         all_sizes = [str(fl_size).replace('.0', '') for fl_size in sorted_list]
     except:
         all_sizes = list(set(all_sizes))
-    print(all_sizes)
     
     prices_code = 'p='
     for price in prices_code_list:
