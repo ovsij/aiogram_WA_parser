@@ -153,6 +153,23 @@ async def btn_callback(callback_query: types.CallbackQuery):
                     #await asyncio.sleep(0.5)
                 except:
                     continue
+    if code[1] == 'publish':
+        text, reply_markup, images = inline_kb_publish(product_id=code[-1], to=code[2])
+        
+        photo = [types.InputMedia(media=open(img, 'rb'), caption=text) if images.index(img) == 0 else types.InputMedia(media=open(img, 'rb')) for img in images]
+        
+        chat_id = -1001617464327 if code[2] == 'channel' else callback_query.from_user.id
+        
+        await bot.send_media_group(
+            chat_id, 
+            media=photo,
+        )
+
+        await bot.send_message(
+            chat_id,
+            text = 'Выберите действие: ',
+            reply_markup=reply_markup
+        )
 
     if code[1] == 'sf':
         # если выбраны размеры выводится это

@@ -179,7 +179,11 @@ def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : in
                 text_and_data.append(['Удалить товар', f'btn_delproduct_{product.id}'])
                 schema.append(1)
             text_and_data.append(['Изменить товар', f'btn_editproduct_{product.id}'])
-            
+            schema.append(1)
+        
+        # добавить кнопку "Опубликовать в канале"
+        if tg_id in os.getenv('EDITORS'):
+            text_and_data.append(['Опубликовать в канале', f'btn_publish_channel_{product.id}'])
             schema.append(1)
         
         dct['reply_markup'] = InlineConstructor.create_kb(text_and_data, schema)
@@ -224,6 +228,8 @@ def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : in
     )
     
     return textInline_kb
+
+
 def inline_kb_tocart(product_id : int, sizes : list = []):
     text = 'Выберите размер, который хотите добавить в корзину'
     text_and_data = []
@@ -254,6 +260,22 @@ def inline_kb_tocart(product_id : int, sizes : list = []):
    
     inline_kb = InlineConstructor.create_kb(text_and_data, schema)
     return text, inline_kb  
+
+def inline_kb_publish(product_id : int, to : str):
+    product = get_product(id=product_id)
+    description = product.description
+    description = '' if not product.description else product.description
+    price = 'Не указана' if not product.price else product.price
+    text = f'{product.name}\n\n{description}\n\nЦена: {price} руб.'
+    if to == 'channel':
+        text_and_data = [['Показать в боте', f'btn_publish_user_{product_id}']]
+    if to == 'user':
+        text_and_data = [[emojize('Добавить в корзину', language='alias'), f'btn_tocart_{product.id}']]
+    
+    inline_kb = InlineConstructor.create_kb(text_and_data, [1])
+
+    images = product.image.split('\n')
+    return text, inline_kb, images
 
 def inline_kb_sizefilter(category : int = None, sub_category : int = None, sizes_code_list : list = None, prices_code_list : list = None, page : list = None, sort : str = None):
     text = "Выберите один или несколько размеров из доступных для данной категории товаров\n\nМаксимум можно выбрать 6 размеров"

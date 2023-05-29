@@ -1659,7 +1659,7 @@ async def get_asics():
         
         crud.create_products(category=cat_name, subcategory=subcategory[0], items=items)
 
-        logging.info(f'Canceled {cat_name} {subcategory[0]} added {len(items)} products') 
+        logging.info(f'Canceled {cat_name} {subcategory[0]} added {len(items)} products')
     await bot.send_message(227184505, f'{cat_name} закончил парсинг')
 
         
