@@ -28,11 +28,11 @@ def inline_kb_menu(telegram_user):
 
     text_and_data = [
         [emojize(':closed_book: Каталог', language='alias'), 'btn_catalog_1'],
-        [emojize(':shopping_cart: Корзина', language='alias'), 'btn_cart_0-5'],
-        [emojize(':package: Как сделать заказ', language='alias'), 'btn_howto'],
-        [emojize(':question: Условия', language='alias'), 'btn_terms'],
+        [emojize(':question: FAQ', language='alias'), 'btn_howto'],
+        [emojize(':bust_in_silhouette: Личный кабинет', language='alias'), 'btn_lk'],
+        [emojize(':package: Условия', language='alias'), 'btn_terms'],
         [emojize(':telephone: Контакты', language='alias'), 'btn_contact'],
-        [emojize(':bust_in_silhouette: Личный кабинет', language='alias'), 'btn_lk']
+        [emojize(':shopping_cart: Корзина', language='alias'), 'btn_cart_0-5'],
     ]
     schema = [1, 1, 1, 2, 1]
     inline_kb = InlineConstructor.create_kb(text_and_data, schema)
@@ -567,7 +567,7 @@ def inline_kb_createorder(tg_id : str, create : bool, order_id : int = None):
         i = 1
         for product in products:
             price = get_promoprice(product=product, tg_id=tg_id)
-            text += f'\n\n {i}. {product.name} ({product}) - {price} руб.'
+            text += f'\n\n {i}. {product.name} - {price} руб.'
             sum += price
             i += 1
         text += f'\n\nИтого: {sum} руб.'
