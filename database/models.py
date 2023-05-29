@@ -43,7 +43,7 @@ class User(db.Entity):
 class Cart(db.Entity):
     id = PrimaryKey(int, auto=True)
     user = Required(User)
-    product = Required(str)
+    product = Required('Product')
     sizes = Required(str)
 
 class Product(db.Entity):
@@ -59,6 +59,7 @@ class Product(db.Entity):
     edited = Optional(bool, default=False)
     article = Optional(str, nullable=True)
     url = Optional(str, nullable=True)
+    carts = Set(Cart)
 
 class SubCategory(db.Entity):
     id = PrimaryKey(int, auto=True)
