@@ -126,6 +126,7 @@ async def btn_callback(callback_query: types.CallbackQuery):
         except:
             pass
         # последнее сообщение с кнопками
+        print(textReply_markup)
         for item in textReply_markup:
             if not item['images']:
                 await bot.send_message(
@@ -149,7 +150,7 @@ async def btn_callback(callback_query: types.CallbackQuery):
                         text = 'Выберите действие: ',
                         reply_markup=item['reply_markup']
                     )
-                    await asyncio.sleep(0.5)
+                    #await asyncio.sleep(0.5)
                 except:
                     continue
 

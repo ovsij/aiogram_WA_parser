@@ -115,69 +115,6 @@ def inline_kb_subcategories(tg_id : str, category : int = None, subcategory : in
     schema.append(1)
     inline_kb = InlineConstructor.create_kb(text_and_data, schema)
     return text, inline_kb
-
-    """
-    if level == 1:
-        sub_categories = get_subcategory(category_id=category, level=1)
-        if sub_categories:
-            for sc in sub_categories:
-                all_sc = get_subcategory(category_id=category)
-                if sc.id in [s.parentSubCategory.id for s in get_subcategory(category_id=category) if s.parentSubCategory]:
-                    text_and_data.append([f'{sc.name}', f'btn_category_{category}_{sc.id}-{sc.level + 1}_1'])
-                    schema.append(1)
-                else:
-                    text_and_data.append([f'{sc.name}', f'btn_ls_{category}_{sc.id}_s=_p=_n_0-5'])
-                    schema.append(1)
-            if len(sub_categories) > 30:
-                text_and_data, schema = btn_prevnext(len(sub_categories), text_and_data, schema, page, name=f'category_{category}')
-
-            if get_category(id=category).name == 'LeSILLA':
-                text_and_data.append([emojize(':scissors: Таблица размеров', language='alias'), f'btn_sizes_{category}'])
-                schema.append(1)
-
-            if tg_id in os.getenv('ADMINS'):# and get_category(id=category).custom:
-                text_and_data.append([f'Удалить категорию {category_name}', f'btn_deletecategory_{category}'])
-                schema.append(1)
-                text_and_data.append(['Добавить подкатегорию', f'btn_addsubcategory_{category}'])
-                schema.append(1)
-            text_and_data.append(btn_back(f'catalog_1'))
-            schema.append(1)
-            
-            inline_kb = InlineConstructor.create_kb(text_and_data, schema)
-            return text, inline_kb
-        else:
-            text_and_data = []
-            if tg_id in os.getenv('ADMINS'):
-                text_and_data.append([f'Удалить категорию {category_name}', f'btn_deletecategory_{category}'])
-                schema.append(1)
-                text_and_data.append(['Добавить подкатегорию', f'btn_addsubcategory_{category}'])
-                schema.append(1)
-            text_and_data.append(btn_back(f'catalog_1'))
-            schema.append(1)
-            text = 'К сожалению, в данной категории пока ничего нет'
-            print(text_and_data)
-            inline_kb = InlineConstructor.create_kb(text_and_data, schema)
-            return text, inline_kb
-            #return inline_kb_listproducts(tg_id=tg_id, category=category, page=page)
-    else:
-        sub_categories = get_subcategory(parent_subcategory=parent_subcategory)
-        for subcat in sub_categories:
-            all_sc = get_subcategory(category_id=category)
-            if subcat.id in [s.parentSubCategory.id for s in get_subcategory(category_id=category) if s.parentSubCategory]:
-                text_and_data.append([f'{subcat.name}', f'btn_category_{category}_{subcat.id}-{subcat.level + 1}_1'])
-                schema.append(1)
-            else:
-                text_and_data.append([f'{subcat.name}', f'btn_ls_{category}_{subcat.id}_s=_p=_n_0-5'])
-                schema.append(1)
-        
-        text_and_data.append(btn_back(f'category_{category}_{parent_subcategory}-{level - 1}_1'))
-        schema.append(1)
-        parent_subcategory = get_subcategory(id=parent_subcategory)
-        text += f'\n\n{parent_subcategory.name}'
-        print(text_and_data)
-        inline_kb = InlineConstructor.create_kb(text_and_data, schema)
-        return text, inline_kb
-    """
         
 
 def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : int = None, sizes : str = None, prices : str = None, page : list = [0, 5], back : bool = False, sort : str = None):
@@ -325,13 +262,7 @@ def inline_kb_sizefilter(category : int = None, sub_category : int = None, sizes
     all_sizes = []
     for product in get_product(category_id=category, subcategory_id=sub_category, sort=sort):
         all_sizes += str(product.sizes).split(', ')
-    if 'S' in all_sizes or 'M' in all_sizes or 'L' in all_sizes or 'XL' in all_sizes or '2XL' in all_sizes or '3XL' in all_sizes or '4XL' in all_sizes or '5XL' in all_sizes:
-        standart_sizes = ['S', 'M', 'L', 'XL', '2XL', '3XL', '4XL', '5XL']
-        for st_size in ['S', 'M', 'L', 'XL', '2XL', '3XL', '4XL', '5XL']:
-            if st_size not in all_sizes:
-                standart_sizes.remove(st_size)
-        all_sizes = standart_sizes
-    else:
+    try:
         all_sizes = list(set(all_sizes))
         sorted_list = []
         for size in all_sizes:
@@ -342,6 +273,8 @@ def inline_kb_sizefilter(category : int = None, sub_category : int = None, sizes
                     continue
         sorted_list.sort()
         all_sizes = [str(fl_size).replace('.0', '') for fl_size in sorted_list]
+    except:
+        pass
     prices_code = 'p='
     for price in prices_code_list:
         prices_code += price + '-'
