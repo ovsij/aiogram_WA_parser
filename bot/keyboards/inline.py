@@ -385,6 +385,7 @@ def inline_kb_pricefilter(category : int = None, sub_category : int = None, size
         button_pcode = prices_code
         if code['id'] in button_pcode:
             button_pcode = button_pcode.replace(code['id'], '').replace('--', '-')
+            button_pcode = button_pcode.strip('-')
         else:
             button_pcode += '-' + code['id']
             button_pcode = button_pcode.strip('-')
