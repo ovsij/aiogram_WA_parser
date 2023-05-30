@@ -1572,7 +1572,7 @@ async def get_asics():
         ['Сумки и рюкзаки женские', 'Аксессуары женские', 3, 'https://www.asics.com/it/en-it/womens-bags-packs/c/as20404000/?sz=96&start={}'],
         ['Экипировка женская', 'Аксессуары женские', 3, 'https://www.asics.com/it/en-it/womens-bags-packs/c/as20404000/?sz=96&start={}'],
         
-        ['Дети']
+        ['Дети'],
         ['Обувь детская', 'Дети', 2],
         ['Беговые кросовки детские', 'Обувь детская', 3, 'https://www.asics.com/it/en-it/kids-running-shoes/c/as30201000/?sz=96&start={}'],
         ['Теннисные кросовки детские', 'Обувь детская', 3, 'https://www.asics.com/it/en-it/kids-tennis-shoes/c/as30203000/?sz=96&start={}'],
