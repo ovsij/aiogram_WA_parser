@@ -1822,7 +1822,7 @@ async def get_newbalance():
                     item_links = ['https://www.newbalance.it/' + item.find('a').get('href') for item in soup.find_all('div', 'image-container')]
             items = []
             euro_costs = euro_cost()
-            for item_url in item_links[:5]:
+            for item_url in item_links:
                 try:
                     await asyncio.sleep(2)
                     async with session.get(item_url, ssl=False) as response:
