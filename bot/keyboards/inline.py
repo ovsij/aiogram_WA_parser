@@ -278,6 +278,7 @@ def inline_kb_publish(product_id : int, to : str):
     return text, inline_kb, images
 
 def inline_kb_sizefilter(category : int = None, sub_category : int = None, sizes_code_list : list = None, prices_code_list : list = None, page : list = None, sort : str = None):
+    print(sizes_code_list)
     text = "Выберите один или несколько размеров из доступных для данной категории товаров\n\nМаксимум можно выбрать 6 размеров"
     text_and_data = []
     schema = []

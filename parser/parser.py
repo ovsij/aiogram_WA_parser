@@ -1517,46 +1517,116 @@ async def get_asics():
     subcategories = [
         ['Мужчины'],
         ['Обувь мужская', 'Мужчины', 2],
-        ['Беговые кросовки мужские', 'Обувь мужская', 3, 'https://outlet.asics.com/it/en-it/mens-running-shoes/c/ao10201000/?sz=96&start={}'],
-        ['Туристические кросовки мужские', 'Обувь мужская', 3, 'https://outlet.asics.com/it/en-it/mens-trail/c/ao10209000/?sz=96&start={}'],
-        ['Теннисные кросовки мужские', 'Обувь мужская', 3, 'https://outlet.asics.com/it/en-it/mens-tennis-shoes/c/ao10202000/?sz=96&start={}'],
-        ['Другие кросовки мужские', 'Обувь мужская', 3, 'https://outlet.asics.com/it/en-it/ao10206000/?sz=96&start={}'],
-        ['Повседневные кросовки мужские', 'Обувь мужская', 3, 'https://outlet.asics.com/it/en-it/ao10205000/?sz=96&start={}'],
+        ['Беговые кросовки мужские', 'Обувь мужская', 3, 'https://www.asics.com/it/en-it/mens-running-shoes/c/as10201000/?sz=96&start={}'],
+        ['Туристические кросовки мужские', 'Обувь мужская', 3, 'https://www.asics.com/it/en-it/mens-trail-running-hiking-shoes/c/as10201010/?sz=96&start={}'],
+        ['Теннисные кросовки мужские', 'Обувь мужская', 3, 'https://www.asics.com/it/en-it/mens-tennis-shoes/c/as10203000/?sz=96&start={}'],
+        ['Волейбольные кросовки мужские', 'Обувь мужская', 3, 'https://www.asics.com/it/en-it/mens-volleyball-shoes/c/as10204000/?sz=96&start={}'],
+        ['Гандбольные кросовки мужские', 'Обувь мужская', 3, 'https://www.asics.com/it/en-it/mens-handball-shoes/c/as10216000/?sz=96&start={}'],
+        ['Падельные кросовки мужские', 'Обувь мужская', 3, 'https://www.asics.com/it/en-it/mens-padel-shoes/c/as10205000/?sz=96&start={}'],
+        ['Повседневные кросовки мужские', 'Обувь мужская', 3, 'https://www.asics.com/it/en-it/sportstyle-men-shoes/c/as10219000/?sz=96&start={}'],
 
         ['Одежда мужская', 'Мужчины', 2],
-        ['Футболки мужские', 'Одежда мужская', 3, 'https://outlet.asics.com/it/en-it/mens-short-sleeve-shirts/c/ao10301000/?sz=96&start={}'],
-        ['Лонгсливы мужские', 'Одежда мужская', 3, 'https://outlet.asics.com/it/en-it/mens-long-sleeve-shirts/c/ao10302000/?sz=96&start={}'],
-        ['Куртки мужские', 'Одежда мужская', 3, 'https://outlet.asics.com/it/en-it/mens-jackets-vests/c/ao10307000/?sz=96&start={}'],
-        ['Леггинцы мужские', 'Одежда мужская', 3, 'https://outlet.asics.com/it/en-it/mens-tights-leggings/c/ao10304000/?sz=96&start={}'],
-        ['Шорты мужские', 'Одежда мужская', 3, 'https://outlet.asics.com/it/en-it/mens-shorts/c/ao10305000/?sz=96&start={}'],
-        ['Штаны мужские', 'Одежда мужская', 3, 'https://outlet.asics.com/it/en-it/mens-pants/c/ao10306000/?sz=96&start={}'],
+        ['Футболки без рукава мужские', 'Одежда мужская', 3, 'https://www.asics.com/it/en-it/mens-tank-tops/c/as10301010/?sz=96&start={}'],
+        ['Футболки мужские', 'Одежда мужская', 3, 'https://www.asics.com/it/en-it/mens-short-sleeve-shirts/c/as10301040/?sz=96&start={}'],
+        ['Лонгсливы мужские', 'Одежда мужская', 3, 'https://www.asics.com/it/en-it/mens-long-sleeve-shirts/c/as10301050/?sz=96&start={}'],
+        ['Худи и свитшоты мужские', 'Одежда мужская', 3, 'https://www.asics.com/it/en-it/mens-hoodies-sweatshirts/c/as10301020/?sz=96&start={}'],
+        ['Куртки мужские', 'Одежда мужская', 3, 'https://www.asics.com/it/en-it/mens-jackets-vests/c/as10301030/?sz=96&start={}'],
+        ['Леггинцы мужские', 'Одежда мужская', 3, 'https://www.asics.com/it/en-it/mens-tights-leggings/c/as10302010/?sz=96&start={}'],
+        ['Шорты мужские', 'Одежда мужская', 3, 'https://www.asics.com/it/en-it/mens-shorts/c/as10302020/?sz=96&start={}'],
+        ['Штаны мужские', 'Одежда мужская', 3, 'https://www.asics.com/it/en-it/mens-pants/c/as10302030/?sz=96&start={}'],
         
         ['Аксессуары мужские', 'Мужчины', 2],
-        ['Сумки и рюкзаки мужские', 'Аксессуары мужские', 3, 'https://outlet.asics.com/it/en-it/womens-bags-packs/c/ao20402000/?sz=96&start={}'],
-        ['Головные уборы и перчатки мужские', 'Аксессуары мужские', 3, 'https://outlet.asics.com/it/en-it/hats-and-gloves/c/ao100000081/?sz=96&start={}'],
-        ['Носки мужские', 'Аксессуары мужские', 3, 'https://outlet.asics.com/it/en-it/mens-socks/c/ao10401000/?sz=96&start={}'],
+        ['Головные уборы мужские', 'Аксессуары мужские', 3, 'https://www.asics.com/it/en-it/mens-hats-headbands-beanies/c/as10401000/?sz=96&start={}'],
+        ['Перчатки мужские', 'Аксессуары мужские', 3, 'https://www.asics.com/it/en-it/mens-gloves/c/as10405000/?sz=96&start={}'],
+        ['Носки мужские', 'Аксессуары мужские', 3, 'https://www.asics.com/it/en-it/mens-socks/c/as10402000/?sz=96&start={}'],
+        ['Сумки и рюкзаки мужские', 'Аксессуары мужские', 3, 'https://www.asics.com/it/en-it/mens-bags-packs/c/as10404000/?sz=96&start={}'],
+        ['Экипировка мужские', 'Аксессуары мужские', 3, 'https://www.asics.com/it/en-it/mens-equipment/c/as10408000/?sz=96&start={}'],
 
         ['Женщины'],
         ['Обувь женская', 'Женщины', 2],
-        ['Беговые кросовки женские', 'Обувь женская', 3, 'https://outlet.asics.com/it/en-it/womens-running-shoes/c/ao20201000/?sz=96&start={}'],
-        ['Туристические кросовки женские', 'Обувь женская', 3, 'https://outlet.asics.com/it/en-it/womens-trail/c/ao20208000/?sz=96&start={}'],
-        ['Теннисные кросовки женские', 'Обувь женская', 3, 'https://outlet.asics.com/it/en-it/womens-tennis-shoes/c/ao20202000/?sz=96&start={}'],
-        ['Другие кросовки женские', 'Обувь женская', 3, 'https://outlet.asics.com/it/en-it/ao20203000/?sz=96&start={}'],
-        ['Повседневные кросовки женские', 'Обувь женская', 3, 'https://outlet.asics.com/it/en-it/ao20205000/?sz=96&start={}'],
+        ['Беговые кросовки женские', 'Обувь женская', 3, 'https://www.asics.com/it/en-it/womens-running-shoes/c/as20201000/?sz=96&start={}'],
+        ['Туристические кросовки женские', 'Обувь женская', 3, 'https://www.asics.com/it/en-it/womens-trail-running-hiking-shoes/c/as20201010/?sz=96&start={}'],
+        ['Теннисные кросовки женские', 'Обувь женская', 3, 'https://www.asics.com/it/en-it/womens-tennis-shoes/c/as20203000/?sz=96&start={}'],
+        ['Волейбольные кросовки женские', 'Обувь женская', 3, 'https://www.asics.com/it/en-it/womens-volleyball-shoes/c/as20204000/?sz=96&start={}'],
+        ['Гандбольные кросовки женские', 'Обувь женская', 3, 'https://www.asics.com/it/en-it/womens-handball-shoes/c/as20216000/?sz=96&start={}'],
+        ['Падельные кросовки женские', 'Обувь женская', 3, 'https://www.asics.com/it/en-it/womens-padel-shoes/c/as20205000/?sz=96&start={}'],
+        ['Нетбольные кросовки женские', 'Обувь женская', 3, 'https://www.asics.com/it/en-it/womens-netball-shoes/c/as20217000/?sz=96&start={}'],
+        ['Повседневные кросовки женские', 'Обувь женская', 3, 'https://www.asics.com/it/en-it/sportstyle-women-shoes/c/as20220000/?sz=96&start={}'],
+        
         ['Одежда женская', 'Женщины', 2],
-        ['Спортивные бюстгальтеры женские', 'Одежда женская', 3, 'https://outlet.asics.com/it/en-it/womens-sports-bras/c/ao20301000/?sz=96&start={}'],
-        ['Безрукавки женские', 'Одежда женская', 3, 'https://outlet.asics.com/it/en-it/womens-tank-tops/c/ao20304000/?sz=96&start={}'],
-        ['Футболки женские', 'Одежда женская', 3, 'https://outlet.asics.com/it/en-it/womens-short-sleeve-shirts/c/ao20302000/?sz=96&start={}'],
-        ['Лонгсливы женские', 'Одежда женская', 3, 'https://outlet.asics.com/it/en-it/womens-long-sleeve-shirts/c/ao20303000/?sz=96&start={}'],
-        ['Куртки женские', 'Одежда женская', 3, 'https://outlet.asics.com/it/en-it/womens-jackets-vests/c/ao20308000/?sz=96&start={}'],
-        ['Шорты женские', 'Одежда женская', 3, 'https://outlet.asics.com/it/en-it/womens-shorts/c/ao20306000/?sz=96&start={}'],
-        ['Штаны женские', 'Одежда женская', 3, 'https://outlet.asics.com/it/en-it/womens-pants/c/ao20307000/?sz=96&start={}'],
-        ['Леггинцы женские', 'Одежда женская', 3, 'https://outlet.asics.com/it/en-it/womens-tights-leggings/c/ao20305000/?sz=96&start={}'],
+        ['Спортивные бюстгальтеры женские', 'Одежда женская', 3, 'https://www.asics.com/it/en-it/sportstyle-women-shoes/c/as20220000/?sz=96&start={}'],
+        ['Футболки без рукава женские', 'Одежда женская', 3, 'https://www.asics.com/it/en-it/womens-tank-tops/c/as20301010/?sz=96&start={}'],
+        ['Футболки женские', 'Одежда женская', 3, 'https://www.asics.com/it/en-it/womens-short-sleeve-shirts/c/as20301040/?sz=96&start={}'],
+        ['Лонгсливы женские', 'Одежда женская', 3, 'https://www.asics.com/it/en-it/womens-long-sleeve-shirts/c/as20301050/?sz=96&start={}'],
+        ['Худи и свитшоты женские', 'Одежда женская', 3, 'https://www.asics.com/it/en-it/womens-hoodies-sweatshirts/c/as20301020/?sz=96&start={}'],
+        ['Куртки женские', 'Одежда женская', 3, 'https://www.asics.com/it/en-it/womens-jackets-vests/c/as20301030/?sz=96&start={}'],
+        ['Шорты женские', 'Одежда женская', 3, 'https://www.asics.com/it/en-it/womens-shorts/c/as20302020/?sz=96&start={}'],
+        ['Штаны женские', 'Одежда женская', 3, 'https://www.asics.com/it/en-it/womens-pants/c/as20302030/?sz=96&start={}'],
+        ['Леггинцы женские', 'Одежда женская', 3, 'https://www.asics.com/it/en-it/womens-tights-leggings/c/as20302010/?sz=96&start={}'],
+        ['Юбки и платья женские', 'Одежда женская', 3, 'https://www.asics.com/it/en-it/womens-skirts-dresses/c/as20302040/?sz=96&start={}'],
         
         ['Аксессуары женские', 'Женщины', 2],
-        ['Сумки и рюкзаки женские', 'Аксессуары женские', 3, 'https://outlet.asics.com/it/en-it/womens-bags-packs/c/ao20402000/?sz=96&start={}'],
-        ['Головные уборы и перчатки женские', 'Аксессуары женские', 3, 'https://outlet.asics.com/it/en-it/womens-hats-headbands-beanies/c/ao20403000/?sz=96&start={}'],
-        ['Носки женские', 'Аксессуары женские', 3, 'https://outlet.asics.com/it/en-it/womens-socks/c/ao20401000/?sz=96&start={}'],
+        ['Головные уборы женские', 'Аксессуары женские', 3, 'https://www.asics.com/it/en-it/as20401000/?sz=96&start={}'],
+        ['Перчатки женские', 'Аксессуары женские', 3, 'https://www.asics.com/it/en-it/womens-gloves/c/as20405000/?sz=96&start={}'],
+        ['Носки женские', 'Аксессуары женские', 3, 'https://www.asics.com/it/en-it/womens-socks/c/as20402000/?sz=96&start={}'],
+        ['Сумки и рюкзаки женские', 'Аксессуары женские', 3, 'https://www.asics.com/it/en-it/womens-bags-packs/c/as20404000/?sz=96&start={}'],
+        ['Экипировка женская', 'Аксессуары женские', 3, 'https://www.asics.com/it/en-it/womens-bags-packs/c/as20404000/?sz=96&start={}'],
+        
+        ['Дети']
+        ['Обувь детская', 'Дети', 2],
+        ['Беговые кросовки детские', 'Обувь детская', 3, 'https://www.asics.com/it/en-it/kids-running-shoes/c/as30201000/?sz=96&start={}'],
+        ['Теннисные кросовки детские', 'Обувь детская', 3, 'https://www.asics.com/it/en-it/kids-tennis-shoes/c/as30203000/?sz=96&start={}'],
+        ['Другие кросовки детские', 'Обувь детская', 3, 'https://www.asics.com/it/en-it/kids-other-sports/c/as30219000/?sz=96&start={}'],
+        ['Повседневные кросовки детские', 'Обувь детская', 3, 'https://www.asics.com/it/en-it/sportstyle-kids-shoes/c/as30220000/?sz=96&start={}'],
+        
+        ['Одежда детская', 'Дети', 2],
+        ['Одежда детская (верх)', 'Одежда детская', 3, 'https://www.asics.com/it/en-it/kids-tops/c/as30301000/?sz=96&start={}'],
+        ['Одежда детская (низ)', 'Одежда детская', 3, 'https://www.asics.com/it/en-it/kids-bottoms/c/as30302000/?sz=96&start={}'],
+
+        ['Аутлет'],
+        ['Мужчины аутлет', 'Аутлет', 2],
+        ['Обувь мужская аутлет', 'Мужчины аутлет', 3],
+        ['Беговые кросовки мужские аутлет', 'Обувь мужская аутлет', 4, 'https://outlet.asics.com/it/en-it/mens-running-shoes/c/ao10201000/?sz=96&start={}'],
+        ['Туристические кросовки мужские аутлет', 'Обувь мужская аутлет', 4, 'https://outlet.asics.com/it/en-it/mens-trail/c/ao10209000/?sz=96&start={}'],
+        ['Теннисные кросовки мужские аутлет', 'Обувь мужская аутлет', 4, 'https://outlet.asics.com/it/en-it/mens-tennis-shoes/c/ao10202000/?sz=96&start={}'],
+        ['Другие кросовки мужские аутлет', 'Обувь мужская аутлет', 4, 'https://outlet.asics.com/it/en-it/ao10206000/?sz=96&start={}'],
+        ['Повседневные кросовки мужские аутлет', 'Обувь мужская аутлет', 4, 'https://outlet.asics.com/it/en-it/ao10205000/?sz=96&start={}'],
+
+        ['Одежда мужская аутлет', 'Мужчины аутлет', 3],
+        ['Футболки мужские аутлет', 'Одежда мужская аутлет', 4, 'https://outlet.asics.com/it/en-it/mens-short-sleeve-shirts/c/ao10301000/?sz=96&start={}'],
+        ['Лонгсливы мужские аутлет', 'Одежда мужская аутлет', 4, 'https://outlet.asics.com/it/en-it/mens-long-sleeve-shirts/c/ao10302000/?sz=96&start={}'],
+        ['Куртки мужские аутлет', 'Одежда мужская аутлет', 4, 'https://outlet.asics.com/it/en-it/mens-jackets-vests/c/ao10307000/?sz=96&start={}'],
+        ['Леггинцы мужские аутлет', 'Одежда мужская аутлет', 4, 'https://outlet.asics.com/it/en-it/mens-tights-leggings/c/ao10304000/?sz=96&start={}'],
+        ['Шорты мужские аутлет', 'Одежда мужская аутлет', 4, 'https://outlet.asics.com/it/en-it/mens-shorts/c/ao10305000/?sz=96&start={}'],
+        ['Штаны мужские аутлет', 'Одежда мужская аутлет', 4, 'https://outlet.asics.com/it/en-it/mens-pants/c/ao10306000/?sz=96&start={}'],
+        
+        ['Аксессуары мужские аутлет', 'Мужчины аутлет', 3],
+        ['Сумки и рюкзаки мужские аутлет', 'Аксессуары мужские аутлет', 4, 'https://outlet.asics.com/it/en-it/womens-bags-packs/c/ao20402000/?sz=96&start={}'],
+        ['Головные уборы и перчатки мужские аутлет', 'Аксессуары мужские аутлет', 4, 'https://outlet.asics.com/it/en-it/hats-and-gloves/c/ao100000081/?sz=96&start={}'],
+        ['Носки мужские аутлет', 'Аксессуары мужские аутлет', 4, 'https://outlet.asics.com/it/en-it/mens-socks/c/ao10401000/?sz=96&start={}'],
+
+        ['Женщины аутлет', 'Аутлет', 2],
+        ['Обувь женская аутлет', 'Женщины аутлет', 3],
+        ['Беговые кросовки женские аутлет', 'Обувь женская аутлет', 4, 'https://outlet.asics.com/it/en-it/womens-running-shoes/c/ao20201000/?sz=96&start={}'],
+        ['Туристические кросовки женские аутлет', 'Обувь женская аутлет', 4, 'https://outlet.asics.com/it/en-it/womens-trail/c/ao20208000/?sz=96&start={}'],
+        ['Теннисные кросовки женские аутлет', 'Обувь женская аутлет', 4, 'https://outlet.asics.com/it/en-it/womens-tennis-shoes/c/ao20202000/?sz=96&start={}'],
+        ['Другие кросовки женские аутлет', 'Обувь женская аутлет', 4, 'https://outlet.asics.com/it/en-it/ao20203000/?sz=96&start={}'],
+        ['Повседневные кросовки женские аутлет', 'Обувь женская аутлет', 4, 'https://outlet.asics.com/it/en-it/ao20205000/?sz=96&start={}'],
+        
+        ['Одежда женская аутлет', 'Женщины аутлет', 3],
+        ['Спортивные бюстгальтеры женские аутлет', 'Одежда женская аутлет', 4, 'https://outlet.asics.com/it/en-it/womens-sports-bras/c/ao20301000/?sz=96&start={}'],
+        ['Футболки без рукава женские аутлет', 'Одежда женская аутлет', 4, 'https://outlet.asics.com/it/en-it/womens-tank-tops/c/ao20304000/?sz=96&start={}'],
+        ['Футболки женские аутлет', 'Одежда женская аутлет', 4, 'https://outlet.asics.com/it/en-it/womens-short-sleeve-shirts/c/ao20302000/?sz=96&start={}'],
+        ['Лонгсливы женские аутлет', 'Одежда женская аутлет', 4, 'https://outlet.asics.com/it/en-it/womens-long-sleeve-shirts/c/ao20303000/?sz=96&start={}'],
+        ['Куртки женские аутлет', 'Одежда женская аутлет', 4, 'https://outlet.asics.com/it/en-it/womens-jackets-vests/c/ao20308000/?sz=96&start={}'],
+        ['Шорты женские аутлет', 'Одежда женская аутлет', 4, 'https://outlet.asics.com/it/en-it/womens-shorts/c/ao20306000/?sz=96&start={}'],
+        ['Штаны женские аутлет', 'Одежда женская аутлет', 4, 'https://outlet.asics.com/it/en-it/womens-pants/c/ao20307000/?sz=96&start={}'],
+        ['Леггинцы женские аутлет', 'Одежда женская аутлет', 4, 'https://outlet.asics.com/it/en-it/womens-tights-leggings/c/ao20305000/?sz=96&start={}'],
+        
+        ['Аксессуары женские аутлет', 'Женщины аутлет', 3],
+        ['Сумки и рюкзаки женские аутлет', 'Аксессуары женские аутлет', 4, 'https://outlet.asics.com/it/en-it/womens-bags-packs/c/ao20402000/?sz=96&start={}'],
+        ['Головные уборы и перчатки женские аутлет', 'Аксессуары женские аутлет', 4, 'https://outlet.asics.com/it/en-it/womens-hats-headbands-beanies/c/ao20403000/?sz=96&start={}'],
+        ['Носки женские аутлет', 'Аксессуары женские аутлет', 4, 'https://outlet.asics.com/it/en-it/womens-socks/c/ao20401000/?sz=96&start={}'],
     ]
     cat_name = 'Asics'
     for subcategory in subcategories:
@@ -1662,32 +1732,97 @@ async def get_asics():
         logging.info(f'Canceled {cat_name} {subcategory[0]} added {len(items)} products')
     await bot.send_message(227184505, f'{cat_name} закончил парсинг')
 
-        
-
 
 async def get_newbalance():
-    subcategories = {
-        'Мужская обувь' : 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=50262-11&start={}&sz={}',
-        'Мужская одежда' : 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=50262-12&start={}&sz={}',
-        #'Мужские аксессуары' : 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=50262-13&start={}&sz={}',
-        'Женская обувь' : 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=50262-21&start={}&sz={}',
-        'Женская одежда' : 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=50262-22&start={}&sz={}',
-        #'Мужская одежда' : 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=50262-12&start={}&sz={}',
+    subcategories = [
+        ['Мужчины'],
+        ['Обувь мужская', 'Мужчины', 2],
+        ['Беговая обувь мужская', 'Обувь мужская', 3, 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=101000&start={}&sz={}'],
+        ['Кросовки мужские', 'Обувь мужская', 3, 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=106000&start={}&sz={}'],
+        ['Кросовки из США и Великобритании мужские', 'Обувь мужская', 3, 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=107000&start={}&sz={}'],
+        ['Кросовки для трейлранинга мужские', 'Обувь мужская', 3, 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=13000&start={}&sz={}'],
+        ['Сандалии мужские', 'Обувь мужская', 3, 'https://www.newbalance.it/it/sandali-uomo/'],
+        ['Тренировочные кросовки мужские', 'Обувь мужская', 3, 'https://www.newbalance.it/it/uomo/scarpe/allenamento/'],
+        ['Футбольные бутсы мужские', 'Обувь мужская', 3, 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=73100&start={}&sz={}'],
+        ['Кросовки для скейтбординга мужские', 'Обувь мужская', 3, 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=108000&start={}&sz={}'],
+        ['Теннисные мужские', 'Обувь мужская', 3, 'https://www.newbalance.it/it/tennis/scarpe/'],
+        
+        ['Одежда мужская', 'Мужчины', 2],
+        ['Толстовки мужские', 'Одежда мужская', 3, 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=159001&start={}&sz={}'],
+        ['Штаны и леггинцы мужские', 'Одежда мужская', 3, 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=158000&start={}&sz={}'],
+        ['Куртки мужские', 'Одежда мужская', 3, 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=157000&start={}&sz={}'],
+        ['Футболки мужские', 'Одежда мужская', 3, 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=155000&start={}&sz={}'],
+        ['Шорты мужские', 'Одежда мужская', 3, 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=153000&start={}&sz={}'],
+        
+        ['Аксессуары мужские', 'Мужчины', 2],
+        ['Носки мужские', 'Аксессуары мужские', 3, 'https://www.newbalance.it/it/uomo/accessori/calzini/'],
+        ['Сумки и рюкзаки мужские', 'Аксессуары мужские', 3, 'https://www.newbalance.it/it/men/clothing/accessories/bags-backpacks/'],
+        ['Головные уборы мужские', 'Аксессуары мужские', 3, 'https://www.newbalance.it/it/uomo/accessori/berretti-e-cappelli/'],
+        ['Спортивные аксессуары мужские', 'Аксессуары мужские', 3, 'https://www.newbalance.it/it/uomo/accessori/attrezzatura-sportiva/'],
 
-    }
-    for subcategory, url in subcategories.items():
-        logging.info(f'Starting Newbalance: {subcategory}')
+        ['Женщины'],
+        ['Обувь женская', 'Женщины', 2],
+        ['Беговая обувь женская', 'Обувь женская', 3, 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=201000&start={}&sz={}'],
+        ['Кросовки женские', 'Обувь женская', 3, 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=206000&start={}&sz={}'],
+        ['Кросовки из США и Великобритании женские', 'Обувь женская', 3, 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=220000&start={}&sz={}'],
+        ['Кросовки для трейлранинга женские', 'Обувь женская', 3, 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=202000&start={}&sz={}'],
+        ['Сандалии женские', 'Обувь женская', 3, 'https://www.newbalance.it/it/sandali-donna/'],
+        ['Тренировочные кросовки женские', 'Обувь женская', 3, 'https://www.newbalance.it/it/donna/scarpe/allenamento/'],
+        ['Футбольные бутсы женские', 'Обувь женская', 3, 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=210000&start={}&sz={}'],
+        ['Кросовки для скейтбординга женские', 'Обувь женская', 3, 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=108000&start={}&sz={}'],
+        ['Теннисные женские', 'Обувь женская', 3, 'https://www.newbalance.it/it/tennis/scarpe/'],
+        
+        ['Одежда женская', 'Женщины', 2],
+        ['Толстовки женские', 'Одежда женская', 3, 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=159001&start={}&sz={}'],
+        ['Штаны и леггинцы женские', 'Одежда женская', 3, 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=158000&start={}&sz={}'],
+        ['Куртки женские', 'Одежда женская', 3, 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=157000&start={}&sz={}'],
+        ['Футболки женские', 'Одежда женская', 3, 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=155000&start={}&sz={}'],
+        ['Шорты женские', 'Одежда женская', 3, 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=153000&start={}&sz={}'],
+        
+        ['Дети'],
+        ['Обувь детская', 'Дети', 2],
+        ['Подростки (35,5 - 39 размер)', 'Обувь детская', 3, 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=31001-1&start={}&sz={}'],
+        ['Дети (28 - 35 размер)', 'Обувь детская', 3, 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=31001-2&start={}&sz={}'],
+        ['Младенцы (16 - 27,5 размер)', 'Обувь детская', 3, 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=31001-3&start={}&sz={}'],
+        ['Кросовки детские', 'Обувь детская', 3, 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=31001-4&start={}&sz={}'],
+        ['Беговые кросовки детские', 'Обувь детская', 3, 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=31001-5&start={}&sz={}'],
+        ['Футбольные бутсы детские', 'Обувь детская', 3, 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=39000-2&start={}&sz={}'],
+        ['Сандалии детские', 'Обувь детская', 3, 'https://www.newbalance.it/it/bambino/scarpe/sandali/'],
+
+        ['Одежда детская', 'Дети', 2, 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=31002&start={}&sz={}'],
+        
+        ['Аутлет'],
+        ['Мужчины', 'Аутлет', 2],
+        ['Обувь мужская аутлет', 'Мужчины', 3, 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=50262-11&start={}&sz={}'],
+        ['Одежда мужская аутлет', 'Мужчины', 3, 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=50262-12&start={}&sz={}'],
+        ['Женщины', 'Аутлет', 2],
+        ['Обувь женская аутлет', 'Женщины', 3, 'https://www.newbalance.it/it/outlet/donna/scarpe/'],
+        ['Одежда женская аутлет', 'Женщины', 3, 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=50262-12&start={}&sz={}'],
+        ['Дети', 'Аутлет', 2],
+        ['Обувь детская аутлет', 'Дети', 3, 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=50262-33&start={}&sz={}'],
+        ['Одежда детская аутлет', 'Дети', 3, 'https://www.newbalance.it/it/outlet/bambino/abbigliamento/'],
+    ]
+    cat_name = 'Newbalance'
+    for subcategory in subcategories:
+        if not str(subcategory[-1]).startswith('http'):
+            if len(subcategory) == 1:
+                crud.create_subcategory(name=subcategory[0], category=cat_name) if not crud.subcategory_exists(name=subcategory[0], category=cat_name) else 0
+            else:
+                if not crud.subcategory_exists(name=subcategory[0], category=cat_name):
+                    parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=crud.get_category(name=cat_name).id)
+                    crud.create_subcategory(name=subcategory[0], category=cat_name, parent_subcategory=parent_subcategory.id, level=subcategory[2])
+            continue
+        logging.info(f'Starting {cat_name}: {subcategory[0]}')
         headers = {'User-Agent': 'Mozilla/5.0'}
         async with aiohttp.ClientSession(headers=headers, trust_env=True) as session:
-            item_links = []
             for i in range(0, 1):
-                async with session.get(url.format(0, 500), ssl=False) as response:
+                async with session.get(subcategory[-1].format(0, 500), ssl=False) as response:
                     webpage = await response.read()
                     soup = bs(webpage, 'html.parser')
-                    item_links += ['https://www.newbalance.it/' + item.find('a').get('href') for item in soup.find_all('div', 'image-container')]
+                    item_links = ['https://www.newbalance.it/' + item.find('a').get('href') for item in soup.find_all('div', 'image-container')]
             items = []
             euro_costs = euro_cost()
-            for item_url in item_links:
+            for item_url in item_links[:5]:
                 try:
                     await asyncio.sleep(2)
                     async with session.get(item_url, ssl=False) as response:
@@ -1695,7 +1830,7 @@ async def get_newbalance():
                         soup = bs(item_webpage, 'html.parser')
                         article = item_url.split('-')[-1].split('.')[0]
                         title = soup.find('h1', 'product-name hidden-sm-down').text
-                        #print(title)
+                        print(title)
                         current_price = int((float(soup.find('span', 'sales font-body-large').text.strip('\r\n        ').strip('€').replace(',00', '').replace(',', '.')) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Asics').margin}"))
                         #print(current_price)
                         try:
@@ -1704,10 +1839,8 @@ async def get_newbalance():
                         except:
                             old_price = None
                         #print(old_price)
-                        
                         #print(percent)
                         description = ''
-                        #description = soup.find('div', 'col-12 value content short-description px-0 pt-6 pt-lg-4 pb-3').text.strip('\n\nDescrizione').strip('\n\n').strip(' ').strip('\n').strip(' ')
                         
                         if old_price:
                             description = description[:700] + f'\n\n<s>{old_price} руб.</s> -{percent}% {current_price} руб.'
@@ -1725,11 +1858,11 @@ async def get_newbalance():
                         #print(description)
                         image_links = [image.find('img').get('data-src') for image in soup.find('div', 'carousel-inner carousel-desktop').find_all('div', ['carousel-item zoom-image-js active', 'carousel-item zoom-image-js false'])]
                         # изображения
-                        if not os.path.exists(f"database/images/Newbalance"):
-                            os.mkdir(f"database/images/Newbalance")
+                        if not os.path.exists(f"database/images/{cat_name}"):
+                            os.mkdir(f"database/images/{cat_name}")
 
-                        if not os.path.exists(f"database/images/Newbalance/{subcategory}"):
-                            os.mkdir(f"database/images/Newbalance/{subcategory}")
+                        if not os.path.exists(f"database/images/{cat_name}/{subcategory[0]}"):
+                            os.mkdir(f"database/images/{cat_name}/{subcategory[0]}")
 
                         i = item_links.index(item_url) + 1
                         images = ''
@@ -1737,7 +1870,7 @@ async def get_newbalance():
                         for url in image_links[:10]:
                             try:
                                 num = image_links.index(url) + 1
-                                img_path = f"database/images/Newbalance/{subcategory}/{i}_{title.replace(' ', '_').replace('/', '_')}_{num}.png"
+                                img_path = f"database/images/{cat_name}/{subcategory[0]}/{i}_{title.replace(' ', '_').replace('/', '_')}_{num}.png"
                                 if not os.path.exists(img_path):
                                     async with session.get(url, ssl=False) as response:
                                         f = await aiofiles.open(img_path, mode='wb')
@@ -1747,41 +1880,17 @@ async def get_newbalance():
                             except:
                                 continue
                         items.append([title, description, current_price, images, size_list, article, item_url])
-                        #print([title, description, current_price, images, size_list, article, item_url])
                 except Exception as ex:
-                    logging.warning(f' Newbalance pr - {ex}')
-        for item in items:
-            try:
-                if not crud.product_exists(article=item[5]):
-                    prod = crud.create_product(
-                    name=item[0],
-                    category='Newbalance',
-                    subcategory=subcategory,
-                    description=item[1],
-                    sizes=item[4],
-                    price=item[2],
-                    image=item[3],
-                    article=item[5],
-                    url=item[6])
-                else:
-                    prod = crud.get_product(article=item[5])
-                    if not prod.deleted and not prod.edited:
-                        crud.update_product(
-                            product_id=prod.id,
-                            name=item[0],
-                            description=item[1],
-                            sizes=item[4],
-                            price=item[2],
-                            image=item[3],
-                            article=item[5],
-                            url=item[6]
-                        )
-            except Exception as ex:
-                logging.warning(f' Newbalance db - {ex}')
+                    logging.warning(f'{cat_name} pr - {ex}')
+        
+        if not crud.subcategory_exists(name=subcategory[0], category=cat_name):
+            parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=crud.get_category(name=cat_name).id)
+            crud.create_subcategory(name=subcategory[0], category=cat_name, parent_subcategory=parent_subcategory.id, level=subcategory[2])
+        
+        crud.create_products(category=cat_name, subcategory=subcategory[0], items=items)
 
-        #print(f'Canceled Newbalance {subcategory} added {len(items)} products')
-        logging.info(f'Canceled Newbalance {subcategory} added {len(items)} products') 
-    await bot.send_message(227184505, f'Newbalance закончил парсинг')
+        logging.info(f'Canceled {cat_name} {subcategory[0]} added {len(items)} products') 
+    await bot.send_message(227184505, f'{cat_name} закончил парсинг')
 
 
 async def get_underarmour():
