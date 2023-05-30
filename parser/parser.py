@@ -1644,7 +1644,7 @@ async def get_asics():
         async with aiohttp.ClientSession(headers=headers, trust_env=True) as session:
             item_links = []
             for i in range(0, 10):
-                await asyncio.steep(5)
+                await asyncio.sleep(5)
                 async with session.get(subcategory[-1].format(96 * i), ssl=False) as response:
                     webpage = await response.read()
                     logging.info(f'Asics  {response.status}')
@@ -1658,7 +1658,6 @@ async def get_asics():
             items = []
             euro_costs = euro_cost()
             for item_url in item_links:
-                await asyncio.steep(5)
                 try:
                     await asyncio.sleep(2)
                     async with session.get(item_url, ssl=False) as response:
