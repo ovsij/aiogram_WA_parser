@@ -77,7 +77,7 @@ class Category(db.Entity):
     subcategory = Set(SubCategory)
     margin = Optional(int)
     phone = Optional(str, unique=True)
-    #metaCategory = Required('MetaCategory')
+    metaCategory = Required('MetaCategory')
     promocodes = Set('Promocode_Category')
     product = Set(Product)
     users = Set(User)
@@ -85,7 +85,7 @@ class Category(db.Entity):
 class MetaCategory(db.Entity):
     id = PrimaryKey(int, auto=True)
     name = Required(str)
-    #categories = Set(Category)
+    categories = Set(Category)
 
 class Promocode(db.Entity):
     id = PrimaryKey(int, auto=True)

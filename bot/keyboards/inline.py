@@ -28,24 +28,45 @@ def inline_kb_menu(telegram_user):
 
     text_and_data = [
         [emojize(':closed_book: Каталог', language='alias'), 'btn_catalog_1'],
-        [emojize(':question: FAQ', language='alias'), 'btn_howto'],
         [emojize(':bust_in_silhouette: Личный кабинет', language='alias'), 'btn_lk'],
         [emojize(':package: Условия', language='alias'), 'btn_terms'],
         [emojize(':telephone: Контакты', language='alias'), 'btn_contact'],
+        [emojize(':question: FAQ', language='alias'), 'btn_howto'],
         [emojize(':shopping_cart: Корзина', language='alias'), 'btn_cart_0-5'],
     ]
     schema = [1, 1, 1, 2, 1]
     inline_kb = InlineConstructor.create_kb(text_and_data, schema)
     return text, inline_kb
 
-def inline_kb_categories(tg_id : str, page : int = 1):
+def inline_kb_metacategories(tg_id : str, page : int = 1):
+    text = 'КАТАЛОГ'
+    metacategories = get_metacategory()
+    text_and_data = []
+    schema = []
+    if bool(metacategories):
+        text += '\n\nВыберите интересующую вас категорию'
+        for cat in metacategories:
+            text_and_data.append([f'{cat.name}', f'btn_metacategory_{cat.id}_1'])
+            schema.append(1)
+        
+        if len(metacategories) > 30:
+            text_and_data, schema = btn_prevnext(len(metacategories), text_and_data, schema, page, name='catalog')
+
+        text_and_data.append(btn_back('menu'))
+        schema.append(1)
+        inline_kb = InlineConstructor.create_kb(text_and_data, schema)
+        
+        return text, inline_kb
+
+
+def inline_kb_categories(tg_id : str, metacategory : int, page : int = 1):
     #выводит названия категорий, если их нет выводит продукты
     text = 'КАТАЛОГ'
-    categories = get_category()
+    categories = get_category(metacategory=metacategory)
     text_and_data = []
     schema = []
     if bool(categories):
-        text += '\n\nВыберите категорию'
+        text += '\n\nВыберите интересующий вас бренд'
         for cat in categories:
             text_and_data.append([f'{cat.name}', f'btn_category_{cat.id}_1'])
             schema.append(1)
@@ -57,22 +78,23 @@ def inline_kb_categories(tg_id : str, page : int = 1):
             text_and_data.append(['Добавить категорию', 'btn_addcategory'])
             schema.append(1)
 
-        text_and_data.append(btn_back('menu'))
+        text_and_data.append(btn_back('catalog_1'))
         schema.append(1)
         inline_kb = InlineConstructor.create_kb(text_and_data, schema)
         
         return text, inline_kb
     else:
-        text += '\n\n К сожалению, на данный момент в каталоге ничего нет'
+        text += '\n\n К сожалению, в данной категории пока ничего нет'
         text_and_data = []
         schema = []
         if tg_id in os.getenv('ADMINS'):
             text_and_data.append(['Добавить категорию', 'btn_addcategory'])
             schema.append(1)
-        text_and_data.append(btn_back('menu'))
+        text_and_data.append(btn_back(f'catalog_1'))
         schema.append(1)
         inline_kb = InlineConstructor.create_kb(text_and_data, schema)
         return text, inline_kb
+
 
 @db_session()
 def inline_kb_subcategories(tg_id : str, category : int = None, subcategory : int = None, level : int = 1, page : int = 1):
@@ -105,7 +127,7 @@ def inline_kb_subcategories(tg_id : str, category : int = None, subcategory : in
         schema.append(1)
     
     if level == 1:
-        text_and_data.append(btn_back(f'catalog_1'))
+        text_and_data.append(btn_back(f'metacategory_{get_category(id=category).metaCategory.id}'))
     elif level == 2:
         text_and_data.append(btn_back(f'category_{category}_1'))
     else:

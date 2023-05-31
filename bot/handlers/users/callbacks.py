@@ -55,7 +55,7 @@ async def btn_callback(callback_query: types.CallbackQuery):
             )
 
     if code[1] == 'catalog':
-        text, reply_markup = inline_kb_categories(tg_id=str(callback_query.from_user.id), page=int(code[-1]))
+        text, reply_markup = inline_kb_metacategories(tg_id=str(callback_query.from_user.id), page=int(code[-1]))
         try:
             await callback_query.message.edit_text(
                 text=text,
@@ -68,7 +68,21 @@ async def btn_callback(callback_query: types.CallbackQuery):
                 text=text,
                 reply_markup=reply_markup
             )
-    
+    if code[1] == 'metacategory':
+        text, reply_markup = inline_kb_categories(tg_id=str(callback_query.from_user.id), metacategory=int(code[2]), page=int(code[-1]))
+        try:
+            await callback_query.message.edit_text(
+                text=text,
+                reply_markup=reply_markup
+            )
+        except:
+            await callback_query.message.delete()
+            await bot.send_message(
+                callback_query.from_user.id,
+                text=text,
+                reply_markup=reply_markup
+            )
+            
     if code[1] == 'category':
         try:
             subcategory = int(code[3].split('-')[0])

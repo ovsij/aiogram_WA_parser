@@ -359,7 +359,33 @@ def del_products(catalog : str = None, category : str = None, subcategory : str 
         product.delete()
 
 
+# metaCategory
+@db_session()
+def create_metacategory(name : str):
+    return MetaCategory(name=name)
+    
+@db_session()
+def get_metacategory(id : int = None, name : str = None):
+    if id:
+        return MetaCategory[id]
+    if name:
+        if MetaCategory.exists(name=name):
+            return MetaCategory.get(name=name)
+        else:
+            return MetaCategory(name=name)
+    else:
+        return select(mc for mc in MetaCategory)[:]
 
+@db_session()
+def delete_metacategory(id : int = None, name : str = None):
+    if id:
+        MetaCategory[id].delete()
+    if name:
+        MetaCategory.get(name=name).delete()
+
+@db_session()
+def metacategory_exists(name : str):
+    return MetaCategory.exists(name=name)
 
 # Category
 @db_session()
@@ -372,7 +398,7 @@ def create_category(name : str, margin : int, custom : bool = False):
     
 
 @db_session()
-def get_category(id : int = None, name : str = None):
+def get_category(id : int = None, name : str = None, metacategory : int = None):
     if id:
         return Category[id]
     if name:
@@ -380,6 +406,8 @@ def get_category(id : int = None, name : str = None):
             return Category.get(name=name)
         else:
             return Category(name=name, phone=name.lower(), margin=30)
+    if metacategory:
+        return select(c for c in Category if c.metaCategory.id == metacategory)[:]
     else:
         return select(c for c in Category)[:]
 
