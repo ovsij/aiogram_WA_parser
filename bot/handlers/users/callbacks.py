@@ -22,11 +22,11 @@ from parser import parser
 
 import asyncio
 
-# исключение при флуде от бота
-@dp.errors_handler(exception=exceptions.RetryAfter)
-async def exception_handler(update: types.Update, exception: exceptions.RetryAfter):
-    # Do something
-    return True
+## исключение при флуде от бота
+#@dp.errors_handler(exception=exceptions.RetryAfter)
+#async def exception_handler(update: types.Update, exception: exceptions.RetryAfter):
+#    # Do something
+#    return True
 
 # обработчик кнопок
 @dp.callback_query_handler(lambda c: c.data.startswith('btn'))
@@ -82,7 +82,7 @@ async def btn_callback(callback_query: types.CallbackQuery):
                 text=text,
                 reply_markup=reply_markup
             )
-            
+
     if code[1] == 'category':
         try:
             subcategory = int(code[3].split('-')[0])
@@ -140,8 +140,8 @@ async def btn_callback(callback_query: types.CallbackQuery):
         except:
             pass
         # последнее сообщение с кнопками
-        print(textReply_markup)
         for item in textReply_markup:
+            await asyncio.sleep(1)
             if not item['images']:
                 await bot.send_message(
                     callback_query.message.chat.id,
@@ -167,6 +167,7 @@ async def btn_callback(callback_query: types.CallbackQuery):
                     #await asyncio.sleep(0.5)
                 except:
                     continue
+
     if code[1] == 'publish':
         text, reply_markup, images = inline_kb_publish(product_id=code[-1], to=code[2])
         

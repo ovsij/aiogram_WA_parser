@@ -1831,7 +1831,7 @@ async def get_newbalance():
                         soup = bs(item_webpage, 'html.parser')
                         article = item_url.split('-')[-1].split('.')[0]
                         title = soup.find('h1', 'product-name hidden-sm-down').text
-                        print(title)
+                        #print(title)
                         current_price = int((float(soup.find('span', 'sales font-body-large').text.strip('\r\n        ').strip('€').replace(',00', '').replace(',', '.')) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Asics').margin}"))
                         #print(current_price)
                         try:
