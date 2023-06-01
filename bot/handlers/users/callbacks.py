@@ -179,10 +179,10 @@ async def btn_callback(callback_query: types.CallbackQuery):
             chat_id, 
             media=photo,
         )
-
+        text = emojize('Подробнее :arrow_down:', language='alias') if code[2] == 'channel' else 'Выберите действие'
         await bot.send_message(
             chat_id,
-            text = emojize('Подробнее :arrow_down:', language='alias'),
+            text = text,
             reply_markup=reply_markup
         )
 
