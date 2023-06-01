@@ -725,6 +725,11 @@ async def get_lesilla():
     
     async with aiohttp.ClientSession(trust_env=True) as session:
         for name, url in urls.items():
+            if not crud.subcategory_exists(name=name, category='LeSILLA Outlet'):
+                subcategory_ = crud.create_subcategory(name=name, category='LeSILLA Outlet')
+            else:
+                category_ = crud.get_category(name='LeSILLA Outlet', metacategory=5)
+                subcategory_ = crud.get_subcategory(name=name, category_id=category_.id)
             logging.info(f'Starting LeSILLA: {name}')
             product_urls = await get_subcategory(session, url)
             items = []
@@ -744,16 +749,17 @@ async def get_lesilla():
             euro_costs = euro_cost()
             for item in items:
                 try:
-                    price = int((item[5] * (euro_costs + 1)) * float(f'1.{crud.get_category(name="LeSILLA Outlet").margin}')) if item[5] else None
+                    price = int((item[5] * (euro_costs + 1)) * float(f'1.{crud.get_category(name="LeSILLA Outlet", metacategory=5).margin}')) if item[5] else None
                     description = item[4].replace('€ ', ' ')
                     for i in re.findall(r'\d*[.]\d\d', item[4]):
                         if i:
-                            price_rub = str(int((float(i) * (euro_costs + 1)) / 100 * crud.get_category(name='LeSILLA Outlet').margin))
+                            price_rub = str(int((float(i) * (euro_costs + 1)) * float(f'1.{crud.get_category(name="LeSILLA Outlet", metacategory=5).margin}')))
                             description = description.replace(i, '<s>' + price_rub + ' руб.</s>  ')
                     description = f'Color: {item[7]}\n\n' + description.replace(f'<s>{price_rub} руб.</s>', f'{price_rub} руб.')
                     #if item[0] + ' ' + item[7] in not_deleted_items:
                     #    continue
-                    if not crud.product_exists(article=item[9]):
+                    
+                    if not crud.product_exists(article=item[9], subcategory_id=subcategory_.id):
                         prod = crud.create_product(
                         name=item[0],
                         category='LeSILLA Outlet',
@@ -765,7 +771,7 @@ async def get_lesilla():
                         article=item[9],
                         url=item[10])
                     else:
-                        prod = crud.get_product(article=item[9])
+                        prod = crud.get_product(article=item[9], subcategory=subcategory_)
                         if not prod.deleted and not prod.edited:
                             crud.update_product(
                                 product_id=prod.id,

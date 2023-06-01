@@ -208,7 +208,7 @@ def create_products(category : str, subcategory : str, items : list):
     all_articles = []
     for item in items:
         try:
-            if not crud.product_exists(article=item[5], subcategory=subcategory_):
+            if not crud.product_exists(article=item[5], subcategory_id=subcategory_.id):
                 prod = crud.create_product(
                 name=item[0],
                 category=category,
@@ -319,8 +319,8 @@ def get_product(
         return Product.get(article=article, subcategory=subcategory)
 
 @db_session()     
-def product_exists(article : str, subcategory : SubCategory):
-    return Product.exists(subcategory = subcategory, article=article)
+def product_exists(article : str, subcategory_id : int):
+    return Product.exists(subcategory = SubCategory[subcategory_id], article=article)
 
 @db_session()
 def get_products_by_category(category : int):
