@@ -173,13 +173,12 @@ async def btn_callback(callback_query: types.CallbackQuery):
         
         photo = [types.InputMedia(media=open(img, 'rb'), caption=text) if images.index(img) == 0 else types.InputMedia(media=open(img, 'rb')) for img in images]
         
-        chat_id = 227184505 if code[2] == 'channel' else callback_query.from_user.id
-        #-1001617464327
+        chat_id = -1001617464327 if code[2] == 'channel' else callback_query.from_user.id
         await bot.send_media_group(
             chat_id, 
             media=photo,
         )
-        text = emojize('Подробнее :arrow_down:', language='alias') if code[2] == 'channel' else 'Выберите действие'
+        text = emojize('Подробнее :arrow_down:', language='alias') if code[2] == 'channel' else 'Выберите действие:'
         await bot.send_message(
             chat_id,
             text = text,
