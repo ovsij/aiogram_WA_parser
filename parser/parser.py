@@ -396,7 +396,7 @@ async def get_valentino_catalog(url, subcategory):
         "goog:chromeOptions": {"args": [
         '--no-sandbox',
         '--user-data-dir=parser/User', 
-        #'--headless',
+        '--headless',
         #'window-size=1280,720',
         '--start-maximized',
         
