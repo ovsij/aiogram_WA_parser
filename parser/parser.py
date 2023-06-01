@@ -16,6 +16,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 import re
 import requests
 from bs4 import BeautifulSoup as bs
+from fp.fp import FreeProxy
 import time
 import sys
 import urllib.request
@@ -1638,7 +1639,8 @@ async def get_asics():
             item_links = []
             for i in range(0, 10):
                 await asyncio.sleep(5)
-                async with session.get(subcategory[-1].format(96 * i), ssl=False) as response:
+                print(FreeProxy(country_id=['IT']).get())
+                async with session.get(url=subcategory[-1].format(96 * i), proxy='http://20.204.190.254:3129', ssl=False) as response:
                     webpage = await response.read()
                     logging.info(f'Asics  {response.status}')
                     soup = bs(webpage, 'html.parser')
@@ -1653,7 +1655,7 @@ async def get_asics():
             for item_url in item_links:
                 try:
                     await asyncio.sleep(2)
-                    async with session.get(item_url, ssl=False) as response:
+                    async with session.get(url=item_url, proxy=FreeProxy(country_id=['IT']).get(), ssl=False) as response:
                         item_wp = await response.read()
                         item_sp = bs(item_wp, 'html.parser')
                         title = item_sp.find('div', 'pdp-top__product-name large-bold').text.replace('\n', '').strip(' ')
@@ -1705,7 +1707,7 @@ async def get_asics():
                                 num = image_links.index(url) + 1
                                 img_path = f"database/images/{cat_name}/{subcategory[0]}/{i}_{title.replace(' ', '_').replace('/', '_')}_{num}.png"
                                 if not os.path.exists(img_path):
-                                    async with session.get(url, ssl=False) as response:
+                                    async with session.get(url=url, proxy=FreeProxy(country_id=['IT']).get(), ssl=False) as response:
                                         f = await aiofiles.open(img_path, mode='wb')
                                         await f.write(await response.read())
                                         await f.close()
