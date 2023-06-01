@@ -664,7 +664,8 @@ async def btn_callback(callback_query: types.CallbackQuery):
         text, reply_markup = inline_kb_howto()
         await callback_query.message.edit_text(
             text=text,
-            reply_markup=reply_markup
+            reply_markup=reply_markup,
+            parse_mode="MarkdownV2"
         )
         
     if code[1] == 'admin':

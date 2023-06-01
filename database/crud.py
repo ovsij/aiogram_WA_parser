@@ -401,12 +401,12 @@ def create_category(name : str, margin : int, custom : bool = False):
 def get_category(id : int = None, name : str = None, metacategory : int = None):
     if id:
         return Category[id]
-    if name:
+    if name and metacategory:
         if Category.exists(name=name):
             return Category.get(name=name)
         else:
-            return Category(name=name, phone=name.lower(), margin=30)
-    if metacategory:
+            return Category(name=name, phone=name.lower(), margin=30, metaCategory=metacategory)
+    if metacategory and not name:
         return select(c for c in Category if c.metaCategory.id == metacategory)[:]
     else:
         return select(c for c in Category)[:]

@@ -396,7 +396,7 @@ async def get_valentino_catalog(url, subcategory):
         "goog:chromeOptions": {"args": [
         '--no-sandbox',
         '--user-data-dir=parser/User', 
-        '--headless',
+        #'--headless',
         #'window-size=1280,720',
         '--start-maximized',
         
@@ -428,8 +428,8 @@ async def get_valentino_catalog(url, subcategory):
             pass
         
         logging.info(f'Start VALENTINO {subcategory} subcategory')
-        
-        for i in range(1, num + 1):
+        euro_costs = euro_cost()
+        for i in range(1, 5):# num + 1):
             try:
                 #logging.info(f'{i} {subcategory}')
                 item_xpath = f'//*[@id="main"]/div/div[2]/div[1]/div[{i}]/div[2]/div[1]'
@@ -446,7 +446,7 @@ async def get_valentino_catalog(url, subcategory):
                 name_el = await session.wait_for_element(10, name_xpath, SelectorType.xpath)
                 name = await name_el.get_text()
                 article = name
-                #logging.info('name: ' + name)
+                logging.info('name: ' + name)
 
                 if not os.path.exists(f"database/images/VALENTINO"):
                     os.mkdir(f"database/images/VALENTINO")
@@ -484,11 +484,19 @@ async def get_valentino_catalog(url, subcategory):
                             price = int(soup.find_all('p', 'sc-dQDPHY gwUuKq')[1].text.replace('.00', '').strip('€').replace(',', ''))
                         except:
                             price = int(soup.find_all('div', 'sc-dQDPHY gwUuKq')[0].text.replace('.00', '').strip('€').replace(',', ''))
-                    except IndexError:
-                        pass
+                    except:
+                        await session.set_window_fullscreen()
+                        img1 = await session.get_screenshot()
+
+                        with open('parser/screenshot.png', 'wb') as png:
+                            png.write(img1.read())
+                        price_xpath = '//*[@id="main"]/div/div/div[1]/div[1]/p'                    
+                        price_el = await session.get_element(price_xpath, SelectorType.xpath)
+                        price = await price_el.get_text()
+                        print(price)
                 
-                
-                #print(f'Цена: {price}')
+                price = int((price * (euro_costs + 1)) * float(f'1.{crud.get_category(name="VALENTINO").margin}')) if price else None
+                print(f'Цена: {price}')
                 
                 description = ''
             
@@ -524,11 +532,12 @@ async def get_valentino_catalog(url, subcategory):
                         name = soup.find_all('p', 'sc-ialjHA dOuBpq')[0].text
                     except:
                         pass
-                    
+                print(name)
                 
                 back_xpath = '//*[@id="main-wrapper"]/div[1]/div[1]'
                 back_el = await session.wait_for_element(10, back_xpath, SelectorType.xpath)
                 await back_el.click()
+                print(price)
                 if price:
                     item = [name, 'VALENTINO', subcategory, 'valentino', description, price, images, list_sizes, article, url]
                     items.append(item)
@@ -542,27 +551,37 @@ async def get_valentino_catalog(url, subcategory):
 async def get_valentino():
     
     url = 'https://myv-experience.valentino.com/0040001024/OUTLET%20SERRAVALLE'
-    categories = {
-        'Женская одежда': '/VAL/search?category=APPAREL',
-        'Женская обувь': '/VAL/search?category=SHOES',
-        'Женские сумки': '/VAL/search?category=BAGS',
-        'Женские кожаные изделия': '/VAL/search?category=SMALL%20LEATHER%20GOODS',
-        'Женская бижутерия': '/VAL/search?category=BIJOUX',
-        'Женские аксессуары': '/VAL/search?category=SOFT%20ACCESSORIES',
-        'Мужская одежда': '/VMA/search?category=APPAREL',
-        'Мужская обувь': '/VMA/search?category=SHOES',
-        'Мужские сумки': '/VMA/search?category=BAGS',
-        'Мужские кожаные изделия': '/VMA/search?category=SMALL%20LEATHER%20GOODS',
-        'Мужская бижутерия': '/VMA/search?category=BIJOUX',
-        'Мужские аксессуары': '/VMA/search?category=SOFT%20ACCESSORIES'
-    }
-    
-    for subcategory, category_url in categories.items():
+    subcategories = [
+        ['Женщины'],
+        ['Женская одежда', 'Женщины', 2, '/VAL/search?category=APPAREL'],
+        ['Женская обувь', 'Женщины', 2, '/VAL/search?category=SHOES'],
+        ['Женские сумки', 'Женщины', 2, '/VAL/search?category=BAGS'],
+        ['Женские кожаные изделия', 'Женщины', 2, '/VAL/search?category=SMALL%20LEATHER%20GOODS'],
+        ['Женская бижутерия', 'Женщины', 2, '/VAL/search?category=BIJOUX'],
+        ['Женские аксессуары', 'Женщины', 2, '/VAL/search?category=SOFT%20ACCESSORIES'],
+        ['Мужчины'],
+        ['Мужская одежда', 'Мужчины', 2, '/VMA/search?category=APPAREL'],
+        ['Мужская обувь', 'Мужчины', 2, '/VMA/search?category=SHOES'],
+        ['Мужские сумки', 'Мужчины', 2, '/VMA/search?category=BAGS'],
+        ['Мужские кожаные изделия', 'Мужчины', 2, '/VMA/search?category=SMALL%20LEATHER%20GOODS'],
+        ['Мужская бижутерия', 'Мужчины', 2, '/VMA/search?category=BIJOUX'],
+        ['Мужские аксессуары', 'Мужчины', 2, '/VMA/search?category=SOFT%20ACCESSORIES']
+    ]
+    cat_name = 'VALENTINO'
+    for subcategory in subcategories:
+        if len(subcategory) == 1:
+            s = crud.create_subcategory(name=subcategory[0], category=cat_name) if not crud.subcategory_exists(name=subcategory[0], category=cat_name) else 0
+            continue
+        elif not isinstance(subcategory[-1], str):
+            if not crud.subcategory_exists(name=subcategory[0], category=cat_name):
+                parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=crud.get_category(name=cat_name).id)
+                crud.create_subcategory(name=subcategory[0], category=cat_name, parent_subcategory=parent_subcategory.id, level=subcategory[2])
+            continue
+
         logging.info(f'Start VALENTINO {subcategory}')
         
-        
-        items = await get_valentino_catalog(url + category_url, subcategory)
-        #print(items)
+        items = await get_valentino_catalog(url + subcategory[-1], subcategory[0])
+        print(items)
         #crud.del_products(subcategory=subcategory, category='VALENTINO')
         #print(crud.get_product(category_id=crud.get_category(name='VALENTINO').id, subcategory_id=1))
         #try:
@@ -570,42 +589,16 @@ async def get_valentino():
         #except:
         #    not_deleted_items = []
         #print(not_deleted_items)
-        euro_costs = euro_cost()
-        for item in items:
-
-            try:
-                price = int((item[5] * (euro_costs + 1)) * float(f'1.{crud.get_category(name="VALENTINO").margin}')) if item[5] else None
-                
-                
-                if not crud.product_exists(article=item[8]):
-                    prod = crud.create_product(
-                    name=item[0],
-                    category=item[1],
-                    subcategory=item[2],
-                    description=item[4],
-                    sizes=item[7],
-                    price=price,
-                    image=item[6],
-                    article=item[8],
-                    url=item[9])
-                else:
-                    prod = crud.get_product(article=item[8])
-                    if not prod.deleted and not prod.edited:
-                        crud.update_product(
-                            product_id=prod.id,
-                            name=item[0],
-                            category=item[1],
-                            description=item[4],
-                            sizes=item[7],
-                            price=price,
-                            image=item[6],
-                            article=item[8],
-                            url=item[9]
-                        )
-
-            except Exception as ex:
-                print(ex)
-        logging.info(f'Canceled VALENTINO {subcategory} added {len(items)} products') 
+        
+            
+        if not crud.subcategory_exists(name=subcategory[0], category='VALENTINO'):
+            metacategory = crud.get_metacategory(name='Premium бренды')
+            parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=crud.get_category(name='VALENTINO', metacategory=metacategory.id).id)
+            crud.create_subcategory(name=subcategory[0], category='VALENTINO', parent_subcategory=parent_subcategory.id, level=subcategory[2])
+        
+        crud.create_products(category='VALENTINO', subcategory=subcategory[0], items=items)
+            
+        logging.info(f'Canceled VALENTINO {subcategory[0]} added {len(items)} products') 
     await bot.send_message(227184505, f'VALENTINO закончил парсинг')
     return items
 
