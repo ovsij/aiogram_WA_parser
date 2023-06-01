@@ -182,7 +182,7 @@ async def btn_callback(callback_query: types.CallbackQuery):
 
         await bot.send_message(
             chat_id,
-            text = emojize('Подробнее :arrow_down:'),
+            text = emojize('Подробнее :arrow_down:', language='alias'),
             reply_markup=reply_markup
         )
 
