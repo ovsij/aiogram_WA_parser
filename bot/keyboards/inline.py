@@ -62,7 +62,10 @@ def inline_kb_metacategories(tg_id : str, page : int = 1):
 def inline_kb_categories(tg_id : str, metacategory : int, page : int = 1):
     #выводит названия категорий, если их нет выводит продукты
     text = 'КАТАЛОГ'
-    categories = get_category(metacategory=metacategory)
+    if get_metacategory(id=metacategory).name == 'Все товары':
+        categories = get_category()
+    else:
+        categories = get_category(metacategory=metacategory)
     text_and_data = []
     schema = []
     if bool(categories):

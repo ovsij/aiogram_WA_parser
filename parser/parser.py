@@ -750,11 +750,11 @@ async def get_lesilla():
             euro_costs = euro_cost()
             for item in items:
                 try:
-                    price = int((item[5] * (euro_costs + 1)) * float(f'1.{crud.get_category(name="LeSILLA").margin}')) if item[5] else None
+                    price = int((item[5] * (euro_costs + 1)) * float(f'1.{crud.get_category(name="LeSILLA Outlet").margin}')) if item[5] else None
                     description = item[4].replace('€ ', ' ')
                     for i in re.findall(r'\d*[.]\d\d', item[4]):
                         if i:
-                            price_rub = str(int((float(i) * (euro_costs + 1)) / 100 * crud.get_category(name='LeSILLA').margin))
+                            price_rub = str(int((float(i) * (euro_costs + 1)) / 100 * crud.get_category(name='LeSILLA Outlet').margin))
                             description = description.replace(i, '<s>' + price_rub + ' руб.</s>  ')
                     description = f'Color: {item[7]}\n\n' + description.replace(f'<s>{price_rub} руб.</s>', f'{price_rub} руб.')
                     #if item[0] + ' ' + item[7] in not_deleted_items:
@@ -762,7 +762,7 @@ async def get_lesilla():
                     if not crud.product_exists(article=item[9]):
                         prod = crud.create_product(
                         name=item[0],
-                        category='LeSILLA',
+                        category='LeSILLA Outlet',
                         subcategory=name,
                         description=description,
                         sizes=item[7],
@@ -776,7 +776,7 @@ async def get_lesilla():
                             crud.update_product(
                                 product_id=prod.id,
                                 name=item[0],
-                                category='LeSILLA',
+                                category='LeSILLA Outlet',
                                 description=description,
                                 sizes=item[7],
                                 price=price,
@@ -1213,7 +1213,7 @@ async def get_golcegabbana():
         ['Детские кожаные изделия', 'Дети', 2, 'https://dolcegabbanaprivatesales.com/collections/baby-leather'],
         ['Детская обувь', 'Дети', 2, 'https://dolcegabbanaprivatesales.com/collections/baby-shoes']
     ]
-    cat_name = 'Dolce&Gabanna'
+    cat_name = 'Dolce&Gabanna Outlet'
     for subcategory in subcategories:
         if not str(subcategory[-1]).startswith('http'):
             if len(subcategory) == 1:
@@ -1267,13 +1267,13 @@ async def get_golcegabbana():
                         try:
                             old_price = soup.find('s', 'product__price--strike').text.strip('\n').strip(' ').strip('\n').strip(' ').strip('\n').strip(' ').strip('€').replace('.', '').replace(',', '.')
                             #print(old_price)
-                            old_price = int((float(old_price) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Dolce&Gabanna').margin}"))
+                            old_price = int((float(old_price) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Dolce&Gabanna Outlet').margin}"))
                             #print(old_price)
                         except:
                             old_price = None
                         current_price = soup.find('span', 'product__price--sale').text.strip('\n').strip(' ').strip('€').replace('.', '').replace(',', '.').strip('\n').strip(' ')
                         #print(current_price)
-                        current_price = int((float(current_price) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Dolce&Gabanna').margin}"))
+                        current_price = int((float(current_price) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Dolce&Gabanna Outlet').margin}"))
                         #print(current_price)
                         
                         #print(percent)
@@ -1299,11 +1299,11 @@ async def get_golcegabbana():
                         article = url.split('/')[-1]
 
                         # изображения
-                        if not os.path.exists(f"database/images/Dolce&Gabanna"):
-                            os.mkdir(f"database/images/Dolce&Gabanna")
+                        if not os.path.exists(f"database/images/Dolce&Gabanna Outlet"):
+                            os.mkdir(f"database/images/Dolce&Gabanna Outlet")
 
-                        if not os.path.exists(f"database/images/Dolce&Gabanna/{subcategory[0]}"):
-                            os.mkdir(f"database/images/Dolce&Gabanna/{subcategory[0]}")
+                        if not os.path.exists(f"database/images/Dolce&Gabanna Outlet/{subcategory[0]}"):
+                            os.mkdir(f"database/images/Dolce&Gabanna Outlet/{subcategory[0]}")
                         image_links = ['https:' + photo.find('img', {'style': "display: none;"}).get('data-src') for photo in soup.find_all('div', ['product__photo', 'product__photo media--hidden'])]
                         
                         i = items_urls.index(url) + 1
@@ -2026,7 +2026,7 @@ async def get_underarmour():
     await bot.send_message(227184505, f'{cat_name} закончил парсинг')
 
 async def get_pleinoutlet():
-    cat_name = 'Philipp Plein'
+    cat_name = 'Philipp Plein Outlet'
     subcategories = [
         #https://www.pleinoutlet.com/it/en/search?cgid=men-clothing-leather&pmin=1.00&prefn1=hasPicture&prefv1=true&start=0&sz=1000
         ['Мужчины'],
@@ -2149,10 +2149,10 @@ async def get_pleinoutlet():
                         article = item['url'].split('.html')[0].split('/')[-1]
                         #print(article)
                         
-                        current_price = int((float(item_soup.find('span', 'price-sales').text.strip('€ ').replace('.', '')) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Philipp Plein').margin}"))
+                        current_price = int((float(item_soup.find('span', 'price-sales').text.strip('€ ').replace('.', '')) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Philipp Plein Outlet').margin}"))
                         #print(current_price)
                         try:
-                            old_price = int((float(item_soup.find('span', 'price-standard').text.strip('€ ').replace('.', '')) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Philipp Plein').margin}"))
+                            old_price = int((float(item_soup.find('span', 'price-standard').text.strip('€ ').replace('.', '')) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Philipp Plein Outlet').margin}"))
                             percent = int(100 - float(current_price) / (float(old_price) / 100))
                             description = f'\n\n<s>{old_price} руб.</s> -{percent}% {current_price} руб.'
                             #print(description)
