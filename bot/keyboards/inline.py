@@ -46,8 +46,9 @@ def inline_kb_metacategories(tg_id : str, page : int = 1):
     if bool(metacategories):
         text += '\n\nВыберите интересующую вас категорию'
         for cat in metacategories:
-            text_and_data.append([f'{cat.name}', f'btn_metacategory_{cat.id}_1'])
-            schema.append(1)
+            if len(get_category(metacategory=cat.id)) > 0:
+                text_and_data.append([f'{cat.name}', f'btn_metacategory_{cat.id}_1'])
+                schema.append(1)
         
         if len(metacategories) > 30:
             text_and_data, schema = btn_prevnext(len(metacategories), text_and_data, schema, page, name='catalog')
