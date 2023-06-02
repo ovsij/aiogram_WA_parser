@@ -290,10 +290,11 @@ def inline_kb_tocart(product_id : int, sizes : list = []):
 
 def inline_kb_publish(product_id : int, to : str):
     product = get_product(id=product_id)
+    category = get_category(id=product.category.id)
     description = product.description
     description = '' if not product.description else product.description
     price = 'Не указана' if not product.price else product.price
-    text = f'{product.name}\n\n{description}\n\nЦена: {price} руб.'
+    text = f'{category.name}\n\n{product.name}\n\n{description}\n\nЦена: {price} руб.'
     if to == 'channel':
         text_and_data = [['Показать в боте', f'btn_publish_user_{product_id}']]
     if to == 'user':
