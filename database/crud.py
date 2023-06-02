@@ -408,6 +408,7 @@ def get_category(id : int = None, name : str = None, metacategory : int = None):
             return Category(name=name, phone=name.lower(), margin=30, metaCategory=metacategory)
     if metacategory and not name:
         return select(c for c in Category if c.metaCategory.id == metacategory)[:]
+    
     else:
         return select(c for c in Category)[:]
 
