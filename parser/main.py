@@ -25,8 +25,8 @@ async def main():
         #await get_coach()
     while True:
         tasks = set()
-        task1 = asyncio.create_task(get_lesilla())
-        tasks.add(task1)
+        #task1 = asyncio.create_task(get_lesilla())
+        #tasks.add(task1)
         #task2 = asyncio.create_task(get_valentino())
         #tasks.add(task2)
         #task3 = asyncio.create_task(get_nike())
@@ -43,8 +43,8 @@ async def main():
         #tasks.add(task8)
         #task9 = asyncio.create_task(get_underarmour())
         #tasks.add(task9)
-        #task10 = asyncio.create_task(get_pleinoutlet())
-        #tasks.add(task10)
+        task10 = asyncio.create_task(get_pleinoutlet())
+        tasks.add(task10)
         #task11 = asyncio.create_task(get_monnalisa())
         #tasks.add(task11)
         

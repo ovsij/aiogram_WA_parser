@@ -120,7 +120,7 @@ def inline_kb_subcategories(tg_id : str, category : int = None, subcategory : in
             text_and_data.append([f'{subcat.name}', f'btn_ls_{category}_{subcat.id}_s=_p=_n_0-5'])
             schema.append(1)
     
-    if get_category(id=category).name == 'LeSILLA' and level == 1:
+    if get_category(id=category).name in ['LeSILLA', 'Dolce&Gabanna Outlet']:
         text_and_data.append([emojize(':scissors: Таблица размеров', language='alias'), f'btn_sizes_{category}'])
         schema.append(1)
     
@@ -901,12 +901,15 @@ def inline_kb_myprices(prices : str):
     inline_kb = InlineConstructor.create_kb(text_and_data, schema)
     return text, inline_kb
 
-def inline_kb_sizes(category_id : int):
+def inline_kb_sizes(messages : str = ''):
     text = 'ТАБЛИЦА РАЗМЕРОВ'
-    text_and_data = [['Скрыть', 'btn_hide']]
+    
+    text_and_data = [['Скрыть', f'btn_hide_{messages}']]
     schema = [1]
+    
     inline_kb = InlineConstructor.create_kb(text_and_data, schema)
     return text, inline_kb
+
 
 def inline_kb_howto():
     text = markdown.text(

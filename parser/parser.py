@@ -2029,12 +2029,11 @@ async def get_underarmour():
     await bot.send_message(227184505, f'{cat_name} закончил парсинг')
 
 async def get_pleinoutlet():
-    cat_name = 'Philipp Plein Outlet'
     subcategories = [
         #https://www.pleinoutlet.com/it/en/search?cgid=men-clothing-leather&pmin=1.00&prefn1=hasPicture&prefv1=true&start=0&sz=1000
         ['Мужчины'],
         ['Мужская одежда', 'Мужчины', 2],
-        ['Верхняя одежда мужская', 'Мужская одежда', 3, 'https://www.pleinoutlet.com/it/en/men/clothing/jackets/?pmin=1.00&prefn1=hasPicture&prefv1=true&sz=150'],
+        ['Верхняя одежда мужская', 'Мужская одежда', 3, 'https://www.pleinoutlet.com/it/en/men/clothing/jackets/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=150'],
         ['Кожаные куртки мужские', 'Мужская одежда', 3, 'https://www.pleinoutlet.com/it/en/search?cgid=men-clothing-leather&pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
         ['Блейзеры мужские', 'Мужская одежда', 3, 'https://www.pleinoutlet.com/it/en/men/clothing/blazers/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
         ['Трикотаж мужской', 'Мужская одежда', 3, 'https://www.pleinoutlet.com/it/en/men/clothing/knitwear/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
@@ -2119,7 +2118,8 @@ async def get_pleinoutlet():
         ['Аксессуары для девочек', 'Девочки', 3, 'https://www.pleinoutlet.com/it/en/kids/girls/accessories/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
         ['Для младенцев девочек', 'Девочки', 3, 'https://www.pleinoutlet.com/it/en/search?cgid=kids-girls-baby?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax']
     ]
-    
+    cat_name = 'Philipp Plein Outlet'
+    category = crud.get_category(name=cat_name, metacategory=6)
     for subcategory in subcategories:
         if not str(subcategory[-1]).startswith('http'):
             if len(subcategory) == 1:
@@ -2134,6 +2134,7 @@ async def get_pleinoutlet():
         async with aiohttp.ClientSession(headers=headers, trust_env=True) as session:
             items_urls = []
             for i in range(0, 10):
+                print(i)
                 async with session.get(subcategory[-1].format(i * 20), ssl=False) as response:
                     webpage = await response.text()
                     soup = bs(webpage, 'html.parser')
@@ -2142,6 +2143,7 @@ async def get_pleinoutlet():
                         items_urls += page_items
                     else:
                         continue
+            print(len(items_urls))
             items = []
             euro_costs = euro_cost()
             for item in items_urls:
@@ -2480,8 +2482,8 @@ cat_name = "Zwilling"
 SUBCATEGORIES = [
     ["Посуда"],
     ["Воки", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/woks/"],
-    ["Фондю", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/fondue/"],
-    ["Крышки для посуды", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/coperchi/"],
+    #["Фондю", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/fondue/"],
+    #["Крышки для посуды", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/coperchi/"],
     # ["Наборы кастрюль", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/set-di-pentole-da-cucina/"],
     # ["Наборы сковородок", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/set-di-padelle/"],
     # ["Ковши и жаровни", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/casseruole-con-manico/"],
@@ -2575,13 +2577,13 @@ async def get_zwilling():
     image_links_dict = {}
     subcategories_dict = {}
     #запускаем парсинг ссылок аутлета в отдельном потоке. К моменту завершения парсинга осн. каталога, селениум уже давно завершит работу
-    #outlet_parser = Outlet_parser()
-    #outlet_parser.get_outlet()
+    outlet_parser = Outlet_parser()
+    outlet_parser.get_outlet()
 
     
     # создаем категорию (проверка наличия уже в функции)
     category = crud.get_category(name=cat_name, metacategory=6)
-    
+    all_items = []
     for subcategory in SUBCATEGORIES:
         items = []
         if not str(subcategory[-1]).startswith('http'):
@@ -2612,7 +2614,7 @@ async def get_zwilling():
                             break
                         i += 1
 
-            for url in urls[:5]:
+            for url in urls:
                 subcategories_dict[url] = subcategory[0]
                 await asyncio.sleep(1)
                 async with session.get(url, ssl=False) as response:
@@ -2671,8 +2673,7 @@ async def get_zwilling():
                     
                     i = urls.index(url) + 1
                     images = ''
-                    
-                    for link in image_links:
+                    for link in image_links[1:]:
                         try:
                             num = image_links.index(link) + 1
                             img_path = f"database/images/{cat_name}/{subcategory[0]}/{i}_{title.replace(' ', '_').replace('/', '_')}_{num}.png"
@@ -2688,20 +2689,22 @@ async def get_zwilling():
                     item = [title, description, current_price, images, sizes, article, url]
                     print(item)
                     items.append(item)
+                    all_items.append(item)
         # добавляем товары
         if not crud.subcategory_exists(name=subcategory[0], category=cat_name):
             parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=crud.get_category(name=cat_name).id)
             crud.create_subcategory(name=subcategory[0], category=cat_name, parent_subcategory=parent_subcategory.id, level=subcategory[2])
         
         crud.create_products(category=cat_name, subcategory=subcategory[0], items=items)
-
+    print('start outlet')
     #получаем ссылки и цены, которые собрал селениум          
     outlet = outlet_parser.outlet
     #сохраняем аутлет отдельно, т к товары аутлета в обычном каталоге уже есть, то берем их, но цену из аутлета
-    for i in range(len(items)):
-        item = items[i]
+    for i in range(len(all_items)):
+        item = all_items[i]
         url = item[-1]
         if url in outlet.keys():
+            print(url)
             print("есть аутлет")
             title = item[0]
             sizes = item[-3]
@@ -2864,12 +2867,12 @@ class Outlet_parser():
     
     def get_driver(self):
         options = webdriver.ChromeOptions()
-        # options.add_argument("--headless")
+        options.add_argument("--headless")
         options.add_argument("--disable-blink-features=AutomationControlled")
         options.add_argument('--no-sandbox')
         options.add_experimental_option("excludeSwitches", ["enable-automation"])
         options.add_experimental_option('useAutomationExtension', False)
-        driver = webdriver.Chrome(executable_path="chromedriver.exe", options= options)
+        driver = webdriver.Chrome(ChromeDriverManager().install(), options= options)
         
         driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {
             "source" : '''

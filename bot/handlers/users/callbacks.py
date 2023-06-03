@@ -151,9 +151,11 @@ async def btn_callback(callback_query: types.CallbackQuery):
             else:
                 
                 try:
+                    
                     # карточка товара с фото
                     images = item['images'].split('\n')
                     photo = [types.InputMedia(media=open(img, 'rb'), caption=item['text']) if images.index(img) == 0 else types.InputMedia(media=open(img, 'rb')) for img in images]
+                    print(photo)
                     await bot.send_media_group(
                         callback_query.message.chat.id, 
                         media=photo,
@@ -646,17 +648,48 @@ async def btn_callback(callback_query: types.CallbackQuery):
         )
 
     if code[1] == 'sizes':
-        text, reply_markup = inline_kb_sizes(category_id=code[-1])
-        photo = types.InputFile('database/sizes.PNG')
+        category = get_category(id=int(code[-1]))
+        text, reply_markup = inline_kb_sizes()
+        #photo = types.InputFile(f'database/image/{category.name}/sizeguide.png')
+
+        images = []
+        for address, dirs, files in os.walk(f'database/images/{category.name}/'):
+            for name in files:
+                if 'sizeguide' in name:
+                    images.append(address + '/' + name)
+        if len(images) > 1:
+            photo = [types.InputMedia(media=open(img, 'rb')) for img in images]
+            message = await bot.send_media_group(
+                callback_query.message.chat.id, 
+                media=photo,
+            )
+            messages = ''
+            for m in message:
+                messages += f'{m.message_id}/'
+            messages.strip('/')
+            print(messages)
+            text, reply_markup = inline_kb_sizes(messages)
+            await bot.send_message(
+                callback_query.message.chat.id,
+                text=text,
+                reply_markup=reply_markup
+                )
+        else:
+            photo = types.InputFile(f'database/images/{category.name}/sizeguide_1.png')
+            message = await bot.send_photo(
+                callback_query.message.chat.id, 
+                photo=photo, 
+                caption=text, 
+                reply_markup=reply_markup
+            )
         
-        await bot.send_photo(
-            callback_query.message.chat.id, 
-            photo=photo, 
-            caption=text, 
-            reply_markup=reply_markup
-        )
 
     if code[1] == 'hide':
+        try:
+            for mes in code[-1].split('/'):
+                await bot.delete_message(chat_id=callback_query.message.chat.id, message_id=int(mes))
+        except:
+            pass
         await callback_query.message.delete()
 
     if code[1] == 'howto':
