@@ -120,7 +120,7 @@ def inline_kb_subcategories(tg_id : str, category : int = None, subcategory : in
             text_and_data.append([f'{subcat.name}', f'btn_ls_{category}_{subcat.id}_s=_p=_n_0-5'])
             schema.append(1)
     
-    if get_category(id=category).name in ['LeSILLA', 'Dolce&Gabanna Outlet']:
+    if get_category(id=category).name in ['LeSILLA Outlet', 'Dolce&Gabanna Outlet', 'Underarmour']:
         text_and_data.append([emojize(':scissors: Таблица размеров', language='alias'), f'btn_sizes_{category}'])
         schema.append(1)
     
