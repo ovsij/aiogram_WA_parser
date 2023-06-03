@@ -675,10 +675,11 @@ async def btn_callback(callback_query: types.CallbackQuery):
                 reply_markup=reply_markup
                 )
         else:
-            
-            photo = types.InputFile(f'database/images/{category.name}/sizeguide_1.png')
             if category.name == 'LeSILLA Outlet':
                 photo = [f'database/images/LeSILLA/sizeguide_1.png']
+            else:
+                photo = types.InputFile(f'database/images/{category.name}/sizeguide_1.png')
+            
             message = await bot.send_photo(
                 callback_query.message.chat.id, 
                 photo=photo, 
