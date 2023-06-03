@@ -657,6 +657,7 @@ async def btn_callback(callback_query: types.CallbackQuery):
                     images.append(address + '/' + name)
         if category.name == 'LeSILLA Outlet':
             images = f'database/images/LeSILLA/sizeguide_1.png'
+        logging.info(images)
         if len(images) > 1:
             photo = [types.InputMedia(media=open(img, 'rb')) for img in images]
             message = await bot.send_media_group(
