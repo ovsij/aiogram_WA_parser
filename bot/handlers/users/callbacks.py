@@ -676,7 +676,7 @@ async def btn_callback(callback_query: types.CallbackQuery):
                 )
         else:
             if category.name == 'LeSILLA Outlet':
-                photo = types.InputFile(f'database/images/LeSILLA/sizeguide_1.png')
+                photo = types.InputFile(f'database/images/LESILLA/sizeguide_1.png')
             else:
                 photo = types.InputFile(f'database/images/{category.name}/sizeguide_1.png')
             
