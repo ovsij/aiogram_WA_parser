@@ -655,8 +655,7 @@ async def btn_callback(callback_query: types.CallbackQuery):
             for name in files:
                 if 'sizeguide' in name:
                     images.append(address + '/' + name)
-        if category.name == 'LeSILLA Outlet':
-            images = [f'database/images/LeSILLA/sizeguide_1.png']
+        
         logging.info(images)
         if len(images) > 1:
             photo = [types.InputMedia(media=open(img, 'rb')) for img in images]
@@ -676,7 +675,10 @@ async def btn_callback(callback_query: types.CallbackQuery):
                 reply_markup=reply_markup
                 )
         else:
+            
             photo = types.InputFile(f'database/images/{category.name}/sizeguide_1.png')
+            if category.name == 'LeSILLA Outlet':
+                photo = [f'database/images/LeSILLA/sizeguide_1.png']
             message = await bot.send_photo(
                 callback_query.message.chat.id, 
                 photo=photo, 
