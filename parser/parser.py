@@ -2700,11 +2700,12 @@ async def get_zwilling():
     #получаем ссылки и цены, которые собрал селениум          
     outlet = outlet_parser.outlet
     #сохраняем аутлет отдельно, т к товары аутлета в обычном каталоге уже есть, то берем их, но цену из аутлета
-    for i in range(len(all_items)):
-        item = all_items[i]
+    print(outlet)
+    print(len(outlet))
+    for i in range(len(items)):
+        item = items[i]
         url = item[-1]
         if url in outlet.keys():
-            print(url)
             print("есть аутлет")
             title = item[0]
             sizes = item[-3]
@@ -2867,7 +2868,7 @@ class Outlet_parser():
     
     def get_driver(self):
         options = webdriver.ChromeOptions()
-        options.add_argument("--headless")
+        # options.add_argument("--headless")
         options.add_argument("--disable-blink-features=AutomationControlled")
         options.add_argument('--no-sandbox')
         options.add_experimental_option("excludeSwitches", ["enable-automation"])
@@ -2884,3 +2885,7 @@ class Outlet_parser():
         driver.maximize_window()
         return driver
 
+if __name__ == "__main__":
+    asyncio.run(get_zwilling())
+    # p = Outlet_parser()
+    # p.get_outlet()
