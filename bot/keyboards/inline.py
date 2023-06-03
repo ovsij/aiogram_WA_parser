@@ -120,9 +120,8 @@ def inline_kb_subcategories(tg_id : str, category : int = None, subcategory : in
             text_and_data.append([f'{subcat.name}', f'btn_ls_{category}_{subcat.id}_s=_p=_n_0-5'])
             schema.append(1)
     
-    if get_category(id=category).name in ['LeSILLA Outlet', 'Dolce&Gabanna Outlet', 'Underarmour', 'Philipp Plein Outlet']:
-        text_and_data.append([emojize(':scissors: Таблица размеров', language='alias'), f'btn_sizes_{category}'])
-        schema.append(1)
+    text_and_data.append([emojize(':scissors: Таблица размеров', language='alias'), f'btn_sizes_{category}'])
+    schema.append(1)
     
     if tg_id in os.getenv('ADMINS') and get_category(id=category).custom:
         text_and_data.append([f'Удалить категорию {category_name}', f'btn_deletecategory_{category}'])
