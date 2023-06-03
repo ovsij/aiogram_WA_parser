@@ -133,4 +133,4 @@ config.py
 *.sqlite
 
 User
-images
+/database/images/*/*

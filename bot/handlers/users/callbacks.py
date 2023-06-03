@@ -155,7 +155,6 @@ async def btn_callback(callback_query: types.CallbackQuery):
                     # карточка товара с фото
                     images = item['images'].split('\n')
                     photo = [types.InputMedia(media=open(img, 'rb'), caption=item['text']) if images.index(img) == 0 else types.InputMedia(media=open(img, 'rb')) for img in images]
-                    print(photo)
                     await bot.send_media_group(
                         callback_query.message.chat.id, 
                         media=photo,
@@ -650,7 +649,6 @@ async def btn_callback(callback_query: types.CallbackQuery):
     if code[1] == 'sizes':
         category = get_category(id=int(code[-1]))
         text, reply_markup = inline_kb_sizes()
-        #photo = types.InputFile(f'database/image/{category.name}/sizeguide.png')
 
         images = []
         for address, dirs, files in os.walk(f'database/images/{category.name}/'):
