@@ -237,10 +237,13 @@ def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : in
         [emojize(':shopping_cart: Перейти в корзину', language='alias'), 'btn_cart_0-5'],
         [emojize(':arrow_down_small: Eще 5 товаров :arrow_down_small:', language='alias'), f'btn_ls_{category}_{sub_category}{sizes_code}{prices_code}_{sort}{page_0}-{page_5}'],
         [emojize(':arrow_down_small: Eще 25 товаров :arrow_down_small:', language='alias'), f'btn_ls_{category}_{sub_category}{sizes_code}{prices_code}_{sort}{page_0}-{page_25}'],
-        [emojize(':scissors: Таблица размеров', language='alias'), f'btn_sizes_{category}'],
+        
         back_btn
     ]
-    schema = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    schema = [1, 1, 1, 1, 1, 1, 1, 1, 1]
+    if category_.name != 'Zwilling':
+        text_and_data.insert(6, [emojize(':scissors: Таблица размеров', language='alias'), f'btn_sizes_{category}'])
+        schema.append(1)
     if tg_id in os.getenv('ADMINS') and get_category(id=category).custom:
         text_and_data.insert(7, ['Добавить товар', f'btn_addproduct_{category}_{sub_category}'])
         schema.append(1)
