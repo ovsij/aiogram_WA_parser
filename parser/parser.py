@@ -3063,7 +3063,7 @@ async def get_twinset():
                 soup = bs(webpage, "html.parser")
                 product_urls += extract_links(soup)
                 
-            for product_url in product_urls[:5]:
+            for product_url in product_urls:
                 try:
                     await asyncio.sleep(1)
                     async with session.get(product_url, ssl=False) as response:
