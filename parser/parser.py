@@ -951,7 +951,7 @@ async def get_nike():
         ['Одежда женская', 'Женщины', 2],
         ['Свитера и футболки женские', 'Одежда женская', 3, 'de314d73-b9c5-4b15-93dd-0bef5257d3b4%2C7baf216c-acc6-4452-9e07-39c2ca77ba32'],
         ['Толстовки женские', 'Одежда женская', 3, '9b674c8e-25c9-45c3-8635-c284c07d3d17%2C7baf216c-acc6-4452-9e07-39c2ca77ba32'],
-        ['Леггинцы женские', 'Одежда женская', 3, '34374691-44fa-4fb7-a8d2-6ac5764eed1b%2C7baf216c-acc6-4452-9e07-39c2ca77ba32)'],
+        ['Легинсы женские', 'Одежда женская', 3, '34374691-44fa-4fb7-a8d2-6ac5764eed1b%2C7baf216c-acc6-4452-9e07-39c2ca77ba32)'],
         ['Шорты женские', 'Одежда женская', 3, '4a388e98-5844-4fe7-8ed3-a2e6ee5e4333%2C7baf216c-acc6-4452-9e07-39c2ca77ba32'],
         ['Брюки женские', 'Одежда женская', 3, '3b5dd430-2183-4019-97cb-5bd8735f10bf%2C7baf216c-acc6-4452-9e07-39c2ca77ba32'],
         ['Спортивные костюмы женские', 'Одежда женская', 3, '3c1b1cc3-bb3f-4f2a-8ada-2724d2f7ad9d%2C7baf216c-acc6-4452-9e07-39c2ca77ba32'],
@@ -975,7 +975,7 @@ async def get_nike():
         ['Толстовки детские', 'Одежда детская', 3, '145ce13c-5740-49bd-b2fd-0f67214765b3%2C9b674c8e-25c9-45c3-8635-c284c07d3d17'],
         ['Спортивные костюмы детские', 'Одежда детская', 3, '2507cbc4-f51f-4df9-97f7-3c44b6616b0f%2C145ce13c-5740-49bd-b2fd-0f67214765b3'],
         ['Шорты детские', 'Одежда детская', 3, '4a388e98-5844-4fe7-8ed3-a2e6ee5e4333%2C145ce13c-5740-49bd-b2fd-0f67214765b3'],
-        ['Брюки и леггинцы детские', 'Одежда детская', 3, '3b5dd430-2183-4019-97cb-5bd8735f10bf%2C145ce13c-5740-49bd-b2fd-0f67214765b3'],
+        ['Брюки и легинсы детские', 'Одежда детская', 3, '3b5dd430-2183-4019-97cb-5bd8735f10bf%2C145ce13c-5740-49bd-b2fd-0f67214765b3'],
         ['Куртки детские', 'Одежда детская', 3, '72ff5f48-1b58-4042-8d72-f8a1c057ee06%2C145ce13c-5740-49bd-b2fd-0f67214765b3'],
         ['Форма детская', 'Одежда детская', 3, '4b4f96dd-146c-4c8b-9b95-3d0b7c453387%2C145ce13c-5740-49bd-b2fd-0f67214765b3'],
         ['Бюстгальтеры детские', 'Одежда детская', 3, 'https://www.nike.com/it/w/bambina-reggiseni-sportivi-3aqegz40qgm'],
@@ -1753,7 +1753,7 @@ async def get_newbalance():
         
         ['Одежда мужская', 'Мужчины', 2],
         ['Толстовки мужские', 'Одежда мужская', 3, 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=159001&start={}&sz={}'],
-        ['Штаны и леггинцы мужские', 'Одежда мужская', 3, 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=158000&start={}&sz={}'],
+        ['Штаны и легинсы мужские', 'Одежда мужская', 3, 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=158000&start={}&sz={}'],
         ['Куртки мужские', 'Одежда мужская', 3, 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=157000&start={}&sz={}'],
         ['Футболки мужские', 'Одежда мужская', 3, 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=155000&start={}&sz={}'],
         ['Шорты мужские', 'Одежда мужская', 3, 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=153000&start={}&sz={}'],
@@ -1778,7 +1778,7 @@ async def get_newbalance():
         
         ['Одежда женская', 'Женщины', 2],
         ['Толстовки женские', 'Одежда женская', 3, 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=159001&start={}&sz={}'],
-        ['Штаны и леггинцы женские', 'Одежда женская', 3, 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=158000&start={}&sz={}'],
+        ['Штаны и легинсы женские', 'Одежда женская', 3, 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=158000&start={}&sz={}'],
         ['Куртки женские', 'Одежда женская', 3, 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=157000&start={}&sz={}'],
         ['Футболки женские', 'Одежда женская', 3, 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=155000&start={}&sz={}'],
         ['Шорты женские', 'Одежда женская', 3, 'https://www.newbalance.it/on/demandware.store/Sites-NBEU-Site/it_IT/Search-UpdateGrid?cgid=153000&start={}&sz={}'],
@@ -2058,7 +2058,7 @@ async def get_pleinoutlet():
         ['Мешочки мужские', 'Мужские сумки', 3, 'https://www.pleinoutlet.com/it/en/men/bags/pouches/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
         ['Сумки для путешествий мужские', 'Мужские сумки', 3, 'https://www.pleinoutlet.com/it/en/men/bags/travel-bags/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
         ['Другие сумки мужские', 'Мужские сумки', 3, 'https://www.pleinoutlet.com/it/en/men/bags/other-bags/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
-        ['Мужские аксессуары', 'Мужчины', 3],
+        ['Мужские аксессуары', 'Мужчины', 2],
         ['Ремни мужские', 'Мужские аксессуары', 3, 'https://www.pleinoutlet.com/it/en/men/accessories/belts/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
         ['Очки мужские', 'Мужские аксессуары', 3, 'https://www.pleinoutlet.com/it/en/men/accessories/eyewear/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
         ['Часы мужские', 'Мужские аксессуары', 3, 'https://www.pleinoutlet.com/it/en/men/accessories/watches/?pmin=1.00&prefn1=hasPicture&prefv1=true&start={}&sz=100&format=ajax'], 
@@ -2222,7 +2222,7 @@ async def get_monnalisa():
         ['Пляжная одежда для девочек (0-18 месяцев)', 'Одежда для девочек (0-18 месяцев)', 4, 'https://www.monnalisa.com/en-it/girl/0-18-months/clothing/beachwear/?sz=1000'],
         ['Пальто и куртки для девочек (0-18 месяцев)', 'Одежда для девочек (0-18 месяцев)', 4, 'https://www.monnalisa.com/en-it/girl/0-18-months/clothing/coats-jackets/?sz=1000'],
         ['Юбки для девочек (0-18 месяцев)', 'Одежда для девочек (0-18 месяцев)', 4, 'https://www.monnalisa.com/en-it/girl/0-18-months/clothing/skirts/?sz=1000'],
-        ['Штаны и легинцы для девочек (0-18 месяцев)', 'Одежда для девочек (0-18 месяцев)', 4, 'https://www.monnalisa.com/en-it/girl/0-18-months/clothing/leggings-pants/?sz=1000'],
+        ['Штаны и легинсы для девочек (0-18 месяцев)', 'Одежда для девочек (0-18 месяцев)', 4, 'https://www.monnalisa.com/en-it/girl/0-18-months/clothing/leggings-pants/?sz=1000'],
         ['Свитеры и кардигары для девочек (0-18 месяцев)', 'Одежда для девочек (0-18 месяцев)', 4, 'https://www.monnalisa.com/en-it/girl/0-18-months/clothing/cardigans-sweaters/?sz=1000'],
         ['Рубашки и футболки для девочек (0-18 месяцев)', 'Одежда для девочек (0-18 месяцев)', 4, 'https://www.monnalisa.com/en-it/girl/0-18-months/clothing/tops--t-shirts-shirts/?sz=1000'],
         ['Аксессуары для девочек (0-18 месяцев)', 'Девочки (0-18 месяцев)', 3, 'https://www.monnalisa.com/en-it/girl/0-18-months/accessories/?sz=1000'],
@@ -2246,7 +2246,7 @@ async def get_monnalisa():
         ['Пляжная одежда для девочек (2-12 лет)', 'Одежда для девочек (2-12 лет)', 4, 'https://www.monnalisa.com/en-it/girl/2-12-years/clothing/beachwear/?sz=1000'],
         ['Пальто и куртки для девочек (2-12 лет)', 'Одежда для девочек (2-12 лет)', 4, 'https://www.monnalisa.com/en-it/girl/2-12-years/clothing/coats-jackets/?sz=1000'],
         ['Юбки для девочек (2-12 лет)', 'Одежда для девочек (2-12 лет)', 4, 'https://www.monnalisa.com/en-it/girl/2-12-years/clothing/skirts/?sz=1000'],
-        ['Штаны и легинцы для девочек (2-12 лет)', 'Одежда для девочек (2-12 лет)', 4, 'https://www.monnalisa.com/en-it/girl/2-12-years/clothing/leggings-pants/?sz=1000'],
+        ['Штаны и легинсы для девочек (2-12 лет)', 'Одежда для девочек (2-12 лет)', 4, 'https://www.monnalisa.com/en-it/girl/2-12-years/clothing/leggings-pants/?sz=1000'],
         ['Свитеры и кардигары для девочек (2-12 лет)', 'Одежда для девочек (2-12 лет)', 4, 'https://www.monnalisa.com/en-it/girl/2-12-years/clothing/cardigans-sweaters/?sz=1000'],
         ['Рубашки и футболки для девочек (2-12 лет)', 'Одежда для девочек (2-12 лет)', 4, 'https://www.monnalisa.com/en-it/girl/2-12-years/clothing/tops--t-shirts-shirts/?sz=1000'],
         
@@ -2266,7 +2266,7 @@ async def get_monnalisa():
         ['Пляжная одежда для девочек (13-16 лет)', 'Одежда для девочек (13-16 лет)', 4, 'https://www.monnalisa.com/en-it/girl/13-16-years/clothing/beachwear/?sz=1000'],
         ['Пальто и куртки для девочек (13-16 лет)', 'Одежда для девочек (13-16 лет)', 4, 'https://www.monnalisa.com/en-it/girl/13-16-years/clothing/coats-jackets/?sz=1000'],
         ['Юбки для девочек (13-16 лет)', 'Одежда для девочек (13-16 лет)', 4, 'https://www.monnalisa.com/en-it/girl/13-16-years/clothing/skirts/?sz=1000'],
-        ['Штаны и легинцы для девочек (13-16 лет)', 'Одежда для девочек (13-16 лет)', 4, 'https://www.monnalisa.com/en-it/girl/13-16-years/clothing/leggings-pants/?sz=1000'],
+        ['Штаны и легинсы для девочек (13-16 лет)', 'Одежда для девочек (13-16 лет)', 4, 'https://www.monnalisa.com/en-it/girl/13-16-years/clothing/leggings-pants/?sz=1000'],
         ['Свитеры и кардигары для девочек (13-16 лет)', 'Одежда для девочек (13-16 лет)', 4, 'https://www.monnalisa.com/en-it/girl/13-16-years/clothing/cardigans-sweaters/?sz=1000'],
         ['Рубашки и футболки для девочек (13-16 лет)', 'Одежда для девочек (13-16 лет)', 4, 'https://www.monnalisa.com/en-it/girl/13-16-years/clothing/tops--t-shirts-shirts/?sz=1000'],
         
@@ -2329,7 +2329,7 @@ async def get_monnalisa():
         ['Кардиганы и свитеры для девочек аутлет', 'Одежда для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/clothing/cardigans-sweaters/?prefn1=gender&prefv1=Girl&sz=1000'],
         ['Футболки и рубашки для девочек аутлет', 'Одежда для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/clothing/tops--t-shirts-shirts/?sz=1000'],
         ['Юбки аутлет', 'Одежда для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/clothing/skirts/?sz=1000'],
-        ['Штаны и леггинсы аутлет', 'Одежда для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/clothing/leggings-pants/?sz=1000'],
+        ['Штаны и легинсы аутлет', 'Одежда для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/clothing/leggings-pants/?sz=1000'],
         
         ['Аксессуары для девочек аутлет', 'Девочки аутлет', 3],
         ['Аксессуары для волос аутлет', 'Аксессуары для девочек аутлет', 4, 'https://www.monnalisa.com/en-it/outlet/accessories/hair-accessories/?sz=1000'],
@@ -2476,114 +2476,116 @@ async def get_monnalisa():
 
 
 
-EURO_COSTS = 87
 
-cat_name = "Zwilling"
-SUBCATEGORIES = [
-    ["Посуда"],
-    ["Воки", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/woks/"],
-    ["Фондю", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/fondue/"],
-    ["Крышки для посуды", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/coperchi/"],
-    ["Наборы кастрюль", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/set-di-pentole-da-cucina/"],
-    ["Наборы сковородок", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/set-di-padelle/"],
-    ["Ковши и жаровни", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/casseruole-con-manico/"],
-    ["Сковороды", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/padelle/"],
-    ["Сковороды-гриль", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/bistecchiere-e-griglie/"],
-    ["Сотейники", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/tegami/"],
-    ["Чайники", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/teiere/"],
-    ["Чугунные кокоты", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/cocottes/"],
-    ["Ручки для посуды", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/accessori/"],
-    ["Миски, рамекины", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/colapasta-e-cestelli/"],
-    ["Формы для запекания", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/cocottes/"],
-    ["Посуда специальной формы", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/speciali/"],
-    ["Блинница", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/crepiere/"],
-    ["Подставка", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/sottopentole/"],
 
-    ["Кухонная утварь"],
-    ["Кухонные ножницы", "Кухонная утварь", 2, "https://www.zwilling.com/it/utensili-da-cucina/forbici-da-cucina/"],
-    ["Ножницы для птицы", "Кухонная утварь", 2, "https://www.zwilling.com/it/utensili-da-cucina/trinciapolli/"],
-    ["Терки", "Кухонная утварь", 2, "https://www.zwilling.com/it/z-cut/"],
-    ["Винные аксессуары", "Кухонная утварь", 2, "https://www.zwilling.com/it/utensili-da-cucina/accessori-per-il-vino/"],
-    ["Банки", "Кухонная утварь", 2, "https://www.zwilling.com/it/utensili-da-cucina/barattoli/"],
-    ["Хранение кухонной утвари", "Кухонная утварь", 2, "https://www.zwilling.com/it/utensili-da-cucina/portautensili-da-cucina/"],
-    ["Практические инструменты", "Кухонная утварь", 2, "https://www.zwilling.com/it/utensili-da-cucina/utensili-pratici/"],
-    ["Очистители картошки", "Кухонная утварь", 2, "https://www.zwilling.com/it/utensili-da-cucina/pelapatate/"],
-    ["Шпатели", "Кухонная утварь", 2, "https://www.zwilling.com/it/utensili-da-cucina/spatole-2/"],
-    ["Половники", "Кухонная утварь", 2, "https://www.zwilling.com/it/utensili-da-cucina/mestoli/"],
-    ["Шумовки", "Кухонная утварь", 2, "https://www.zwilling.com/it/utensili-da-cucina/schiumarole/"],
-    ["Лопатки", "Кухонная утварь", 2, "https://www.zwilling.com/it/utensili-da-cucina/palette/"],
-    ["Венчики", "Кухонная утварь", 2, "https://www.zwilling.com/it/utensili-da-cucina/fruste/"],
-    ["Кухонные полотенца", "Кухонная утварь", 2, "https://www.zwilling.com/it/utensili-da-cucina/strofinacci-da-cucina/"],
 
-    ["Хранение"],
-    ["Аксессуары хранение", "Хранение", 2, "https://www.zwilling.com/it/sistema-sottovuoto/accessori-per-sottovuoto/"],
-    ["Вакуумные насосы", "Хранение", 2, "https://www.zwilling.com/it/sistema-sottovuoto/pompa-per-sottovuoto/"],
-    ["Вакуумные пробки для вина", "Хранение", 2, "https://www.zwilling.com/it/sistema-sottovuoto/tappo-da-vino-sottovuoto/"],
-    ["Наборы для вакуумного хранения", "Хранение", 2, "https://www.zwilling.com/it/sistema-sottovuoto/primo-set-per-sottovuoto/"],
-    ["Пакеты для вакуумного хранения", "Хранение", 2, "https://www.zwilling.com/it/sistema-sottovuoto/sacchetti-sottovuoto/"],
-    ["Вакуумные контейнеры", "Хранение", 2, "https://www.zwilling.com/it/sistema-sottovuoto/contenitori-sottovuoto/"],
-    ["Ланч бокс в вакуумной упаковке", "Хранение", 2, "https://www.zwilling.com/it/sistema-sottovuoto/lunch-box-sottovuoto/"],
-
-    ["Сервировка стола"],
-    ["Посуда", "Сервировка стола", 2, "https://www.zwilling.com/it/servizi-per-la-tavola/servizi-tavola/"],
-    ["Столовые приборы", "Сервировка стола", 2, "https://www.zwilling.com/it/servizi-per-la-tavola/posate/"],
-    ["Стеклянная посуда", "Сервировка стола", 2, "https://www.zwilling.com/it/servizi-per-la-tavola/vetreria/"],
-    ["Стеклянная соломка", "Сервировка стола", 2, "https://www.zwilling.com/it/servizi-per-la-tavola/vetreria/cannucce-in-vetro/"],
-    ["Термо", "Сервировка стола", 2, "https://www.zwilling.com/it/servizi-per-la-tavola/thermo/"],
-    ["Соль и перец", "Сервировка стола", 2, "https://www.zwilling.com/it/servizi-per-la-tavola/sale-e-pepe/"],
-
-    ["Техника"],
-    ["Аксессуары техника", "Техника", 2, "https://www.zwilling.com/it/elettrodomestici-da-cucina/accessori/"],
-    ["Блендеры", "Техника", 2, "https://www.zwilling.com/it/elettrodomestici-da-cucina/frullatori/"],
-    ["Капучинаторы", "Техника", 2, "https://www.zwilling.com/it/elettrodomestici-da-cucina/macchine-caffe/"],
-    ["Тостеры", "Техника", 2, "https://www.zwilling.com/it/elettrodomestici-da-cucina/tostapane/"],
-    ["Чайники", "Техника", 2, "https://www.zwilling.com/it/elettrodomestici-da-cucina/bollitori-elettrici/"],
-    ["Кухонные весы", "Техника", 2, "https://www.zwilling.com/it/elettrodomestici-da-cucina/bilancia/"],
-    ["Машина для специй", "Техника", 2, "https://www.zwilling.com/it/elettrodomestici-da-cucina/macina-spezie/"],
-    
-    ["Ножи"],
-    ["Блоки ножей", "Ножи", 2, "https://www.zwilling.com/it/coltelli/ceppi-di-coltelli/"],
-    ["Наборы ножей", "Ножи", 2, "https://www.zwilling.com/it/coltelli/set-di-coltelli/"],
-    ["Ножи для овощей", "Ножи", 2, "https://www.zwilling.com/it/coltelli/coltelli-da-verdura/"],
-    ["Ножи для сыра", "Ножи", 2, "https://www.zwilling.com/it/coltelli/coltelli-da-formaggio/"],
-    ["Филейные ножи", "Ножи", 2, "https://www.zwilling.com/it/coltelli/coltelli-da-disosso/"],
-    ["Ножи сантоку", "Ножи", 2, "https://www.zwilling.com/it/coltelli/coltelli-santoku/"],
-    ["Кухонные топорики", "Ножи", 2, "https://www.zwilling.com/it/coltelli/mannaia/"],
-    ["Стейковые ножи", "Ножи", 2, "https://www.zwilling.com/it/coltelli/coltelli-da-bistecca/"],
-    ["Нож для мяса", "Ножи", 2, "https://www.zwilling.com/it/coltelli/coltelli-da-carne/"],
-    ["Универсальные ножи", "Ножи", 2, "https://www.zwilling.com/it/coltelli/coltelli-universali/"],
-    ["Ножи для хлеба", "Ножи", 2, "https://www.zwilling.com/it/coltelli/coltelli-da-pane/"],
-    ["Аксессуары для заточки", "Ножи", 2, "https://zwilling.ru/catalog/nozhi/aksessuary_dlya_zatochki/"],
-    ["Поварские ножи", "Ножи", 2, "https://www.zwilling.com/it/coltelli/coltelli-da-cuoco/"],
-    ["Нож для чистки овощей", "Ножи", 2, "https://www.zwilling.com/it/coltelli/coltelli-spelucchino/"],
-    ["Нож для чистки картошки", "Ножи", 2, "https://www.zwilling.com/it/coltelli/pelapatate/"],
-    ["Китайский поварской нож", "Ножи", 2, "https://www.zwilling.com/it/coltelli/coltelli-da-cuoco-cinesi/"],
-]
-HEADERS = {
-    "Accept-Language": "ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3",
-    "Referer": "https://www.zwilling.com/it/outlet/",
-    "Upgrade-Insecure-Requests": "1",
-    "Sec-Fetch-Dest": "document",
-    "Sec-Fetch-Mode": "navigate",
-    "Sec-Fetch-Site": "same-origin",
-    "Connection": "keep-alive",
-}
-
-outlet_url = "https://www.zwilling.com/it/outlet/"
-login = "manishin06@gmail.com"
-password = "xYXA&]9n73z5J$j"
 
 async def get_zwilling():
+    cat_name = "Zwilling"
+    SUBCATEGORIES = [
+        ["Посуда"],
+        ["Воки", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/woks/"],
+        ["Фондю", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/fondue/"],
+        ["Крышки для посуды", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/coperchi/"],
+        ["Наборы кастрюль", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/set-di-pentole-da-cucina/"],
+        ["Наборы сковородок", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/set-di-padelle/"],
+        ["Ковши и жаровни", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/casseruole-con-manico/"],
+        ["Сковороды", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/padelle/"],
+        ["Сковороды-гриль", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/bistecchiere-e-griglie/"],
+        ["Сотейники", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/tegami/"],
+        ["Чайники", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/teiere/"],
+        ["Чугунные кокоты", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/cocottes/"],
+        ["Ручки для посуды", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/accessori/"],
+        ["Миски, рамекины", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/colapasta-e-cestelli/"],
+        ["Формы для запекания", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/cocottes/"],
+        ["Посуда специальной формы", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/speciali/"],
+        ["Блинница", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/crepiere/"],
+        ["Подставка", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/sottopentole/"],
+
+        ["Кухонная утварь"],
+        ["Кухонные ножницы", "Кухонная утварь", 2, "https://www.zwilling.com/it/utensili-da-cucina/forbici-da-cucina/"],
+        ["Ножницы для птицы", "Кухонная утварь", 2, "https://www.zwilling.com/it/utensili-da-cucina/trinciapolli/"],
+        ["Терки", "Кухонная утварь", 2, "https://www.zwilling.com/it/z-cut/"],
+        ["Винные аксессуары", "Кухонная утварь", 2, "https://www.zwilling.com/it/utensili-da-cucina/accessori-per-il-vino/"],
+        ["Банки", "Кухонная утварь", 2, "https://www.zwilling.com/it/utensili-da-cucina/barattoli/"],
+        ["Хранение кухонной утвари", "Кухонная утварь", 2, "https://www.zwilling.com/it/utensili-da-cucina/portautensili-da-cucina/"],
+        ["Практические инструменты", "Кухонная утварь", 2, "https://www.zwilling.com/it/utensili-da-cucina/utensili-pratici/"],
+        ["Очистители картошки", "Кухонная утварь", 2, "https://www.zwilling.com/it/utensili-da-cucina/pelapatate/"],
+        ["Шпатели", "Кухонная утварь", 2, "https://www.zwilling.com/it/utensili-da-cucina/spatole-2/"],
+        ["Половники", "Кухонная утварь", 2, "https://www.zwilling.com/it/utensili-da-cucina/mestoli/"],
+        ["Шумовки", "Кухонная утварь", 2, "https://www.zwilling.com/it/utensili-da-cucina/schiumarole/"],
+        ["Лопатки", "Кухонная утварь", 2, "https://www.zwilling.com/it/utensili-da-cucina/palette/"],
+        ["Венчики", "Кухонная утварь", 2, "https://www.zwilling.com/it/utensili-da-cucina/fruste/"],
+        ["Кухонные полотенца", "Кухонная утварь", 2, "https://www.zwilling.com/it/utensili-da-cucina/strofinacci-da-cucina/"],
+
+        ["Хранение"],
+        ["Аксессуары хранение", "Хранение", 2, "https://www.zwilling.com/it/sistema-sottovuoto/accessori-per-sottovuoto/"],
+        ["Вакуумные насосы", "Хранение", 2, "https://www.zwilling.com/it/sistema-sottovuoto/pompa-per-sottovuoto/"],
+        ["Вакуумные пробки для вина", "Хранение", 2, "https://www.zwilling.com/it/sistema-sottovuoto/tappo-da-vino-sottovuoto/"],
+        ["Наборы для вакуумного хранения", "Хранение", 2, "https://www.zwilling.com/it/sistema-sottovuoto/primo-set-per-sottovuoto/"],
+        ["Пакеты для вакуумного хранения", "Хранение", 2, "https://www.zwilling.com/it/sistema-sottovuoto/sacchetti-sottovuoto/"],
+        ["Вакуумные контейнеры", "Хранение", 2, "https://www.zwilling.com/it/sistema-sottovuoto/contenitori-sottovuoto/"],
+        ["Ланч бокс в вакуумной упаковке", "Хранение", 2, "https://www.zwilling.com/it/sistema-sottovuoto/lunch-box-sottovuoto/"],
+
+        ["Сервировка стола"],
+        ["Посуда", "Сервировка стола", 2, "https://www.zwilling.com/it/servizi-per-la-tavola/servizi-tavola/"],
+        ["Столовые приборы", "Сервировка стола", 2, "https://www.zwilling.com/it/servizi-per-la-tavola/posate/"],
+        ["Стеклянная посуда", "Сервировка стола", 2, "https://www.zwilling.com/it/servizi-per-la-tavola/vetreria/"],
+        ["Стеклянная соломка", "Сервировка стола", 2, "https://www.zwilling.com/it/servizi-per-la-tavola/vetreria/cannucce-in-vetro/"],
+        ["Термо", "Сервировка стола", 2, "https://www.zwilling.com/it/servizi-per-la-tavola/thermo/"],
+        ["Соль и перец", "Сервировка стола", 2, "https://www.zwilling.com/it/servizi-per-la-tavola/sale-e-pepe/"],
+
+        ["Техника"],
+        ["Аксессуары техника", "Техника", 2, "https://www.zwilling.com/it/elettrodomestici-da-cucina/accessori/"],
+        ["Блендеры", "Техника", 2, "https://www.zwilling.com/it/elettrodomestici-da-cucina/frullatori/"],
+        ["Капучинаторы", "Техника", 2, "https://www.zwilling.com/it/elettrodomestici-da-cucina/macchine-caffe/"],
+        ["Тостеры", "Техника", 2, "https://www.zwilling.com/it/elettrodomestici-da-cucina/tostapane/"],
+        ["Чайники", "Техника", 2, "https://www.zwilling.com/it/elettrodomestici-da-cucina/bollitori-elettrici/"],
+        ["Кухонные весы", "Техника", 2, "https://www.zwilling.com/it/elettrodomestici-da-cucina/bilancia/"],
+        ["Машина для специй", "Техника", 2, "https://www.zwilling.com/it/elettrodomestici-da-cucina/macina-spezie/"],
+        
+        ["Ножи"],
+        ["Блоки ножей", "Ножи", 2, "https://www.zwilling.com/it/coltelli/ceppi-di-coltelli/"],
+        ["Наборы ножей", "Ножи", 2, "https://www.zwilling.com/it/coltelli/set-di-coltelli/"],
+        ["Ножи для овощей", "Ножи", 2, "https://www.zwilling.com/it/coltelli/coltelli-da-verdura/"],
+        ["Ножи для сыра", "Ножи", 2, "https://www.zwilling.com/it/coltelli/coltelli-da-formaggio/"],
+        ["Филейные ножи", "Ножи", 2, "https://www.zwilling.com/it/coltelli/coltelli-da-disosso/"],
+        ["Ножи сантоку", "Ножи", 2, "https://www.zwilling.com/it/coltelli/coltelli-santoku/"],
+        ["Кухонные топорики", "Ножи", 2, "https://www.zwilling.com/it/coltelli/mannaia/"],
+        ["Стейковые ножи", "Ножи", 2, "https://www.zwilling.com/it/coltelli/coltelli-da-bistecca/"],
+        ["Нож для мяса", "Ножи", 2, "https://www.zwilling.com/it/coltelli/coltelli-da-carne/"],
+        ["Универсальные ножи", "Ножи", 2, "https://www.zwilling.com/it/coltelli/coltelli-universali/"],
+        ["Ножи для хлеба", "Ножи", 2, "https://www.zwilling.com/it/coltelli/coltelli-da-pane/"],
+        ["Аксессуары для заточки", "Ножи", 2, "https://zwilling.ru/catalog/nozhi/aksessuary_dlya_zatochki/"],
+        ["Поварские ножи", "Ножи", 2, "https://www.zwilling.com/it/coltelli/coltelli-da-cuoco/"],
+        ["Нож для чистки овощей", "Ножи", 2, "https://www.zwilling.com/it/coltelli/coltelli-spelucchino/"],
+        ["Нож для чистки картошки", "Ножи", 2, "https://www.zwilling.com/it/coltelli/pelapatate/"],
+        ["Китайский поварской нож", "Ножи", 2, "https://www.zwilling.com/it/coltelli/coltelli-da-cuoco-cinesi/"],
+    ]
+    HEADERS = {
+        "Accept-Language": "ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3",
+        "Referer": "https://www.zwilling.com/it/outlet/",
+        "Upgrade-Insecure-Requests": "1",
+        "Sec-Fetch-Dest": "document",
+        "Sec-Fetch-Mode": "navigate",
+        "Sec-Fetch-Site": "same-origin",
+        "Connection": "keep-alive",
+    }
+
+    outlet_url = "https://www.zwilling.com/it/outlet/"
+    login = "manishin06@gmail.com"
+    password = "xYXA&]9n73z5J$j"
     image_links_dict = {}
     subcategories_dict = {}
     #запускаем парсинг ссылок аутлета в отдельном потоке. К моменту завершения парсинга осн. каталога, селениум уже давно завершит работу
-    outlet_parser = Outlet_parser()
-    outlet_parser.get_outlet()
+    #outlet_parser = Outlet_parser()
+    #outlet_parser.get_outlet()
 
     
     # создаем категорию (проверка наличия уже в функции)
-    category = crud.get_category(name=cat_name, metacategory=6)
+    category = crud.get_category(name=CAT_NAME, metacategory=crud.get_metacategory(name='Товары для дома').id)
     all_items = []
+    EURO_COSTS = euro_cost()
     for subcategory in SUBCATEGORIES:
         items = []
         if not str(subcategory[-1]).startswith('http'):
@@ -2614,7 +2616,7 @@ async def get_zwilling():
                             break
                         i += 1
 
-            for url in urls:
+            for url in urls[:5]:
                 subcategories_dict[url] = subcategory[0]
                 await asyncio.sleep(1)
                 async with session.get(url, ssl=False) as response:
@@ -2643,7 +2645,7 @@ async def get_zwilling():
                     if old_price:
                         description = description[:700] + f'\n\n<s>{old_price} руб.</s> -{percent}% {current_price} руб.'
 
-                    sizes = None
+                    sizes = 'Один размер'
 
                     try:
                         image_links = []
@@ -2694,8 +2696,7 @@ async def get_zwilling():
         if not crud.subcategory_exists(name=subcategory[0], category=cat_name):
             parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=crud.get_category(name=cat_name).id)
             crud.create_subcategory(name=subcategory[0], category=cat_name, parent_subcategory=parent_subcategory.id, level=subcategory[2])
-        
-        crud.create_products(category=cat_name, subcategory=subcategory[0], items=items)
+        await crud.create_products(category=cat_name, subcategory=subcategory[0], items=items)
     print('start outlet')
     #получаем ссылки и цены, которые собрал селениум          
     outlet = outlet_parser.outlet
@@ -2885,7 +2886,295 @@ class Outlet_parser():
         driver.maximize_window()
         return driver
 
-if __name__ == "__main__":
-    asyncio.run(get_zwilling())
-    # p = Outlet_parser()
-    # p.get_outlet()
+
+
+
+async def get_twinset():
+    CAT_NAME = "Twinset"
+
+    SUBCATEGORIES = [
+        # ["Новинки", 1, "https://www.twinset.com/en-it/new-arrivals/"],
+        
+        # #clothing
+        # ["Одежда", 1, "https://www.twinset.com/en-it/clothing/"],
+        ['Одежда'],
+        ["Платья", "Одежда", 2],
+        ["Короткие платья", "Платья", 3, "https://www.twinset.com/en-it/clothing/dresses/short-dresses/"],
+        ["Длинные платья", "Платья", 3, "https://www.twinset.com/en-it/clothing/dresses/long-dresses/"],
+        ["Платья с длинными рукавами", "Платья", 3, "https://www.twinset.com/en-it/clothing/dresses/longuette-dresses/" ],
+        ["Вязаные платья", "Платья", 3, "https://www.twinset.com/en-it/clothing/dresses/knitted-dresses/" ],
+        ["Платья-рубашки", "Платья", 3, "https://www.twinset.com/en-it/clothing/dresses/shirt-dresses/" ],
+        ["Кружевные платья", "Платья", 3, "https://www.twinset.com/en-it/clothing/dresses/lace-dresses/" ],
+        ["Элегантные платья", "Платья", 3, "https://www.twinset.com/en-it/clothing/dresses/elegant-dresses/" ],
+        ["Вечерние платья", "Платья", 3, "https://www.twinset.com/en-it/clothing/dresses/formal-dresses/" ],
+        ["Rомбинезоны", "Платья", 3, "https://www.twinset.com/en-it/clothing/dresses/jumpsuits/" ],
+        
+        ["Джемперы и кардиганы", "Одежда", 2, "https://www.twinset.com/en-it/clothing/jumpers-and-cardigans/"],
+        ["Блузки и рубашки", "Одежда", 2, "https://www.twinset.com/en-it/clothing/blouses-and-shirts/"],
+        ["Футболки и топы", "Одежда", 2, "https://www.twinset.com/en-it/clothing/t-shirts-and-tops/"],
+        ["Толстовки", "Одежда", 2, "https://www.twinset.com/en-it/clothing/sweatshirts/"],
+        ["Джинсы", "Одежда", 2, "https://www.twinset.com/en-it/clothing/jeans/"],
+        ["Юбки", "Одежда", 2, "https://www.twinset.com/en-it/clothing/skirts/"],
+        ["Брюки", "Одежда", 2, "https://www.twinset.com/en-it/clothing/trousers/"],
+        ["Костюмы и комплекты", "Одежда", 2, "https://www.twinset.com/en-it/clothing/suits-and-sets/"],
+        ["Нижнее белье и одежда для сна", "Одежда", 2, "https://www.twinset.com/en-it/clothing/underwear-and-nightwear/"],
+        
+        ["Куртки и верхняя одежда", "Одежда", 2],
+        ["Блейзеры", "Куртки и верхняя одежда", 3, "https://www.twinset.com/en-it/clothing/jackets-and-outerwear/blazers/"],
+        ["Куртки и пуховики", "Куртки и верхняя одежда", 3, "https://www.twinset.com/en-it/clothing/jackets-and-outerwear/jackets-and-puffer-jackets/"],
+        ["Пальто и тренчи", "Куртки и верхняя одежда", 3, "https://www.twinset.com/en-it/clothing/jackets-and-outerwear/coats-and-trench-coats/"],
+        ["Пончо", "Куртки и верхняя одежда", 3, "https://www.twinset.com/en-it/clothing/jackets-and-outerwear/ponchos/"],
+        
+        ["Пляжная одежда", "Одежда", 2, "https://www.twinset.com/en-it/clothing/beachwear/"],
+        ["Бикини", "Пляжная одежда", 3, "https://www.twinset.com/en-it/clothing/beachwear/bikini/"],
+        ["Купальники", "Пляжная одежда", 3, "https://www.twinset.com/en-it/clothing/beachwear/swimsuits/"],
+        ["Пляжная одежда и аксессуары", "Пляжная одежда", 3, "https://www.twinset.com/en-it/clothing/beachwear/beachwear-and-accessories/"],
+
+        #["Покупки по вдожновению", "Одежда", 2, "https://www.twinset.com/en-it/clothing/shop-by-inspiration/"],
+        #["Летние флюиды", "Покупки по вдожновению", "Одежда", 3, "https://www.twinset.com/en-it/clothing/shop-by-inspiration/summer-vibes/"],
+        #["Очаровательный Нуар", "Покупки по вдожновению", "Одежда", 3, "https://www.twinset.com/en-it/clothing/shop-by-inspiration/charming-noir/"],
+        #["Наилучшее", "Покупки по вдожновению", "Одежда", 3, "https://www.twinset.com/en-it/clothing/shop-by-inspiration/most-loved/"],
+
+        # ["Одежда по случаю", "Одежда", 2, "https://www.twinset.com/en-it/clothing/shop-by-occasion/"],
+        # ["Официальные мероприятия", "Одежда по случаю", "Одежда", 3, "https://www.twinset.com/en-it/clothing/shop-by-occasion/formal-events/"],
+        # ["Вечеринка", "Одежда по случаю", "Одежда", 3, "https://www.twinset.com/en-it/clothing/shop-by-occasion/party/"],
+        # ["Свадьба", "Одежда по случаю", "Одежда", 3, "https://www.twinset.com/en-it/clothing/shop-by-occasion/wedding/"],
+        # ["Выпускной", "Одежда по случаю", "Одежда", 3, "https://www.twinset.com/en-it/clothing/shop-by-occasion/graduation/"],
+        # ["Бизнес", "Одежда по случаю", "Одежда", 3, "https://www.twinset.com/en-it/clothing/shop-by-occasion/business/"],
+        # ["Для путешествий", "Одежда по случаю", "Одежда", 3, "https://www.twinset.com/en-it/clothing/shop-by-occasion/travel/"],
+        
+        
+        # #bags
+        ['Сумки'],
+        #["Сумки", 1, "https://www.twinset.com/en-it/bags/"],
+        ["Сумки через плечо", "Сумки", 2, "https://www.twinset.com/en-it/bags/cross-body-bags/"],
+        ["Сумки на плечо", "Сумки", 2, "https://www.twinset.com/en-it/bags/shoulder-bags/"],
+        ["Дамские сумочки", "Сумки", 2, "https://www.twinset.com/en-it/bags/handbags/"],
+        ["Сумки для покупок", "Сумки", 2, "https://www.twinset.com/en-it/bags/shopping-bags/"],
+        ["Сумки Хобо", "Сумки", 2, "https://www.twinset.com/en-it/bags/hobo-bags/"],
+        ["Клатчи", "Сумки", 2, "https://www.twinset.com/en-it/bags/clutch-bags/"],
+        ["Мини-сумки", "Сумки", 2, "https://www.twinset.com/en-it/bags/mini-bags/"],
+        
+
+        # #shoes
+        ['Обувь'],
+        # ["Обувь", 1, "https://www.twinset.com/en-it/shoes/"],
+        ["Кроссовки", "Обувь", 2, "https://www.twinset.com/en-it/shoes/sneakers/"],
+        ["Туфли-лодочки и сандалии", "Обувь", 2, "https://www.twinset.com/en-it/shoes/court-shoes-and-sandals/"],
+        ["Сапоги и ботильоны", "Обувь", 2, "https://www.twinset.com/en-it/shoes/boots-and-ankle-boots/"],
+        ["Боевые сапоги", "Обувь", 2, "https://www.twinset.com/en-it/shoes/combat-boots/"],
+        ["Обувь на плоской подошве", "Обувь", 2, "https://www.twinset.com/en-it/shoes/flat-shoes/"],
+        ["Каблуки", "Обувь", 2, "https://www.twinset.com/en-it/shoes/heels/"],
+        
+        
+        # #accessories
+        
+        ["Аксессуары"],
+        ["Ювелирные изделия", "Аксессуары", 2, "https://www.twinset.com/en-it/accessories/jewellery/"],
+        ["Ремни", "Аксессуары", 2, "https://www.twinset.com/en-it/accessories/belts/"],
+        ["Шарфы", "Аксессуары", 2, "https://www.twinset.com/en-it/accessories/scarves/"],
+        ["Головные уборы", "Аксессуары", 2, "https://www.twinset.com/en-it/accessories/hats/"],
+        ["Кошельки и брелоки", "Аксессуары", 2, "https://www.twinset.com/en-it/accessories/wallets-and-keyrings/"],
+        ["Солнечные очки", "Аксессуары", 2, "https://www.twinset.com/en-it/accessories/sunglasses/"],
+        ["Другие аксессуары", "Аксессуары", 2, "https://www.twinset.com/en-it/accessories/other-accessories/"],
+
+        # #actitude
+        # ["Коллекция Actitude", 1, "https://www.twinset.com/en-it/actitude/"],
+        # ["Платья Actitude","Коллекция Actitude", 2, "https://www.twinset.com/en-it/actitude/dresses/"],
+        # ["Джемперы и кардиганы Actitude", "Коллекция Actitude", 2, "https://www.twinset.com/en-it/actitude/jumpers-and-cardigans/"],
+        # ["Блузки и рубашки Actitude", "Коллекция Actitude", 2, "https://www.twinset.com/en-it/actitude/blouses-and-shirts/"],
+        # ["Толстовки Actitude", "Коллекция Actitude", 2, "https://www.twinset.com/en-it/actitude/sweatshirts/"],
+        # ["Футболки и топы Actitude", "Коллекция Actitude", 2, "https://www.twinset.com/en-it/actitude/t-shirts-and-tops/"],
+        # ["Юбки Actitude", "Коллекция Actitude", 2, "https://www.twinset.com/en-it/actitude/skirts/"],
+        # ["Джинсы Actitude", "Коллекция Actitude", 2, "https://www.twinset.com/en-it/actitude/jeans/"],
+        # ["Брюки Actitude", "Коллекция Actitude", 2, "https://www.twinset.com/en-it/actitude/trousers/"],
+        # ["Куртки и верхняя одежда Actitude", "Коллекция Actitude", 2, "https://www.twinset.com/en-it/actitude/jackets-and-outerwear/"],
+        # ["Аксессуары Actitude", "Коллекция Actitude", 2, "https://www.twinset.com/en-it/actitude/accessories/"],
+        # ["Сумки Actitude", "Коллекция Actitude", 2, "https://www.twinset.com/en-it/actitude/bags/"],
+        # ["Обувь Actitude", "Коллекция Actitude", 2, "https://www.twinset.com/en-it/actitude/shoes/"],
+        
+        # #girls
+        ["Для девочек"],
+        ["Платья для девочек", "Для девочек", 2, "https://www.twinset.com/en-it/girl/dresses/"],
+        ["Футболки и топы для девочек", "Для девочек", 2, "https://www.twinset.com/en-it/girl/t-shirts-and-tops/"],
+        ["Блузки и рубашки для девочек", "Для девочек", 2, "https://www.twinset.com/en-it/girl/blouses-and-shirts/"],
+        ["Джемперы и кардиганы для девочек", "Для девочек", 2, "https://www.twinset.com/en-it/girl/jumpers-and-cardigans/"],
+        ["Юбки для девочек", "Для девочек", 2, "https://www.twinset.com/en-it/girl/skirts/"],
+        ["Брюки и джинсы для девочек", "Для девочек", 2, "https://www.twinset.com/en-it/girl/trousers-and-jeans/"],
+        ["Наборы для девочек", "Для девочек", 2, "https://www.twinset.com/en-it/girl/sets/"],
+        ["Куртки и верхняя одежда для девочек", "Для девочек", 2, "https://www.twinset.com/en-it/girl/jackets-and-outerwear/"],
+        ["Аксессуары для девочек", "Для девочек", 2, "https://www.twinset.com/en-it/girl/accessories/"],
+        ["Обувь для девочек", "Для девочек", 2, "https://www.twinset.com/en-it/girl/shoes/"],
+        ["Для новорожденных", "Для девочек", 2, "https://www.twinset.com/en-it/girl/baby-girl/"],
+
+        # #outlet
+        ["Аутлет"],
+        ["Аксессуары аутлет", "Аутлет", 2, "https://www.twinset.com/en-it/outlet/?prefn1=microCategorySearch&prefv1=Accessories"],
+        ["Сумки аутлет", "Аутлет", 2, "https://www.twinset.com/en-it/outlet/?prefn1=microCategorySearch&prefv1=Bags"],
+        ["Пляжная одежда аутлет", "Аутлет", 2, "https://www.twinset.com/en-it/outlet/?prefn1=microCategorySearch&prefv1=Beachwear"],
+        ["Блузки аутлет", "Аутлет", 2, "https://www.twinset.com/en-it/outlet/?prefn1=microCategorySearch&prefv1=Blouses"],
+        ["Кардиганы аутлет", "Аутлет", 2, "https://www.twinset.com/en-it/outlet/?prefn1=microCategorySearch&prefv1=Cardigans"],
+        ["Платья аутлет", "Аутлет", 2, "https://www.twinset.com/en-it/outlet/?prefn1=microCategorySearch&prefv1=Dresses"],
+        ["Коллекция для девочек аутлет", "Аутлет", 2, "https://www.twinset.com/en-it/outlet/?prefn1=microCategorySearch&prefv1=Girls' collection"],
+        ["Джинсы аутлет", "Аутлет", 2, "https://www.twinset.com/en-it/outlet/?prefn1=microCategorySearch&prefv1=Jeans"],
+        ["Джемперы аутлет", "Аутлет", 2, "https://www.twinset.com/en-it/outlet/?prefn1=microCategorySearch&prefv1=Jumpers"],
+        ["Верхняя одежда аутлет", "Аутлет", 2, "https://www.twinset.com/en-it/outlet/?prefn1=microCategorySearch&prefv1=Outerwear"],
+        ["Рубашки аутлет", "Аутлет", 2, "https://www.twinset.com/en-it/outlet/?prefn1=microCategorySearch&prefv1=Shirts"],
+        ["Обувь аутлет", "Аутлет", 2, "https://www.twinset.com/en-it/outlet/?prefn1=microCategorySearch&prefv1=Shoes"],
+        ["Юбки аутлет", "Аутлет", 2, "https://www.twinset.com/en-it/outlet/?prefn1=microCategorySearch&prefv1=Skirts"],
+        ["Толстовки аутлет", "Аутлет", 2, "https://www.twinset.com/en-it/outlet/?prefn1=microCategorySearch&prefv1=Sweatshirts"],
+        ["Топы аутлет", "Аутлет", 2, "https://www.twinset.com/en-it/outlet/?prefn1=microCategorySearch&prefv1=Tops"],
+        ["Брюки аутлет", "Аутлет", 2, "https://www.twinset.com/en-it/outlet/?prefn1=microCategorySearch&prefv1=Trousers"],
+        ["Футболки аутлет", "Аутлет", 2, "https://www.twinset.com/en-it/outlet/?prefn1=microCategorySearch&prefv1=T-shirts"],
+        ["Нижнее белье и одежда для сна аутлет", "Аутлет", 2, "https://www.twinset.com/en-it/outlet/?prefn1=microCategorySearch&prefv1=Underwear and Nightwear"],
+    ]
+
+    HEADERS = {
+        "Accept-Language": "ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3",
+        "Upgrade-Insecure-Requests": "1",
+        "Sec-Fetch-Dest": "document",
+        "Sec-Fetch-Mode": "navigate",
+        "Sec-Fetch-Site": "same-origin",
+        "Connection": "keep-alive",
+    }
+    category = crud.get_category(name=CAT_NAME, metacategory=crud.get_metacategory(name='Женская одежда').id)
+    EURO_COSTS = euro_cost()
+    for subcategory in SUBCATEGORIES:
+        if not str(subcategory[-1]).startswith('http'):
+            if len(subcategory) == 1:
+                crud.create_subcategory(name=subcategory[0], category=CAT_NAME) if not crud.subcategory_exists(name=subcategory[0], category=CAT_NAME) else 0
+            else:
+                if not crud.subcategory_exists(name=subcategory[0], category=CAT_NAME):
+                    parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=category.id)
+                    crud.create_subcategory(name=subcategory[0], category=CAT_NAME, parent_subcategory=parent_subcategory.id, level=subcategory[2])
+            continue
+        items = []
+        subcategory_link = subcategory[-1]
+        async with aiohttp.ClientSession(headers=HEADERS, trust_env=True) as session:
+            async with session.get(subcategory_link, ssl=False) as response:
+                webpage = await response.text()
+            soup = bs(webpage, "html.parser")   
+            product_urls = extract_links(soup)
+
+            while is_next_page_existing(soup):
+                next_page_link = get_link_to_next_page(soup)
+                async with session.get(next_page_link, ssl=False) as response:
+                    webpage = await response.text()
+                soup = bs(webpage, "html.parser")
+                product_urls += extract_links(soup)
+                
+            for product_url in product_urls[:5]:
+                try:
+                    await asyncio.sleep(1)
+                    async with session.get(product_url, ssl=False) as response:
+                        webpage = await response.text()
+                    soup = bs(webpage, "html.parser")
+                    
+                    try:
+                        title = soup.find("h1", attrs={"class" : "product-name"}).getText()
+                    except:
+                        pass
+                    
+                    try:
+                        image_links = [i.get("src") for i in soup.find("div", attrs={"class" : "side-grid-images"}).find_all("img")][:10]
+                    except Exception as err:
+                        print(err)
+                        image_links = []
+                        
+                    price_wrapper = soup.find("span", attrs={"class" : "price-wrapper"})
+                    try:
+                        current_price = int((float(price_wrapper.find("span", attrs={"class" : "sales value"}).getText().strip(' ').strip('\n').strip(' ').strip('€').replace(',', '.')) * (EURO_COSTS + 1)))
+                    except:
+                        pass
+                    
+                    try:
+                        old_price = int((float(price_wrapper.find('span', attrs={"class" : "strike-through"}).getText().strip(' ').strip('\n').strip(' ').strip('€').replace(',', '.')) * (EURO_COSTS + 1)))
+                        #print([old_price])
+                        percent = int(100 - float(current_price) / (float(old_price) / 100))
+                    except:
+                        old_price = None
+                        
+                    description = get_description_from_soup(soup)
+                    if old_price:
+                        description = description[:700] + f'\n\n<s>{old_price} руб.</s> -{percent}% {current_price} руб.'
+                    
+                    try:
+                        sizes = [i.getText().strip(" \n") for i in soup.find("ul", attrs={"class" : "list-size"}).find_all("li")]
+                        sizes = ", ".join(sizes)
+                        description += '\n\nРазмеры:\n' + sizes
+                    except Exception as err:
+                        print(err)
+                        pass
+                    
+                    article = product_url.split('.html')[0].split('/')[-1].split("-")[-1]
+                    
+                    i = product_urls.index(product_url) + 1
+                    images = ''
+                    
+                    if not os.path.exists(f"database/images/{CAT_NAME}"):
+                            os.mkdir(f"database/images/{CAT_NAME}")
+
+                    if not os.path.exists(f"database/images/{CAT_NAME}/{subcategory[0]}"):
+                        os.mkdir(f"database/images/{CAT_NAME}/{subcategory[0]}")
+
+                    for link in image_links:
+                        try:
+                            num = image_links.index(link) + 1
+                            img_path = f"database/images/{CAT_NAME}/{subcategory[0]}/{i}_{title.replace(' ', '_').replace('/', '_')}_{num}.png"
+                            if not os.path.exists(img_path):
+                                async with session.get(link, ssl=False) as response:
+                                    f = await aiofiles.open(img_path, mode='wb')
+                                    await f.write(await response.read())
+                                    await f.close()
+                            images +=  img_path + '\n'
+                        except Exception as err:
+                            print(err)
+
+                    item = [title, description, current_price, images, sizes, article, product_url]
+                    print(item)
+                    items.append(item)
+                    
+                except Exception as ex:
+                    logging.warning(f'{CAT_NAME} pr - {ex}')
+        
+        ## добавляем товары
+        if not crud.subcategory_exists(name=subcategory[0], category=CAT_NAME):
+            parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=category.id)
+            crud.create_subcategory(name=subcategory[0], category=CAT_NAME, parent_subcategory=parent_subcategory.id, level=subcategory[2])
+        await crud.create_products(category=CAT_NAME, subcategory=subcategory[0], items=items)
+            
+            
+                           
+def extract_links(soup : bs) -> list:
+    base = "https://www.twinset.com"
+    try:
+        product_panel = soup.find("div", attrs={"id" : "product-search-results"})
+        if product_panel is not None:
+            product_urls = [base + i.get("href") for i in product_panel.find_all("a", attrs={"class" : "image-link"})]
+        else:
+            product_urls = [base + i.get("href") for i in soup.find_all("a", attrs={"class" : "image-link"})]
+    except:
+        return []
+    
+    print(f"len = {len(product_urls)}")
+    return product_urls
+
+def is_next_page_existing(soup : bs) -> bool:
+    elems = soup.find_all("li", attrs={"class" : "pagination-next"})
+    if len(elems) == 0:
+        return False
+    else: 
+        return True
+            
+def get_link_to_next_page(soup : bs) -> str:
+    link = soup.find("li", attrs={"class" : "pagination-next"}).find("button").get("data-url")
+    return link
+
+def get_description_from_soup(soup : bs) -> str:
+    try:
+        panel = soup.find("div", attrs={"class" : "primary-image-description"})
+        paragraphs = [i.getText().strip(" \n") for i in panel.find_all("div")]
+        description = "\n".join(paragraphs)
+    except:
+        description = ""
+    return description

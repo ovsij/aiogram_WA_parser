@@ -184,12 +184,27 @@ def create_product(
     return product
 
 @db_session()
-def create_products(category : str, subcategory : str, items : list):
+async def create_products(category : str, subcategory : str, items : list):
     # удаляем старые товары
     all_articles = [item[5] for item in items]
     category_ = Category.get(name=category)
     subcategory_ = SubCategory.get(name=subcategory, category=category_)
     
+     # Разослать юзерам что товар из их корзины удален
+    users = get_users()
+    for user in users:
+        try:
+            print(user.username)
+            cart = get_cart(user.tg_id)
+            print(cart)
+            for product in cart:
+                print(product)
+                if product.article not in all_articles:
+                    print(product.article)
+                    await bot.send_message(user.tg_id, f'К сожалению, товар {product.name} ({product.category.name}) из вашей корзины закончился')
+        except:
+            continue
+
     all_images = []
     for product in get_product(category_id=category_.id, subcategory_id=subcategory_.id, sort='n'):
         if product.article not in all_articles:
@@ -197,7 +212,7 @@ def create_products(category : str, subcategory : str, items : list):
             product.delete()
         else:
             all_images += product.image.split('\n')
-            
+   
     for root, dirs, files in os.walk(f"database/images/{category}/{subcategory}/"):
         for filename in files:
             if f"database/images/{category}/{subcategory}/{filename}" not in all_images:
@@ -235,7 +250,7 @@ def create_products(category : str, subcategory : str, items : list):
                         url=item[6]
                     )
                     commit()
-                    #print(f'update {prod}')
+            print(f'{prod} {prod.sizes}')
         except Exception as ex:
             logging.warning(f'{category} db - {ex}')
 

@@ -47,8 +47,10 @@ async def main():
         #tasks.add(task10)
         #task11 = asyncio.create_task(get_monnalisa())
         #tasks.add(task11)
-        task12 = asyncio.create_task(get_zwilling())
-        tasks.add(task12)
+        #task12 = asyncio.create_task(get_zwilling())
+        #tasks.add(task12)
+        task13 = asyncio.create_task(get_twinset())
+        tasks.add(task13)
         
     
         L = await asyncio.gather(*tasks)
