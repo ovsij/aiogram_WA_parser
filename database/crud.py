@@ -190,16 +190,16 @@ async def create_products(category : str, subcategory : str, items : list):
     category_ = Category.get(name=category)
     subcategory_ = SubCategory.get(name=subcategory, category=category_)
     
-     # Разослать юзерам что товар из их корзины удален
+    # Разослать юзерам что товар из их корзины удален
     users = get_users()
     for user in users:
         try:
-            print(user.username)
+            #print(user.username)
             cart = get_cart(user.tg_id)
-            print(cart)
+            #print(cart)
             for product in cart:
-                print(product)
-                if product.article not in all_articles:
+                #print(product)
+                if product.article not in all_articles and product.subcategory.id == subcategory_.id:
                     print(product.article)
                     await bot.send_message(user.tg_id, f'К сожалению, товар {product.name} ({product.category.name}) из вашей корзины закончился')
         except:
