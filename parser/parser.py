@@ -2587,7 +2587,7 @@ async def get_zwilling():
     category = crud.get_category(name=cat_name, metacategory=crud.get_metacategory(name='Товары для дома').id)
     all_items = []
     
-    for subcategory in SUBCATEGORIES[:10]:
+    for subcategory in SUBCATEGORIES:
         items = []
         if not str(subcategory[-1]).startswith('http'):
             if len(subcategory) == 1:
