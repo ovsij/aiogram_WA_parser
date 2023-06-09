@@ -420,6 +420,39 @@ async def add_comment(message: types.Message, state: FSMContext):
 # получаем поисковый запрос
 @dp.message_handler(state=Form.search)
 async def search(message: types.Message, state: FSMContext):
-    #category = get_category(name=message.text.split('"')[-2])
-    #print(category)
-    print(state.data)
+    await state.finish()
+    state_category = int(get_user(tg_id=str(message.from_user.id)).state)
+    update_user(tg_id=str(message.from_user.id), state=f'{state_category}| {message.text}')
+    textReply_markup = inline_kb_listproducts(
+        tg_id=str(message.from_user.id), 
+        category=state_category, 
+        page=[0,5],
+        search=message.text
+    )
+    # последнее сообщение с кнопками
+    for item in textReply_markup:
+        await asyncio.sleep(1)
+        if not item['images']:
+            await bot.send_message(
+                message.from_user.id,
+                text=item['text'], 
+                reply_markup=item['reply_markup']
+            )
+        else:
+            try:
+                # карточка товара с фото
+                images = item['images'].split('\n')
+                photo = [types.InputMedia(media=open(img, 'rb'), caption=item['text']) if images.index(img) == 0 else types.InputMedia(media=open(img, 'rb')) for img in images]
+                await bot.send_media_group(
+                    message.from_user.id, 
+                    media=photo,
+                )
+                # сообщение м кнопками под товаром "добавить в корзину" и тд
+                await bot.send_message(
+                    message.from_user.id,
+                    text = 'Выберите действие: ',
+                    reply_markup=item['reply_markup']
+                )
+                #await asyncio.sleep(0.5)
+            except:
+                continue

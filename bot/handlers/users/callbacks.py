@@ -106,9 +106,8 @@ async def btn_callback(callback_query: types.CallbackQuery):
             )
     if code[1] == 'search':
         await Form.search.set()
-        
         category = get_category(id=code[2])
-        await Form.search.update_data(category=category.name)
+        update_user(tg_id=str(callback_query.from_user.id), state=code[2])
         reply_markup = InlineConstructor.create_kb([['Отмена','deny']], [1])
         await bot.send_message(
             callback_query.from_user.id,
@@ -136,7 +135,13 @@ async def btn_callback(callback_query: types.CallbackQuery):
                 reply_markup=textReply_markup[-1]['reply_markup']
             )
             return
-          
+        elif code[3] == 'None':
+            textReply_markup = inline_kb_listproducts(
+            tg_id=str(callback_query.from_user.id), 
+            category=int(code[2]), 
+            page=[int(p) for p in code[-1].split('-')],
+            search=get_user(tg_id=str(callback_query.from_user.id)).state.split('| ')[-1]
+        )
         else:
             textReply_markup = inline_kb_listproducts(
                 tg_id=str(callback_query.from_user.id), 

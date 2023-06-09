@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from bs4 import BeautifulSoup as bs
+import difflib
 import httplib2
 import pandas as pd
 import requests
@@ -47,7 +48,8 @@ def update_user(
     brands : str = None,
     prices : str = None,
     last_usage : bool = None,
-    is_banned : bool = None
+    is_banned : bool = None,
+    state : bool = None
     ) -> User:
 
     user_to_update = User.get(tg_id = tg_id)
@@ -77,6 +79,8 @@ def update_user(
         user_to_update.is_banned = is_banned
     if last_usage:
         user_to_update.last_usage = datetime.now()
+    if state:
+        user_to_update.state = state
     return user_to_update
 
 # Cart
@@ -267,11 +271,20 @@ def get_product(
     sizes : str = None, 
     prices : str = None, 
     sort : str = None,
-    article : str = None):
+    article : str = None,
+    search : str = None):
     if id:
         return Product[id]
     #if catalog:
     #    return select(p for p in Product if p.catalog.phone == catalog)[:]
+    elif category_id and search:
+        all_products = select(p for p in Product if p.category.id == category_id and search.lower() in p.name.lower())[:]
+        #products = []
+        #for p in all_products:
+        #    matcher = difflib.SequenceMatcher(None, search.lower(), p.name.lower())
+        #    if matcher.ratio() >= 0.15:
+        #        products.append(p)
+        return all_products
     elif category_id and not subcategory_id:
         return select(p for p in Product if p.category.id == category_id)[:]
     elif category_id and subcategory_id and not sizes and not prices:

@@ -145,14 +145,16 @@ def inline_kb_subcategories(tg_id : str, category : int = None, subcategory : in
     return text, inline_kb
         
 
-def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : int = None, sizes : str = None, prices : str = None, page : list = [0, 5], back : bool = False, sort : str = None):
+def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : int = None, sizes : str = None, prices : str = None, page : list = [0, 5], back : bool = False, sort : str = None, search : str = None):
     subcategory = get_subcategory(id=sub_category)
     textInline_kb = []
     if sizes or prices:
         products = get_product(category_id=category, subcategory_id=sub_category, sizes=sizes, prices=prices, sort=sort)
+    elif search:
+        products = get_product(category_id=category, search=search)
     else:
         products = get_product(category_id=category, subcategory_id=sub_category, sort=sort)
-    if len(products) == 0:
+    if len(products) == 0 and not search:
         text_and_data = []
         schema = []
         if tg_id in os.getenv('ADMINS'):
@@ -229,8 +231,10 @@ def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : in
     page_0 = 0 if back else page[1]
     page_5 = 5 if back else page[1] + 5
     page_25 = 25 if back else page[1] + 25
-    
-    back_btn = btn_back(f'category_{category}_{subcategory.parentSubCategory.id}-{subcategory.level - 1}_1') if subcategory.parentSubCategory else btn_back(f'category_{category}_1')
+    if not search:
+        back_btn = btn_back(f'category_{category}_{subcategory.parentSubCategory.id}-{subcategory.level - 1}_1') if subcategory.parentSubCategory else btn_back(f'category_{category}_1')
+    else:
+        back_btn = btn_back(f'category_{category}_1')
     text_and_data = [
         [emojize(f'{filter_size_emoji} Фильтр по размеру', language='alias'), f'btn_sf_{category}_{sub_category}{sizes_code}{prices_code}_n'],
         [emojize(f'{filter_price_emoji} Фильтр по цене', language='alias'), f'btn_pf_{category}_{sub_category}{sizes_code}{prices_code}_n'],
@@ -240,7 +244,6 @@ def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : in
         [emojize(':shopping_cart: Перейти в корзину', language='alias'), 'btn_cart_0-5'],
         [emojize(':arrow_down_small: Eще 5 товаров :arrow_down_small:', language='alias'), f'btn_ls_{category}_{sub_category}{sizes_code}{prices_code}_{sort}{page_0}-{page_5}'],
         [emojize(':arrow_down_small: Eще 25 товаров :arrow_down_small:', language='alias'), f'btn_ls_{category}_{sub_category}{sizes_code}{prices_code}_{sort}{page_0}-{page_25}'],
-        
         back_btn
     ]
     schema = [1, 1, 1, 1, 1, 1, 1, 1, 1]
@@ -252,9 +255,17 @@ def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : in
         schema.append(1)
         text_and_data.insert(8, [f'Удалить подкатегорию {get_subcategory(id=sub_category).name}', f'btn_deletesubcategory_{category}_{sub_category}'])
         schema.append(1)
+    if search:
+        for _ in range(5):
+            text_and_data.pop(0)
+
+        text = ''
+    else:
+        text = f'{get_category(id=category).name}\n{get_subcategory(id=sub_category).name}\n\n'
+    schema = [1 for _ in range(len(text_and_data))]
     textInline_kb.append(
         {
-        'text' : f'{get_category(id=category).name}\n{get_subcategory(id=sub_category).name}\n\nПоказано {len_prodcts} товаров из {len(products)}',
+        'text' : f'{text}Показано {len_prodcts} товаров из {len(products)}',
         'reply_markup' : InlineConstructor.create_kb(text_and_data, schema),
         'images' : False
         }
@@ -1165,3 +1176,5 @@ def inline_kb_approveupdatecapalog(phone : str = None, custom : str = None):
     schema = [1, 1]
     inline_kb = InlineConstructor.create_kb(text_and_data, schema)
     return text, inline_kb
+
+
