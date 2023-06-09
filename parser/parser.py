@@ -2478,7 +2478,10 @@ async def get_monnalisa():
 
 
 
-
+outlet_url = "https://www.zwilling.com/it/outlet/"
+login = "manishin06@gmail.com"
+password = "xYXA&]9n73z5J$j"
+EURO_COSTS = euro_cost()
 
 async def get_zwilling():
     cat_name = "Zwilling"
@@ -2572,21 +2575,19 @@ async def get_zwilling():
         "Connection": "keep-alive",
     }
 
-    outlet_url = "https://www.zwilling.com/it/outlet/"
-    login = "manishin06@gmail.com"
-    password = "xYXA&]9n73z5J$j"
+    
     image_links_dict = {}
     subcategories_dict = {}
     #запускаем парсинг ссылок аутлета в отдельном потоке. К моменту завершения парсинга осн. каталога, селениум уже давно завершит работу
-    #outlet_parser = Outlet_parser()
-    #outlet_parser.get_outlet()
+    outlet_parser = Outlet_parser()
+    outlet_parser.get_outlet()
 
     
     # создаем категорию (проверка наличия уже в функции)
-    category = crud.get_category(name=CAT_NAME, metacategory=crud.get_metacategory(name='Товары для дома').id)
+    category = crud.get_category(name=cat_name, metacategory=crud.get_metacategory(name='Товары для дома').id)
     all_items = []
-    EURO_COSTS = euro_cost()
-    for subcategory in SUBCATEGORIES:
+    
+    for subcategory in SUBCATEGORIES[:10]:
         items = []
         if not str(subcategory[-1]).startswith('http'):
             if len(subcategory) == 1:
@@ -2616,7 +2617,7 @@ async def get_zwilling():
                             break
                         i += 1
 
-            for url in urls[:5]:
+            for url in urls:
                 subcategories_dict[url] = subcategory[0]
                 await asyncio.sleep(1)
                 async with session.get(url, ssl=False) as response:
@@ -2689,7 +2690,7 @@ async def get_zwilling():
                             continue
 
                     item = [title, description, current_price, images, sizes, article, url]
-                    print(item)
+                    #print(item)
                     items.append(item)
                     all_items.append(item)
         # добавляем товары
@@ -2703,8 +2704,9 @@ async def get_zwilling():
     #сохраняем аутлет отдельно, т к товары аутлета в обычном каталоге уже есть, то берем их, но цену из аутлета
     print(outlet)
     print(len(outlet))
-    for i in range(len(items)):
-        item = items[i]
+    outlet_dct = {}
+    for i in range(len(all_items)):
+        item = all_items[i]
         url = item[-1]
         if url in outlet.keys():
             print("есть аутлет")
@@ -2726,7 +2728,7 @@ async def get_zwilling():
             i = list(outlet.keys()).index(url) + 1
             images = ''
             
-            for link in image_links:
+            for link in image_links[1:]:
                 try:
                     num = image_links.index(link) + 1
                     img_path = f"database/images/{cat_name}/{subcategory}/{i}_{title.replace(' ', '_').replace('/', '_')}_{num}.png"
@@ -2740,10 +2742,22 @@ async def get_zwilling():
                 except Exception as err:
                     print(err)
                     continue
-
+            
             item = [title, description, current_price, images, sizes, article, url]
-            print(item)
-            items.append(item)
+            #print(item)
+            if subcategory in outlet_dct:
+                outlet_dct[subcategory] += [item]
+            else:
+                outlet_dct[subcategory] = [item]
+            #items.append(item)
+    print(outlet_dct)
+    if not crud.subcategory_exists(name='Аутлет', category=cat_name):
+        crud.create_subcategory(name='Аутлет', category=cat_name)
+    for subcategory, items in outlet_dct.items():
+        if not crud.subcategory_exists(name=subcategory, category=cat_name):
+            parent_subcategory = crud.get_subcategory(name='Аутлет', category_id=crud.get_category(name=cat_name).id)
+            crud.create_subcategory(name=subcategory, category=cat_name, parent_subcategory=parent_subcategory.id, level=2)
+        await crud.create_products(category=cat_name, subcategory=subcategory, items=items)
                   
 def is_last_page(text : str) -> bool:
     soup = bs(text, "html.parser")
@@ -2869,13 +2883,13 @@ class Outlet_parser():
     
     def get_driver(self):
         options = webdriver.ChromeOptions()
-        # options.add_argument("--headless")
+        options.add_argument("--headless")
         options.add_argument("--disable-blink-features=AutomationControlled")
         options.add_argument('--no-sandbox')
         options.add_experimental_option("excludeSwitches", ["enable-automation"])
         options.add_experimental_option('useAutomationExtension', False)
         driver = webdriver.Chrome(ChromeDriverManager().install(), options= options)
-        
+        driver.execute_cdp_cmd('Network.setUserAgentOverride', {"userAgent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.53 Safari/537.36'})
         driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {
             "source" : '''
             delete window.cdc_adoQpoasnfa76pfcZLmcfl_Array;

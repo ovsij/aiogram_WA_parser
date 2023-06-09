@@ -10,18 +10,13 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 import time
 
-from database.db import *
-from database import crud
-
-
 EURO_COSTS = 87
 
 cat_name = "Zwilling"
 SUBCATEGORIES = [
-    ["Посуда"],
     ["Воки", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/woks/"],
-    ["Фондю", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/fondue/"],
-    ["Крышки для посуды", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/coperchi/"],
+    # ["Фондю", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/fondue/"],
+    # ["Крышки для посуды", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/coperchi/"],
     # ["Наборы кастрюль", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/set-di-pentole-da-cucina/"],
     # ["Наборы сковородок", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/set-di-padelle/"],
     # ["Ковши и жаровни", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/casseruole-con-manico/"],
@@ -37,7 +32,7 @@ SUBCATEGORIES = [
     # ["Блинница", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/crepiere/"],
     # ["Подставка", "Посуда", 2, "https://www.zwilling.com/it/pentole-e-padelle/sottopentole/"],
 
-    # ["Кухонная утварь"],
+
     # ["Кухонные ножницы", "Кухонная утварь", 2, "https://www.zwilling.com/it/utensili-da-cucina/forbici-da-cucina/"],
     # ["Ножницы для птицы", "Кухонная утварь", 2, "https://www.zwilling.com/it/utensili-da-cucina/trinciapolli/"],
     # ["Терки", "Кухонная утварь", 2, "https://www.zwilling.com/it/z-cut/"],
@@ -53,7 +48,7 @@ SUBCATEGORIES = [
     # ["Венчики", "Кухонная утварь", 2, "https://www.zwilling.com/it/utensili-da-cucina/fruste/"],
     # ["Кухонные полотенца", "Кухонная утварь", 2, "https://www.zwilling.com/it/utensili-da-cucina/strofinacci-da-cucina/"],
 
-    # ["Хранение"],
+    
     # ["Аксессуары хранение", "Хранение", 2, "https://www.zwilling.com/it/sistema-sottovuoto/accessori-per-sottovuoto/"],
     # ["Вакуумные насосы", "Хранение", 2, "https://www.zwilling.com/it/sistema-sottovuoto/pompa-per-sottovuoto/"],
     # ["Вакуумные пробки для вина", "Хранение", 2, "https://www.zwilling.com/it/sistema-sottovuoto/tappo-da-vino-sottovuoto/"],
@@ -62,7 +57,7 @@ SUBCATEGORIES = [
     # ["Вакуумные контейнеры", "Хранение", 2, "https://www.zwilling.com/it/sistema-sottovuoto/contenitori-sottovuoto/"],
     # ["Ланч бокс в вакуумной упаковке", "Хранение", 2, "https://www.zwilling.com/it/sistema-sottovuoto/lunch-box-sottovuoto/"],
 
-    # ["Сервировка стола"],
+    
     # ["Посуда", "Сервировка стола", 2, "https://www.zwilling.com/it/servizi-per-la-tavola/servizi-tavola/"],
     # ["Столовые приборы", "Сервировка стола", 2, "https://www.zwilling.com/it/servizi-per-la-tavola/posate/"],
     # ["Стеклянная посуда", "Сервировка стола", 2, "https://www.zwilling.com/it/servizi-per-la-tavola/vetreria/"],
@@ -70,7 +65,7 @@ SUBCATEGORIES = [
     # ["Термо", "Сервировка стола", 2, "https://www.zwilling.com/it/servizi-per-la-tavola/thermo/"],
     # ["Соль и перец", "Сервировка стола", 2, "https://www.zwilling.com/it/servizi-per-la-tavola/sale-e-pepe/"],
 
-    # ["Техника"],
+
     # ["Аксессуары техника", "Техника", 2, "https://www.zwilling.com/it/elettrodomestici-da-cucina/accessori/"],
     # ["Блендеры", "Техника", 2, "https://www.zwilling.com/it/elettrodomestici-da-cucina/frullatori/"],
     # ["Капучинаторы", "Техника", 2, "https://www.zwilling.com/it/elettrodomestici-da-cucina/macchine-caffe/"],
@@ -79,7 +74,7 @@ SUBCATEGORIES = [
     # ["Кухонные весы", "Техника", 2, "https://www.zwilling.com/it/elettrodomestici-da-cucina/bilancia/"],
     # ["Машина для специй", "Техника", 2, "https://www.zwilling.com/it/elettrodomestici-da-cucina/macina-spezie/"],
     
-    # ["Ножи"],
+    
     # ["Блоки ножей", "Ножи", 2, "https://www.zwilling.com/it/coltelli/ceppi-di-coltelli/"],
     # ["Наборы ножей", "Ножи", 2, "https://www.zwilling.com/it/coltelli/set-di-coltelli/"],
     # ["Ножи для овощей", "Ножи", 2, "https://www.zwilling.com/it/coltelli/coltelli-da-verdura/"],
@@ -115,23 +110,11 @@ async def get_zwilling():
     image_links_dict = {}
     subcategories_dict = {}
     #запускаем парсинг ссылок аутлета в отдельном потоке. К моменту завершения парсинга осн. каталога, селениум уже давно завершит работу
-    #outlet_parser = Outlet_parser()
-    #outlet_parser.get_outlet()
+    outlet_parser = Outlet_parser()
+    outlet_parser.get_outlet()
 
     items = []
-    # создаем категорию (проверка наличия уже в функции)
-    category = crud.get_category(name=cat_name, metacategory=6)
-    
     for subcategory in SUBCATEGORIES:
-        if not str(subcategory[-1]).startswith('http'):
-            if len(subcategory) == 1:
-                crud.create_subcategory(name=subcategory[0], category=cat_name) if not crud.subcategory_exists(name=subcategory[0], category=cat_name) else 0
-            else:
-                if not crud.subcategory_exists(name=subcategory[0], category=cat_name):
-                    parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=category.id)
-                    crud.create_subcategory(name=subcategory[0], category=cat_name, parent_subcategory=parent_subcategory.id, level=subcategory[2])
-            continue
-
         base_link = subcategory[-1]
         logging.info(f'Starting {cat_name}: {subcategory[0]}')
         async with aiohttp.ClientSession(headers=HEADERS, trust_env=True) as session:
@@ -151,7 +134,7 @@ async def get_zwilling():
                             break
                         i += 1
 
-            for url in urls[:5]:
+            for url in urls:
                 subcategories_dict[url] = subcategory[0]
                 await asyncio.sleep(1)
                 async with session.get(url, ssl=False) as response:
@@ -163,14 +146,14 @@ async def get_zwilling():
                         logging.warning("title")
                         
                     try:
-                        #current_price = int((float(soup.find('span', attrs={"class" : "product-sales-price"}).text.strip(' ').strip('\n').strip(' ').strip('€').replace(',', '.')) * (EURO_COSTS + 1)))
-                        current_price = int((float(soup.find('span', attrs={"class" : "product-sales-price"}).text.strip(' ').strip('\n').strip(' ').strip('€').replace(',', '.')) * (EURO_COSTS + 1)) * float(f"1.{category.margin}"))
+                        current_price = int((float(soup.find('span', attrs={"class" : "product-sales-price"}).text.strip(' ').strip('\n').strip(' ').strip('€').replace(',', '.')) * (EURO_COSTS + 1)))
+                        # current_price = int((float(soup.find('span', attrs={"class" : "product-sales-price"}).text.strip(' ').strip('\n').strip(' ').strip('€').replace(',', '.')) * (EURO_COSTS + 1)) * float(f"1.{crud.get_category(name='Underarmour').margin}"))
                     except:
                         logging.warning("price")
                         
                     try:
-                        #old_price = int((float(soup.find('span', 'listprice-standard').text.strip(' ').strip('\n').strip(' ').strip('€').replace(',', '.')) * (EURO_COSTS + 1)))
-                        old_price = int((float(soup.find('span', 'listprice-standard').text.strip(' ').strip('\n').strip(' ').strip('€').replace(',', '.')) * (EURO_COSTS + 1)) * float(f"1.{category.margin}"))
+                        old_price = int((float(soup.find('span', 'listprice-standard').text.strip(' ').strip('\n').strip(' ').strip('€').replace(',', '.')) * (EURO_COSTS + 1)))
+                        # old_price = int((float(soup.find('span', 'listprice-standard').text.strip(' ').strip('\n').strip(' ').strip('€').replace(',', '.')) * (EURO_COSTS + 1)) * float(f"1.{crud.get_category(name='Underarmour').margin}"))
                         #print([old_price])
                         percent = int(100 - float(current_price) / (float(old_price) / 100))
                     except:
@@ -190,7 +173,8 @@ async def get_zwilling():
                                 src = img.get("src")
                                 if src:
                                     src = src.replace("sw=100", "sw=350").replace("sh=100", "sh=350")
-                                    image_links.append(src)
+                                    if src not in image_links:
+                                        image_links.append(src)
                             except:
                                 continue
                             
@@ -246,7 +230,7 @@ async def get_zwilling():
             
             description = f'\n\n<s>{old_price} руб.</s> -{percent}% {current_price} руб.'
             subcategory = subcategories_dict[url] + " аутлет"
-            article = item[-2] + " outlet"
+            article = item[-2] + " аутлет"
             
             if not os.path.exists(f"database/images/{cat_name}/{subcategory}"):
                 os.mkdir(f"database/images/{cat_name}/{subcategory}")
@@ -328,7 +312,7 @@ class Outlet_parser():
             elem.click()
             elem.send_keys(password)
             time.sleep(3)
-            
+            driver.save_screenshot("scr.png")
             driver.find_element(By.XPATH, "/html/body/div[2]/div[10]/div[2]/div/div/div[2]/form/fieldset/div[3]/div/div[2]").click()
             time.sleep(10)
             
@@ -397,13 +381,13 @@ class Outlet_parser():
     
     def get_driver(self):
         options = webdriver.ChromeOptions()
-        # options.add_argument("--headless")
+        options.add_argument("--headless")
         options.add_argument("--disable-blink-features=AutomationControlled")
         options.add_argument('--no-sandbox')
         options.add_experimental_option("excludeSwitches", ["enable-automation"])
         options.add_experimental_option('useAutomationExtension', False)
         driver = webdriver.Chrome(executable_path="chromedriver.exe", options= options)
-        
+        driver.execute_cdp_cmd('Network.setUserAgentOverride', {"userAgent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.53 Safari/537.36'})
         driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {
             "source" : '''
             delete window.cdc_adoQpoasnfa76pfcZLmcfl_Array;
@@ -415,6 +399,6 @@ class Outlet_parser():
         return driver
 
 if __name__ == "__main__":
-    asyncio.run(get_zwilling())
-    # p = Outlet_parser()
-    # p.get_outlet()
+    # asyncio.run(get_zwilling())
+    p = Outlet_parser()
+    p.get_outlet()

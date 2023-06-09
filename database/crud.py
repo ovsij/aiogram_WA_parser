@@ -250,7 +250,7 @@ async def create_products(category : str, subcategory : str, items : list):
                         url=item[6]
                     )
                     commit()
-            print(f'{prod} {prod.sizes}')
+            #print(f'{prod} {prod.sizes}')
         except Exception as ex:
             logging.warning(f'{category} db - {ex}')
 

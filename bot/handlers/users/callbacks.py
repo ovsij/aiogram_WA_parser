@@ -104,6 +104,18 @@ async def btn_callback(callback_query: types.CallbackQuery):
                 text=text, 
                 reply_markup=reply_markup
             )
+    if code[1] == 'search':
+        await Form.search.set()
+        
+        category = get_category(id=code[2])
+        await Form.search.update_data(category=category.name)
+        reply_markup = InlineConstructor.create_kb([['Отмена','deny']], [1])
+        await bot.send_message(
+            callback_query.from_user.id,
+            text=f'Пришлите сообщение с названием (или частью названия) товара, который вы хотите найти в "{category.name}"',
+            reply_markup=reply_markup
+        )
+
 
     if code[1] == 'ls':
         # кнопка назад из меню выбора размеров
@@ -1062,11 +1074,12 @@ async def denysending(callback_query: types.CallbackQuery, state: FSMContext):
             )
 
 # Отмена 
+@dp.callback_query_handler(lambda c: c.data == 'deny', state=Form.search)
 @dp.callback_query_handler(lambda c: c.data == 'deny', state=Form.promocode_user)
 async def denysending(callback_query: types.CallbackQuery, state: FSMContext):
     print(f'User {callback_query.from_user.id} open {callback_query.data}')
 
     await state.finish()
-    await bot.delete_message(chat_id=callback_query.from_user.id, message_id=Form.prev_message.message_id)
+    await callback_query.message.delete()
     
     

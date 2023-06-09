@@ -35,3 +35,4 @@ class Form(StatesGroup):
     add_subcategory = State()
     add_comment = State()
     order_message = State()
+    search = State()

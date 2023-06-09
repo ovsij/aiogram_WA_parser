@@ -39,6 +39,7 @@ class User(db.Entity):
     first_usage = Optional(datetime, default=lambda: datetime.now())
     last_usage = Optional(datetime, default=lambda: datetime.now())
     is_banned = Optional(bool, default=False)
+    state = Optional(str)
 
 class Cart(db.Entity):
     id = PrimaryKey(int, auto=True)

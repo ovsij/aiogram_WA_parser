@@ -415,3 +415,11 @@ async def add_comment(message: types.Message, state: FSMContext):
     order = update_order(id=int(Form.prev_message.text.split('№')[1]), comment=message.text)
 
     await Form.order_message.edit_text(text=Form.order_message.text + '\n' + message.text, reply_markup=Form.order_message.reply_markup)
+
+
+# получаем поисковый запрос
+@dp.message_handler(state=Form.search)
+async def search(message: types.Message, state: FSMContext):
+    #category = get_category(name=message.text.split('"')[-2])
+    #print(category)
+    print(state.data)

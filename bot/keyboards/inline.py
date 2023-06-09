@@ -99,7 +99,7 @@ def inline_kb_categories(tg_id : str, metacategory : int, page : int = 1):
         inline_kb = InlineConstructor.create_kb(text_and_data, schema)
         return text, inline_kb
 
-
+# субкатегории
 @db_session()
 def inline_kb_subcategories(tg_id : str, category : int = None, subcategory : int = None, level : int = 1, page : int = 1):
     #выводит названия суб-категорий, если их нет выводит продукты
@@ -129,6 +129,9 @@ def inline_kb_subcategories(tg_id : str, category : int = None, subcategory : in
         text_and_data.append(['Добавить подкатегорию', f'btn_addsubcategory_{category}'])
         schema.append(1)
     
+    if level == 1:
+        text_and_data.append([emojize(':magnifying_glass_tilted_left: Поиск по бренду', language='alias'), f'btn_search_{category}'])
+        schema.append(1)
     if level == 1:
         text_and_data.append(btn_back(f'metacategory_{get_category(id=category).metaCategory.id}'))
     elif level == 2:
