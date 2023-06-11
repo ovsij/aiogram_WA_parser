@@ -170,6 +170,8 @@ def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : in
         text = 'К сожалению, в данной подкатегории пока ничего нет'
         reply_markup = InlineConstructor.create_kb(text_and_data, schema)
         return [{'text' : text, 'reply_markup' : reply_markup, 'images' : False}]
+    elif len(products) == 0 and search:
+        return False
     
     # показываем удаленные товары только админам
     if tg_id in os.getenv('ADMINS'):
@@ -331,7 +333,7 @@ def inline_kb_sizefilter(category : int = None, sub_category : int = None, sizes
     for product in get_product(category_id=category, subcategory_id=sub_category, sort=sort):
         all_sizes += str(product.sizes).split(', ')
     try:
-        _ = int(all_sizes)
+        _ = float(all_sizes[0])
         all_sizes = list(set(all_sizes))
         sorted_list = []
         for size in all_sizes:
@@ -344,6 +346,7 @@ def inline_kb_sizefilter(category : int = None, sub_category : int = None, sizes
         all_sizes = [str(fl_size).replace('.0', '') for fl_size in sorted_list]
     except:
         all_sizes = list(set(all_sizes))
+        print('без сортировки"')
     
     prices_code = 'p='
     for price in prices_code_list:
@@ -596,13 +599,19 @@ async def inline_kb_cart(tg_id : str, page : list = [0, 5]):
         [emojize(':arrow_down_small: Eще 10 товаров :arrow_down_small:', language='alias'), f'btn_cart_{page[1]}-{page[1] + 10}'],
         btn_back(f'menu')
     ]
+    schema = [1, 1, 1, 1]
+    if len_prodcts == len(products):
+        text_and_data.pop(1)
+        text_and_data.pop(1)
+        schema = [1,1]
     textInline_kb.append(
         {
         'text' : f'Показано {len_prodcts} товаров из {len(products)}',
-        'reply_markup' : InlineConstructor.create_kb(text_and_data, [1, 1, 1, 1]),
+        'reply_markup' : InlineConstructor.create_kb(text_and_data, schema),
         'images' : False
         }
     )
+    
     return textInline_kb
 
 def inline_kb_createorder(tg_id : str, create : bool, order_id : int = None):

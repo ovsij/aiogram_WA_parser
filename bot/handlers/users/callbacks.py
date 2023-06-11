@@ -443,6 +443,8 @@ async def btn_callback(callback_query: types.CallbackQuery):
                     )
         else:
             textReply_markup  = await inline_kb_cart(tg_id=str(callback_query.from_user.id), page=[int(p) for p in code[-1].split('-')])
+            if len(textReply_markup) == 1:
+                return
             for item in textReply_markup:
                 if not item['images']:
                     await bot.send_message(
@@ -1085,6 +1087,10 @@ async def denysending(callback_query: types.CallbackQuery, state: FSMContext):
     print(f'User {callback_query.from_user.id} open {callback_query.data}')
 
     await state.finish()
-    await callback_query.message.delete()
-    
+    text, reply_markup = inline_kb_metacategories(tg_id=str(callback_query.from_user.id))
+    await bot.send_message(
+        callback_query.from_user.id,
+        text=text,
+        reply_markup=reply_markup
+    )
     

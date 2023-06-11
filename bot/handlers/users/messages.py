@@ -420,8 +420,10 @@ async def add_comment(message: types.Message, state: FSMContext):
 # получаем поисковый запрос
 @dp.message_handler(state=Form.search)
 async def search(message: types.Message, state: FSMContext):
-    await state.finish()
-    state_category = int(get_user(tg_id=str(message.from_user.id)).state)
+    try:
+        state_category = int(get_user(tg_id=str(message.from_user.id)).state)
+    except:
+        state_category = int(get_user(tg_id=str(message.from_user.id)).state.split('| ')[0])
     update_user(tg_id=str(message.from_user.id), state=f'{state_category}| {message.text}')
     textReply_markup = inline_kb_listproducts(
         tg_id=str(message.from_user.id), 
@@ -429,6 +431,16 @@ async def search(message: types.Message, state: FSMContext):
         page=[0,5],
         search=message.text
     )
+    if not textReply_markup:
+        reply_markup = InlineConstructor.create_kb([['Отмена','deny']], [1])
+        await bot.send_message(
+            message.from_user.id,
+            text = 'К сожалению, по вашему запросу ничего не найдено. Попробуйте еще раз',
+            reply_markup=reply_markup
+        )
+        return
+    
+    await state.finish()
     # последнее сообщение с кнопками
     for item in textReply_markup:
         await asyncio.sleep(1)
