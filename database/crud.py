@@ -560,7 +560,10 @@ def get_promoprice(product : Product, tg_id : int):
             if product.category.id in [promcat.category.id for promcat in promocode.categories]:
                 promcat = get_promocodecategory(promocode_id=promocode.id, category_id=product.category.id)
                 price.append(int(product.price * (1 - promcat.discount / 100)))
-        return min(price)
+        if price:
+            return min(price)
+        else:
+            return product.price
     
 
 # PromocodeCategory
