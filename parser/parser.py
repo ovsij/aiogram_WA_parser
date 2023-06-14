@@ -3783,7 +3783,7 @@ async def get_wolford():
                 product_urls += addictional_urls
                 counter += 1
             
-            for product_url in product_urls[:5]:
+            for product_url in product_urls:
                 try:
                     async with session.get(product_url, ssl = False) as response:
                         webpage = await response.text()
