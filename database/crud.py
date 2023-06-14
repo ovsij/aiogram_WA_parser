@@ -598,7 +598,7 @@ def promocodecategory_exists(promocode_id : int, category_id : int):
 def create_order(tg_id : str, products : list):
     order = Order(user=User.get(tg_id=tg_id))
     for product in products:
-        Order_Product(order=order, product=product[0].article, sizes=product[1])
+        Order_Product(order=order, product=product.article, sizes=product.sizes)
     return order
 
 @db_session()
