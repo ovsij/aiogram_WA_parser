@@ -51,8 +51,9 @@ async def main():
         #tasks.add(task12)
         #task13 = asyncio.create_task(get_twinset())
         #tasks.add(task13)
+        task14 = asyncio.create_task(get_hellyhansen())
+        tasks.add(task14)
         
-    
         L = await asyncio.gather(*tasks)
         await asyncio.sleep(10)
     #except Exception as ex:

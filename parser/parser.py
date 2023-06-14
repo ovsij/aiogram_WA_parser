@@ -3099,12 +3099,12 @@ async def get_twinset():
                         
                     price_wrapper = soup.find("span", attrs={"class" : "price-wrapper"})
                     try:
-                        current_price = int((float(price_wrapper.find("span", attrs={"class" : "sales value"}).getText().strip(' ').strip('\n').strip(' ').strip('€').replace(',', '.')) * (EURO_COSTS + 1)))
+                        current_price = int(float(price_wrapper.find("span", attrs={"class" : "sales value"}).getText().strip(' ').strip('\n').strip(' ').strip('€').replace(',', '.')) * (EURO_COSTS + 1) * float(f"1.{crud.get_category(name=CAT_NAME).margin}"))
                     except:
                         pass
-                    
+                    #current_price = int(prices["final_price"]["value"] * (EURO_COSTS + 1) * float(f"1.{crud.get_category(name=CAT_NAME).margin}"))
                     try:
-                        old_price = int((float(price_wrapper.find('span', attrs={"class" : "strike-through"}).getText().strip(' ').strip('\n').strip(' ').strip('€').replace(',', '.')) * (EURO_COSTS + 1)))
+                        old_price = int(float(price_wrapper.find('span', attrs={"class" : "strike-through"}).getText().strip(' ').strip('\n').strip(' ').strip('€').replace(',', '.')) * (EURO_COSTS + 1)  * float(f"1.{crud.get_category(name=CAT_NAME).margin}"))
                         #print([old_price])
                         percent = int(100 - float(current_price) / (float(old_price) / 100))
                     except:
@@ -3225,17 +3225,17 @@ async def get_hellyhansen():
         
         ["Мужчины"],
         ["Верхний слой (куртки) для мужчин", "Мужчины", 2],
-        ["Куртки для яхтинга мужские", "Куртки", 3, "https://www.hellyhansen.com/en_it/mens/jackets/sailing-jackets"],
-        ["Куртка-оболочка мужские", "Куртки", 3, "https://www.hellyhansen.com/en_it/mens/jackets/shell-jackets"],
-        ["Туристические куртки мужские", "Куртки", 3, "https://www.hellyhansen.com/en_it/mens/jackets/mountain-hiking-jackets"],
-        ["Дождевики мужские", "Куртки", 3, "https://www.hellyhansen.com/en_it/mens/jackets/rain-jackets"],
-        ["Жилеты мужские", "Куртки", 3, "https://www.hellyhansen.com/en_it/mens/jackets/vest"],
-        ["Повседневные куртки мужские", "Куртки", 3, "https://www.hellyhansen.com/en_it/mens/jackets/casual-jackets"],
-        ["Ветровки мужские", "Куртки", 3, "https://www.hellyhansen.com/en_it/mens/jackets/windbreakers"],
-        ["Пуховики мужские", "Куртки", 3, "https://www.hellyhansen.com/en_it/mens/jackets/down-jackets"],
-        ["Парки мужские", "Куртки", 3, "https://www.hellyhansen.com/en_it/mens/jackets/parka"],
-        ["Зимние куртки мужские", "Куртки", 3, "https://www.hellyhansen.com/en_it/mens/jackets/winter-jackets"],
-        ["Лыжные куртки мужские", "Куртки", 3, "https://www.hellyhansen.com/en_it/mens/jackets/ski-jackets"],
+        ["Куртки для яхтинга мужские", "Верхний слой (куртки) для мужчин", 3, "https://www.hellyhansen.com/en_it/mens/jackets/sailing-jackets"],
+        ["Куртка-оболочка мужские", "Верхний слой (куртки) для мужчин", 3, "https://www.hellyhansen.com/en_it/mens/jackets/shell-jackets"],
+        ["Туристические куртки мужские", "Верхний слой (куртки) для мужчин", 3, "https://www.hellyhansen.com/en_it/mens/jackets/mountain-hiking-jackets"],
+        ["Дождевики мужские", "Верхний слой (куртки) для мужчин", 3, "https://www.hellyhansen.com/en_it/mens/jackets/rain-jackets"],
+        ["Жилеты мужские", "Верхний слой (куртки) для мужчин", 3, "https://www.hellyhansen.com/en_it/mens/jackets/vest"],
+        ["Повседневные куртки мужские", "Верхний слой (куртки) для мужчин", 3, "https://www.hellyhansen.com/en_it/mens/jackets/casual-jackets"],
+        ["Ветровки мужские", "Верхний слой (куртки) для мужчин", 3, "https://www.hellyhansen.com/en_it/mens/jackets/windbreakers"],
+        ["Пуховики мужские", "Верхний слой (куртки) для мужчин", 3, "https://www.hellyhansen.com/en_it/mens/jackets/down-jackets"],
+        ["Парки мужские", "Верхний слой (куртки) для мужчин", 3, "https://www.hellyhansen.com/en_it/mens/jackets/parka"],
+        ["Зимние куртки мужские", "Верхний слой (куртки) для мужчин", 3, "https://www.hellyhansen.com/en_it/mens/jackets/winter-jackets"],
+        ["Лыжные куртки мужские", "Верхний слой (куртки) для мужчин", 3, "https://www.hellyhansen.com/en_it/mens/jackets/ski-jackets"],
 
         ["Средний слой для мужчин", "Мужчины", 2],
         ["Флис мужской", "Средний слой для мужчин", 3, "https://www.hellyhansen.com/en_it/mens/midlayers/fleece"],
@@ -3418,7 +3418,6 @@ async def get_hellyhansen():
 
 
         ["Экипировка"],
-        
         ["Сумки", "Экипировка", 2],
         ["Спортивные сумки", "Сумки", 3, "https://www.hellyhansen.com/en_it/gear/bags/duffel-bags"],
         ["Тележки и чемоданы на колесах", "Сумки", 3, "https://www.hellyhansen.com/en_it/gear/bags/trolleys-rolling-luggage"],
@@ -3430,11 +3429,11 @@ async def get_hellyhansen():
         ["Походные рюкзаки", "Рюкзаки", 2, "https://www.hellyhansen.com/en_it/gear/backpacks/outdoor-backpacks"],
         ["Повседневные рюкзаки", "Рюкзаки", 2, "https://www.hellyhansen.com/en_it/gear/backpacks/casual-backpacks"],
 
-        ["Водные виды спорта", "Экипировка", 2]
-        ["Спасательные жилеты", "Водные виды спорта", 3, "https://www.hellyhansen.com/en_it/gear/watersports/life-jackets"]
-        ["Гидрокостюмы и парусное снаряжение", "Водные виды спорта", 3, "https://www.hellyhansen.com/en_it/gear/watersports/wet-suits"]
-        ["Детские спасательные жилеты", "Водные виды спорта", 3, "https://www.hellyhansen.com/en_it/gear/watersports/kids-life-jackets"]
-        ["Детали и комплекты для ремонта спасательных жилетов", "Водные виды спорта", 3, "https://www.hellyhansen.com/en_it/gear/watersports/life-jacket-parts"]
+        ["Водные виды спорта", "Экипировка", 2],
+        ["Спасательные жилеты", "Водные виды спорта", 3, "https://www.hellyhansen.com/en_it/gear/watersports/life-jackets"],
+        ["Гидрокостюмы и парусное снаряжение", "Водные виды спорта", 3, "https://www.hellyhansen.com/en_it/gear/watersports/wet-suits"],
+        ["Детские спасательные жилеты", "Водные виды спорта", 3, "https://www.hellyhansen.com/en_it/gear/watersports/kids-life-jackets"],
+        ["Детали и комплекты для ремонта спасательных жилетов", "Водные виды спорта", 3, "https://www.hellyhansen.com/en_it/gear/watersports/life-jacket-parts"],
 
         # ["Новинки", "https://www.hellyhansen.com/en_it/shop/new-arrivals?promo_name=ss23_newarrivals&promo_id=090323&promo_creative=newarrivals&promo_position=menu"]
     
@@ -3509,7 +3508,7 @@ async def get_hellyhansen():
                         result = product_url_pattern.replace("urlKey$", product_key)
                         return result
 
-                    for product_key in product_keys[:5]:
+                    for product_key in product_keys:
                         await asyncio.sleep(3)
                         json_url = get_product_json_url(product_key)
                         async with session.get(json_url, ssl = False) as response:
@@ -3524,8 +3523,8 @@ async def get_hellyhansen():
 
                             try:
                                 prices = product_data["variants"][0]["product"]["price_range"]["maximum_price"]
-                                current_price = prices["final_price"]["value"] * (EURO_COSTS + 1)
-                                old_price = prices["regular_price"]["value"]  * (EURO_COSTS + 1)
+                                current_price = int(prices["final_price"]["value"] * (EURO_COSTS + 1) * float(f"1.{crud.get_category(name=CAT_NAME).margin}"))
+                                old_price = int(prices["regular_price"]["value"]  * (EURO_COSTS + 1) * float(f"1.{crud.get_category(name=CAT_NAME).margin}"))
                                 if old_price - current_price != 0:
                                     percent = int(100 - float(current_price) / (float(old_price) / 100))
                                     description += f'\n\n<s>{old_price} руб.</s> -{percent}% {current_price} руб.'
@@ -3586,7 +3585,7 @@ async def get_hellyhansen():
 
                         i = product_keys.index(product_key) + 1
                         images = ''
-                        for link in image_links:
+                        for link in image_links[:10]:
                             try:
                                 num = image_links.index(link) + 1
                                 img_path = f"database/images/{CAT_NAME}/{subcategory[0]}/{i}_{title.replace(' ', '_').replace('/', '_').replace('|', '')}_{num}.jpg"
