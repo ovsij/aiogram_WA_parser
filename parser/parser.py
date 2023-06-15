@@ -3458,6 +3458,7 @@ async def get_hellyhansen():
             #try:
             async with session.get(base_url, ssl=False) as response:
                 webpage = await response.text()
+                print(webpage)
                 def extract_category_id_from_page(webpage : str) -> str:
                     match = re.search(r"id&quot;:&quot;\d{1,10}&quot;", webpage)
                     id_with_text = match[0] 
