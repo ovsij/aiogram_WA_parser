@@ -3454,7 +3454,7 @@ async def get_hellyhansen():
         logging.info(f'Starting {CAT_NAME}: {subcategory[0]}')
         base_url = subcategory[-1]
         items = []
-        async with aiohttp.ClientSession(trust_env=True) as session:
+        async with aiohttp.ClientSession(headers=HEADERS, trust_env=True) as session:
             #try:
             async with session.get(base_url, ssl=False) as response:
                 webpage = await response.text()
@@ -3510,6 +3510,7 @@ async def get_hellyhansen():
                     return result
 
                 for product_key in product_keys:
+                    print(product_key)
                     await asyncio.sleep(3)
                     json_url = get_product_json_url(product_key)
                     async with session.get(json_url, ssl = False) as response:

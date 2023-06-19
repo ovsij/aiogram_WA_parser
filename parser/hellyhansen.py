@@ -12,9 +12,8 @@ import time
 import re
 import json
 
-
 async def get_hellyhansen():
-    EURO_COSTS = 87
+    EURO_COSTS = euro_cost()
     HEADERS = {
         "Host": "www.hellyhansen.com",
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/114.0",
@@ -30,13 +29,13 @@ async def get_hellyhansen():
         "TE": "trailers",
         "store" : "en_it"
     }
-    CAT_NAME = "hellyhansen"
+    CAT_NAME = "Hellyhansen"
     SUBCATEGORIES = [
         
         ["Мужчины"],
         ["Верхний слой (куртки) для мужчин", "Мужчины", 2],
         ["Куртки для яхтинга мужские", "Верхний слой (куртки) для мужчин", 3, "https://www.hellyhansen.com/en_it/mens/jackets/sailing-jackets"],
-        ["Куртка-оболочка мужские", "Верхний слой (куртки) для мужчин", 3, "https://www.hellyhansen.com/en_it/mens/jackets/shell-jackets"],
+        ["Ветровки мужские", "Верхний слой (куртки) для мужчин", 3, "https://www.hellyhansen.com/en_it/mens/jackets/shell-jackets"],
         ["Туристические куртки мужские", "Верхний слой (куртки) для мужчин", 3, "https://www.hellyhansen.com/en_it/mens/jackets/mountain-hiking-jackets"],
         ["Дождевики мужские", "Верхний слой (куртки) для мужчин", 3, "https://www.hellyhansen.com/en_it/mens/jackets/rain-jackets"],
         ["Жилеты мужские", "Верхний слой (куртки) для мужчин", 3, "https://www.hellyhansen.com/en_it/mens/jackets/vest"],
@@ -247,166 +246,184 @@ async def get_hellyhansen():
 
         # ["Новинки", "https://www.hellyhansen.com/en_it/shop/new-arrivals?promo_name=ss23_newarrivals&promo_id=090323&promo_creative=newarrivals&promo_position=menu"]
     
-   
-    items = []
+    ]
+    #category = crud.get_category(name=CAT_NAME, metacategory=crud.get_metacategory(name='Спортивные товары').id)
+    
     print(len(SUBCATEGORIES))
     for subcategory in SUBCATEGORIES:
+        
+        #if not str(subcategory[-1]).startswith('http'):
+        #    if len(subcategory) == 1:
+        #        crud.create_subcategory(name=subcategory[0], category=CAT_NAME) if not crud.subcategory_exists(name=subcategory[0], category=CAT_NAME) else 0
+        #    else:
+        #        if not crud.subcategory_exists(name=subcategory[0], category=CAT_NAME):
+        #            parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=category.id)
+        #            crud.create_subcategory(name=subcategory[0], category=CAT_NAME, parent_subcategory=parent_subcategory.id, level=subcategory[2])
+        #    continue
         logging.info(f'Starting {CAT_NAME}: {subcategory[0]}')
         base_url = subcategory[-1]
+        items = []
         async with aiohttp.ClientSession(headers=HEADERS, trust_env=True) as session:
-            try:
-                async with session.get(base_url, ssl=False) as response:
-                    webpage = await response.text()
-                    def extract_category_id_from_page(webpage : str) -> str:
-                        match = re.search(r"id&quot;:&quot;\d{1,10}&quot;", webpage)
-                        id_with_text = match[0] 
-                        id = id_with_text.split("id&quot;:&quot;")[1].split("&quot;")[0]
-                        return id
+            #try:
+            async with session.get(base_url, ssl=False) as response:
+                webpage = await response.text()
+                print(webpage)
+                def extract_category_id_from_page(webpage : str) -> str:
+                    match = re.search(r"id&quot;:&quot;\d{1,10}&quot;", webpage)
+                    id_with_text = match[0] 
+                    id = id_with_text.split("id&quot;:&quot;")[1].split("&quot;")[0]
+                    return id
+                
+                def extract_product_keys_from_json(json_ : dict) -> list:
+                    try:
+                        items = json_["data"]["products"]["items"]
+                        product_urls = []
+                        for product in items:
+                            key = product["url_key"]
+                            product_urls.append(key)
+                        return product_urls
+                    except:
+                        return []
                     
-                    def extract_product_keys_from_json(json_ : dict) -> list:
-                        try:
-                            items = json_["data"]["products"]["items"]
-                            product_urls = []
-                            for product in items:
-                                key = product["url_key"]
-                                product_urls.append(key)
-                            return product_urls
-                        except:
-                            return []
+                def does_json_contain_errors(json_ : dict) -> bool:
+                    try:
+                        errors = json_["errors"]
+                        return True
+                    except:
+                        return False
+                    
+                category_id = extract_category_id_from_page(webpage)
+                page_counter = 1
+                url_pattern = 'https://www.hellyhansen.com/graphql?query=query GetCategoryProducts($pageSize:Int!$currentPage:Int!$filters:ProductAttributeFilterInput!$sort:ProductAttributeSortInput){products(pageSize:$pageSize currentPage:$currentPage filter:$filters sort:$sort){...ProductsFragment __typename}}fragment ProductsFragment on Products{items{id uid name price{regularPrice{amount{currency value __typename}__typename}__typename}price_range{maximum_price{final_price{value currency __typename}regular_price{value currency __typename}discount{amount_off __typename}__typename}minimum_price{final_price{value currency __typename}regular_price{value currency __typename}discount{amount_off __typename}__typename}__typename}special_price sku small_image{url __typename}image{url __typename}thumbnail{url __typename}categories{id uid name __typename}stock_status type_id url_key url_suffix __typename}aggregations{attribute_code options{value __typename}__typename}page_info{total_pages __typename}total_count __typename}&operationName=GetCategoryProducts&variables={"currentPage":current_page_value,"filters":{"category_id":{"eq":"id_tag$"}},"id":id_tag$,"pageSize":16,"sort":{"position":"ASC"}}'
+                product_keys = []
+                while True:
+                    await asyncio.sleep(3)
+                    products_url = url_pattern.replace("id_tag$", category_id).replace("current_page_value", str(page_counter))
+                    async with session.get(products_url, ssl=False) as response:
+                        json_string = await response.text()
+                        json_ = json.loads(json_string)
+                        if does_json_contain_errors(json_):
+                            break
+                        product_keys += extract_product_keys_from_json(json_)
+                        page_counter += 1
                         
-                    def does_json_contain_errors(json_ : dict) -> bool:
-                        try:
-                            errors = json_["errors"]
-                            return True
-                        except:
-                            return False
                         
-                    category_id = extract_category_id_from_page(webpage)
-                    page_counter = 1
-                    url_pattern = 'https://www.hellyhansen.com/graphql?query=query GetCategoryProducts($pageSize:Int!$currentPage:Int!$filters:ProductAttributeFilterInput!$sort:ProductAttributeSortInput){products(pageSize:$pageSize currentPage:$currentPage filter:$filters sort:$sort){...ProductsFragment __typename}}fragment ProductsFragment on Products{items{id uid name price{regularPrice{amount{currency value __typename}__typename}__typename}price_range{maximum_price{final_price{value currency __typename}regular_price{value currency __typename}discount{amount_off __typename}__typename}minimum_price{final_price{value currency __typename}regular_price{value currency __typename}discount{amount_off __typename}__typename}__typename}special_price sku small_image{url __typename}image{url __typename}thumbnail{url __typename}categories{id uid name __typename}stock_status type_id url_key url_suffix __typename}aggregations{attribute_code options{value __typename}__typename}page_info{total_pages __typename}total_count __typename}&operationName=GetCategoryProducts&variables={"currentPage":current_page_value,"filters":{"category_id":{"eq":"id_tag$"}},"id":id_tag$,"pageSize":16,"sort":{"position":"ASC"}}'
-                    product_keys = []
-                    while True:
+                def get_product_json_url(product_key : str) -> str:
+                    product_url_pattern = 'https://www.hellyhansen.com/graphql?query=query getProductSwatchesForProductPage($urlKey:String!){products(filter:{url_key:{eq:$urlKey}}){items{id uid price_range{maximum_price{final_price{value currency __typename}regular_price{value currency __typename}discount{amount_off __typename}__typename}minimum_price{final_price{value currency __typename}regular_price{value currency __typename}discount{amount_off __typename}__typename}__typename}name sku __typename ...ProductSwatchesFragment}__typename}}fragment ProductSwatchesFragment on ProductInterface{...on ConfigurableProduct{configurable_options{attribute_code attribute_id id label values{uid default_label label store_label use_default_value value_index swatch_data{...on ImageSwatchData{thumbnail __typename}value __typename}__typename}__typename}variants{attributes{code value_index uid __typename}product{id uid only_x_left_in_stock media_gallery_entries{id uid disabled file label position media_type video_content{media_type video_provider video_url video_title video_description video_metadata __typename}__typename}name sku stock_status special_price price_range{maximum_price{final_price{value currency __typename}regular_price{value currency __typename}discount{amount_off __typename}__typename}minimum_price{final_price{value currency __typename}regular_price{value currency __typename}discount{amount_off __typename}__typename}__typename}__typename}__typename}__typename}__typename}&operationName=getProductSwatchesForProductPage&variables={"urlKey":"urlKey$"}'
+                    result = product_url_pattern.replace("urlKey$", product_key)
+                    return result
+
+                def get_url_of_json_with_description(product_key : str) -> str:
+                    product_url_pattern = 'https://www.hellyhansen.com/graphql?query=query getProductDetailForProductPage($urlKey:String!){products(filter:{url_key:{eq:$urlKey}}){items{id uid page_title __typename ...ProductDetailsFragment ...ProductPerformanceFragment ...ProductInfoFragment}__typename}}fragment ProductDetailsFragment on ProductInterface{__typename features short_description{html __typename}categories{id uid breadcrumbs{category_id category_name __typename}use_as_related_category name url_path __typename}description{html __typename}id uid meta_description meta_keyword name price{regularPrice{amount{currency value __typename}__typename}__typename}price_range{maximum_price{final_price{value currency __typename}regular_price{value currency __typename}discount{amount_off __typename}__typename}minimum_price{final_price{value currency __typename}regular_price{value currency __typename}discount{amount_off __typename}__typename}__typename}robots_meta_tag sku small_image{url __typename}stock_status pdf_sheet product_use_for{code title __typename}url_key}fragment ProductPerformanceFragment on ProductInterface{performance_breathability{label value __typename}performance_durability{label value __typename}performance_insulation{label value __typename}performance_waterproof{label value __typename}performance_weight{label value __typename}performance_windproof{label value __typename}product_workwear_features __typename}fragment ProductInfoFragment on ProductInterface{care_instructions{html __typename}fiber{html __typename}water_column weight_with_unit __typename}&operationName=getProductDetailForProductPage&variables={"urlKey":"urlKey$"}'
+                    result = product_url_pattern.replace("urlKey$", product_key)
+                    return result
+
+                for product_key in product_keys:
+                    print(product_key)
+                    await asyncio.sleep(3)
+                    json_url = get_product_json_url(product_key)
+                    async with session.get(json_url, ssl = False) as response:
+                        webpage = await response.text()
+                        json_ = json.loads(webpage)
+                        with open("js.json", "w", encoding="utf-8") as file:
+                            file.write(webpage)
                         await asyncio.sleep(3)
-                        products_url = url_pattern.replace("id_tag$", category_id).replace("current_page_value", str(page_counter))
-                        async with session.get(products_url, ssl=False) as response:
-                            json_string = await response.text()
-                            json_ = json.loads(json_string)
-                            if does_json_contain_errors(json_):
-                                break
-                            product_keys += extract_product_keys_from_json(json_)
-                            page_counter += 1
-                            
-                            
-                    def get_product_json_url(product_key : str) -> str:
-                        product_url_pattern = 'https://www.hellyhansen.com/graphql?query=query getProductSwatchesForProductPage($urlKey:String!){products(filter:{url_key:{eq:$urlKey}}){items{id uid price_range{maximum_price{final_price{value currency __typename}regular_price{value currency __typename}discount{amount_off __typename}__typename}minimum_price{final_price{value currency __typename}regular_price{value currency __typename}discount{amount_off __typename}__typename}__typename}name sku __typename ...ProductSwatchesFragment}__typename}}fragment ProductSwatchesFragment on ProductInterface{...on ConfigurableProduct{configurable_options{attribute_code attribute_id id label values{uid default_label label store_label use_default_value value_index swatch_data{...on ImageSwatchData{thumbnail __typename}value __typename}__typename}__typename}variants{attributes{code value_index uid __typename}product{id uid only_x_left_in_stock media_gallery_entries{id uid disabled file label position media_type video_content{media_type video_provider video_url video_title video_description video_metadata __typename}__typename}name sku stock_status special_price price_range{maximum_price{final_price{value currency __typename}regular_price{value currency __typename}discount{amount_off __typename}__typename}minimum_price{final_price{value currency __typename}regular_price{value currency __typename}discount{amount_off __typename}__typename}__typename}__typename}__typename}__typename}__typename}&operationName=getProductSwatchesForProductPage&variables={"urlKey":"urlKey$"}'
-                        result = product_url_pattern.replace("urlKey$", product_key)
-                        return result
+                        article = str(product_key)
+                        description = ""
+                        product_data = json_["data"]["products"]["items"][0]
 
-                    def get_url_of_json_with_description(product_key : str) -> str:
-                        product_url_pattern = 'https://www.hellyhansen.com/graphql?query=query getProductDetailForProductPage($urlKey:String!){products(filter:{url_key:{eq:$urlKey}}){items{id uid page_title __typename ...ProductDetailsFragment ...ProductPerformanceFragment ...ProductInfoFragment}__typename}}fragment ProductDetailsFragment on ProductInterface{__typename features short_description{html __typename}categories{id uid breadcrumbs{category_id category_name __typename}use_as_related_category name url_path __typename}description{html __typename}id uid meta_description meta_keyword name price{regularPrice{amount{currency value __typename}__typename}__typename}price_range{maximum_price{final_price{value currency __typename}regular_price{value currency __typename}discount{amount_off __typename}__typename}minimum_price{final_price{value currency __typename}regular_price{value currency __typename}discount{amount_off __typename}__typename}__typename}robots_meta_tag sku small_image{url __typename}stock_status pdf_sheet product_use_for{code title __typename}url_key}fragment ProductPerformanceFragment on ProductInterface{performance_breathability{label value __typename}performance_durability{label value __typename}performance_insulation{label value __typename}performance_waterproof{label value __typename}performance_weight{label value __typename}performance_windproof{label value __typename}product_workwear_features __typename}fragment ProductInfoFragment on ProductInterface{care_instructions{html __typename}fiber{html __typename}water_column weight_with_unit __typename}&operationName=getProductDetailForProductPage&variables={"urlKey":"urlKey$"}'
-                        result = product_url_pattern.replace("urlKey$", product_key)
-                        return result
+                        try:
+                            prices = product_data["variants"][0]["product"]["price_range"]["maximum_price"]
+                            current_price = int(prices["final_price"]["value"] * (EURO_COSTS + 1) * float(f"1.{crud.get_category(name=CAT_NAME).margin}"))
+                            old_price = int(prices["regular_price"]["value"]  * (EURO_COSTS + 1) * float(f"1.{crud.get_category(name=CAT_NAME).margin}"))
+                            if old_price - current_price != 0:
+                                percent = int(100 - float(current_price) / (float(old_price) / 100))
+                                description += f'\n\n<s>{old_price} руб.</s> -{percent}% {current_price} руб.'
+                        except Exception as err:
+                            print(err)
+                            pass
 
-                    for product_key in product_keys:
-                        await asyncio.sleep(3)
-                        json_url = get_product_json_url(product_key)
-                        async with session.get(json_url, ssl = False) as response:
-                            webpage = await response.text()
-                            json_ = json.loads(webpage)
-                            with open("js.json", "w", encoding="utf-8") as file:
-                                file.write(webpage)
-                            await asyncio.sleep(3)
-                            article = str(product_key)
-                            description = ""
-                            product_data = json_["data"]["products"]["items"][0]
-
-                            try:
-                                prices = product_data["variants"][0]["product"]["price_range"]["maximum_price"]
-                                current_price = prices["final_price"]["value"] * (EURO_COSTS + 1)
-                                old_price = prices["regular_price"]["value"]  * (EURO_COSTS + 1)
-                                if old_price - current_price != 0:
-                                    percent = int(100 - float(current_price) / (float(old_price) / 100))
-                                    description += f'\n\n<s>{old_price} руб.</s> -{percent}% {current_price} руб.'
-                            except Exception as err:
-                                print(err)
-                                pass
-
-                            try:
-                                sizes = []
-                                product_config : list = product_data["configurable_options"]
-                                
-                                for param in product_config:
-                                    if param["attribute_code"] == "size":
-                                        values = param["values"]
-                                        
-                                        for i in values:
-                                            sizes.append(i["label"])
-                                        if len(sizes) != 0:
-                                            sizes = ", ".join(sizes)
-                                            description += '\n\nРазмеры:\n' + sizes
-                            except Exception as err:
-                                print(err)
+                        try:
+                            sizes = []
+                            product_config : list = product_data["configurable_options"]
                             
-                            try:
-                                image_links = []
-                                product = product_data["variants"][0]["product"] 
-                                for media in product["media_gallery_entries"]:
-                                    if media["media_type"] == "image":
-                                        base_image_url = "https://www.hellyhansen.com/media/catalog/product"
-                                        image_links.append(base_image_url + media["file"])
-                            except:
-                                image_links = []
-                            
-                        #second butch of params
-                        json_url = get_url_of_json_with_description(product_key)
-                        async with session.get(json_url, ssl = False) as response:
-                            webpage = await response.text()
-                            json_ = json.loads(webpage)
+                            for param in product_config:
+                                if param["attribute_code"] == "size":
+                                    values = param["values"]
+                                    
+                                    for i in values:
+                                        sizes.append(i["label"])
+                                    if len(sizes) != 0:
+                                        sizes = ", ".join(sizes)
+                                        description += '\n\nРазмеры:\n' + sizes
+                        except Exception as err:
+                            print(err)
                         
-                            product = json_["data"]["products"]["items"][0]
+                        try:
+                            image_links = []
+                            product = product_data["variants"][0]["product"] 
+                            for media in product["media_gallery_entries"]:
+                                if media["media_type"] == "image":
+                                    base_image_url = "https://www.hellyhansen.com/media/catalog/product"
+                                    image_links.append(base_image_url + media["file"])
+                        except:
+                            image_links = []
+                        
+                    #second butch of params
+                    json_url = get_url_of_json_with_description(product_key)
+                    async with session.get(json_url, ssl = False) as response:
+                        webpage = await response.text()
+                        json_ = json.loads(webpage)
+                    
+                        product = json_["data"]["products"]["items"][0]
+                        
+                        try:
+                            title = product["page_title"]
+                        except Exception as err:
+                            print(err)
+                            title = ""  
+                        try:
+                            product_short_description = product["short_description"]["html"]
+                            description = product_short_description + description
+                        except Exception as err:
+                            print(err)
+                    
+                    if not os.path.exists(f"database/images/{CAT_NAME}"):
+                        os.mkdir(f"database/images/{CAT_NAME}")
+
+                    if not os.path.exists(f"database/images/{CAT_NAME}/{subcategory[0]}"):
+                        os.mkdir(f"database/images/{CAT_NAME}/{subcategory[0]}")
+
+                    i = product_keys.index(product_key) + 1
+                    images = ''
+                    for link in image_links[:10]:
+                        try:
+                            num = image_links.index(link) + 1
+                            img_path = f"database/images/{CAT_NAME}/{subcategory[0]}/{i}_{title.replace(' ', '_').replace('/', '_').replace('|', '')}_{num}.jpg"
+                            if not os.path.exists(img_path):
+                                async with session.get(link, ssl=False) as response:
+                                    f = await aiofiles.open(img_path, mode='wb')
+                                    await f.write(await response.read())
+                                    await f.close()
+                            images += img_path + '\n'
+                        except Exception as err:
+                            print(err)
                             
-                            try:
-                                title = product["page_title"]
-                            except Exception as err:
-                                print(err)
-                                title = ""  
-                            try:
-                                product_short_description = product["short_description"]["html"]
-                                description = product_short_description + description
-                            except Exception as err:
-                                print(err)
-                        
-                        if not os.path.exists(f"database/images/{CAT_NAME}"):
-                            os.mkdir(f"database/images/{CAT_NAME}")
+                    product_url = "https://www.hellyhansen.com/en_it/" + product_key
+                    item = [title, description, current_price, images, sizes, article, product_url]
+                    print(item)
+                    items.append(item)
+            await asyncio.sleep(10)                      
+            #except Exception as err:
+            #    print(err)
+            #    pass
 
-                        if not os.path.exists(f"database/images/{CAT_NAME}/{subcategory[0]}"):
-                            os.mkdir(f"database/images/{CAT_NAME}/{subcategory[0]}")
+        ## добавляем товары
+        #if not crud.subcategory_exists(name=subcategory[0], category=CAT_NAME):
+        #    parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=category.id)
+        #    crud.create_subcategory(name=subcategory[0], category=CAT_NAME, parent_subcategory=parent_subcategory.id, level=subcategory[2])
+        #await crud.create_products(category=CAT_NAME, subcategory=subcategory[0], items=items)
+    
+    #await bot.send_message(227184505, f'{CAT_NAME} закончил парсинг')
 
-                        i = product_keys.index(product_key) + 1
-                        images = ''
-                        for link in image_links:
-                            try:
-                                num = image_links.index(link) + 1
-                                img_path = f"database/images/{CAT_NAME}/{subcategory[0]}/{i}_{title.replace(' ', '_').replace('/', '_').replace('|', '')}_{num}.jpg"
-                                if not os.path.exists(img_path):
-                                    async with session.get(link, ssl=False) as response:
-                                        f = await aiofiles.open(img_path, mode='wb')
-                                        await f.write(await response.read())
-                                        await f.close()
-                                images += img_path + '\n'
-                            except Exception as err:
-                                print(err)
-                                
-                        product_url = "https://www.hellyhansen.com/en_it/" + product_key
-                        item = [title, description, current_price, images, sizes, article, product_url]
-                        print(item)
-                        items.append(item)
-                        
-                        
-                       
-                await asyncio.sleep(10)                      
-            except Exception as err:
-                print(err)
-                pass
-if __name__ == "__main__":
-    asyncio.run(get_hellyhansen())
+

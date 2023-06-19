@@ -623,3 +623,16 @@ def update_order(id : int = None, tg_id : str = None, status : str = None, comme
 @db_session()
 def delete_order(id : int = None):
     Order[id].delete()
+
+#Log
+@db_session()
+def create_log(tg_id : str, action : str):
+    log = Log(user=User.get(tg_id=tg_id), action=action)
+    return log
+
+@db_session()
+def get_log(id : int = None, tg_id : str = None):
+    if id:
+        return Log[id]
+    if tg_id:
+        return select(l for l in Log if l.user == User.get(tg_id=tg_id))[:]

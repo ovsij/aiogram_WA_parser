@@ -40,6 +40,7 @@ class User(db.Entity):
     last_usage = Optional(datetime, default=lambda: datetime.now())
     is_banned = Optional(bool, default=False)
     state = Optional(str, nullable=True)
+    log = Set('Log')
 
 class Cart(db.Entity):
     id = PrimaryKey(int, auto=True)
@@ -115,3 +116,8 @@ class Order_Product(db.Entity):
     product = Required(str) # артикул товара
     sizes = Required(str)
     
+class Log(db.Entity):
+    id = PrimaryKey(int, auto=True)
+    user = Required(User)
+    action = Required(str)
+    datetime = Required(datetime, default=lambda: datetime.now())

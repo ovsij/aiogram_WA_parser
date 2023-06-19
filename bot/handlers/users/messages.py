@@ -380,7 +380,8 @@ async def add_user_promocode(message: types.Message, state: FSMContext):
         )
     else:
         await bot.send_message(message.from_user.id, f'Промокод {message.text} не существует')
-
+    # logging
+    create_log(tg_id=str(message.from_user.id), action=f'Ввод промокода: {message.text}')
 
 # получаем название новой категории
 @dp.message_handler(state=Form.add_category)
@@ -425,6 +426,8 @@ async def search(message: types.Message, state: FSMContext):
     except:
         state_category = int(get_user(tg_id=str(message.from_user.id)).state.split('| ')[0])
     update_user(tg_id=str(message.from_user.id), state=f'{state_category}| {message.text}')
+    # logging
+    create_log(tg_id=str(message.from_user.id), action=f'Категория: {get_category(id=state_category).name} Поиск: {message.text}')
     textReply_markup = inline_kb_listproducts(
         tg_id=str(message.from_user.id), 
         category=state_category, 
@@ -468,3 +471,4 @@ async def search(message: types.Message, state: FSMContext):
                 #await asyncio.sleep(0.5)
             except:
                 continue
+    

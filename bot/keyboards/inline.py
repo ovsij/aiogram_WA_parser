@@ -1112,10 +1112,11 @@ def inline_kb_wacatalogs():
 # проверка сообщения перед отправкой
 def inline_sendmessage():
     text_and_data = [
-        [emojize(':white_check_mark: Отправить :white_check_mark:', language='alias'), 'aceptsending'],
+        [emojize(':white_check_mark: Отправить всем :white_check_mark:', language='alias'), 'aceptsending'],
+        [emojize(':white_check_mark: Отправить неактивным пользователям :white_check_mark:', language='alias'), 'aceptsending_nonactive'],
         [emojize(':x: Отменить :x:', language='alias'), 'denysending']
     ]
-    schema = [1, 1]
+    schema = [1, 1, 1]
     inline_kb = InlineConstructor.create_kb(text_and_data, schema)
     return inline_kb
 

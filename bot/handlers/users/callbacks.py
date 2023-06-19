@@ -2,7 +2,7 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State
 from aiogram.utils import exceptions, markdown
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from dotenv import load_dotenv
 import logging
 import os
@@ -36,6 +36,10 @@ async def btn_callback(callback_query: types.CallbackQuery):
     update_user(tg_id=str(callback_query.from_user.id), last_usage=True)
     code = callback_query.data.split('_')
     logging.info(f'User {callback_query.from_user.id} open {code}')
+
+    # создаем лог, если пользователь не в каталоге (для него отдельно с переводом)
+    if code[1] not in ['metacategory', 'category', 'ls', 'sf', 'pf', 'subcategory', 'tocart']:
+        create_log(tg_id=str(callback_query.from_user.id), action=callback_query.data)
 
     if code[1] == 'menu':
         text, reply_markup = inline_kb_menu(callback_query.from_user)
@@ -82,6 +86,8 @@ async def btn_callback(callback_query: types.CallbackQuery):
                 text=text,
                 reply_markup=reply_markup
             )
+        # logging
+        create_log(tg_id=str(callback_query.from_user.id), action=get_metacategory(id=int(code[2])).name)
 
     if code[1] == 'category':
         try:
@@ -104,6 +110,12 @@ async def btn_callback(callback_query: types.CallbackQuery):
                 text=text, 
                 reply_markup=reply_markup
             )
+        # logging
+        if len(code) == 4:
+            create_log(tg_id=str(callback_query.from_user.id), action=get_category(id=int(code[2])).name)
+        elif len(code) == 5:
+            create_log(tg_id=str(callback_query.from_user.id), action=f'{get_category(id=int(code[2])).name} | {get_subcategory(id=int(code[3].split("-")[0])).name}')
+
     if code[1] == 'search':
         await Form.search.set()
         category = get_category(id=code[2])
@@ -115,6 +127,13 @@ async def btn_callback(callback_query: types.CallbackQuery):
             reply_markup=reply_markup
         )
 
+
+    diapazon_prices = {
+        '1' : 'до 10', 
+        '2' : '10-20', 
+        '3' : '20-30', 
+        '4' : '50+'
+    }
 
     if code[1] == 'ls':
         # кнопка назад из меню выбора размеров
@@ -143,15 +162,22 @@ async def btn_callback(callback_query: types.CallbackQuery):
             search=get_user(tg_id=str(callback_query.from_user.id)).state.split('| ')[-1]
         )
         else:
+            sizes = code[4].replace('s=', '') if len(code[4].replace('s=', '')) > 0 else None
+            prices = code[5].replace('p=', '') if len(code[5].replace('p=', '')) > 0 else None
             textReply_markup = inline_kb_listproducts(
                 tg_id=str(callback_query.from_user.id), 
                 category=int(code[2]), 
                 sub_category=int(code[3]),
-                sizes=code[4].replace('s=', '') if len(code[4].replace('s=', '')) > 0 else None,
-                prices=code[5].replace('p=', '') if len(code[5].replace('p=', '')) > 0 else None,
+                sizes=sizes,
+                prices=prices,
                 page=[int(p) for p in code[-1].split('-')],
                 sort=code[6]
             )
+            # logging
+            sizes_code = f' | sizes = {sizes}' if sizes else ''
+            prices_code = f' | prices = {[diapazon_prices[price] for price in code[5].strip("p=").split("-")]}' if prices else ''
+            create_log(tg_id=str(callback_query.from_user.id), action=f'{get_category(id=int(code[2])).name} | {get_subcategory(id=int(code[3])).name} | {code[-1]}{sizes_code}{prices_code}')
+            
         try:
             await callback_query.message.delete()
         except:
@@ -166,7 +192,6 @@ async def btn_callback(callback_query: types.CallbackQuery):
                     reply_markup=item['reply_markup']
                 )
             else:
-                
                 try:
                     
                     # карточка товара с фото
@@ -203,11 +228,14 @@ async def btn_callback(callback_query: types.CallbackQuery):
             reply_markup=reply_markup
         )
 
+    
+    
     if code[1] == 'sf':
         # если выбраны размеры выводится это
         sizes = code[4].replace('s=', '').split('-') if code[4].strip('s=').split('-')[0] != '' else []
         prices = code[5].replace('p=', '').split('-') if code[5].strip('p=').split('-')[0] != '' else []
-    
+
+        
         text, reply_markup = inline_kb_sizefilter(category=code[2], sub_category=code[3], sizes_code_list=sizes, prices_code_list=prices, sort=code[6])
         # при превышении лимита в 6 размеров ничего не происходит
         if len(reply_markup['inline_keyboard'][-1][0]['callback_data'].split('_')[4].replace('s=', '').split('-')) > 6 or len(reply_markup['inline_keyboard'][-1][0]['callback_data'].split('_')[4].replace('s=', '')) > 30:
@@ -411,15 +439,16 @@ async def btn_callback(callback_query: types.CallbackQuery):
                 text=text,
                 reply_markup=reply_markup
             )
+            # logging
+            product = get_product(id=int(code[2]))
+            create_log(tg_id=str(callback_query.from_user.id), action=f'Добавление в корзину: {product.name} ({get_category(id=product.category.id).name}) - {sizes}')
         else:
             text, reply_markup = inline_kb_tocart(product_id=int(code[2]))
             await callback_query.message.edit_text(
                 text=text,
                 reply_markup=reply_markup
             )
-            #reply_markup = callback_query.message['reply_markup']
-            #reply_markup['inline_keyboard'][0][0]['text'] = 'Удалить из корзины'
-            #reply_markup['inline_keyboard'][0][0]['callback_data'] = f'btn_delfromcart_{code[-1]}'
+            
 
     if code[1] == 'delfromcart':
         delete_from_cart(tg_id=str(callback_query.from_user.id), product_id=code[-1])
@@ -1037,7 +1066,7 @@ async def btn_callback(callback_query: types.CallbackQuery):
         )
 
 # Рассылка сообщения
-@dp.callback_query_handler(lambda c: c.data == 'aceptsending', state=Form.new_message)
+@dp.callback_query_handler(lambda c: 'aceptsending' in c.data, state=Form.new_message)
 async def acceptsending(callback_query: types.CallbackQuery, state: FSMContext):
     print(f'User {callback_query.from_user.id} open {callback_query.data}')
 
@@ -1047,14 +1076,27 @@ async def acceptsending(callback_query: types.CallbackQuery, state: FSMContext):
 
     text = data['new_message']
 
-    for user_id in [u.tg_id for u in get_users()]:
-        try:
-            await bot.send_message(
-                user_id,
-                text=text
-            )
-        except Exception as ex:
-            print(ex)
+    if callback_query.data == 'aceptsending_nonactive':
+        # рассылка если пользователь неактивен более 30 дней
+        for user_id in [u.tg_id for u in get_users() if datetime.now() - u.last_usage > timedelta(days=30)]:
+            try:
+                #print(f'send {user_id}')
+                await bot.send_message(
+                    user_id,
+                    text=text
+                )
+            except:
+                pass
+    else:
+        for user_id in [u.tg_id for u in get_users()]:
+            try:
+                #print(f'send {user_id}')
+                await bot.send_message(
+                    user_id,
+                    text=text
+                )
+            except:
+                pass
     
     await state.finish()
     await bot.delete_message(chat_id=callback_query.from_user.id, message_id=Form.prev_message.message_id)
@@ -1080,7 +1122,7 @@ async def denysending(callback_query: types.CallbackQuery, state: FSMContext):
             reply_markup=reply_markup
             )
 
-# Отмена 
+# Отмена (закрытие State)
 @dp.callback_query_handler(lambda c: c.data == 'deny', state=Form.search)
 @dp.callback_query_handler(lambda c: c.data == 'deny', state=Form.promocode_user)
 async def denysending(callback_query: types.CallbackQuery, state: FSMContext):
