@@ -3900,7 +3900,7 @@ async def get_odlo():
         'dwfrm_countrychange_apply': 'Apply',
     }
     EURO_COSTS = euro_cost()
-    CAT_NAME = "odlo"
+    CAT_NAME = "Odlo"
     SUBCATEGORIES = [
         ["Женщины"],
         
@@ -4062,12 +4062,13 @@ async def get_odlo():
                             title = None
                             
                         try:
-                            current_price = int((float(soup.find('span', attrs={"class" : "product-price__item m-new"}).text.strip(' ').strip('\n').strip(' ').strip('€').replace(',', '.')) * (EURO_COSTS + 1)))
-                            old_price = int((float(soup.find('span', attrs={"class" : "product-price__item m-old"}).text.strip(' ').strip('\n').strip(' ').strip('€').replace(',', '.')) * (EURO_COSTS + 1)))
+                            current_price = int((float(soup.find('span', attrs={"class" : "product-price__item m-new"}).text.strip(' ').strip('\n').strip(' ').strip('€').replace(',', '.')) * (EURO_COSTS + 1)) * float(f"1.{category.margin}"))
+                            old_price = int((float(soup.find('span', attrs={"class" : "product-price__item m-old"}).text.strip(' ').strip('\n').strip(' ').strip('€').replace(',', '.')) * (EURO_COSTS + 1)) * float(f"1.{category.margin}"))
                         except:
                             old_price = None
                             try:
-                                current_price = int((float(soup.find('span', attrs={"class" : "product-price__item m-usual"}).text.strip(' ').strip('\n').strip(' ').strip('€').replace(',', '.')) * (EURO_COSTS + 1)))
+                                current_price = int((float(soup.find('span', attrs={"class" : "product-price__item m-usual"}).text.strip(' ').strip('\n').strip(' ').strip('€').replace(',', '.')) * (EURO_COSTS + 1)) * float(f"1.{category.margin}"))
+                                
                             except:
                                 current_price = None
                         
@@ -4139,3 +4140,111 @@ async def get_odlo():
             await crud.create_products(category=CAT_NAME, subcategory=subcategory[0], items=items)
 
         await bot.send_message(227184505, f'{CAT_NAME} закончил парсинг')
+
+
+
+
+async def get_villeroyboch():
+    CAT_NAME = 'Villeroy & Boch'
+    SUBCATEGORIES = [
+        ['Фарфор'],
+        ['Тарелки', 'Фарфор', 2, 'https://www.villeroy-boch.it/shop/prodotti/porcellane/piatti.html'],
+        ['Миски и чашки', 'Фарфор', 2, 'https://www.villeroy-boch.it/shop/prodotti/porcellane/ciotole-e-coppette.html'],
+        ['Тарелки и тарелки для тортов', 'Фарфор', 2, 'https://www.villeroy-boch.it/shop/prodotti/porcellane/piatti-da-portata-e-piatti-da-torta.html'],
+        ['Посуда для детей', 'Фарфор', 2, 'https://www.villeroy-boch.it/shop/prodotti/porcellane/stoviglie-per-bambini.html'],
+        ['Чашки и кружки', 'Фарфор', 2, 'https://www.villeroy-boch.it/shop/prodotti/porcellane/tazze-e-tazzine.html'],
+        ['Серебро'],
+        ['Ножи', 'Серебро', 2, 'https://www.villeroy-boch.it/shop/prodotti/posate/coltelli.html'],
+        ['Вилки', 'Серебро', 2, 'https://www.villeroy-boch.it/shop/prodotti/posate/forchette.html'],
+        ['Ложки', 'Серебро', 2, 'https://www.villeroy-boch.it/shop/prodotti/posate/cucchiai.html'],
+        ['Детские столовые приборы', 'Серебро', 2, 'https://www.villeroy-boch.it/shop/prodotti/posate/posate-per-bambini.html'],
+        ['Для салата', 'Серебро', 2, 'https://www.villeroy-boch.it/shop/prodotti/posate/posate-da-insalata.html'],
+        ['Большие приборы', 'Серебро', 2, 'https://www.villeroy-boch.it/shop/prodotti/posate/altre-posate.html'],
+        ['Столовые приборы', 'Серебро', 2, 'https://www.villeroy-boch.it/shop/prodotti/posate/servizi-di-posate.html'],
+        ['Сервировочные столовые приборы', 'Серебро', 2, 'https://www.villeroy-boch.it/shop/prodotti/posate/posate-da-portata.html'],
+        ['Бокалы'],
+        ['Для воды и сока', 'Бокалы', 2, 'https://www.villeroy-boch.it/shop/prodotti/bicchieri-e-calici/bicchieri-da-acqua-e-succo.html'],
+        ['Для вина', 'Бокалы', 2, 'https://www.villeroy-boch.it/shop/prodotti/bicchieri-e-calici/calici-da-vino.html'],
+        ['Для шампанского', 'Бокалы', 2, 'https://www.villeroy-boch.it/shop/prodotti/bicchieri-e-calici/calici-da-spumante.html'],
+        ['Барные бокалы', 'Бокалы', 2, 'https://www.villeroy-boch.it/shop/prodotti/bicchieri-e-calici/bicchieri-da-bar.html'],
+        ['Для пива', 'Бокалы', 2, 'https://www.villeroy-boch.it/shop/prodotti/bicchieri-e-calici/bicchieri-da-birra.html'],
+        ['Графины и кувшины', 'Бокалы', 2, 'https://www.villeroy-boch.it/shop/prodotti/bicchieri-e-calici/caraffe-e-brocche.html'],
+        ['Большие бокалы', 'Бокалы', 2, 'https://www.villeroy-boch.it/shop/prodotti/bicchieri-e-calici/altri-bicchieri.html'],
+        ['Подарочные наборы', 'Наборы', 2, 'https://www.villeroy-boch.it/shop/regali/confezioni-regalo.html'],
+        ['Фарфоровые наборы', 'Наборы', 2, 'https://www.villeroy-boch.it/shop/prodotti/set/servizi-di-porcellana.html'],
+        ['Стеклянные наборы', 'Наборы', 2, 'https://www.villeroy-boch.it/shop/prodotti/set/set-di-bicchieri.html'],
+        ['Наборы столовых приборов', 'Наборы', 2, 'https://www.villeroy-boch.it/shop/prodotti/posate/servizi-di-posate.html'],
+        ['Эксклюзивные наборы', 'Наборы', 2, 'https://www.villeroy-boch.it/shop/prodotti/set/set-in-esclusiva-online.html'],
+    ]
+    category = crud.get_category(name=CAT_NAME, metacategory=crud.get_metacategory(name='Товары для дома').id)
+
+    for subcategory in SUBCATEGORIES:
+        
+        if not str(subcategory[-1]).startswith('http'):
+            if len(subcategory) == 1:
+                crud.create_subcategory(name=subcategory[0], category=CAT_NAME) if not crud.subcategory_exists(name=subcategory[0], category=CAT_NAME) else 0
+            else:
+                if not crud.subcategory_exists(name=subcategory[0], category=CAT_NAME):
+                    parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=category.id)
+                    crud.create_subcategory(name=subcategory[0], category=CAT_NAME, parent_subcategory=parent_subcategory.id, level=subcategory[2])
+            continue
+
+        logging.info(f'Starting {CAT_NAME}: {subcategory[0]}')
+        items = []
+
+        async with aiohttp.ClientSession(trust_env=True) as session:
+            products = []
+            url = subcategory[-1]
+            for i in [i * 48 for i in range(20)]:
+                async with session.get(url + f'?start={i}', ssl=False) as response:
+                    webpage = await response.text()
+                    soup = bs(webpage, 'html.parser')
+                    page_products = ['https://www.villeroy-boch.it' + item.find('a', 'tile-link').get('href') for item in soup.find_all('div', 'product-grid-item col-6 col-md-4')]
+                    if len(page_products) == 0:
+                        break
+                    products += page_products
+
+            for url in products[:5]:
+                async with session.get(url, ssl=False) as response:
+                    item_webpage = await response.text()
+                    item_soup = bs(item_webpage, 'html.parser')
+                    title = item_soup.find('h1', 'product-name').text
+                    #print(title)
+                    current_price = int((float(item_soup.find('span', 'sales').text.strip('\n').strip(' €').replace(',', '.')) * (EURO_COSTS + 1)) * float(f"1.{category.margin}"))
+                    #print(current_price)
+                    article = url.split('.html')[0].split('-')[-1]
+                    #print(article)
+                    sizes = ''
+                    description = ''
+                    image_links = [image.get('srcset').split(' 1x,')[0].replace('?sw=100', '?sw=1000') for image in item_soup.find('ol', 'col-lg-6 col-md-2 carousel-indicators thumbnail-container hidden-sm-down').find_all('source', 'js-srcset-desktop')]
+                    #print(image_links)
+
+                    if not os.path.exists(f"database/images/{CAT_NAME}"):
+                        os.mkdir(f"database/images/{CAT_NAME}")
+
+                    if not os.path.exists(f"database/images/{CAT_NAME}/{subcategory[0]}"):
+                        os.mkdir(f"database/images/{CAT_NAME}/{subcategory[0]}")
+                    
+                    i = products.index(url) + 1
+                    images = ''
+                    for link in image_links[:10]:
+                        try:
+                            num = image_links.index(link) + 1
+                            img_path = f"database/images/{CAT_NAME}/{subcategory[0]}/{i}_{title.replace(' ', '_').replace('/', '_').replace('|', '')}_{num}.jpg"
+                            if not os.path.exists(img_path):
+                                async with session.get(link, ssl=False) as response:
+                                    f = await aiofiles.open(img_path, mode='wb')
+                                    await f.write(await response.read())
+                                    await f.close()
+                            images += img_path + '\n'
+                        except Exception as err:
+                            print(err)
+                    item = [title, description, current_price, images, sizes, article, url]
+                    print(item)
+                    items.append(item)
+        if not crud.subcategory_exists(name=subcategory[0], category=CAT_NAME):
+            parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=category.id)
+            crud.create_subcategory(name=subcategory[0], category=CAT_NAME, parent_subcategory=parent_subcategory.id, level=subcategory[2])
+        await crud.create_products(category=CAT_NAME, subcategory=subcategory[0], items=items)
+
+    await bot.send_message(227184505, f'{CAT_NAME} закончил парсинг')
