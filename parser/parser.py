@@ -3742,6 +3742,7 @@ async def get_hellyhansen():
                 await asyncio.sleep(3)
                 products_url = url_pattern.replace("id_tag$", category_id).replace("current_page_value", str(page_counter))
                 async with session.get(products_url, ssl=False) as response:
+                    logging.info(response.status())
                     json_string = await response.text()
                     json_ = json.loads(json_string)
                     if does_json_contain_errors(json_):
@@ -3767,7 +3768,7 @@ async def get_hellyhansen():
                     json_url = get_product_json_url(product_key)
                     async with session.get(json_url, ssl = False) as response:
                         webpage = await response.text()
-                        print(response.status())
+                        
                         json_ = json.loads(webpage)
                         with open("js.json", "w", encoding="utf-8") as file:
                             file.write(webpage)
