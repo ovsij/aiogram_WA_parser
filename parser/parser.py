@@ -3467,7 +3467,7 @@ async def get_hellyhansen():
         "Host": "www.hellyhansen.com",
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/114.0",
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
-        "Accept-Language": "ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3",
+        "Accept-Language": "en-US;q=0.5,en;q=0.3",
         "Accept-Encoding": "gzip, deflate, br",
         "Connection": "keep-alive",
         "Upgrade-Insecure-Requests": "1",
@@ -3744,6 +3744,7 @@ async def get_hellyhansen():
                 async with session.get(products_url, ssl=False) as response:
                     logging.info(response)
                     json_string = await response.text()
+                    print(json_string)
                     json_ = json.loads(json_string)
                     if does_json_contain_errors(json_):
                         break
