@@ -3742,7 +3742,7 @@ async def get_hellyhansen():
                 await asyncio.sleep(3)
                 products_url = url_pattern.replace("id_tag$", category_id).replace("current_page_value", str(page_counter))
                 async with session.get(products_url, ssl=False) as response:
-                    logging.info(response.status())
+                    logging.info(response)
                     json_string = await response.text()
                     json_ = json.loads(json_string)
                     if does_json_contain_errors(json_):
