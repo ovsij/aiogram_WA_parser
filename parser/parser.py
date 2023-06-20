@@ -3767,6 +3767,7 @@ async def get_hellyhansen():
                     json_url = get_product_json_url(product_key)
                     async with session.get(json_url, ssl = False) as response:
                         webpage = await response.text()
+                        print(response.status())
                         json_ = json.loads(webpage)
                         with open("js.json", "w", encoding="utf-8") as file:
                             file.write(webpage)
