@@ -4043,8 +4043,8 @@ async def get_odlo():
                 category_url = subcategory[-1]
                 async with session.get(category_url, ssl=False) as response:
                     webpage = await response.text()
-                with open("site.html", "w", encoding="utf-8") as file:
-                    file.write(webpage)
+                #with open("site.html", "w", encoding="utf-8") as file:
+                #    file.write(webpage)
                 soup = bs(webpage, "html.parser")
                 product_urls = [i.find("a").get("href") for i in soup.find("div", attrs={"id" : "search-result-items"}).find_all("div", attrs={"class" : "l-plp-grid__item"})]
                 print(product_urls)
