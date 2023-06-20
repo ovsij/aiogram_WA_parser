@@ -308,23 +308,18 @@ def get_product(
                 if len(list(set(sizes.split("-")) & set(str(prod.sizes).split(', ')))) > 0:
                     filter_products.append(prod)
             elif prices and not sizes:
+                
                 if '1' in prices:
-                    if prod.price <= 5000:
+                    if prod.price <= 10000:
                         filter_products.append(prod)
                 if '2' in prices:
-                    if prod.price >= 5000 and prod.price <= 10000:
-                        filter_products.append(prod)
-                if '3' in prices:
                     if prod.price >= 10000 and prod.price <= 20000:
                         filter_products.append(prod)
+                if '3' in prices:
+                    if prod.price >= 20000 and prod.price <= 50000:
+                        filter_products.append(prod)
                 if '4' in prices:
-                    if prod.price >= 20000 and prod.price <= 30000:
-                        filter_products.append(prod)
-                if '5' in prices:
-                    if prod.price >= 30000 and prod.price <= 40000:
-                        filter_products.append(prod)
-                if '6' in prices:
-                    if prod.price >= 40000:
+                    if prod.price >= 50000:
                         filter_products.append(prod)
             elif sizes and prices:
                 if len(list(set(sizes.split("-")) & set(str(prod.sizes).split(', ')))) > 0:

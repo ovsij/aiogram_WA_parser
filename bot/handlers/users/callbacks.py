@@ -164,6 +164,8 @@ async def btn_callback(callback_query: types.CallbackQuery):
         else:
             sizes = code[4].replace('s=', '') if len(code[4].replace('s=', '')) > 0 else None
             prices = code[5].replace('p=', '') if len(code[5].replace('p=', '')) > 0 else None
+            print(sizes)
+            print(prices)
             textReply_markup = inline_kb_listproducts(
                 tg_id=str(callback_query.from_user.id), 
                 category=int(code[2]), 
