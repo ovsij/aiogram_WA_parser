@@ -3899,27 +3899,26 @@ async def get_odlo():
         'dwfrm_countrychange_urlparams': 'eyJhY3Rpb24iOiJTZWFyY2gtU2hvdyIsInBhcmFtcyI6WyJjZ2lkIiwid29tZW4taGVhZHdlYXItZ2xvdmVzIl19',
         'dwfrm_countrychange_apply': 'Apply',
     }
-    EURO_COSTS = euro_costs()
+    EURO_COSTS = euro_cost()
     CAT_NAME = "odlo"
     SUBCATEGORIES = [
         ["Женщины"],
         
-        ["Женщины распродажа", "Женщины", 2, "https://www.odlo.com/it/en/women/sale/"],
         
-        ["Женская одежда", "Женщины"],
-        ["Женщины нижний слой (куртки)", "Женская одежда", 3, "https://www.odlo.com/it/en/women/apparel/base-layers/"],
-        ["Женщины нижнее белье", "Женская одежда", 3, "https://www.odlo.com/it/en/women/apparel/underwear/"],
-        ["Женщины Спортивные бюстгальтеры", "Женская одежда", 3, "https://www.odlo.com/it/en/women/apparel/sports-bras/"],
-        ["Женщины футболки и поло", "Женская одежда", 3, "https://www.odlo.com/it/en/women/apparel/t-shirts-polos/"],
-        ["Женщины шорты", "Женская одежда", 3, "https://www.odlo.com/it/en/women/apparel/shorts/"],
-        ["Женщины брюки и колготки", "Женская одежда", 3, "https://www.odlo.com/it/en/women/apparel/pants-tights/"],
-        ["Женщины средние слои (куртки) и длинные рукава", "Женская одежда", 3, "https://www.odlo.com/it/en/women/apparel/mid-layers-longsleeves/"],
-        ["Женщины куртки и жилеты", "Женская одежда", 3, "https://www.odlo.com/it/en/women/apparel/jackets-vests/"],
-        ["Женщины носки", "Женская одежда", 3, "https://www.odlo.com/it/en/women/apparel/socks/"],
-        ["Женщины головной убор и перчатки", "Женская одежда", 3, "https://www.odlo.com/it/en/women/apparel/headwear-gloves/"],
-        ["Женщины другие аксессуары", "Женская одежда", 3, "https://www.odlo.com/it/en/women/apparel/other-accessories/"],
+        ["Женская одежда", "Женщины", 2],
+        ["Базовый слой для женсщин", "Женская одежда", 3, "https://www.odlo.com/it/en/women/apparel/base-layers/"],
+        ["Нижнее белье женское", "Женская одежда", 3, "https://www.odlo.com/it/en/women/apparel/underwear/"],
+        ["Спортивные бюстгальтеры женские", "Женская одежда", 3, "https://www.odlo.com/it/en/women/apparel/sports-bras/"],
+        ["Футболки и поло женские", "Женская одежда", 3, "https://www.odlo.com/it/en/women/apparel/t-shirts-polos/"],
+        ["Шорты женские", "Женская одежда", 3, "https://www.odlo.com/it/en/women/apparel/shorts/"],
+        ["Брюки и колготки женские", "Женская одежда", 3, "https://www.odlo.com/it/en/women/apparel/pants-tights/"],
+        ["Лонгсливы женские", "Женская одежда", 3, "https://www.odlo.com/it/en/women/apparel/mid-layers-longsleeves/"],
+        ["Куртки и жилеты женские", "Женская одежда", 3, "https://www.odlo.com/it/en/women/apparel/jackets-vests/"],
+        ["Носки женские", "Женская одежда", 3, "https://www.odlo.com/it/en/women/apparel/socks/"],
+        ["Головной уборы и перчатки женские", "Женская одежда", 3, "https://www.odlo.com/it/en/women/apparel/headwear-gloves/"],
+        ["Другие аксессуары женские", "Женская одежда", 3, "https://www.odlo.com/it/en/women/apparel/other-accessories/"],
         
-        ["Женщины спорт", "Женщины"],
+        ["Женщины спорт", "Женщины", 2],
         ["Женщины бег", "Женщины спорт", 3, "https://www.odlo.com/it/en/women/sports/running/"],
         ["Женщины тренировки", "Женщины спорт", 3, "https://www.odlo.com/it/en/women/sports/training/"],
         ["Женщины езда на велосипеде", "Женщины спорт", 3, "https://www.odlo.com/it/en/women/sports/cycling/"],
@@ -3928,7 +3927,7 @@ async def get_odlo():
         ["Женщины лыжи и снег", "Женщины спорт", 3, "https://www.odlo.com/it/en/women/sports/ski-snow/"],
         ["Женщины скиатлон", "Женщины спорт", 3, "https://www.odlo.com/it/en/women/sports/cross-country-skiing/"],
         
-        ["Женщины технологии", "Женщины"],
+        ["Женщины технологии", "Женщины", 2],
         ["Женщины Active Spine", "Женщины технологии", 3, "https://www.odlo.com/it/en/women/technologies/active-spine/"],
         ["Женщины Dual Dry", "Женщины технологии", 3, "https://www.odlo.com/it/en/women/technologies/dual-dry/"],
         ["Женщины Chill-Tec", "Женщины технологии", 3, "https://www.odlo.com/it/en/women/technologies/chill-tec/"],
@@ -3938,36 +3937,35 @@ async def get_odlo():
         ["Женщины Performance wool", "Женщины технологии", 3, "https://www.odlo.com/it/en/women/technologies/performance-wool/"],
         ["Женщины ZeroScent", "Женщины технологии", 3, "https://www.odlo.com/it/en/women/technologies/zeroscent/"],
 
-        ["Женщины рекомендуемое", "Женщины"],
-        ["Женщины бестселлеры", "Женщины рекомендуемое", 3, "https://www.odlo.com/it/en/women/featured/bestsellers/"],
-        ["Женщины гид по нижнему слою (куртки)", "Женщины рекомендуемое", 3, "https://www.odlo.com/it/en/women/featured/base-layer-guide/"],
-        ["Женщины экологичная одежда", "Женщины рекомендуемое", 3, "https://www.odlo.com/it/en/women/featured/eco-apparel/"],
-        ["Женщины меринос", "Женщины рекомендуемое", 3, "https://www.odlo.com/it/en/women/featured/merino/"],
-        ["Женщины бег по тропе", "Женщины рекомендуемое", 3, "https://www.odlo.com/it/en/women/featured/trail-running/"],
-        ["Женщины Active 365", "Женщины рекомендуемое", 3, "https://www.odlo.com/it/en/women/featured/active-365/"],
-        ["Женщины Ride 365", "Женщины рекомендуемое", 3, "https://www.odlo.com/it/en/women/featured/ride-365/"],
-        ["Женщины бег Zero weight", "Женщины рекомендуемое", 3, "https://www.odlo.com/it/en/women/featured/zeroweight-running/"],
-        ["Женщины езда на велосипеде Zero weight", "Женщины рекомендуемое", 3, "https://www.odlo.com/it/en/women/featured/zeroweight-cycling/"],
-        ["Женщины езда на горных велосипедах", "Женщины рекомендуемое", 3, "https://www.odlo.com/it/en/women/featured/mountain-biking/"],
+        ["Женщины аутлет", "Женщины", 2, "https://www.odlo.com/it/en/women/sale/"],
+
+        #["Женщины рекомендуемое", "Женщины", 2],
+        #["Женщины бестселлеры", "Женщины рекомендуемое", 3, "https://www.odlo.com/it/en/women/featured/bestsellers/"],
+        #["Женщины экологичная одежда", "Женщины рекомендуемое", 3, "https://www.odlo.com/it/en/women/featured/eco-apparel/"],
+        #["Женщины меринос", "Женщины рекомендуемое", 3, "https://www.odlo.com/it/en/women/featured/merino/"],
+        #["Женщины бег по тропе", "Женщины рекомендуемое", 3, "https://www.odlo.com/it/en/women/featured/trail-running/"],
+        #["Женщины Active 365", "Женщины рекомендуемое", 3, "https://www.odlo.com/it/en/women/featured/active-365/"],
+        #["Женщины Ride 365", "Женщины рекомендуемое", 3, "https://www.odlo.com/it/en/women/featured/ride-365/"],
+        #["Женщины бег Zero weight", "Женщины рекомендуемое", 3, "https://www.odlo.com/it/en/women/featured/zeroweight-running/"],
+        #["Женщины езда на велосипеде Zero weight", "Женщины рекомендуемое", 3, "https://www.odlo.com/it/en/women/featured/zeroweight-cycling/"],
+        #["Женщины езда на горных велосипедах", "Женщины рекомендуемое", 3, "https://www.odlo.com/it/en/women/featured/mountain-biking/"],
        
 
         ["Мужчины"],
+    
+        ["Мужская одежда", "Мужчины", 2],
+        ["Базовый слой для мужчин", "Мужская одежда", 3, "https://www.odlo.com/it/en/men/apparel/base-layers/"],
+        ["Нижнее белье мужские", "Мужская одежда", 3, "https://www.odlo.com/it/en/men/apparel/underwear/"],
+        ["Футболки и поло мужские", "Мужская одежда", 3, "https://www.odlo.com/it/en/men/apparel/t-shirts-polos/"],
+        ["Шорты мужские", "Мужская одежда", 3, "https://www.odlo.com/it/en/men/apparel/shorts/"],
+        ["Брюки и колготки мужские", "Мужская одежда", 3, "https://www.odlo.com/it/en/men/apparel/pants-tights/"],
+        ["Лонгсливы мужские", "Мужская одежда", 3, "https://www.odlo.com/it/en/men/apparel/mid-layers-longsleeves/"],
+        ["Куртки и жилеты мужские", "Мужская одежда", 3, "https://www.odlo.com/it/en/men/apparel/jackets-vests/"],
+        ["Носки мужские", "Мужская одежда", 3, "https://www.odlo.com/it/en/men/apparel/socks/"],
+        ["Головные уборы и перчатки мужские", "Мужская одежда", 3, "https://www.odlo.com/it/en/men/apparel/headwear-gloves/"],
+        ["Другие аксессуары мужские", "Мужская одежда", 3, "https://www.odlo.com/it/en/men/apparel/other-accessories/"],
         
-        ["Мужчины распродажа", "Мужская одежда", 2, "https://www.odlo.com/it/en/men/sale/"],
-
-        ["Мужская одежда", "Мужчины"],
-        ["Мужчины нижние слои (куртки)", "Мужская одежда", 3, "https://www.odlo.com/it/en/men/apparel/base-layers/"],
-        ["Мужчины нижнее белье", "Мужская одежда", 3, "https://www.odlo.com/it/en/men/apparel/underwear/"],
-        ["Мужчины футболки и поло", "Мужская одежда", 3, "https://www.odlo.com/it/en/men/apparel/t-shirts-polos/"],
-        ["Мужчины шорты", "Мужская одежда", 3, "https://www.odlo.com/it/en/men/apparel/shorts/"],
-        ["Мужчины брюки и колготки", "Мужская одежда", 3, "https://www.odlo.com/it/en/men/apparel/pants-tights/"],
-        ["Мужчины средние слои (куртки) и длинные рукава", "Мужская одежда", 3, "https://www.odlo.com/it/en/men/apparel/mid-layers-longsleeves/"],
-        ["Мужчины куртки и жилеты", "Мужская одежда", 3, "https://www.odlo.com/it/en/men/apparel/jackets-vests/"],
-        ["Мужчины носки", "Мужская одежда", 3, "https://www.odlo.com/it/en/men/apparel/socks/"],
-        ["Мужчины головные уборы и перчатки", "Мужская одежда", 3, "https://www.odlo.com/it/en/men/apparel/headwear-gloves/"],
-        ["Мужчины другие аксессуары", "Мужская одежда", 3, "https://www.odlo.com/it/en/men/apparel/other-accessories/"],
-        
-        ["Мужчины спорт", "Мужчины"],
+        ["Мужчины спорт", "Мужчины", 2],
         ["Мужчины бег", "Мужчины спорт", 3, "https://www.odlo.com/it/en/men/sports/running/"],
         ["Мужчины тренировки", "Мужчины спорт", 3, "https://www.odlo.com/it/en/men/sports/training/"],
         ["Мужчины езда на велосипеде", "Мужчины спорт", 3, "https://www.odlo.com/it/en/men/sports/cycling/"],
@@ -3976,7 +3974,7 @@ async def get_odlo():
         ["Мужчины лыжи и снег", "Мужчины спорт", 3, "https://www.odlo.com/it/en/men/sports/ski-snow/"],
         ["Мужчины катание на беговых лыжах", "Мужчины спорт", 3, "https://www.odlo.com/it/en/men/sports/ski-snow/"],
 
-        ["Мужчины технологии", "Мужчины"],
+        ["Мужчины технологии", "Мужчины", 2],
         ["Мужчины Active Spine", "Мужчины технологии", 3, "https://www.odlo.com/it/en/men/technologies/active-spine/"],
         ["Мужчины Dual Dry", "Мужчины технологии", 3, "https://www.odlo.com/it/en/men/technologies/dual-dry/"],
         ["Мужчины Chill-Tec", "Мужчины технологии", 3, "https://www.odlo.com/it/en/men/technologies/chill-tec/"],
@@ -3986,34 +3984,34 @@ async def get_odlo():
         ["Мужчины Performance wool", "Мужчины технологии", 3, "https://www.odlo.com/it/en/men/technologies/performance-wool/"],
         ["Мужчины ZeroScent", "Мужчины технологии", 3, "https://www.odlo.com/it/en/men/technologies/zeroscent/"],
         
-        ["Мужчины рекомендуемое", "Мужчины"],
-        ["Мужчины бестселлеры", "Мужчины рекомендуемое", 3, "https://www.odlo.com/it/en/men/featured/bestsellers/"],
-        ["Мужчины гид по нижнему слою (куртки)", "Мужчины рекомендуемое", 3, "https://www.odlo.com/it/en/men/featured/base-layer-guide/"],
-        ["Мужчины экологичная одежда", "Мужчины рекомендуемое", 3, "https://www.odlo.com/it/en/men/apparel/t-shirts-polos/"],
-        ["Мужчины меринос", "Мужчины рекомендуемое", 3, "https://www.odlo.com/it/en/men/featured/merino/"],
-        ["Мужчины бег по тропе", "Мужчины рекомендуемое", 3, "https://www.odlo.com/it/en/men/featured/trail-running/"],
-        ["Мужчины Active 365", "Мужчины рекомендуемое", 3, "https://www.odlo.com/it/en/men/featured/active-365/"],
-        ["Мужчины Ride 365", "Мужчины рекомендуемое", 3, "https://www.odlo.com/it/en/men/featured/ride-365/"],
-        ["Мужчины бег Zero weight", "Мужчины рекомендуемое", 3, "https://www.odlo.com/it/en/men/featured/ride-365/"],
-        ["Мужчины езда на велосипеде Zero weight", "Мужчины рекомендуемое", 3, "https://www.odlo.com/it/en/men/featured/zeroweight-cycling/"],
-        ["Мужчины езда на горных велосипедах", "Мужчины рекомендуемое", 3, "https://www.odlo.com/it/en/men/featured/mountain-biking/"],
+        #["Мужчины рекомендуемое", "Мужчины", 2],
+        #["Мужчины бестселлеры", "Мужчины рекомендуемое", 3, "https://www.odlo.com/it/en/men/featured/bestsellers/"],
+        #["Мужчины гид по нижнему слою (куртки)", "Мужчины рекомендуемое", 3, "https://www.odlo.com/it/en/men/featured/base-layer-guide/"],
+        #["Мужчины экологичная одежда", "Мужчины рекомендуемое", 3, "https://www.odlo.com/it/en/men/apparel/t-shirts-polos/"],
+        #["Мужчины меринос", "Мужчины рекомендуемое", 3, "https://www.odlo.com/it/en/men/featured/merino/"],
+        #["Мужчины бег по тропе", "Мужчины рекомендуемое", 3, "https://www.odlo.com/it/en/men/featured/trail-running/"],
+        #["Мужчины Active 365", "Мужчины рекомендуемое", 3, "https://www.odlo.com/it/en/men/featured/active-365/"],
+        #["Мужчины Ride 365", "Мужчины рекомендуемое", 3, "https://www.odlo.com/it/en/men/featured/ride-365/"],
+        #["Мужчины бег Zero weight", "Мужчины рекомендуемое", 3, "https://www.odlo.com/it/en/men/featured/ride-365/"],
+        #["Мужчины езда на велосипеде Zero weight", "Мужчины рекомендуемое", 3, "https://www.odlo.com/it/en/men/featured/zeroweight-cycling/"],
+        #["Мужчины езда на горных велосипедах", "Мужчины рекомендуемое", 3, "https://www.odlo.com/it/en/men/featured/mountain-biking/"],
 
+        ["Мужчины аутлет", "Мужчины", 2, "https://www.odlo.com/it/en/men/sale/"],
 
         ["Дети"],
         
-        ["Товары", "Дети"],
-        ["Детская одежда", "Товары", 3, "https://www.odlo.com/it/en/kids/products/clothing/"],
-        ["Дети аксессуары", "Товары", 3, "https://www.odlo.com/it/en/kids/products/accessories/"],
-        ["Игры на природе", "Товары", 3, "https://www.odlo.com/it/en/kids/products/play-in-natural/"],
+        ["Детская одежда", "Дети", 2, "https://www.odlo.com/it/en/kids/products/clothing/"],
+        ["Дети аксессуары", "Дети", 2, "https://www.odlo.com/it/en/kids/products/accessories/"],
+        ["Игры на природе", "Дети", 2, "https://www.odlo.com/it/en/kids/products/play-in-natural/"],
         
-        ["Дети спорт", "Дети"],
-        ["Пешие прогулки и отдых на свежем воздухе", "Дети спорт", 3, "https://www.odlo.com/it/en/kids/sports/hiking-outdoor/"],
-        ["Лыжи и снег", "Дети спорт", 3, "https://www.odlo.com/it/en/kids/sports/hiking-outdoor/"],
+        #["Дети спорт", "Дети", 2],
+        #["Пешие прогулки и отдых на свежем воздухе", "Дети спорт", 3, "https://www.odlo.com/it/en/kids/sports/hiking-outdoor/"],
+        #["Лыжи и снег", "Дети спорт", 3, "https://www.odlo.com/it/en/kids/sports/hiking-outdoor/"],
         
-        ["Распродажа Дети", "Дети", 2, "https://www.odlo.com/it/en/kids/sale/"],     
+        ["Дети аутлет", "Дети", 2, "https://www.odlo.com/it/en/kids/sale/"],     
     ]
-    items = []
-
+    
+    category = crud.get_category(name=CAT_NAME, metacategory=crud.get_metacategory(name='Спортивные товары').id)
     async with aiohttp.ClientSession(headers=headers, trust_env=True) as session:
         #auth
         test_link = "https://www.odlo.com/it/en/women/apparel/headwear-gloves/"
@@ -4029,6 +4027,17 @@ async def get_odlo():
             webpage = await response.text() 
 
         for subcategory in SUBCATEGORIES:
+            items = []
+            if not str(subcategory[-1]).startswith('http'):
+                if len(subcategory) == 1:
+                    crud.create_subcategory(name=subcategory[0], category=CAT_NAME) if not crud.subcategory_exists(name=subcategory[0], category=CAT_NAME) else 0
+                else:
+                    if not crud.subcategory_exists(name=subcategory[0], category=CAT_NAME):
+                        parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=category.id)
+                        crud.create_subcategory(name=subcategory[0], category=CAT_NAME, parent_subcategory=parent_subcategory.id, level=subcategory[2])
+                continue
+
+        
             logging.info(f'Starting {CAT_NAME}: {subcategory[0]}')
             try:
                 category_url = subcategory[-1]
@@ -4073,7 +4082,7 @@ async def get_odlo():
                         
                         try:
                             image_links = []
-                            image_links.append(soup.find("img", attrs={"class" : "primary-image"}).get("src"))
+                            #image_links.append(soup.find("img", attrs={"class" : "primary-image"}).get("src"))
                             for image in soup.find("div", attrs={"class" : "thumbnail-items"}).find_all("img"):
                                 try:
                                     data = json.loads(image.get("data-lgimg"))
@@ -4103,7 +4112,7 @@ async def get_odlo():
                         i = product_urls.index(product_url) + 1
                         images = ''
                         
-                        for link in image_links:
+                        for link in image_links[:10]:
                             try:
                                 num = image_links.index(link) + 1
                                 img_path = f"database/images/{CAT_NAME}/{subcategory[0]}/{i}_{title.replace(' ', '_').replace('/', '_')}_{num}.png"
@@ -4115,7 +4124,7 @@ async def get_odlo():
                                 images +=  img_path + '\n'
                             except:
                                 continue
-                        item = [title, description, current_price, image_links, sizes, article, product_url]
+                        item = [title, description, current_price, images, sizes, article, product_url]
                         print(item)
                         items.append(item)
                         
@@ -4123,3 +4132,10 @@ async def get_odlo():
                         logging.warning(f'{CAT_NAME} pr - {ex}')
             except:
                 pass
+            ## добавляем товары
+            if not crud.subcategory_exists(name=subcategory[0], category=CAT_NAME):
+                parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=category.id)
+                crud.create_subcategory(name=subcategory[0], category=CAT_NAME, parent_subcategory=parent_subcategory.id, level=subcategory[2])
+            await crud.create_products(category=CAT_NAME, subcategory=subcategory[0], items=items)
+
+        await bot.send_message(227184505, f'{CAT_NAME} закончил парсинг')
