@@ -3862,7 +3862,7 @@ async def get_hellyhansen():
             #except Exception as err:
             #    print(err)
             #    pass
-
+        logging.info(items)
         ## добавляем товары
         if not crud.subcategory_exists(name=subcategory[0], category=CAT_NAME):
             parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=category.id)
