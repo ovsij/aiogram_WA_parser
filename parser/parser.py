@@ -4062,8 +4062,8 @@ async def get_odlo():
                             title = None
                             
                         try:
-                            current_price = int((float(soup.find('span', attrs={"class" : "product-price__item m-new"}).text.strip(' ').strip('\n').strip(' ').strip('€').replace(',', '.')) * (EURO_COSTS + 1)) * float(f"1.{category.margin}"))
-                            old_price = int((float(soup.find('span', attrs={"class" : "product-price__item m-old"}).text.strip(' ').strip('\n').strip(' ').strip('€').replace(',', '.')) * (EURO_COSTS + 1)) * float(f"1.{category.margin}"))
+                            current_price = int((float(soup.find('span', attrs={"class" : "product-price__item m-new"}).text.strip(' ').strip('\n').strip(' ').strip('€').replace('.', '').replace(',', '.')) * (EURO_COSTS + 1)) * float(f"1.{category.margin}"))
+                            old_price = int((float(soup.find('span', attrs={"class" : "product-price__item m-old"}).text.strip(' ').strip('\n').strip(' ').strip('€').replace('.', '').replace(',', '.')) * (EURO_COSTS + 1)) * float(f"1.{category.margin}"))
                         except:
                             old_price = None
                             try:
