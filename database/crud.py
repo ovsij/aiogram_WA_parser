@@ -289,7 +289,10 @@ def get_product(
         return select(p for p in Product if p.category.id == category_id)[:]
     elif category_id and subcategory_id and not sizes and not prices:
         if sort == 'n':
-            return select(p for p in Product if p.category.id == category_id and p.subcategory.id == subcategory_id)[:]
+            if SubCategory[subcategory_id].childSubCategory:
+                return select(p for p in Product if p.category.id == category_id and p.subcategory.parentSubCategory.id == subcategory_id)[:]
+            else:
+                return select(p for p in Product if p.category.id == category_id and p.subcategory.id == subcategory_id)[:]
         elif sort == 'u':
             return  Product.select(lambda p: p.category.id == category_id and p.subcategory.id == subcategory_id).order_by(Product.price)[:]
         elif sort == 'd':

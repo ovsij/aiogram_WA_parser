@@ -129,7 +129,6 @@ def inline_kb_subcategories(tg_id : str, category : int = None, subcategory : in
     except:
         pass
     
-    
     if tg_id in os.getenv('ADMINS') and get_category(id=category).custom:
         text_and_data.append([f'Удалить категорию {category_name}', f'btn_deletecategory_{category}'])
         schema.append(1)
