@@ -119,8 +119,12 @@ def inline_kb_subcategories(tg_id : str, category : int = None, subcategory : in
         else:
             text_and_data.append([f'{subcat.name}', f'btn_ls_{category}_{subcat.id}_s=_p=_n_0-5'])
             schema.append(1)
-    if category_name != 'Zwilling':
+    if category_name not in ['Zwilling', 'Villeroy & Boch']:
         text_and_data.append([emojize(':scissors: Таблица размеров', language='alias'), f'btn_sizes_{category}'])
+        schema.append(1)
+    
+    if category_name == 'Zwilling' and get_subcategory(id=subcategory).name == 'Аутлет':
+        text_and_data.append([f'Показать все', f'btn_ls_{category}_{subcategory}_s=_p=_n_0-5'])
         schema.append(1)
     
     if tg_id in os.getenv('ADMINS') and get_category(id=category).custom:

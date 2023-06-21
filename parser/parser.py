@@ -2395,7 +2395,8 @@ async def get_monnalisa():
             continue
 
         logging.info(f'Starting {cat_name}: {subcategory[0]}')
-        headers = {'User-Agent': 'Mozilla/5.0'}
+        headers = {
+            'User-Agent': 'Mozilla/5.0'}
         async with aiohttp.ClientSession(headers=headers, trust_env=True) as session:
             #items_urls = []
             for i in range(0, 1):
