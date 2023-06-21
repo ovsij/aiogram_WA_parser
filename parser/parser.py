@@ -4126,7 +4126,7 @@ async def get_odlo():
                             except:
                                 continue
                         item = [title, description, current_price, images, sizes, article, product_url]
-                        print(item)
+                        #print(item)
                         items.append(item)
                         
                     except Exception as ex:
@@ -4204,7 +4204,7 @@ async def get_villeroyboch():
                         break
                     products += page_products
 
-            for url in products[:5]:
+            for url in products:
                 async with session.get(url, ssl=False) as response:
                     item_webpage = await response.text()
                     item_soup = bs(item_webpage, 'html.parser')
@@ -4240,7 +4240,7 @@ async def get_villeroyboch():
                         except Exception as err:
                             print(err)
                     item = [title, description, current_price, images, sizes, article, url]
-                    print(item)
+                    #print(item)
                     items.append(item)
         if not crud.subcategory_exists(name=subcategory[0], category=CAT_NAME):
             parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=category.id)
