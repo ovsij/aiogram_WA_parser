@@ -3700,7 +3700,7 @@ async def get_hellyhansen():
     category = crud.get_category(name=CAT_NAME, metacategory=crud.get_metacategory(name='Спортивные товары').id)
     
     print(len(SUBCATEGORIES))
-    for subcategory in SUBCATEGORIES:
+    for subcategory in SUBCATEGORIES[62:]:
         print(subcategory)
         if type(subcategory[-1]) != str or len(subcategory) == 1:
             if len(subcategory) == 1:
@@ -3743,9 +3743,9 @@ async def get_hellyhansen():
                 await asyncio.sleep(3)
                 products_url = url_pattern.replace("id_tag$", category_id).replace("current_page_value", str(page_counter))
                 async with session.get(products_url, ssl=False) as response:
-                    logging.info(response)
+                    #logging.info(response)
                     json_string = await response.text()
-                    print(json_string)
+                    #print(json_string)
                     json_ = json.loads(json_string)
                     if does_json_contain_errors(json_):
                         break
@@ -3866,12 +3866,14 @@ async def get_hellyhansen():
             #except Exception as err:
             #    print(err)
             #    pass
-        logging.info(items)
+        #logging.info(items)
         ## добавляем товары
         if not crud.subcategory_exists(name=subcategory[0], category=CAT_NAME):
             parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=category.id)
             crud.create_subcategory(name=subcategory[0], category=CAT_NAME, parent_subcategory=parent_subcategory.id, level=subcategory[2])
         await crud.create_products(category=CAT_NAME, subcategory=subcategory[0], items=items)
+
+        logging.info(f'Canceled {CAT_NAME} {subcategory[0]} added {len(items)} products') 
     
     await bot.send_message(227184505, f'{CAT_NAME} закончил парсинг')
 

@@ -252,6 +252,7 @@ async def get_hellyhansen():
     print(len(SUBCATEGORIES))
     for subcategory in SUBCATEGORIES:
         
+        
         #if not str(subcategory[-1]).startswith('http'):
         #    if len(subcategory) == 1:
         #        crud.create_subcategory(name=subcategory[0], category=CAT_NAME) if not crud.subcategory_exists(name=subcategory[0], category=CAT_NAME) else 0

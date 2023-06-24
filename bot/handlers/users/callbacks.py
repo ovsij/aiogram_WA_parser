@@ -517,7 +517,7 @@ async def btn_callback(callback_query: types.CallbackQuery):
             for product in cart:
                 price = get_promoprice(product=product, tg_id=str(callback_query.from_user.id))
                 category = get_category(id=product.category.id)
-                order_text += f'\n {i}. {category.name} | {markdown.link(product.name, product.url)} - {price} руб. | {product  > article}'
+                order_text += f'\n {i}. {category.name} | {markdown.link(product.name, product.url)} - {price} руб. | {product.article}'
                 sum += price
                 i += 1
             order_text += f'\n\nИтого: {sum} руб.'
