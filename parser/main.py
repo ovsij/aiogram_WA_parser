@@ -33,7 +33,7 @@ async def main():
         #tasks.add(task3)
         #task4 = asyncio.create_task(get_nike())
         #tasks.add(task4)
-        #task5 = asyncio.create_task(get_golcegabbana())
+        #task5 = asyncio.create_task(get_dolcegabbana())
         #tasks.add(task5)
         #task6 = asyncio.create_task(get_coach())
         #tasks.add(task6)

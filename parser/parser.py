@@ -1148,7 +1148,7 @@ async def get_nike():
     await bot.send_message(227184505, f'{cat_name} закончил парсинг')
 
 
-async def get_golcegabbana():
+async def get_dolcegabbana():
     subcategories = [
         ['Женщины'],
         ['Женская одежда', 'Женщины', 2],
@@ -1216,6 +1216,7 @@ async def get_golcegabbana():
         ['Детская обувь', 'Дети', 2, 'https://dolcegabbanaprivatesales.com/collections/baby-shoes']
     ]
     cat_name = 'Dolce&Gabanna Outlet'
+    category = crud.get_category(name=cat_name, metacategory=crud.get_metacategory(name='Premium бренды').id)
     for subcategory in subcategories:
         if not str(subcategory[-1]).startswith('http'):
             if len(subcategory) == 1:
@@ -1225,18 +1226,18 @@ async def get_golcegabbana():
                     parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=crud.get_category(name=cat_name).id)
                     crud.create_subcategory(name=subcategory[0], category=cat_name, parent_subcategory=parent_subcategory.id, level=subcategory[2])
             continue
-        # logging
-        #url = 'https://dolcegabbanaprivatesales.com/account/login/'
-        #s = requests.Session()
-        #r = s.get(url)
-        #csrf_token = r.cookies['_secure_session_id']#Cookie _secure_session_id
-        #data = {
-        #    'login': os.getenv('DGLogin'),
-        #    'password': os.getenv('DGPassword'),
-        #    'csrfmiddlewaretoken': csrf_token
-        #}
-        #d = s.post(url, data=data, headers=dict(Referer=url))
-        #dd = s.get('https://dolcegabbanaprivatesales.com/collections/dresses-jumpsuits')
+        # login
+        url = 'https://dolcegabbanaprivatesales.com/account/login/'
+        s = requests.Session()
+        r = s.get(url)
+        csrf_token = r.cookies['_secure_session_id']#Cookie _secure_session_id
+        data = {
+            'login': os.getenv('DGLogin'),
+            'password': os.getenv('DGPassword'),
+            'csrfmiddlewaretoken': csrf_token
+        }
+        d = s.post(url, data=data, headers=dict(Referer=url))
+        dd = s.get('https://dolcegabbanaprivatesales.com/collections/dresses-jumpsuits')
 
 
         logging.info(f'Starting Dolce&Gabanna: {subcategory[0]}')
@@ -1246,13 +1247,15 @@ async def get_golcegabbana():
                 url = subcategory[-1] + f'?page={i}'
                 async with session.get(url, ssl=False) as response:
                     webpage = await response.text()
-                    #print(response.status)
+                    print(response.status)
                     soup = bs(webpage, 'html.parser')
                     items = [item.find('a').get('href') for item in soup.find_all('div', 'product-item small--one-half medium--one-half large-up--one-quarter')]
+                    print(len(items))
                     if len(items) == 0:
                         break
                     items_urls += items
                 await asyncio.sleep(2)
+            print(len(items_urls))
         
         items = []
         euro_costs = euro_cost()
@@ -1263,6 +1266,7 @@ async def get_golcegabbana():
                     async with session.get('https://dolcegabbanaprivatesales.com' + url, ssl=False) as response:
                         item_url = 'https://dolcegabbanaprivatesales.com' + url
                         webpage = await response.text()
+                        #print(response)
                         soup = bs(webpage, 'html.parser')
                         title = soup.find('h1', 'product__title').text
                         
@@ -1328,7 +1332,7 @@ async def get_golcegabbana():
                             continue
                         #print(images)
                         items.append([title, description, current_price, images, list_sizes, article, item_url])
-                        #logging.info(title)
+                        logging.info([title, description, current_price, images, list_sizes, article, item_url])
                         #print([title, description, current_price, images, list_sizes, article])
             except Exception as ex:
                 logging.warning(f'Dolce&Gabanna pr - {ex}')
