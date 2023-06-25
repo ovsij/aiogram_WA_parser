@@ -122,8 +122,9 @@ async def push_logs():
         gstable = gc.open_by_key(os.getenv('GS_RESULT_KEY'))
         worksheet = gstable.worksheet("Log")
         max_index = max([int(i) for i in worksheet.col_values(1)])
-        new_logs = get_log()[max_index:]
-        worksheet.update(f'A{max_index + 2}:G{len(new_logs) + 2}', new_logs)
+        all_logs = get_log()
+        new_logs = all_logs[max_index:]
+        worksheet.update(f'A{max_index + 2}:G{len(all_logs) + 2}', new_logs)
         await asyncio.sleep(3600)
 
 
