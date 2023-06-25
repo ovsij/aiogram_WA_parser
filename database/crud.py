@@ -239,7 +239,7 @@ async def create_products(category : str, subcategory : str, items : list):
                 article=item[5],
                 url=item[6])
                 commit()
-                #print(f'create {prod}')
+                logging.info(f'create {prod}')
             else:
                 prod = crud.get_product(article=item[5], subcategory_id = subcategory_.id)
                 if not prod.deleted and not prod.edited:
@@ -254,7 +254,7 @@ async def create_products(category : str, subcategory : str, items : list):
                         url=item[6]
                     )
                     commit()
-            #print(f'{prod} {prod.sizes}')
+            logging.info(f'{prod} {prod.sizes}')
         except Exception as ex:
             logging.warning(f'{category} db - {ex}')
 
