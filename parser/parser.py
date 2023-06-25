@@ -1247,7 +1247,7 @@ async def get_dolcegabbana():
                 url = subcategory[-1] + f'?page={i}'
                 async with session.get(url, ssl=False) as response:
                     webpage = await response.text()
-                    print(response.status)
+                    logging.info(response.status)
                     soup = bs(webpage, 'html.parser')
                     items = [item.find('a').get('href') for item in soup.find_all('div', 'product-item small--one-half medium--one-half large-up--one-quarter')]
                     print(len(items))
@@ -1255,7 +1255,7 @@ async def get_dolcegabbana():
                         break
                     items_urls += items
                 await asyncio.sleep(2)
-            print(len(items_urls))
+            logging.info(len(items_urls))
         
         items = []
         euro_costs = euro_cost()
@@ -1269,6 +1269,7 @@ async def get_dolcegabbana():
                         #print(response)
                         soup = bs(webpage, 'html.parser')
                         title = soup.find('h1', 'product__title').text
+                        logging.info(title)
                         
                         try:
                             old_price = soup.find('s', 'product__price--strike').text.strip('\n').strip(' ').strip('\n').strip(' ').strip('\n').strip(' ').strip('€').replace('.', '').replace(',', '.')
