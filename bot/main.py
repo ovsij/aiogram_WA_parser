@@ -125,6 +125,7 @@ async def push_logs():
         all_logs = get_log()
         new_logs = all_logs[max_index:]
         worksheet.update(f'A{max_index + 2}:G{len(all_logs) + 2}', new_logs)
+        print(f'A{max_index + 2}:G{len(all_logs) + 2}')
         await asyncio.sleep(3600)
 
 
