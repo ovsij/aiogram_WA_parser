@@ -1223,7 +1223,7 @@ async def get_dolcegabbana():
                 crud.create_subcategory(name=subcategory[0], category=cat_name) if not crud.subcategory_exists(name=subcategory[0], category=cat_name) else 0
             else:
                 if not crud.subcategory_exists(name=subcategory[0], category=cat_name):
-                    parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=crud.get_category(name=cat_name).id)
+                    parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=category.id)
                     crud.create_subcategory(name=subcategory[0], category=cat_name, parent_subcategory=parent_subcategory.id, level=subcategory[2])
             continue
         # login
@@ -1312,7 +1312,6 @@ async def get_dolcegabbana():
                         if not os.path.exists(f"database/images/Dolce&Gabanna Outlet/{subcategory[0]}"):
                             os.mkdir(f"database/images/Dolce&Gabanna Outlet/{subcategory[0]}")
                         image_links = ['https:' + photo.find('img', {'style': "display: none;"}).get('data-src') for photo in soup.find_all('div', ['product__photo', 'product__photo media--hidden'])]
-                        
                         i = items_urls.index(url) + 1
                         images = ''
                         
@@ -1325,13 +1324,12 @@ async def get_dolcegabbana():
                                         f = await aiofiles.open(img_path, mode='wb')
                                         await f.write(await response.read())
                                         await f.close()
-                                images +=  img_path + '\n'
+                                        images +=  img_path + '\n'
+                                
                             except:
                                 continue
-                        
-                        if len(images) < 1:
-                            continue
-                        #print(images)
+                            
+                        print(images)
                         items.append([title, description, current_price, images, list_sizes, article, item_url])
                         logging.info([title, description, current_price, images, list_sizes, article, item_url])
                         #print([title, description, current_price, images, list_sizes, article])
