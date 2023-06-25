@@ -1344,7 +1344,8 @@ async def get_dolcegabbana():
         if not crud.subcategory_exists(name=subcategory[0], category=cat_name):
             parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=crud.get_category(name=cat_name).id)
             crud.create_subcategory(name=subcategory[0], category=cat_name, parent_subcategory=parent_subcategory.id, level=subcategory[2])
-        
+        logging.info('items:')
+        logging.info(items)
         crud.create_products(category=cat_name, subcategory=subcategory[0], items=items)
 
         logging.info(f'Canceled {cat_name} {subcategory[0]} added {len(items)} products') 
@@ -4254,3 +4255,32 @@ async def get_villeroyboch():
         await crud.create_products(category=CAT_NAME, subcategory=subcategory[0], items=items)
 
     await bot.send_message(227184505, f'{CAT_NAME} закончил парсинг')
+
+
+
+async def get_agent():
+    CAT_NAME = 'Agent Provocateur'
+    service = services.Chromedriver(binary=ChromeDriverManager().install(), log_file=os.devnull)
+    browser = browsers.Chrome()
+    #options = browser.capabilities()
+    #options.add_experimental_option('prefs', {'intl.accept_languages': 'en,en_US'})
+
+    browser.capabilities = {
+        "goog:chromeOptions": {"args": [
+        '--no-sandbox',
+        #'--headless',
+        #'window-size=1280,720',
+        '--start-maximized',
+        
+        '--private',
+        '--disable-gpu',
+        '--disable-dev-shm-usage',
+        #'--profile-directory=Profile 1',
+        #'user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36',
+        ],
+        'prefs': {'intl.accept_languages': 'en,en_US'}}}
+    
+    items = []
+    async with get_session(service, browser) as session:
+        await session.get('https://www.agentprovocateur.com/int_en/bestsellers')
+        await asyncio.sleep(100)
