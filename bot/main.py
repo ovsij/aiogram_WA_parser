@@ -1,4 +1,6 @@
 import asyncio
+import gspread
+
 from os.path import getctime
 import datetime
 
@@ -114,15 +116,22 @@ async def send_mes(wait_for):
         except:
             continue
 
-async def p():
-    await parser.get_nike()
+async def push_logs():
+    while True:
+        gc = gspread.service_account('database/credentials.json')
+        gstable = gc.open_by_key(os.getenv('GS_RESULT_KEY'))
+        worksheet = gstable.worksheet("Log")
+        max_index = max([int(i) for i in worksheet.col_values(1)])
+        new_logs = get_log()[max_index:]
+        worksheet.update(f'A{max_index + 2}:G{len(new_logs) + 2}', new_logs)
+        await asyncio.sleep(3600)
 
 
 
 if __name__ == '__main__':
     from handlers import dp
     loop = asyncio.get_event_loop()
-    loop.create_task(get_hellyhansen())
+    loop.create_task(push_logs())
     #loop.create_task(scheduled_catalogs(0))
     #loop.create_task(send_mes(5))
     #loop.create_task(scheduled_valentino(7200))

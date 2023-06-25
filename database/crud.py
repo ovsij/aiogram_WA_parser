@@ -634,3 +634,6 @@ def get_log(id : int = None, tg_id : str = None):
         return Log[id]
     if tg_id:
         return select(l for l in Log if l.user == User.get(tg_id=tg_id))[:]
+    else:
+        return [list(i)[:-1] + [list(i)[-1].strftime('%d.%m.%Y %H:%M:%S')] for i in select([log.id, log.user.tg_id, log.user.username, log.user.first_name, log.user.last_name, log.action, log.datetime] for log in Log)[:]]
+    
