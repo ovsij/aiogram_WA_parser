@@ -134,7 +134,8 @@ if __name__ == '__main__':
     from handlers import dp
     loop = asyncio.get_event_loop()
     #loop.create_task(push_logs())
-    loop.create_task(get_agent())
+    #loop.create_task(get_agent())
+    loop.create_task(get_dolcegabbana())
     #loop.create_task(send_mes(5))
     #loop.create_task(scheduled_valentino(7200))
     #asyncio.run(send_mes(5))
