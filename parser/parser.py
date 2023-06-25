@@ -1257,98 +1257,100 @@ async def get_dolcegabbana():
                 await asyncio.sleep(2)
             logging.info(len(items_urls))
         
-        items = []
-        euro_costs = euro_cost()
-        for url in items_urls:
-            try:
-                await asyncio.sleep(2)
-                async with aiohttp.ClientSession(trust_env=True) as session:
-                    async with session.get('https://dolcegabbanaprivatesales.com' + url, ssl=False) as response:
-                        item_url = 'https://dolcegabbanaprivatesales.com' + url
-                        webpage = await response.text()
-                        #print(response)
-                        soup = bs(webpage, 'html.parser')
-                        title = soup.find('h1', 'product__title').text
-                        logging.info(title)
-                        
-                        try:
-                            old_price = soup.find('s', 'product__price--strike').text.strip('\n').strip(' ').strip('\n').strip(' ').strip('\n').strip(' ').strip('€').replace('.', '').replace(',', '.')
-                            #print(old_price)
-                            old_price = int((float(old_price) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Dolce&Gabanna Outlet').margin}"))
-                            #print(old_price)
-                        except:
-                            old_price = None
-                        current_price = soup.find('span', 'product__price--sale').text.strip('\n').strip(' ').strip('€').replace('.', '').replace(',', '.').strip('\n').strip(' ')
-                        #print(current_price)
-                        current_price = int((float(current_price) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Dolce&Gabanna Outlet').margin}"))
-                        #print(current_price)
-                        
-                        #print(percent)
-                        description = ''
-                        #description = soup.find('div', 'product-description rte').text.strip('\n').strip(' ').strip('\n')
-                        if old_price:
-                            percent = int(100 - float(current_price)/(float(old_price)/100))
-                            description = description[:700] + f'\n\n<s>{old_price} руб.</s> -{percent}% {current_price} руб.'
+            items = []
+            euro_costs = euro_cost()
+            for url in items_urls:
+                try:
+                    await asyncio.sleep(2)
+                    async with aiohttp.ClientSession(trust_env=True) as session:
+                        async with session.get('https://dolcegabbanaprivatesales.com' + url, ssl=False) as response:
+                            item_url = 'https://dolcegabbanaprivatesales.com' + url
+                            webpage = await response.text()
+                            #print(response)
+                            soup = bs(webpage, 'html.parser')
+                            title = soup.find('h1', 'product__title').text
+                            logging.info(title)
                             
-                        #print(description)
-                        sizes = [size.text.replace('\n', '').strip(' ') for size in soup.find_all('div', 'variant-field')]
-                        try:
-                            if int(sizes[0]) > 100:
-                                sizes = [str(int(size)/100) for size in sizes]
-                        except:
-                            pass
-                        list_sizes = ''
-                        for size in sizes:
-                            list_sizes += f'{size}, '
-                        list_sizes = list_sizes.strip(', ')
-                        description += f'\n\nРазмеры: {list_sizes}'
-                        #print(list_sizes)
-                        article = url.split('/')[-1]
-
-                        # изображения
-                        if not os.path.exists(f"database/images/Dolce&Gabanna Outlet"):
-                            os.mkdir(f"database/images/Dolce&Gabanna Outlet")
-
-                        if not os.path.exists(f"database/images/Dolce&Gabanna Outlet/{subcategory[0]}"):
-                            os.mkdir(f"database/images/Dolce&Gabanna Outlet/{subcategory[0]}")
-                        image_links = ['https:' + photo.find('img', {'style': "display: none;"}).get('data-src') for photo in soup.find_all('div', ['product__photo', 'product__photo media--hidden'])]
-                        i = items_urls.index(url) + 1
-                        images = ''
-                        
-                        for url in image_links[:10]:
                             try:
-                                num = image_links.index(url) + 1
-                                img_path = f"database/images/Dolce&Gabanna/{subcategory[0]}/{i}_{title.replace(' ', '_').replace('/', '_')}_{num}.png"
-                                if not os.path.exists(img_path):
-                                    async with session.get(url, ssl=False) as response:
-                                        f = await aiofiles.open(img_path, mode='wb')
-                                        await f.write(await response.read())
-                                        await f.close()
-                                        images +=  img_path + '\n'
-                                
+                                old_price = soup.find('s', 'product__price--strike').text.strip('\n').strip(' ').strip('\n').strip(' ').strip('\n').strip(' ').strip('€').replace('.', '').replace(',', '.')
+                                #print(old_price)
+                                old_price = int((float(old_price) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Dolce&Gabanna Outlet').margin}"))
+                                #print(old_price)
                             except:
-                                continue
+                                old_price = None
+                            current_price = soup.find('span', 'product__price--sale').text.strip('\n').strip(' ').strip('€').replace('.', '').replace(',', '.').strip('\n').strip(' ')
+                            #print(current_price)
+                            current_price = int((float(current_price) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='Dolce&Gabanna Outlet').margin}"))
+                            #print(current_price)
                             
-                        print(images)
-                        items.append([title, description, current_price, images, list_sizes, article, item_url])
-                        logging.info([title, description, current_price, images, list_sizes, article, item_url])
-                        #print([title, description, current_price, images, list_sizes, article])
-            except Exception as ex:
-                logging.warning(f'Dolce&Gabanna pr - {ex}')
-        #crud.del_products(subcategory=subcategory, category='Dolce&Gabanna')
-        #try:
-        #    not_deleted_items = [product.article for product in crud.get_product(category_id=crud.get_category(name='Dolce&Gabanna').id, subcategory_id=crud.get_subcategory(name=subcategory).id)]
-        #except:
-        #    not_deleted_items = []
-        #logging.info(items)
-        if not crud.subcategory_exists(name=subcategory[0], category=cat_name):
-            parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=crud.get_category(name=cat_name).id)
-            crud.create_subcategory(name=subcategory[0], category=cat_name, parent_subcategory=parent_subcategory.id, level=subcategory[2])
-        logging.info('items:')
-        logging.info(items)
-        crud.create_products(category=cat_name, subcategory=subcategory[0], items=items)
+                            #print(percent)
+                            description = ''
+                            #description = soup.find('div', 'product-description rte').text.strip('\n').strip(' ').strip('\n')
+                            if old_price:
+                                percent = int(100 - float(current_price)/(float(old_price)/100))
+                                description = description[:700] + f'\n\n<s>{old_price} руб.</s> -{percent}% {current_price} руб.'
+                                
+                            #print(description)
+                            sizes = [size.text.replace('\n', '').strip(' ') for size in soup.find_all('div', 'variant-field')]
+                            try:
+                                if int(sizes[0]) > 100:
+                                    sizes = [str(int(size)/100) for size in sizes]
+                            except:
+                                pass
+                            list_sizes = ''
+                            for size in sizes:
+                                list_sizes += f'{size}, '
+                            list_sizes = list_sizes.strip(', ')
+                            description += f'\n\nРазмеры: {list_sizes}'
+                            #print(list_sizes)
+                            article = url.split('/')[-1]
 
-        logging.info(f'Canceled {cat_name} {subcategory[0]} added {len(items)} products') 
+                            # изображения
+                            if not os.path.exists(f"database/images/Dolce&Gabanna Outlet"):
+                                os.mkdir(f"database/images/Dolce&Gabanna Outlet")
+
+                            if not os.path.exists(f"database/images/Dolce&Gabanna Outlet/{subcategory[0]}"):
+                                os.mkdir(f"database/images/Dolce&Gabanna Outlet/{subcategory[0]}")
+                            image_links = ['https:' + photo.find('img', {'style': "display: none;"}).get('data-src') for photo in soup.find_all('div', ['product__photo', 'product__photo media--hidden'])]
+                            i = items_urls.index(url) + 1
+                            images = ''
+                            
+                            for url in image_links[:10]:
+                                try:
+                                    num = image_links.index(url) + 1
+                                    img_path = f"database/images/Dolce&Gabanna/{subcategory[0]}/{i}_{title.replace(' ', '_').replace('/', '_')}_{num}.png"
+                                    if not os.path.exists(img_path):
+                                        async with session.get(url, ssl=False) as response:
+                                            f = await aiofiles.open(img_path, mode='wb')
+                                            await f.write(await response.read())
+                                            await f.close()
+                                            images +=  img_path + '\n'
+                                    
+                                except:
+                                    continue
+                                
+                            print(images)
+                            items.append([title, description, current_price, images, list_sizes, article, item_url])
+                            logging.info([title, description, current_price, images, list_sizes, article, item_url])
+                            #print([title, description, current_price, images, list_sizes, article])
+                except Exception as ex:
+                    logging.warning(f'Dolce&Gabanna pr - {ex}')
+            #crud.del_products(subcategory=subcategory, category='Dolce&Gabanna')
+            #try:
+            #    not_deleted_items = [product.article for product in crud.get_product(category_id=crud.get_category(name='Dolce&Gabanna').id, subcategory_id=crud.get_subcategory(name=subcategory).id)]
+            #except:
+            #    not_deleted_items = []
+            #logging.info(items)
+            if not crud.subcategory_exists(name=subcategory[0], category=cat_name):
+                parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=crud.get_category(name=cat_name).id)
+                crud.create_subcategory(name=subcategory[0], category=cat_name, parent_subcategory=parent_subcategory.id, level=subcategory[2])
+            logging.info('items:')
+            logging.info(items)
+            await crud.create_products(category=cat_name, subcategory=subcategory[0], items=items)
+
+       
+
+            logging.info(f'Canceled {cat_name} {subcategory[0]} added {len(items)} products') 
     await bot.send_message(227184505, f'{cat_name} закончил парсинг')
 
 
