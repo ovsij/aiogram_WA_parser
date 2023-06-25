@@ -189,11 +189,13 @@ def create_product(
 
 @db_session()
 async def create_products(category : str, subcategory : str, items : list):
+    logging.info('Creating')
     # удаляем старые товары
     all_articles = [item[5] for item in items]
     category_ = Category.get(name=category)
     subcategory_ = SubCategory.get(name=subcategory, category=category_)
-    
+    logging.info(category_)
+    logging.info(subcategory_)
     # Разослать юзерам что товар из их корзины удален
     users = get_users()
     for user in users:
