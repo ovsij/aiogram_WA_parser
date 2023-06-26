@@ -4265,7 +4265,7 @@ async def get_agent():
     CAT_NAME = 'Agent Provocateur'
     SUBCATEGORIES = [
         ['Нижнее белье'],
-        ['Бестселлеры', 'Нижнее белье', 2, 'https://www.agentprovocateur.com/int_en/api/n/bundle?requests=%5B%7B%22action%22%3A%22route%22%2C%22children%22%3A%5B%7B%22path%22%3A%22%2Fbestsellers%22%2C%22_reqId%22%3A0%7D%5D%7D%2C%7B%22type%22%3A%22block%22%2C%22filter%22%3A%7B%22url%22%3A%22page-header%22%7D%2C%22verbosity%22%3A1%2C%22action%22%3A%22find%22%2C%22children%22%3A%5B%7B%22_reqId%22%3A1%7D%5D%7D%5D']
+        ['Бестселлеры', 'Нижнее белье', 2, 'https://www.agentprovocateur.com/int_en/api/n/bundle?requests=%5B%7B%22action%22%3A%22route%22%2C%22children%22%3A%5B%7B%22path%22%3A%22%2Fbestsellers%22%2C%22_reqId%22%3A0%7D%5D%7D%2C%7B%22type%22%3A%22block%22%2C%22filter%22%3A%7B%22url%22%3A%22page-header%22%7D%2C%22verbosity%22%3A1%2C%22action%22%3A%22find%22%2C%22children%22%3A%5B%7B%22_reqId%22%3A1%7D%5D%7D%5D'],
         ['Сексуальное белье', 'Нижнее белье', 2, 'https://www.agentprovocateur.com/eu_en/api/n/bundle?requests=%5B%7B%22action%22%3A%22route%22%2C%22children%22%3A%5B%7B%22path%22%3A%22%2Flingerie%2Fnaughty-sexy%22%2C%22_reqId%22%3A0%7D%5D%7D%2C%7B%22type%22%3A%22block%22%2C%22filter%22%3A%7B%22url%22%3A%22page-header%22%7D%2C%22verbosity%22%3A3%2C%22action%22%3A%22find%22%2C%22children%22%3A%5B%7B%22_reqId%22%3A1%7D%5D%7D%5D']
     ]
     headers = {
