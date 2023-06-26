@@ -4298,10 +4298,10 @@ async def get_agent():
                 #product_urls = ['apm0414001000-dedee-balconette-underwired-bra-in-black-24362']
                 items = []
                 #print(products)
-                for url in products:
+                for url in products[:5]:
                     #'https://www.agentprovocateur.com/int_en/api/n/product/m/i/microsoftteams-image_3_.png'
                     #'https://www.agentprovocateur.com/static/media/catalog/product/1/0/103954_ecom_03_1.jpg'
-                    base_url = 'https://www.agentprovocateur.com/int_en/api/n/bundle?requests=%5B%7B%22action%22%3A%22route%22%2C%22children%22%3A%5B%7B%22path%22%3A%22%2F{}%22%2C%22_reqId%22%3A0%7D%5D%7D%5D'
+                    base_url = 'https://www.agentprovocateur.com/eu_en/api/n/bundle?requests=%5B%7B%22action%22%3A%22route%22%2C%22children%22%3A%5B%7B%22path%22%3A%22%2F{}%22%2C%22_reqId%22%3A0%7D%5D%7D%5D'
                     
                     async with session.get(base_url.format(url), ssl=False) as response:
                         product = await response.json()
@@ -4323,7 +4323,7 @@ async def get_agent():
                         #print(article)
                         
                         #print(image_links)
-                        async with session.get('https://www.agentprovocateur.com/int_en/' + url, ssl=False) as response:
+                        async with session.get('https://www.agentprovocateur.com/eu_en/' + url, ssl=False) as response:
                             webpage = await response.text()
                             soup = bs(webpage, 'html.parser')
                             sizes = soup.find_all('option')
@@ -4373,8 +4373,15 @@ async def get_agent():
                             except Exception as err:
                                 print(err)
 
-                        item = [title, description, current_price, images, sizes, article, url]
+                        item = [title, description, current_price, images, sizes_list, article, 'https://www.agentprovocateur.com/eu_en/' + url]
                         logging.info(item)
                         items.append(item)
+                        
+        if not crud.subcategory_exists(name=subcategory[0], category=CAT_NAME):
+            parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=category.id)
+            crud.create_subcategory(name=subcategory[0], category=CAT_NAME, parent_subcategory=parent_subcategory.id, level=subcategory[2])
+        await crud.create_products(category=CAT_NAME, subcategory=subcategory[0], items=items)
+
+    await bot.send_message(227184505, f'{CAT_NAME} закончил парсинг')
 
 
