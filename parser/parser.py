@@ -4275,12 +4275,12 @@ async def get_agent():
     category = crud.get_category(name=CAT_NAME, metacategory=crud.get_metacategory(name='Женская одежда').id)
     for subcategory in SUBCATEGORIES:
         if not str(subcategory[-1]).startswith('http'):
-            #if len(subcategory) == 1:
-            #    crud.create_subcategory(name=subcategory[0], category=CAT_NAME) if not crud.subcategory_exists(name=subcategory[0], category=CAT_NAME) else 0
-            #else:
-            #    if not crud.subcategory_exists(name=subcategory[0], category=CAT_NAME):
-            #        parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=category.id)
-            #        crud.create_subcategory(name=subcategory[0], category=CAT_NAME, parent_subcategory=parent_subcategory.id, level=subcategory[2])
+            if len(subcategory) == 1:
+                crud.create_subcategory(name=subcategory[0], category=CAT_NAME) if not crud.subcategory_exists(name=subcategory[0], category=CAT_NAME) else 0
+            else:
+                if not crud.subcategory_exists(name=subcategory[0], category=CAT_NAME):
+                    parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=category.id)
+                    crud.create_subcategory(name=subcategory[0], category=CAT_NAME, parent_subcategory=parent_subcategory.id, level=subcategory[2])
             continue
 
         logging.info(f'Starting {CAT_NAME}: {subcategory[0]}')
@@ -4376,7 +4376,7 @@ async def get_agent():
                         item = [title, description, current_price, images, sizes_list, article, 'https://www.agentprovocateur.com/eu_en/' + url]
                         logging.info(item)
                         items.append(item)
-                        
+
         if not crud.subcategory_exists(name=subcategory[0], category=CAT_NAME):
             parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=category.id)
             crud.create_subcategory(name=subcategory[0], category=CAT_NAME, parent_subcategory=parent_subcategory.id, level=subcategory[2])
