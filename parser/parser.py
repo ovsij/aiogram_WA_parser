@@ -4355,8 +4355,10 @@ async def get_agent():
 
                         if not os.path.exists(f"database/images/{CAT_NAME}/{subcategory[0]}"):
                             os.mkdir(f"database/images/{CAT_NAME}/{subcategory[0]}")
-                        
-                        i = products.index(url) + 1
+                        try:
+                            i = products.index(url) + 1
+                        except:
+                            continue
                         images = ''
                         for link in image_links[:10]:
                             try:
