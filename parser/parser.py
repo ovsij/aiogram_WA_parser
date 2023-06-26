@@ -4297,7 +4297,7 @@ async def get_agent():
                         products.append(r['url'])
                 #product_urls = ['apm0414001000-dedee-balconette-underwired-bra-in-black-24362']
                 items = []
-                print(products)
+                #print(products)
                 for url in products:
                     #'https://www.agentprovocateur.com/int_en/api/n/product/m/i/microsoftteams-image_3_.png'
                     #'https://www.agentprovocateur.com/static/media/catalog/product/1/0/103954_ecom_03_1.jpg'
@@ -4305,9 +4305,9 @@ async def get_agent():
                     
                     async with session.get(base_url.format(url), ssl=False) as response:
                         product = await response.json()
-                        print(product['catalog'][0])
+                        #print(product['catalog'][0])
                         title = product['catalog'][0]['name']
-                        print(title)
+                        #print(title)
                         current_price = int((float(product['catalog'][0]['price']) * (EURO_COSTS + 1)) * float(f"1.{category.margin}"))
                         try:
                             old_price = int((float(product['catalog'][0]['org_price']) * (EURO_COSTS + 1)) * float(f"1.{category.margin}"))
@@ -4315,7 +4315,7 @@ async def get_agent():
                             old_price = None
                         percent = int(100 - float(current_price) / (float(old_price) / 100)) if old_price else 0
                         description = f'\n\n<s>{old_price} руб.</s> -{percent}% {current_price} руб.' if old_price else ''
-                        print(description)
+                        #print(description)
                         #print(current_price)
                         url = product['catalog'][0]['url']
                         #print(url)
