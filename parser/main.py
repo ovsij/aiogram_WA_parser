@@ -57,8 +57,8 @@ async def main():
         #tasks.add(task15)
         #task16 = asyncio.create_task(get_odlo())
         #tasks.add(task16)
-        task17 = asyncio.create_task(get_villeroyboch())
-        tasks.add(task17)
+        #task17 = asyncio.create_task(get_villeroyboch())
+        #tasks.add(task17)
         task18 = asyncio.create_task(get_agent())
         tasks.add(task18)
         
