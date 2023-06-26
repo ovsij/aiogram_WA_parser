@@ -4267,10 +4267,12 @@ async def get_agent():
         ['Нижнее белье'],
         ['Бестселлеры', 'Нижнее белье', 2, 'https://www.agentprovocateur.com/int_en/api/n/bundle?requests=%5B%7B%22action%22%3A%22route%22%2C%22children%22%3A%5B%7B%22path%22%3A%22%2Fbestsellers%22%2C%22_reqId%22%3A0%7D%5D%7D%2C%7B%22type%22%3A%22block%22%2C%22filter%22%3A%7B%22url%22%3A%22page-header%22%7D%2C%22verbosity%22%3A1%2C%22action%22%3A%22find%22%2C%22children%22%3A%5B%7B%22_reqId%22%3A1%7D%5D%7D%5D']
     ]
-    
     headers = {
         'User-Agent': 'Mozilla/5.0'
         }
+    
+    EURO_COSTS = euro_cost()
+    category = crud.get_category(name=CAT_NAME, metacategory=crud.get_metacategory(name='Женская одежда').id)
     for subcategory in SUBCATEGORIES:
         if not str(subcategory[-1]).startswith('http'):
             #if len(subcategory) == 1:
@@ -4295,6 +4297,7 @@ async def get_agent():
                         products.append(r['url'])
                 #product_urls = ['apm0414001000-dedee-balconette-underwired-bra-in-black-24362']
                 items = []
+                print(products)
                 for url in products:
                     #'https://www.agentprovocateur.com/int_en/api/n/product/m/i/microsoftteams-image_3_.png'
                     #'https://www.agentprovocateur.com/static/media/catalog/product/1/0/103954_ecom_03_1.jpg'
@@ -4305,9 +4308,9 @@ async def get_agent():
                         print(product['catalog'][0])
                         title = product['catalog'][0]['name']
                         print(title)
-                        current_price = product['catalog'][0]['price']
+                        current_price = int((float(product['catalog'][0]['price']) * (EURO_COSTS + 1)) * float(f"1.{category.margin}"))
                         try:
-                            old_price = product['catalog'][0]['price']
+                            old_price = int((float(product['catalog'][0]['org_price']) * (EURO_COSTS + 1)) * float(f"1.{category.margin}"))
                         except:
                             old_price = None
                         percent = int(100 - float(current_price) / (float(old_price) / 100)) if old_price else 0
