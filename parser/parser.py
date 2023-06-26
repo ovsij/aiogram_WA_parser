@@ -4298,7 +4298,7 @@ async def get_agent():
                 #product_urls = ['apm0414001000-dedee-balconette-underwired-bra-in-black-24362']
                 items = []
                 #print(products)
-                for url in products[:5]:
+                for url in products:
                     #'https://www.agentprovocateur.com/int_en/api/n/product/m/i/microsoftteams-image_3_.png'
                     #'https://www.agentprovocateur.com/static/media/catalog/product/1/0/103954_ecom_03_1.jpg'
                     base_url = 'https://www.agentprovocateur.com/eu_en/api/n/bundle?requests=%5B%7B%22action%22%3A%22route%22%2C%22children%22%3A%5B%7B%22path%22%3A%22%2F{}%22%2C%22_reqId%22%3A0%7D%5D%7D%5D'
