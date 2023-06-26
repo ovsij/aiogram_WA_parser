@@ -4286,7 +4286,6 @@ async def get_agent():
         url = subcategory[-1]
         async with aiohttp.ClientSession(headers=headers, trust_env=True) as session:
             async with session.get(url, ssl=False) as response:
-                print(response)
                 webpage = await response.json()
                 #print(webpage)
                 #print(webpage['catalog'][0])
@@ -4340,7 +4339,7 @@ async def get_agent():
                                 sizes_list = None
 
                             if sizes_list:
-                                description += '\n\nРазмеры:\n' + sizes
+                                description += '\n\nРазмеры:\n' + sizes_list
                             elif len(sizes_list) < 1:
                                 continue
                             else:
