@@ -1259,7 +1259,7 @@ async def get_dolcegabbana():
         
             items = []
             euro_costs = euro_cost()
-            for url in items_urls:
+            for url in items_urls[:5]:
                 try:
                     await asyncio.sleep(2)
                     async with aiohttp.ClientSession(trust_env=True) as session:
@@ -1316,18 +1316,19 @@ async def get_dolcegabbana():
                             images = ''
                             
                             for url in image_links[:10]:
-                                try:
-                                    num = image_links.index(url) + 1
-                                    img_path = f"database/images/Dolce&Gabanna/{subcategory[0]}/{i}_{title.replace(' ', '_').replace('/', '_')}_{num}.png"
-                                    if not os.path.exists(img_path):
-                                        async with session.get(url, ssl=False) as response:
-                                            f = await aiofiles.open(img_path, mode='wb')
-                                            await f.write(await response.read())
-                                            await f.close()
-                                            images +=  img_path + '\n'
+                                #try:
+                                num = image_links.index(url) + 1
+                                img_path = f"database/images/Dolce&Gabanna Outlet/{subcategory[0]}/{i}_{title.replace(' ', '_').replace('/', '_')}_{num}.png"
+                                print(img_path)
+                                if not os.path.exists(img_path):
+                                    async with session.get(url, ssl=False) as response:
+                                        f = await aiofiles.open(img_path, mode='wb')
+                                        await f.write(await response.read())
+                                        await f.close()
+                                images +=  img_path + '\n'
                                     
-                                except:
-                                    continue
+                                #except:
+                                #    continue
                                 
                             print(images)
                             items.append([title, description, current_price, images, list_sizes, article, item_url])
