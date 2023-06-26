@@ -4262,18 +4262,31 @@ async def get_villeroyboch():
 
 
 async def get_agent():
-    SUBCATEGORIES = {
+    CAT_NAME = 'Agent Provocateur'
+    SUBCATEGORIES = [
         ['Нижнее белье'],
         ['Бестселлеры', 'Нижнее белье', 2, 'https://www.agentprovocateur.com/int_en/api/n/bundle?requests=%5B%7B%22action%22%3A%22route%22%2C%22children%22%3A%5B%7B%22path%22%3A%22%2Fbestsellers%22%2C%22_reqId%22%3A0%7D%5D%7D%2C%7B%22type%22%3A%22block%22%2C%22filter%22%3A%7B%22url%22%3A%22page-header%22%7D%2C%22verbosity%22%3A1%2C%22action%22%3A%22find%22%2C%22children%22%3A%5B%7B%22_reqId%22%3A1%7D%5D%7D%5D']
-    }
+    ]
+    
     headers = {
         'User-Agent': 'Mozilla/5.0'
         }
     for subcategory in SUBCATEGORIES:
-        CAT_NAME = 'Agent Provocateur'
-        url = subcategory[0]
+        if not str(subcategory[-1]).startswith('http'):
+            #if len(subcategory) == 1:
+            #    crud.create_subcategory(name=subcategory[0], category=CAT_NAME) if not crud.subcategory_exists(name=subcategory[0], category=CAT_NAME) else 0
+            #else:
+            #    if not crud.subcategory_exists(name=subcategory[0], category=CAT_NAME):
+            #        parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=category.id)
+            #        crud.create_subcategory(name=subcategory[0], category=CAT_NAME, parent_subcategory=parent_subcategory.id, level=subcategory[2])
+            continue
+
+        logging.info(f'Starting {CAT_NAME}: {subcategory[0]}')
+        
+        url = subcategory[-1]
         async with aiohttp.ClientSession(headers=headers, trust_env=True) as session:
             async with session.get(url, ssl=False) as response:
+                print(response)
                 webpage = await response.json()
                 #print(webpage)
                 #print(webpage['catalog'][0])
