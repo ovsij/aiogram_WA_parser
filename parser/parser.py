@@ -3707,7 +3707,7 @@ async def get_hellyhansen():
     category = crud.get_category(name=CAT_NAME, metacategory=crud.get_metacategory(name='Спортивные товары').id)
     
     print(len(SUBCATEGORIES))
-    for subcategory in SUBCATEGORIES[62:]:
+    for subcategory in SUBCATEGORIES:
         print(subcategory)
         if type(subcategory[-1]) != str or len(subcategory) == 1:
             if len(subcategory) == 1:
@@ -4262,28 +4262,102 @@ async def get_villeroyboch():
 
 
 async def get_agent():
-    CAT_NAME = 'Agent Provocateur'
-    service = services.Chromedriver(binary=ChromeDriverManager().install(), log_file=os.devnull)
-    browser = browsers.Chrome()
-    #options = browser.capabilities()
-    #options.add_experimental_option('prefs', {'intl.accept_languages': 'en,en_US'})
+    SUBCATEGORIES = {
+        ['Нижнее белье'],
+        ['Бестселлеры', 'Нижнее белье', 2, 'https://www.agentprovocateur.com/int_en/api/n/bundle?requests=%5B%7B%22action%22%3A%22route%22%2C%22children%22%3A%5B%7B%22path%22%3A%22%2Fbestsellers%22%2C%22_reqId%22%3A0%7D%5D%7D%2C%7B%22type%22%3A%22block%22%2C%22filter%22%3A%7B%22url%22%3A%22page-header%22%7D%2C%22verbosity%22%3A1%2C%22action%22%3A%22find%22%2C%22children%22%3A%5B%7B%22_reqId%22%3A1%7D%5D%7D%5D']
+    }
+    headers = {
+        'User-Agent': 'Mozilla/5.0'
+        }
+    for subcategory in SUBCATEGORIES:
+        CAT_NAME = 'Agent Provocateur'
+        url = subcategory[0]
+        async with aiohttp.ClientSession(headers=headers, trust_env=True) as session:
+            async with session.get(url, ssl=False) as response:
+                webpage = await response.json()
+                #print(webpage)
+                #print(webpage['catalog'][0])
+                products = []
+                for r in webpage['catalog']:
+                    if str(r).startswith("{'url':"):
+                        products.append(r['url'])
+                #product_urls = ['apm0414001000-dedee-balconette-underwired-bra-in-black-24362']
+                items = []
+                for url in products:
+                    #'https://www.agentprovocateur.com/int_en/api/n/product/m/i/microsoftteams-image_3_.png'
+                    #'https://www.agentprovocateur.com/static/media/catalog/product/1/0/103954_ecom_03_1.jpg'
+                    base_url = 'https://www.agentprovocateur.com/int_en/api/n/bundle?requests=%5B%7B%22action%22%3A%22route%22%2C%22children%22%3A%5B%7B%22path%22%3A%22%2F{}%22%2C%22_reqId%22%3A0%7D%5D%7D%5D'
+                    
+                    async with session.get(base_url.format(url), ssl=False) as response:
+                        product = await response.json()
+                        print(product['catalog'][0])
+                        title = product['catalog'][0]['name']
+                        print(title)
+                        current_price = product['catalog'][0]['price']
+                        try:
+                            old_price = product['catalog'][0]['price']
+                        except:
+                            old_price = None
+                        percent = int(100 - float(current_price) / (float(old_price) / 100)) if old_price else 0
+                        description = f'\n\n<s>{old_price} руб.</s> -{percent}% {current_price} руб.' if old_price else ''
+                        print(description)
+                        #print(current_price)
+                        url = ('https://www.agentprovocateur.com/int_en' + product['catalog'][0]['url'])
+                        #print(url)
+                        article = product['catalog'][0]['sku']
+                        #print(article)
+                        
+                        #print(image_links)
+                        async with session.get('https://www.agentprovocateur.com/int_en/' + url, ssl=False) as response:
+                            webpage = await response.text()
+                            soup = bs(webpage, 'html.parser')
+                            sizes = soup.find_all('option')
+                            
+                            try:
+                                sizes_list = ''
+                                for s in sizes[1:]:
+                                    if 'Select' in s.text:
+                                        break
+                                    elif '- Sold Out' in s.text:
+                                        continue
+                                    else:
+                                        sizes_list += f"{s.text.replace(' - Only one left', '')}, "
+                                sizes_list = sizes_list.strip(', ')
+                            except:
+                                sizes_list = None
 
-    browser.capabilities = {
-        "goog:chromeOptions": {"args": [
-        '--no-sandbox',
-        #'--headless',
-        #'window-size=1280,720',
-        '--start-maximized',
-        
-        '--private',
-        '--disable-gpu',
-        '--disable-dev-shm-usage',
-        #'--profile-directory=Profile 1',
-        #'user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36',
-        ],
-        'prefs': {'intl.accept_languages': 'en,en_US'}}}
-    
-    items = []
-    async with get_session(service, browser) as session:
-        await session.get('https://www.agentprovocateur.com/int_en/bestsellers')
-        await asyncio.sleep(100)
+                            if sizes_list:
+                                description += '\n\nРазмеры:\n' + sizes
+                            elif len(sizes_list) < 1:
+                                continue
+                            else:
+                                continue
+
+                        image_links = ['https://www.agentprovocateur.com/static/media/catalog' + im['image'] for im in product['catalog'][0]['media']]
+
+                        if not os.path.exists(f"database/images/{CAT_NAME}"):
+                            os.mkdir(f"database/images/{CAT_NAME}")
+
+                        if not os.path.exists(f"database/images/{CAT_NAME}/{subcategory[0]}"):
+                            os.mkdir(f"database/images/{CAT_NAME}/{subcategory[0]}")
+                        
+                        i = products.index(url) + 1
+                        images = ''
+                        for link in image_links[:10]:
+                            try:
+                                num = image_links.index(link) + 1
+                                img_path = f"database/images/{CAT_NAME}/{subcategory[0]}/{i}_{title.replace(' ', '_').replace('/', '_').replace('|', '')}_{num}.jpg"
+                                if not os.path.exists(img_path):
+                                    async with session.get(link, ssl=False) as response:
+                                        f = await aiofiles.open(img_path, mode='wb')
+                                        await f.write(await response.read())
+                                        await f.close()
+                                images += img_path + '\n'
+                            except Exception as err:
+                                print(err)
+
+                        item = [title, description, current_price, images, sizes, article, url]
+                        logging.info(item)
+                        items.append(item)
+
+

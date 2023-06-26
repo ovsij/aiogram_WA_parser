@@ -59,6 +59,8 @@ async def main():
         #tasks.add(task16)
         task17 = asyncio.create_task(get_villeroyboch())
         tasks.add(task17)
+        task18 = asyncio.create_task(get_agent())
+        tasks.add(task18)
         
         
         L = await asyncio.gather(*tasks)
