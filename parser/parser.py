@@ -4317,7 +4317,7 @@ async def get_agent():
                         description = f'\n\n<s>{old_price} руб.</s> -{percent}% {current_price} руб.' if old_price else ''
                         #print(description)
                         #print(current_price)
-                        url = product['catalog'][0]['url']
+                        #url = product['catalog'][0]['url']
                         #print(url)
                         article = product['catalog'][0]['sku']
                         #print(article)
