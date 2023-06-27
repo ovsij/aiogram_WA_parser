@@ -1669,7 +1669,7 @@ async def get_asics():
             euro_costs = euro_cost()
             for item_url in item_links:
                 try:
-                    await asyncio.sleep(2)
+                    await asyncio.sleep(3)
                     async with session.get(url=item_url, proxy=FreeProxy(country_id=['IT']).get(), ssl=False) as response:
                         item_wp = await response.read()
                         item_sp = bs(item_wp, 'html.parser')

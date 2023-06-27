@@ -37,8 +37,8 @@ async def main():
         #tasks.add(task5)
         #task6 = asyncio.create_task(get_coach())
         #tasks.add(task6)
-        #task7 = asyncio.create_task(get_asics())
-        #tasks.add(task7)
+        task7 = asyncio.create_task(get_asics())
+        tasks.add(task7)
         #task8 = asyncio.create_task(get_newbalance())
         #tasks.add(task8)
         #task9 = asyncio.create_task(get_underarmour())
@@ -59,8 +59,8 @@ async def main():
         #tasks.add(task16)
         #task17 = asyncio.create_task(get_villeroyboch())
         #tasks.add(task17)
-        task18 = asyncio.create_task(get_agent())
-        tasks.add(task18)
+        #task18 = asyncio.create_task(get_agent())
+        #tasks.add(task18)
         
         
         L = await asyncio.gather(*tasks)
