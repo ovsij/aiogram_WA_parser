@@ -1654,10 +1654,10 @@ async def get_asics():
             item_links = []
             for i in range(0, 10):
                 await asyncio.sleep(5)
-                print(FreeProxy(country_id=['IT']).get())
                 async with session.get(url=subcategory[-1].format(96 * i), ssl=False) as response:
                     webpage = await response.read()
                     logging.info(f'Asics  {response.status}')
+                    print(webpage)
                     soup = bs(webpage, 'html.parser')
                     links = [link.find('a', 'product-tile__link js-product-tile').get('href') for link in soup.find_all('li', ['grid-tile new-row ', 'grid-tile'])]
                     if len(links) > 0:
