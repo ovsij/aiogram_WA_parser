@@ -417,13 +417,14 @@ def metacategory_exists(name : str):
 
 # Category
 @db_session()
-def create_category(name : str, margin : int, custom : bool = False):
-    category = Category(name=name)
+def create_category(meta : int, name : str, margin : int, custom : bool = False, phone=None):
+    category = Category(name=name, metaCategory=meta)
     if custom:
         category.custom = custom
     if margin:
         category.margin = margin
-    
+    if phone:
+        category.phone = phone
 
 @db_session()
 def get_category(id : int = None, name : str = None, metacategory : int = None):
@@ -438,20 +439,33 @@ def get_category(id : int = None, name : str = None, metacategory : int = None):
         return Category.get(name=name)
     if metacategory and not name:
         return select(c for c in Category if c.metaCategory.id == metacategory)[:]
-    
     else:
         return select(c for c in Category)[:]
 
 @db_session()
-def delete_category(id : int = None, name : str = None):
+def delete_category(id : int = None, name : str = None, phone : str = None):
     if id:
         Category[id].delete()
     if name:
         Category.get(name=name).delete()
+    if phone:
+        Category.get(phone=phone).delete()
 
 @db_session()
-def category_exists(name : str):
-    return Category.exists(name=name)
+def category_exists(name : str, phone : str = None):
+    if name and phone:
+        if not Category.exists(name=name):
+            return Category.exists(phone=phone)
+        else:
+            return True
+    else:
+        return Category.exists(name=name)
+
+@db_session()
+def update_category(phone : str, margin : int):
+    cat_to_update = Category.get(phone=phone)
+    cat_to_update.margin = margin
+
 
 #SubCategory
 @db_session()

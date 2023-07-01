@@ -850,10 +850,12 @@ async def btn_callback(callback_query: types.CallbackQuery):
         )
     
     if code[1] == 'addcatalog':
-        text = 'Пришлите номер аккаунта в котором находится каталог в формате: 393421807916 \n Для отвены введите команду /stop'
+        text = 'Пришлите через запятую название категории, название каталога и номер аккаунта в котором находится каталог в формате: Спортивные товары, Abibas, 393421807916'
         await Form.add_catalog.set()
+        reply_markup = InlineConstructor.create_kb([['Отмена','deny']], [1])
         Form.prev_message = await callback_query.message.edit_text(
-            text=text
+            text=text,
+            reply_markup=reply_markup
         )
 
     if code[1] == 'delcatalog':
@@ -864,7 +866,7 @@ async def btn_callback(callback_query: types.CallbackQuery):
                 reply_markup=reply_markup
             )
         else:
-            delete_catalog(phone=code[2])
+            delete_category(phone=code[2])
             text, reply_markup = inline_kb_delcatalog()
             text += f'\n\n Каталог {code[2]} удален'
             await callback_query.message.edit_text(
@@ -1038,14 +1040,17 @@ async def btn_callback(callback_query: types.CallbackQuery):
 
     if code[1] == 'addcategory':
         await Form.add_category.set()
+        metacategory = get_metacategory(id=code[-1])
+        reply_markup = InlineConstructor.create_kb([['Отмена','deny']], [1])
         Form.prev_message = await bot.send_message(
             callback_query.from_user.id, 
-            'Для отмены введите /stop\n\nДля продолжения введите название новой категории:'
+            text=f'Для отмены нажмите на кнопку.\n\nДля продолжения введите название новой  подкатегории в категории "{metacategory.name}({metacategory.id})":',
+            reply_markup=reply_markup
         )
     
     if code[1] == 'deletecategory':
         delete_category(id=code[2])
-        text, reply_markup = inline_kb_categories(tg_id=str(callback_query.from_user.id))
+        text, reply_markup = inline_kb_categories(tg_id=str(callback_query.from_user.id), metacategory=int(code[-1]))
         await callback_query.message.edit_text(
             text=text,
             reply_markup=reply_markup
@@ -1054,14 +1059,16 @@ async def btn_callback(callback_query: types.CallbackQuery):
     if code[1] == 'addsubcategory':
         await Form.add_subcategory.set()
         category = get_category(id=code[2])
+        reply_markup = InlineConstructor.create_kb([['Отмена','deny']], [1])
         Form.prev_message = await bot.send_message(
             callback_query.from_user.id, 
-            f'Для отмены введите /stop\n\nДля продолжения введите название новой подкатегории в категории "{category.name}"'
+            text=f'Для отмены введите нажмите на кнопку.\n\nДля продолжения введите название новой подкатегории в категории "{category.name}"',
+            reply_markup=reply_markup,
         )
     
     if code[1] == 'deletesubcategory':
-        delete_category(id=code[2])
-        text, reply_markup = inline_kb_categories(tg_id=str(callback_query.from_user.id))
+        delete_subcategory(id=int(code[3]), category_id=int(code[2]))
+        text, reply_markup = inline_kb_subcategories(tg_id=str(callback_query.from_user.id), category=get_category(id=int(code[2])).id)
         await callback_query.message.edit_text(
             text=text,
             reply_markup=reply_markup
@@ -1125,13 +1132,14 @@ async def denysending(callback_query: types.CallbackQuery, state: FSMContext):
             )
 
 # Отмена (закрытие State)
+@dp.callback_query_handler(lambda c: c.data == 'deny', state=Form.add_catalog)
 @dp.callback_query_handler(lambda c: c.data == 'deny', state=Form.search)
 @dp.callback_query_handler(lambda c: c.data == 'deny', state=Form.promocode_user)
 async def denysending(callback_query: types.CallbackQuery, state: FSMContext):
     print(f'User {callback_query.from_user.id} open {callback_query.data}')
 
     await state.finish()
-    text, reply_markup = inline_kb_metacategories(tg_id=str(callback_query.from_user.id))
+    text, reply_markup = inline_kb_menu(callback_query.from_user)
     await bot.send_message(
         callback_query.from_user.id,
         text=text,

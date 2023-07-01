@@ -224,12 +224,12 @@ async def get_items(category : str, session, subcategory : str = 'Другое')
             
 
             subcategory_ = None if subcategory == 'Другое' else subcategory
-            if subcategory == 'Другое':
-                lst = [title, category, subcategory_, description, price, images]
-            else:
-                lst = [title, category, subcategory_, description, price, images]
+            
+
+            item = [title, description, price, images, '', title, 'whatsapp']
+            
             #print(lst)
-            items.append(lst)
+            items.append(item)
             #logging.info(lst)
             # закрываем карточку товара кнопкой "назад"
             if subcategory == 'Другое':
@@ -3750,7 +3750,7 @@ async def get_hellyhansen():
             while True:
                 await asyncio.sleep(3)
                 products_url = url_pattern.replace("id_tag$", category_id).replace("current_page_value", str(page_counter))
-                async with session.get(products_url, ssl=False) as response:
+                async with session.get(products_url, ssl=False, proxy='http://ovsijrnd8432:28d034@193.23.50.176:10093') as response:
                     #logging.info(response)
                     json_string = await response.text()
                     #print(json_string)
@@ -3774,15 +3774,15 @@ async def get_hellyhansen():
             for product_key in product_keys:
                 try:
                     print(product_key)
-                    await asyncio.sleep(3)
+                    await asyncio.sleep(1)
                     json_url = get_product_json_url(product_key)
-                    async with session.get(json_url, ssl = False) as response:
+                    async with session.get(json_url, ssl = False, proxy='http://ovsijrnd8432:28d034@193.23.50.176:10093') as response:
                         webpage = await response.text()
                         
                         json_ = json.loads(webpage)
                         with open("js.json", "w", encoding="utf-8") as file:
                             file.write(webpage)
-                        await asyncio.sleep(3)
+                        await asyncio.sleep(1)
                         article = str(product_key)
                         description = ""
                         product_data = json_["data"]["products"]["items"][0]
@@ -3829,7 +3829,7 @@ async def get_hellyhansen():
                     async with session.get(json_url, ssl = False) as response:
                         webpage = await response.text()
                         json_ = json.loads(webpage)
-                    
+                        print(webpage)
                         product = json_["data"]["products"]["items"][0]
                         
                         try:
@@ -3863,8 +3863,8 @@ async def get_hellyhansen():
                             images += img_path + '\n'
                         except Exception as err:
                             print(err)
-                except:
-                    pass
+                except Exception as err:
+                    print(err)
                         
                 product_url = "https://www.hellyhansen.com/en_it/" + product_key
                 item = [title, description, current_price, images, sizes, article, product_url]
@@ -4419,5 +4419,3 @@ async def get_agent():
         await crud.create_products(category=CAT_NAME, subcategory=subcategory[0], items=items)
 
     await bot.send_message(227184505, f'{CAT_NAME} закончил парсинг')
-
-

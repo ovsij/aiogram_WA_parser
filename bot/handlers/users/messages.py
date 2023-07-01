@@ -63,14 +63,16 @@ async def sendmessate_text(message: types.Message, state: FSMContext):
             )
 
 # неверный формат номера каталога
-@dp.message_handler(lambda message: len(message.text) != 12, state=Form.add_catalog)
+@dp.message_handler(lambda message: len(message.text.split(', ')[2]) != 12, state=Form.add_catalog)
 async def add_catalog_wrong(message: types.Message, state: FSMContext):
     await bot.delete_message(chat_id=message.chat.id, message_id=Form.prev_message.message_id)
     await message.delete()
-    text = 'Пришлите номер аккаунта в котором находится каталог в формате: 393421807916\n\n Номер телефона должен состоять из 12 цифр без пробелов и иных знаков'
+    text = 'Пришлите через запятую название каталога и номер аккаунта в котором находится каталог в формате: 393421807916\n\n Номер телефона должен состоять из 12 цифр без пробелов и иных знаков'
+    reply_markup = InlineConstructor.create_kb([['Отмена','deny']], [1])
     Form.prev_message = await bot.send_message(
             message.from_user.id,
             text=text,
+            reply_markup=reply_markup
             )
 
 # получаем номер телефона для добавления каталога
@@ -82,22 +84,35 @@ async def add_catalog_phone(message: types.Message, state: FSMContext):
     await message.delete()
 
     #text, reply_markup = inline_kb_admin()
-    
-    if not catalog_exists(phone=message.text):
-        phone = message.text
-        link = 'https://web.whatsapp.com/catalog/' + message.text
-        create_catalog(phone=phone, link=link, margin=30)
-        text = 'Пришлите какой процент наценки будет у этого каталога (двузначное число). Например: 20'
-        await Form.add_margin.set()
-        Form.cat_phone = message.text
-        
+    mes_text = message.text.split(', ')
+    meta = mes_text[0]
+    name = mes_text[1]
+    phone = mes_text[2]
+    if not metacategory_exists(name=meta):
+        text = f'\n\nКатегория "{meta}" не существует'
     else:
-        text = f'\n\nКаталог {message.text} уже существует'
+        print(category_exists(name=name, phone=phone))
+        if not category_exists(name=name, phone=phone):
+            #link = 'https://web.whatsapp.com/catalog/' + message.text
+            metacategory = get_metacategory(name=meta)
+            create_category(meta=metacategory.id, name=name, phone=phone, margin=30)
+            text = f'Каталог {name} успешно добавлен.'
+            #text = 'Пришлите какой процент наценки будет у этого каталога (двузначное число). Например: 20'
+            #await Form.add_margin.set()
+            #Form.cat_phone = message.text
+        else:
+            text = f'\n\nКаталог с таким названием или номером телефона уже существует'
     
     Form.prev_message = await bot.send_message(
-                message.from_user.id,
-                text=text,
-                )
+        message.from_user.id,
+        text=text,
+    )
+    text, reply_markup = inline_kb_admin()
+    await bot.send_message(
+        message.from_user.id,
+        text=text,
+        reply_markup=reply_markup
+    )
     
 # неверный формат процента наценки
 @dp.message_handler(lambda message: len(message.text) != 2, state=Form.add_margin)
@@ -114,15 +129,15 @@ async def add_catalog_margin(message: types.Message, state: FSMContext):
 
     #phone = get_catalog(id=max([c.id for c in get_catalogs()])).phone
     phone = Form.cat_phone
-    update_catalog(phone=phone, margin=int(message.text))
+    update_category(phone=phone, margin=int(message.text))
 
-    text, reply_markup = inline_kb_admin()
-    text += f'\n\nВнесение изменений произошло успешно'
+    text, reply_markup = inline_kb_editcatalog()
+    
     await bot.send_message(
-                message.from_user.id,
-                text=text,
-                reply_markup=reply_markup
-                )
+        message.from_user.id,
+        text=text,
+        reply_markup=reply_markup
+    )
 
 # получаем новое наименование товара
 @dp.message_handler(state=Form.edit_name)
@@ -246,6 +261,15 @@ async def get_photo(message: types.Message, state: FSMContext):
             update_product(product_id=product.id, image=img_path + '\n', several_images=True)
 
     await state.finish()
+
+    text, reply_markup = inline_kb_editproduct(product_id=product.id)
+    text += f'\n\nВнесение изменений произошло успешно'
+    await bot.send_message(
+        message.from_user.id,
+        text=text,
+        reply_markup=reply_markup
+    )
+
 
 # получаем артикул товара
 @dp.message_handler(state=Form.find_item)
@@ -386,12 +410,14 @@ async def add_user_promocode(message: types.Message, state: FSMContext):
 # получаем название новой категории
 @dp.message_handler(state=Form.add_category)
 async def add_category(message: types.Message, state: FSMContext):
+    meta = int(Form.prev_message.text.split('(')[-1].split(')')[0])
     await state.finish()
     await bot.delete_message(chat_id=message.chat.id, message_id=Form.prev_message.message_id)
     await message.delete()
+    
     if not category_exists(name=message.text):
-        create_category(name=message.text, margin=30, custom=True)
-    text, reply_markup = inline_kb_categories(str(message.from_user.id))
+        create_category(meta=meta, name=message.text, margin=30, custom=True)
+    text, reply_markup = inline_kb_categories(tg_id=str(message.from_user.id), metacategory=meta)
     await bot.send_message(message.from_user.id, text=text, reply_markup=reply_markup)
 
 # получаем название новой подкатегории

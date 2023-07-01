@@ -79,7 +79,7 @@ def inline_kb_categories(tg_id : str, metacategory : int, page : int = 1):
             text_and_data, schema = btn_prevnext(len(categories), text_and_data, schema, page, name='catalog')
         
         if tg_id in os.getenv('ADMINS'):
-            text_and_data.append(['Добавить категорию', 'btn_addcategory'])
+            text_and_data.append(['Добавить категорию', f'btn_addcategory_{metacategory}'])
             schema.append(1)
 
         text_and_data.append(btn_back('catalog_1'))
@@ -119,7 +119,7 @@ def inline_kb_subcategories(tg_id : str, category : int = None, subcategory : in
         else:
             text_and_data.append([f'{subcat.name}', f'btn_ls_{category}_{subcat.id}_s=_p=_n_0-5'])
             schema.append(1)
-    if category_name not in ['Zwilling', 'Villeroy & Boch']:
+    if os.path.exists(f'database/{category_name}/sizeguide_1.png'):
         text_and_data.append([emojize(':scissors: Таблица размеров', language='alias'), f'btn_sizes_{category}'])
         schema.append(1)
     try:
@@ -130,7 +130,8 @@ def inline_kb_subcategories(tg_id : str, category : int = None, subcategory : in
         pass
     
     if tg_id in os.getenv('ADMINS') and get_category(id=category).custom:
-        text_and_data.append([f'Удалить категорию {category_name}', f'btn_deletecategory_{category}'])
+        metacategory = get_metacategory(id=get_category(id=category).metaCategory.id)
+        text_and_data.append([f'Удалить категорию {category_name}', f'btn_deletecategory_{category}_{metacategory.id}'])
         schema.append(1)
         text_and_data.append(['Добавить подкатегорию', f'btn_addsubcategory_{category}'])
         schema.append(1)
@@ -255,7 +256,7 @@ def inline_kb_listproducts(tg_id : str, category : int = None, sub_category : in
         back_btn
     ]
     schema = [1, 1, 1, 1, 1, 1, 1, 1, 1]
-    if category_.name != 'Zwilling':
+    if os.path.exists(f'database/{category_name}/sizeguide_1.png'):
         text_and_data.insert(6, [emojize(':scissors: Таблица размеров', language='alias'), f'btn_sizes_{category}'])
         schema.append(1)
     if tg_id in os.getenv('ADMINS') and get_category(id=category).custom:
@@ -1128,10 +1129,14 @@ def inline_kb_delcatalog():
     text = 'Выберите каталог, который хотите удалить'
     text_and_data = []
     schema = [1]
-    catalogs = get_catalogs()
+    catalogs = get_category()
     for catalog in catalogs:
-        text_and_data.append([emojize(f':recycle: {catalog.phone}', language='alias'), f'btn_delcatalog_{catalog.phone}'])
-        schema.append(1)
+        try:
+            int(catalog.phone[0])
+            text_and_data.append([emojize(f':recycle: {catalog.name}', language='alias'), f'btn_delcatalog_{catalog.phone}'])
+            schema.append(1)
+        except:
+            continue
     text_and_data.append(btn_back('wacatalogs'))
     inline_kb = InlineConstructor.create_kb(text_and_data, schema)
     return text, inline_kb
@@ -1140,9 +1145,9 @@ def inline_kb_editcatalog():
     text = 'Выберите каталог, наценку которого хотите изменить'
     text_and_data = []
     schema = [1]
-    catalogs = get_catalogs()
+    catalogs = get_category()
     for catalog in catalogs:
-        text_and_data.append([emojize(f':recycle: {catalog.phone} | {catalog.margin}%', language='alias'), f'btn_editcatalog_{catalog.phone}'])
+        text_and_data.append([emojize(f':recycle: {catalog.name} | {catalog.margin}%', language='alias'), f'btn_editcatalog_{catalog.phone}'])
         schema.append(1)
     text_and_data.append(btn_back('wacatalogs'))
     inline_kb = InlineConstructor.create_kb(text_and_data, schema)
