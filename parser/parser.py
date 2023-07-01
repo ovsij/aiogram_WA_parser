@@ -4501,9 +4501,12 @@ async def get_victorias():
                 for product in webpage['stacks'][0]['list'][:5]:
                     title_ = product['name']
                     description = ''
-                    current_price = int((float(product['salePrice'].strip(' €').replace(',', '.')) * (EURO_COSTS + 1)) * float(f"1.{category.margin}"))
-                    old_price = int((float(product['price'].strip(' €').replace(',', '.')) * (EURO_COSTS + 1)) * float(f"1.{category.margin}")) if product['salePrice'] else None
-                    
+                    if product['salePrice']:
+                        current_price = int((float(product['salePrice'].strip(' €').replace(',', '.')) * (EURO_COSTS + 1)) * float(f"1.{category.margin}"))
+                        old_price = int((float(product['price'].strip(' €').replace(',', '.')) * (EURO_COSTS + 1)) * float(f"1.{category.margin}")) if product['salePrice'] else None
+                    else:
+                        current_price = int((float(product['price'].strip(' €').replace(',', '.')) * (EURO_COSTS + 1)) * float(f"1.{category.margin}"))
+                        old_price = None
                     if old_price:
                         percent = int(100 - float(current_price) / (float(old_price) / 100)) if old_price else 0
                         description = f'\n\n<s>{old_price} руб.</s> -{percent}% {current_price} руб.' if old_price else ''
