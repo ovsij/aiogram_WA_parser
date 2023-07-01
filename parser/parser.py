@@ -4149,6 +4149,7 @@ async def get_odlo():
                 parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=category.id)
                 crud.create_subcategory(name=subcategory[0], category=CAT_NAME, parent_subcategory=parent_subcategory.id, level=subcategory[2])
             await crud.create_products(category=CAT_NAME, subcategory=subcategory[0], items=items)
+            logging.info(f'Canceled {CAT_NAME} {subcategory[0]} added {len(items)} products') 
 
         await bot.send_message(227184505, f'{CAT_NAME} закончил парсинг')
 
@@ -4257,6 +4258,7 @@ async def get_villeroyboch():
             parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=category.id)
             crud.create_subcategory(name=subcategory[0], category=CAT_NAME, parent_subcategory=parent_subcategory.id, level=subcategory[2])
         await crud.create_products(category=CAT_NAME, subcategory=subcategory[0], items=items)
+        logging.info(f'Canceled {CAT_NAME} {subcategory[0]} added {len(items)} products') 
 
     await bot.send_message(227184505, f'{CAT_NAME} закончил парсинг')
 
@@ -4347,10 +4349,11 @@ async def get_agent():
                         current_price = int((float(product['catalog'][0]['price']) * (EURO_COSTS + 1)) * float(f"1.{category.margin}"))
                         try:
                             old_price = int((float(product['catalog'][0]['org_price']) * (EURO_COSTS + 1)) * float(f"1.{category.margin}"))
+                            percent = int(100 - float(current_price) / (float(old_price) / 100)) if old_price else 0
+                            description = f'\n\n<s>{old_price} руб.</s> -{percent}% {current_price} руб.' if old_price else ''
                         except:
                             old_price = None
-                        percent = int(100 - float(current_price) / (float(old_price) / 100)) if old_price else 0
-                        description = f'\n\n<s>{old_price} руб.</s> -{percent}% {current_price} руб.' if old_price else ''
+                        
                         #print(description)
                         #print(current_price)
                         #url = product['catalog'][0]['url']
@@ -4417,5 +4420,161 @@ async def get_agent():
             parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=category.id)
             crud.create_subcategory(name=subcategory[0], category=CAT_NAME, parent_subcategory=parent_subcategory.id, level=subcategory[2])
         await crud.create_products(category=CAT_NAME, subcategory=subcategory[0], items=items)
+        logging.info(f'Canceled {CAT_NAME} {subcategory[0]} added {len(items)} products') 
 
     await bot.send_message(227184505, f'{CAT_NAME} закончил парсинг')
+
+
+
+async def get_victorias():
+    CAT_NAME = 'Victoria\'s Secret'
+    SUBCATEGORIES = [
+        ['Нижнее белье'],
+        ['Сексуальное белье', 'Нижнее белье', 2, 'https://api.victoriassecret.com/stacks/v27/?brand=vs&collectionId=a137d130-9e9d-4579-a341-0fd6e0f96d98&orderBy=REC&maxSwatches=8&isPersonalized=true&activeCountry=IT&platform=web&deviceType=&platformType=&cid=&perzConsent=true&tntId=c36636b4-6eeb-444e-b349-dbd8a214f93c.34_0&screenWidth=1440&screenHeight=900'],
+        ['Body By Victoria Collection', 'Нижнее белье', 2, 'https://api.victoriassecret.com/stacks/v27/?brand=vs&collectionId=c5f21e25-935c-4e3c-9cde-cc9b9bdc9fe0&orderBy=REC&maxSwatches=8&isPersonalized=true&activeCountry=IT&platform=web&deviceType=&platformType=&cid=&perzConsent=true&tntId=c36636b4-6eeb-444e-b349-dbd8a214f93c.34_0&screenWidth=1440&screenHeight=900'],
+        ['Dream Angels Collection', 'Нижнее белье', 2, 'https://api.victoriassecret.com/stacks/v27/?brand=vs&collectionId=3ddd41df-abbf-4a1b-b172-932c8944dd44&orderBy=REC&maxSwatches=8&isPersonalized=true&activeCountry=IT&platform=web&deviceType=&platformType=&cid=&perzConsent=true&tntId=c36636b4-6eeb-444e-b349-dbd8a214f93c.34_0&screenWidth=1440&screenHeight=900'],
+        ['Бюстгальтеры-футболки', 'Нижнее белье', 2, 'https://api.victoriassecret.com/stacks/v27/?brand=vs&collectionId=64e1c97c-e32a-43b7-b6c7-0497e3f93dd5&orderBy=REC&maxSwatches=8&isPersonalized=true&activeCountry=IT&platform=web&deviceType=&platformType=&cid=&perzConsent=true&tntId=c36636b4-6eeb-444e-b349-dbd8a214f93c.34_0&screenWidth=1440&screenHeight=900'],
+        ['For Love & Lemons Collection', 'Нижнее белье', 2, 'https://api.victoriassecret.com/stacks/v27/?brand=vs&collectionId=d1475ef2-82bd-4700-b497-9a0247bb8157&orderBy=REC&maxSwatches=8&isPersonalized=true&activeCountry=IT&platform=web&deviceType=&platformType=&cid=&perzConsent=true&tntId=c36636b4-6eeb-444e-b349-dbd8a214f93c.34_0&screenWidth=1440&screenHeight=900'],
+        ['Сеты', 'Нижнее белье', 2, 'https://api.victoriassecret.com/stacks/v27/?brand=vs&collectionId=a10e2f32-ce6c-4117-b135-e8e64d792ba0&orderBy=REC&maxSwatches=8&isPersonalized=true&activeCountry=IT&platform=web&deviceType=&platformType=&cid=&perzConsent=true&tntId=c36636b4-6eeb-444e-b349-dbd8a214f93c.34_0&screenWidth=1440&screenHeight=900'],
+        ['Боди', 'Нижнее белье', 2, 'https://api.victoriassecret.com/stacks/v27/?brand=vs&collectionId=ceca4d45-cdb4-4453-949b-0d0b2a7e546a&orderBy=REC&maxSwatches=8&isPersonalized=true&activeCountry=IT&platform=web&deviceType=&platformType=&cid=&perzConsent=true&tntId=c36636b4-6eeb-444e-b349-dbd8a214f93c.34_0&screenWidth=1440&screenHeight=900'],
+        ['Babydolls', 'Нижнее белье', 2, 'https://api.victoriassecret.com/stacks/v27/?brand=vs&collectionId=7ef2e543-499f-4abb-8641-8e7c7ca336e6&orderBy=REC&maxSwatches=8&isPersonalized=true&activeCountry=IT&platform=web&deviceType=&platformType=&cid=&perzConsent=true&tntId=c36636b4-6eeb-444e-b349-dbd8a214f93c.34_0&screenWidth=1440&screenHeight=900'],
+        ['Корсеты', 'Нижнее белье', 2, 'https://api.victoriassecret.com/stacks/v27/?brand=vs&collectionId=3250ffa5-0277-42a0-87db-6767cae04c82&orderBy=REC&maxSwatches=8&isPersonalized=true&activeCountry=IT&platform=web&deviceType=&platformType=&cid=&perzConsent=true&tntId=c36636b4-6eeb-444e-b349-dbd8a214f93c.34_0&screenWidth=1440&screenHeight=900'],
+        ['Комбинезоны', 'Нижнее белье', 2, 'https://api.victoriassecret.com/stacks/v27/?brand=vs&collectionId=ea68415a-01dd-40e5-b67d-550c79b6e116&orderBy=REC&maxSwatches=8&isPersonalized=true&activeCountry=IT&platform=web&deviceType=&platformType=&cid=&perzConsent=true&tntId=c36636b4-6eeb-444e-b349-dbd8a214f93c.34_0&screenWidth=1440&screenHeight=900'],
+        ['Для сна'],
+        ['Пижамы', 'Для сна', 2, 'https://api.victoriassecret.com/stacks/v27/?brand=vs&collectionId=97bcd5b2-25f4-4c31-805c-c2a0041c0f3d&orderBy=REC&maxSwatches=8&isPersonalized=true&activeCountry=IT&platform=web&deviceType=&platformType=&cid=&perzConsent=true&tntId=c36636b4-6eeb-444e-b349-dbd8a214f93c.34_0&screenWidth=1440&screenHeight=900'],
+        ['Ночные рубашки', 'Для сна', 2, 'https://api.victoriassecret.com/stacks/v27/?brand=vs&collectionId=da01644a-530b-4b6a-99eb-2538f4258c41&orderBy=REC&maxSwatches=8&isPersonalized=true&activeCountry=IT&platform=web&deviceType=&platformType=&cid=&perzConsent=true&tntId=c36636b4-6eeb-444e-b349-dbd8a214f93c.34_0&screenWidth=1440&screenHeight=900'],
+        ['Комплекты на бретельках', 'Для сна', 2, 'https://api.victoriassecret.com/stacks/v27/?brand=vs&collectionId=023565a2-910a-4273-a987-23d203c682c1&orderBy=REC&maxSwatches=8&isPersonalized=true&activeCountry=IT&platform=web&deviceType=&platformType=&cid=&perzConsent=true&tntId=c36636b4-6eeb-444e-b349-dbd8a214f93c.34_0&screenWidth=1440&screenHeight=900'],
+        ['Халаты', 'Для сна', 2, 'https://api.victoriassecret.com/stacks/v27/?brand=vs&collectionId=4c0899a1-ae61-481c-b2af-b5794c93378b&orderBy=REC&maxSwatches=8&isPersonalized=true&activeCountry=IT&platform=web&deviceType=&platformType=&cid=&perzConsent=true&tntId=c36636b4-6eeb-444e-b349-dbd8a214f93c.34_0&screenWidth=1440&screenHeight=900'],
+        ['Купальники'],
+        ['Бикини', 'Купальники', 2, 'https://api.victoriassecret.com/stacks/v27/?brand=vs&collectionId=0d63db16-da33-4243-8569-b6d5736dffa0&orderBy=REC&maxSwatches=8&isPersonalized=true&activeCountry=IT&platform=web&deviceType=&platformType=&cid=&perzConsent=true&tntId=c36636b4-6eeb-444e-b349-dbd8a214f93c.34_0&screenWidth=1440&screenHeight=900'],
+        ['Бикини верх', 'Купальники', 2, 'https://api.victoriassecret.com/stacks/v27/?brand=vs&collectionId=cfbbc54e-aeea-44ae-9af8-d67e3e208e6d&orderBy=REC&maxSwatches=8&isPersonalized=true&activeCountry=IT&platform=web&deviceType=&platformType=&cid=&perzConsent=true&tntId=c36636b4-6eeb-444e-b349-dbd8a214f93c.34_0&screenWidth=1440&screenHeight=900'],
+        ['Бикини низ', 'Купальники', 2, 'https://api.victoriassecret.com/stacks/v27/?brand=vs&collectionId=cb79301a-a20a-4fa0-82ce-86a55f9f97d9&orderBy=REC&maxSwatches=8&isPersonalized=true&activeCountry=IT&platform=web&deviceType=&platformType=&cid=&perzConsent=true&tntId=c36636b4-6eeb-444e-b349-dbd8a214f93c.34_0&screenWidth=1440&screenHeight=900'],
+        ['Слитные купальники', 'Купальники', 2, 'https://api.victoriassecret.com/stacks/v27/?brand=vs&collectionId=cdc404af-ef51-4e60-ad56-88ac8ca3c082&orderBy=REC&maxSwatches=8&isPersonalized=true&activeCountry=IT&platform=web&deviceType=&platformType=&cid=&perzConsent=true&tntId=c36636b4-6eeb-444e-b349-dbd8a214f93c.34_0&screenWidth=1440&screenHeight=900'],
+        ['Пляжная одежда', 'Купальники', 2, 'https://api.victoriassecret.com/stacks/v27/?brand=vs&collectionId=d664ca4c-c3c4-4022-aed9-f99b62e600da&orderBy=REC&maxSwatches=8&isPersonalized=true&activeCountry=IT&platform=web&deviceType=&platformType=&cid=&perzConsent=true&tntId=c36636b4-6eeb-444e-b349-dbd8a214f93c.34_0&screenWidth=1440&screenHeight=900'],
+        ['Спорт и отдых'],
+        ['Спортивные бюстгальтеры', 'Спорт и отдых', 2, 'https://api.victoriassecret.com/stacks/v27/?brand=vs&collectionId=f7f31323-a322-46c9-a20d-2b623d7ec714&orderBy=REC&maxSwatches=8&isPersonalized=true&activeCountry=IT&platform=web&deviceType=&platformType=&cid=&perzConsent=true&tntId=c36636b4-6eeb-444e-b349-dbd8a214f93c.34_0&screenWidth=1440&screenHeight=900'],
+        ['Леггинсы', 'Спорт и отдых', 2, 'https://api.victoriassecret.com/stacks/v27/?brand=vs&collectionId=e70162e1-74d1-45c5-9caa-4b191dd3f86d&orderBy=REC&maxSwatches=8&isPersonalized=true&activeCountry=IT&platform=web&deviceType=&platformType=&cid=&perzConsent=true&tntId=c36636b4-6eeb-444e-b349-dbd8a214f93c.34_0&screenWidth=1440&screenHeight=900'],
+        ['Свитшоты', 'Спорт и отдых', 2, 'https://api.victoriassecret.com/stacks/v27/?brand=vs&collectionId=8c78a46e-0ed2-44a5-bccc-0d942c3d23eb&orderBy=REC&maxSwatches=8&isPersonalized=true&activeCountry=IT&platform=web&deviceType=&platformType=&cid=&perzConsent=true&tntId=c36636b4-6eeb-444e-b349-dbd8a214f93c.34_0&screenWidth=1440&screenHeight=900'],
+        ['Штаны', 'Спорт и отдых', 2, 'https://api.victoriassecret.com/stacks/v27/?brand=vs&collectionId=8028ca96-9451-400c-a38e-0ae60b49e45f&orderBy=REC&maxSwatches=8&isPersonalized=true&activeCountry=IT&platform=web&deviceType=&platformType=&cid=&perzConsent=true&tntId=c36636b4-6eeb-444e-b349-dbd8a214f93c.34_0&screenWidth=1440&screenHeight=900'],
+        ['Шорты', 'Спорт и отдых', 2, 'https://api.victoriassecret.com/stacks/v27/?brand=vs&collectionId=9ba551fc-7526-438a-a07e-0ce8ad6e8ccd&orderBy=REC&maxSwatches=8&isPersonalized=true&activeCountry=IT&platform=web&deviceType=&platformType=&cid=&perzConsent=true&tntId=c36636b4-6eeb-444e-b349-dbd8a214f93c.34_0&screenWidth=1440&screenHeight=900'],
+        ['Парфюмерия'],
+        ['Духи', 'Парфюмерия', 2, 'https://api.victoriassecret.com/stacks/v27/?brand=vs&collectionId=f2a98ba3-e118-4a76-aff4-b5b146a702fd&orderBy=REC&maxSwatches=8&isPersonalized=true&activeCountry=IT&platform=web&deviceType=&platformType=&cid=&perzConsent=true&tntId=c36636b4-6eeb-444e-b349-dbd8a214f93c.34_0&screenWidth=1440&screenHeight=900'],
+        ['Роллеры', 'Парфюмерия', 2, 'https://api.victoriassecret.com/stacks/v27/?brand=vs&collectionId=047be607-7e48-49a7-8eb0-8aec327a4e28&orderBy=REC&maxSwatches=8&isPersonalized=true&activeCountry=IT&platform=web&deviceType=&platformType=&cid=&perzConsent=true&tntId=c36636b4-6eeb-444e-b349-dbd8a214f93c.34_0&screenWidth=1440&screenHeight=900'],
+        ['Fragrance Mists', 'Парфюмерия', 2, 'https://api.victoriassecret.com/stacks/v27/?brand=vs&collectionId=d15948c4-a78f-4dab-bd2a-cdc6564ffc34&orderBy=REC&maxSwatches=8&isPersonalized=true&activeCountry=IT&platform=web&deviceType=&platformType=&cid=&perzConsent=true&tntId=c36636b4-6eeb-444e-b349-dbd8a214f93c.34_0&screenWidth=1440&screenHeight=900'],
+        ['Лосьоны', 'Парфюмерия', 2, 'https://api.victoriassecret.com/stacks/v27/?brand=vs&collectionId=c4cae9ea-40c4-4d58-8c3b-cb82ab70f0d5&orderBy=REC&maxSwatches=8&isPersonalized=true&activeCountry=IT&platform=web&deviceType=&platformType=&cid=&perzConsent=true&tntId=c36636b4-6eeb-444e-b349-dbd8a214f93c.34_0&screenWidth=1440&screenHeight=900'],
+        ['Для тела'],
+        ['Мисты для тела', 'Для тела', 2, 'https://api.victoriassecret.com/stacks/v27/?brand=vs&collectionId=f764f0f2-a6a8-4c70-8cde-dbb4ba7b673b&orderBy=REC&maxSwatches=8&isPersonalized=true&activeCountry=IT&platform=web&deviceType=&platformType=&cid=&perzConsent=true&tntId=c36636b4-6eeb-444e-b349-dbd8a214f93c.34_0&screenWidth=1440&screenHeight=900'],
+        ['Лосьоны для тела', 'Для тела', 2, 'https://api.victoriassecret.com/stacks/v27/?brand=vs&collectionId=97910f84-8b07-410a-9467-bb3d230c140d&orderBy=REC&maxSwatches=8&isPersonalized=true&activeCountry=IT&platform=web&deviceType=&platformType=&cid=&perzConsent=true&tntId=c36636b4-6eeb-444e-b349-dbd8a214f93c.34_0&screenWidth=1440&screenHeight=900'],
+        ['Скрабы', 'Для тела', 2, 'https://api.victoriassecret.com/stacks/v27/?brand=vs&collectionId=a20b0946-7f3b-49b8-8584-ec462966d05b&orderBy=REC&maxSwatches=8&isPersonalized=true&activeCountry=IT&platform=web&deviceType=&platformType=&cid=&perzConsent=true&tntId=c36636b4-6eeb-444e-b349-dbd8a214f93c.34_0&screenWidth=1440&screenHeight=900'],
+        ['Дезодоранты', 'Для тела', 2, 'https://api.victoriassecret.com/stacks/v27/?brand=vs&collectionId=82c582a8-0a32-42d4-9c20-11cb6ffc66c7&orderBy=REC&maxSwatches=8&isPersonalized=true&activeCountry=IT&platform=web&deviceType=&platformType=&cid=&perzConsent=true&tntId=c36636b4-6eeb-444e-b349-dbd8a214f93c.34_0&screenWidth=1440&screenHeight=900'],
+        ['Аксессуары'],
+        ['Для губ', 'Аксессуары', 2, 'https://api.victoriassecret.com/stacks/v27/?brand=vs&collectionId=0855f9df-4f28-4dbf-b31c-0fb825489c4c&orderBy=REC&maxSwatches=8&isPersonalized=true&activeCountry=IT&platform=web&deviceType=&platformType=&cid=&perzConsent=true&tntId=c36636b4-6eeb-444e-b349-dbd8a214f93c.34_0&screenWidth=1440&screenHeight=900'],
+        ['Косметички', 'Аксессуары', 2, 'https://api.victoriassecret.com/stacks/v27/?brand=vs&collectionId=f8ca7af4-8d74-4a29-8a4a-5a6e73d410f1&orderBy=REC&maxSwatches=8&isPersonalized=true&activeCountry=IT&platform=web&deviceType=&platformType=&cid=&perzConsent=true&tntId=c36636b4-6eeb-444e-b349-dbd8a214f93c.34_0&screenWidth=1440&screenHeight=900'],
+        ['Сумки', 'Аксессуары', 2, 'https://api.victoriassecret.com/stacks/v27/?brand=vs&collectionId=65849cac-396c-4bc5-8e12-6e48db60a23a&orderBy=REC&maxSwatches=8&isPersonalized=true&activeCountry=IT&platform=web&deviceType=&platformType=&cid=&perzConsent=true&tntId=c36636b4-6eeb-444e-b349-dbd8a214f93c.34_0&screenWidth=1440&screenHeight=900'],
+        ['Кошельки', 'Аксессуары', 2, 'https://api.victoriassecret.com/stacks/v27/?brand=vs&collectionId=ebbf61fc-d0ef-404b-80ee-e9c4b934acb8&orderBy=REC&maxSwatches=8&isPersonalized=true&activeCountry=IT&platform=web&deviceType=&platformType=&cid=&perzConsent=true&tntId=c36636b4-6eeb-444e-b349-dbd8a214f93c.34_0&screenWidth=1440&screenHeight=900'],
+        ['Ключницы', 'Аксессуары', 2, 'https://api.victoriassecret.com/stacks/v27/?brand=vs&collectionId=1257be42-ce4c-431f-adf4-217c43ffd012&orderBy=REC&maxSwatches=8&isPersonalized=true&activeCountry=IT&platform=web&deviceType=&platformType=&cid=&perzConsent=true&tntId=c36636b4-6eeb-444e-b349-dbd8a214f93c.34_0&screenWidth=1440&screenHeight=900'],
+    ]
+    headers = {
+        'User-Agent': 'Mozilla/5.0'
+        }
+    EURO_COSTS = euro_cost()
+    category = crud.get_category(name=CAT_NAME, metacategory=crud.get_metacategory(name='Женская одежда').id)
+    for subcategory in SUBCATEGORIES:
+        if not str(subcategory[-1]).startswith('http'):
+            if len(subcategory) == 1:
+                crud.create_subcategory(name=subcategory[0], category=CAT_NAME) if not crud.subcategory_exists(name=subcategory[0], category=CAT_NAME) else 0
+            else:
+                if not crud.subcategory_exists(name=subcategory[0], category=CAT_NAME):
+                    parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=category.id)
+                    crud.create_subcategory(name=subcategory[0], category=CAT_NAME, parent_subcategory=parent_subcategory.id, level=subcategory[2])
+            continue
+
+        logging.info(f'Starting {CAT_NAME}: {subcategory[0]}')
+        
+        url = subcategory[-1]
+        async with aiohttp.ClientSession(headers=headers, trust_env=True) as session:
+            async with session.get(url, ssl=False) as response:
+                webpage = await response.json()
+                items = []
+                
+                print(len(webpage['stacks'][0]['list']))
+                for product in webpage['stacks'][0]['list'][:5]:
+                    title_ = product['name']
+                    description = ''
+                    current_price = int((float(product['salePrice'].strip(' €').replace(',', '.')) * (EURO_COSTS + 1)) * float(f"1.{category.margin}"))
+                    old_price = int((float(product['price'].strip(' €').replace(',', '.')) * (EURO_COSTS + 1)) * float(f"1.{category.margin}")) if product['salePrice'] else None
+                    
+                    if old_price:
+                        percent = int(100 - float(current_price) / (float(old_price) / 100)) if old_price else 0
+                        description = f'\n\n<s>{old_price} руб.</s> -{percent}% {current_price} руб.' if old_price else ''
+                    
+                    #alt_price = f"Любые {product['altPrices'][0].strip(' €').split('/')[0].strip('any ')} /{int((float(product['altPrices'][0].strip(' €').split('/')[1].replace(',', '')) * (EURO_COSTS + 1)) * float(f'1.{category.margin}'))}" if product['altPrices'] else None
+                    #any 3/44,52 €
+                    #if alt_price:
+                    #    description += f'\n\nАкция: {alt_price}'
+                    percent = 0
+                    
+                    url = 'https://www.victoriassecret.com' + product['url']
+                    article_ = product['genericChoiceId']
+
+                    url_item = 'https://api.victoriassecret.com/products/v22/page/5000000022?collectionId=a137d130-9e9d-4579-a341-0fd6e0f96d98&productId={}&stackId=173cdd14-2844-4276-9660-4a9cc52810c5&priceType=regular&activeCountry=IT'
+                    async with session.get(url_item.format(product['id']), ssl=False) as response:
+                        product_json = await response.json()
+                        print(len(product_json['product']['productData'].values()))
+                        for group in product_json['product']['productData'].values():
+                            
+                            try:
+                                _ = group['shortDescription']
+                            except:
+                                continue
+                            for item in group['choices'].values():
+                                if not item['images']:
+                                    continue
+                                title = title_ + ' ' + item['label']
+                                article = article_ + '_' + item['label'].replace(' ', '_')
+                                #print(title)
+                                #print(item)
+                                image_links = [f"https://www.victoriassecret.com/p/760x1013/{im['image']}.jpg" for im in item['images']]
+                                #print(image_links)
+                                try:
+                                    sizes_list = [size for size in item['availableSizes'].keys()]
+                                    sizes = ''
+                                    for size in sizes_list:
+                                        sizes += size + ', '
+                                    sizes = sizes.strip(', ')
+                                except:
+                                    sizes = ''
+
+                                if not os.path.exists(f"database/images/{CAT_NAME}"):
+                                    os.mkdir(f"database/images/{CAT_NAME}")
+
+                                if not os.path.exists(f"database/images/{CAT_NAME}/{subcategory[0]}"):
+                                    os.mkdir(f"database/images/{CAT_NAME}/{subcategory[0]}")
+                                #try:
+                                i = webpage['stacks'][0]['list'].index(product) + 1
+                                #except:
+                                #    continue
+                                images = ''
+                                for link in image_links[:10]:
+                                    try:
+                                        num = image_links.index(link) + 1
+                                        img_path = f"database/images/{CAT_NAME}/{subcategory[0]}/{i}_{title.replace(' ', '_').replace('/', '_').replace('|', '')}_{num}.jpg"
+                                        if not os.path.exists(img_path):
+                                            async with session.get(link, ssl=False) as response:
+                                                f = await aiofiles.open(img_path, mode='wb')
+                                                await f.write(await response.read())
+                                                await f.close()
+                                        images += img_path + '\n'
+                                    except Exception as err:
+                                        print(err)
+                                        
+                                items.append([title, description, current_price, images, sizes, article, url])
+        if not crud.subcategory_exists(name=subcategory[0], category=CAT_NAME):
+            parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=category.id)
+            crud.create_subcategory(name=subcategory[0], category=CAT_NAME, parent_subcategory=parent_subcategory.id, level=subcategory[2])
+        await crud.create_products(category=CAT_NAME, subcategory=subcategory[0], items=items)
+        logging.info(f'Canceled {CAT_NAME} {subcategory[0]} added {len(items)} products') 
+
+    await bot.send_message(227184505, f'{CAT_NAME} закончил парсинг')
+
+           

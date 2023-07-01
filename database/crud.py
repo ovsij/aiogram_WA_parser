@@ -189,13 +189,10 @@ def create_product(
 
 @db_session()
 async def create_products(category : str, subcategory : str, items : list):
-    logging.info('Creating')
     # удаляем старые товары
     all_articles = [item[5] for item in items]
     category_ = Category.get(name=category)
     subcategory_ = SubCategory.get(name=subcategory, category=category_)
-    logging.info(category_)
-    logging.info(subcategory_)
     # Разослать юзерам что товар из их корзины удален
     users = get_users()
     for user in users:
@@ -206,7 +203,7 @@ async def create_products(category : str, subcategory : str, items : list):
             for product in cart:
                 #print(product)
                 if product.article not in all_articles and product.subcategory.id == subcategory_.id:
-                    print(product.article)
+                    #print(product.article)
                     await bot.send_message(user.tg_id, f'К сожалению, товар {product.name} ({product.category.name}) из вашей корзины закончился')
         except:
             continue
