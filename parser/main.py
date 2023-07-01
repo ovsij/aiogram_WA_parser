@@ -51,8 +51,8 @@ async def main():
         #tasks.add(task12)
         #task13 = asyncio.create_task(get_twinset())
         #tasks.add(task13)
-        task14 = asyncio.create_task(get_hellyhansen())
-        tasks.add(task14)
+        #task14 = asyncio.create_task(get_hellyhansen())
+        #tasks.add(task14)
         #task15 = asyncio.create_task(get_wolford())
         #tasks.add(task15)
         #task16 = asyncio.create_task(get_odlo())
@@ -61,6 +61,8 @@ async def main():
         #tasks.add(task17)
         #task18 = asyncio.create_task(get_agent())
         #tasks.add(task18)
+        task19 = asyncio.create_task(get_victorias())
+        tasks.add(task19)
         
         
         L = await asyncio.gather(*tasks)
