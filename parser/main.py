@@ -61,8 +61,10 @@ async def main():
         #tasks.add(task17)
         #task18 = asyncio.create_task(get_agent())
         #tasks.add(task18)
-        task19 = asyncio.create_task(get_victorias())
-        tasks.add(task19)
+        #task19 = asyncio.create_task(get_victorias())
+        #tasks.add(task19)
+        task20 = asyncio.create_task(get_crocs())
+        tasks.add(task20)
         
         
         L = await asyncio.gather(*tasks)
