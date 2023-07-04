@@ -4733,7 +4733,7 @@ async def get_crocs():
                                 except Exception as err:
                                     print(err)
                             item = [title, description, current_price, images, sizes, article, item_url]
-                            print(item)
+                            #print(item)
                             items.append(item)
                             
         if not crud.subcategory_exists(name=subcategory[0], category=CAT_NAME):
