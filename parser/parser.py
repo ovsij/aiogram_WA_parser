@@ -4497,7 +4497,6 @@ async def get_victorias():
                 webpage = await response.json()
                 items = []
                 
-                print(len(webpage['stacks'][0]['list']))
                 for product in webpage['stacks'][0]['list'][:5]:
                     title_ = product['name']
                     description = ''
@@ -4523,7 +4522,6 @@ async def get_victorias():
                     url_item = 'https://api.victoriassecret.com/products/v22/page/5000000022?collectionId=a137d130-9e9d-4579-a341-0fd6e0f96d98&productId={}&stackId=173cdd14-2844-4276-9660-4a9cc52810c5&priceType=regular&activeCountry=IT'
                     async with session.get(url_item.format(product['id']), ssl=False) as response:
                         product_json = await response.json()
-                        print(len(product_json['product']['productData'].values()))
                         for group in product_json['product']['productData'].values():
                             
                             try:
@@ -4581,3 +4579,169 @@ async def get_victorias():
     await bot.send_message(227184505, f'{CAT_NAME} закончил парсинг')
 
            
+
+async def get_crocs():
+    EURO_COSTS = euro_cost()
+    print(EURO_COSTS)
+    CAT_NAME = 'Crocs'
+    category = crud.get_category(name=CAT_NAME, metacategory=crud.get_metacategory(name='Обувные бренды').id)
+    SUBCATEGORIES = [
+        ['Женщины'],
+        ['Сабо', 'Женщины', 2, 'https://www.crocsitalia.it/donna/footwear-donna/sabot?page={}'],
+        ['Платформа', 'Женщины', 2, 'https://www.crocsitalia.it/donna/footwear-donna/platform?page={}'],
+        ['Шлепки', 'Женщины', 2, 'https://www.crocsitalia.it/donna/footwear-donna/infradito?page={}'],
+        ['Тапочки', 'Женщины', 2, 'https://www.crocsitalia.it/donna/footwear-donna/fasce?page={}'],
+        ['Сандалии', 'Женщины', 2, 'https://www.crocsitalia.it/donna/footwear-donna/sandali?page={}'],
+        ['Кросовки', 'Женщины', 2, 'https://www.crocsitalia.it/donna/footwear-donna/sneakers-e-mocassini?page={}'],
+        ['Слиперы', 'Женщины', 2, 'https://www.crocsitalia.it/donna/footwear-donna/slippers?page={}'],
+        ['Ботинки', 'Женщины', 2, 'https://www.crocsitalia.it/donna/footwear-donna/stivali?page={}'],
+        ['Носки', 'Женщины', 2, 'https://www.crocsitalia.it/socks/socks/socks?page={}'],
+        ['Мужчины'],
+        ['Сабо', 'Мужчины', 2, 'https://www.crocsitalia.it/uomo/footwear-uomo/sabot?page={}'],
+        ['Шлепки', 'Мужчины', 2, 'https://www.crocsitalia.it/uomo/footwear-uomo/infradito?page={}'],
+        ['Тапочки', 'Мужчины', 2, 'https://www.crocsitalia.it/uomo/footwear-uomo/fasce?page={}'],
+        ['Сандалии', 'Мужчины', 2, 'https://www.crocsitalia.it/uomo/footwear-uomo/sandali?page={}'],
+        ['Кросовки', 'Мужчины', 2, 'https://www.crocsitalia.it/uomo/footwear-uomo/sneakers-e-mocassini?page={}'],
+        ['Слиперы', 'Мужчины', 2, 'https://www.crocsitalia.it/uomo/footwear-uomo/slippers?page={}'],
+        ['Ботинки', 'Мужчины', 2, 'https://www.crocsitalia.it/uomo/footwear-uomo/stivali?page={}'],
+        ['Носки', 'Мужчины', 2, 'https://www.crocsitalia.it/socks/socks/socks?page={}'],
+        ['Девочки'],
+        ['Сабо', 'Девочки', 2, 'https://www.crocsitalia.it/bambina/footwear-bambina/sabot?page={}'],
+        ['Платформа', 'Девочки', 2, 'https://www.crocsitalia.it/bambina/footwear-bambina/platform?page={}'],
+        ['Шлепки', 'Девочки', 2, 'https://www.crocsitalia.it/bambina/footwear-bambina/infradito?page={}'],
+        ['Тапочки', 'Девочки', 2, 'https://www.crocsitalia.it/bambina/footwear-bambina/fasce?page={}'],
+        ['Сандалии', 'Девочки', 2, 'https://www.crocsitalia.it/bambina/footwear-bambina/sandali?page={}'],
+        ['Кросовки', 'Девочки', 2, 'https://www.crocsitalia.it/bambina/footwear-bambina/sneakers-e-mocassini?page={}'],
+        ['Слиперы', 'Девочки', 2, 'https://www.crocsitalia.it/bambina/footwear-bambina/slippers?page={}'],
+        ['Ботинки', 'Девочки', 2, 'https://www.crocsitalia.it/bambina/footwear-bambina/stivali?page={}'],
+        ['Носки', 'Девочки', 2, 'https://www.crocsitalia.it/socks/socks/socks?page={}'],
+        ['Мальчики'],
+        ['Сабо', 'Мальчики', 2, 'https://www.crocsitalia.it/bambino/footwear-bambino/sabot?page={}'],
+        ['Платформа', 'Мальчики', 2, 'https://www.crocsitalia.it/bambino/footwear-bambino/platform?page={}'],
+        ['Шлепки', 'Мальчики', 2, 'https://www.crocsitalia.it/bambino/footwear-bambino/infradito?page={}'],
+        ['Тапочки', 'Мальчики', 2, 'https://www.crocsitalia.it/bambino/footwear-bambino/fasce?page={}'],
+        ['Сандалии', 'Мальчики', 2, 'https://www.crocsitalia.it/bambino/footwear-bambino/sandali?page={}'],
+        ['Кросовки', 'Мальчики', 2, 'https://www.crocsitalia.it/bambino/footwear-bambino/sneakers-e-mocassini?page={}'],
+        ['Слиперы', 'Мальчики', 2, 'https://www.crocsitalia.it/bambino/footwear-bambino/slippers?page={}'],
+        ['Ботинки', 'Мальчики', 2, 'https://www.crocsitalia.it/bambino/footwear-bambino/stivali?page={}'],
+        ['Носки', 'Мальчики', 2, 'https://www.crocsitalia.it/socks/socks/socks?page={}'],
+    ]
+
+    headers = {
+        'Cookie' : 'cto_bundle=p9aV8V96NlpBU0dHSTVSaHpaZFByczFOSVJ0NzglMkZmNWZEJTJGdnZoaGdQZ203a3BSQ2VyaTVkbXU4JTJGZllnOEp1QTY2VGUxZHFYMk5WVWFwVmslMkZGJTJGR3FtMVVsWDNGV0dFRlExb2lFYjROc1I0WlpaWFNTT3JoWHpJQTd5T0hVNE1yYWh5MzA; _ga_YMN8FV8JQ8=GS1.1.1688468670.3.1.1688473934.0.0.0; _ga_3QEP8X3SV6=GS1.1.1688468670.3.1.1688473934.60.0.0; _iub_cs-19733067=%7B%22timestamp%22%3A%222023-07-03T19%3A18%3A43.392Z%22%2C%22version%22%3A%221.48.0%22%2C%22purposes%22%3A%7B%221%22%3Atrue%2C%224%22%3Atrue%2C%225%22%3Atrue%7D%2C%22id%22%3A19733067%2C%22cons%22%3A%7B%22rand%22%3A%224cd493%22%7D%7D; _clsk=tbc7qv|1688473843756|2|1|x.clarity.ms/collect; _ga=GA1.1.5074727.1688411912; _ga_J0NSG8MNJ7=GS1.2.1688468678.2.1.1688473837.0.0.0; _gcl_au=1.1.1153860720.1688411913; _gid=GA1.2.1130102347.1688411912; modalShown=1; _cksess=htaGdFXvMyp5cBxRTeZCL2npOd4Ju51J; _clck=z2vhff|2|fd0|0|1279; ps_analytics=8rXTYjwfSPgiaYmLc35r; nl-popup=1; PHPSESSID=mnps2ulpeghtmk86t76p9i0kg1',
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.4 Safari/605.1.15',
+        'Referer' : 'https://www.crocsitalia.it/donna/footwear-donna/sabot',
+        'Accept-Language': 'it',
+        }
+    service = services.Chromedriver(binary=ChromeDriverManager().install(), log_file=os.devnull)
+    browser = browsers.Chrome()
+    browser.capabilities = {
+        "goog:chromeOptions": {"args": [
+        '--no-sandbox',
+        '--user-data-dir=parser/User', 
+        '--headless',
+        #'window-size=1280,720',
+        '--start-maximized',
+        
+        '--private',
+        '--disable-gpu',
+        '--disable-dev-shm-usage',
+        '--profile-directory=Profile 1',
+        'user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36',
+        '--lang="ru"'
+        ]}}
+    items = []
+    for subcategory in SUBCATEGORIES:
+        if not str(subcategory[-1]).startswith('http'):
+            if len(subcategory) == 1:
+                crud.create_subcategory(name=subcategory[0], category=CAT_NAME) if not crud.subcategory_exists(name=subcategory[0], category=CAT_NAME) else 0
+            else:
+                if not crud.subcategory_exists(name=subcategory[0], category=CAT_NAME):
+                    parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=category.id)
+                    crud.create_subcategory(name=subcategory[0], category=CAT_NAME, parent_subcategory=parent_subcategory.id, level=subcategory[2])
+            continue
+
+        logging.info(f'Starting {CAT_NAME}: {subcategory[0]}')
+
+        async with aiohttp.ClientSession(headers=headers, trust_env=True) as session:
+            products = []
+            url = subcategory[-1]
+            for i in range(1):
+                async with session.get(url.format(i), ssl=False) as response:
+                    webpage = await response.text()
+                    soup = bs(webpage, 'html.parser')
+                    products_ = ['https://www.crocsitalia.it' + a.get('href') for a in soup.find('div', 'product-list-container').find('div', 'desktop').find_all('a')]
+                    max_page = soup.find('span', 'PageNumbering').find_all('a')[-1].text
+                    if i > int(max_page):
+                        break
+                    else:
+                        index = len(products_)/2
+                        products += products_
+            for product in products:
+                async with session.get(product, ssl=False) as response:
+                    item_soup = bs(await response.text(), 'html.parser')
+                    for color_url in [im.get('class')[1] for im in item_soup.find('div', {'id' : 'color-item'}).find_all('img')]:
+                        item_url = product.split('?color=')[0] + f'?color={color_url}'
+                        #async with session.get(item_url, ssl=False) as response:
+                        async with get_session(service, browser) as browser_session:
+                            await browser_session.get(item_url)
+                            #await asyncio.sleep(1000)
+
+                            webpage = await browser_session.get_page_source()
+                            color_soup = bs(webpage, 'html.parser')
+                            #print(color_soup)
+                            title = color_soup.find('h1', 'f-24 c-4 fw700 proximanova-regular-arial').text
+                            color = color_soup.find('span', {'id': 'desc-color'}).text
+                            title = f'{title} {color}'
+                            
+                            current_price = int((float(color_soup.find('div', ['price left f-18 fw700 c-4 proximanova-bold mb-10', 'price left f-18 fw700 c-4 proximanova-bold mb-10 cred']).text.strip('€ ')) * (EURO_COSTS + 1)) * float(f"1.{category.margin}"))
+                            try:
+                                old_price = int((float(color_soup.find('div', 'full_price f-18 left ml-10 lt mb-10').text.strip('€ ')) * (EURO_COSTS + 1)) * float(f"1.{category.margin}"))
+                            except:
+                                old_price = None
+                            if old_price:
+                                percent = int(100 - float(current_price) / (float(old_price) / 100))
+                                description = f'\n\n<s>{old_price} руб.</s> -{percent}% {current_price} руб.'
+                            sizes_list = [div.text for div in color_soup.find('div', 'c-8 tc ml--5 mr--5 size-block').find_all('div') if not 'fake' in div.get('class')]
+                            sizes = ''
+                            for size in sizes_list:
+                                sizes += f'{size}, '
+                            sizes = sizes.strip(', ')
+                            article = 'CR' + item_url.split('CR')[1]
+                            image_links = [img.get('src').replace('220x200', '1200x1200') for img in color_soup.find('div', {'id' : 'all-photo'}).find_all('img')]
+                            
+                            if not os.path.exists(f"database/images/{CAT_NAME}"):
+                                os.mkdir(f"database/images/{CAT_NAME}")
+
+                            if not os.path.exists(f"database/images/{CAT_NAME}/{subcategory[0]}"):
+                                os.mkdir(f"database/images/{CAT_NAME}/{subcategory[0]}")
+                            try:
+                                i = products.index(product) + 1
+                            except:
+                                continue
+                            images = ''
+                            for link in image_links[:10]:
+                                try:
+                                    num = image_links.index(link) + 1
+                                    img_path = f"database/images/{CAT_NAME}/{subcategory[0]}/{i}_{title.replace(' ', '_').replace('/', '_').replace('|', '')}_{num}.jpg"
+                                    if not os.path.exists(img_path):
+                                        async with session.get(link, ssl=False) as response:
+                                            f = await aiofiles.open(img_path, mode='wb')
+                                            await f.write(await response.read())
+                                            await f.close()
+                                    images += img_path + '\n'
+                                except Exception as err:
+                                    print(err)
+                            item = [title, description, current_price, images, sizes, article, item_url]
+                            print(item)
+                            items.append(item)
+                            
+        if not crud.subcategory_exists(name=subcategory[0], category=CAT_NAME):
+            parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=category.id)
+            crud.create_subcategory(name=subcategory[0], category=CAT_NAME, parent_subcategory=parent_subcategory.id, level=subcategory[2])
+        await crud.create_products(category=CAT_NAME, subcategory=subcategory[0], items=items)
+        logging.info(f'Canceled {CAT_NAME} {subcategory[0]} added {len(items)} products') 
+
+    await bot.send_message(227184505, f'{CAT_NAME} закончил парсинг')
+    
+                            
