@@ -4650,7 +4650,7 @@ async def get_crocs():
         'user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36',
         '--lang="ru"'
         ]}}
-    items = []
+    
     for subcategory in SUBCATEGORIES:
         if not str(subcategory[-1]).startswith('http'):
             if len(subcategory) == 1:
@@ -4662,6 +4662,7 @@ async def get_crocs():
             continue
 
         logging.info(f'Starting {CAT_NAME}: {subcategory[0]}')
+        items = []
 
         async with aiohttp.ClientSession(headers=headers, trust_env=True) as session:
             products = []
@@ -4675,7 +4676,6 @@ async def get_crocs():
                     if i > int(max_page):
                         break
                     else:
-                        index = len(products_)/2
                         products += products_
             for product in products:
                 async with session.get(product, ssl=False) as response:
