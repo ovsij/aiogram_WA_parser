@@ -4672,7 +4672,10 @@ async def get_crocs():
                     webpage = await response.text()
                     soup = bs(webpage, 'html.parser')
                     products_ = ['https://www.crocsitalia.it' + a.get('href') for a in soup.find('div', 'product-list-container').find('div', 'desktop').find_all('a')]
-                    max_page = soup.find('span', 'PageNumbering').find_all('a')[-1].text
+                    try:
+                        max_page = soup.find('span', 'PageNumbering').find_all('a')[-1].text
+                    except:
+                        max_page = 1
                     if i > int(max_page):
                         break
                     else:
