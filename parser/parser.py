@@ -4667,7 +4667,7 @@ async def get_crocs():
         async with aiohttp.ClientSession(headers=headers, trust_env=True) as session:
             products = []
             url = subcategory[-1]
-            for i in range(1):
+            for i in range(100):
                 async with session.get(url.format(i), ssl=False) as response:
                     webpage = await response.text()
                     soup = bs(webpage, 'html.parser')
