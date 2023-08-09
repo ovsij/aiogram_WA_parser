@@ -1437,7 +1437,7 @@ async def get_coach():
             for i in range(1, 100):
                 async with session.get(subcategory[-1].format(f'?page={i}'), ssl=False) as response:
                     webpage = await response.json()
-                    if len(webpage['pageData']['products']) > 0:
+                    if len(webpage['pageData'].keys()) > 5:
                         items += webpage['pageData']['products']
                     else:
                         break
