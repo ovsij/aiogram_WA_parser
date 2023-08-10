@@ -1403,8 +1403,8 @@ async def get_coach():
         ['Поясные сумки мужские', 'Сумки мужские', 3, 'https://it.coach.com/api/shop/uomo/borse/borse-a-cintura{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
         ['Портфели мужские', 'Сумки мужские', 3, 'https://it.coach.com/api/shop/uomo/borse/valigette{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
         ['Папки мужские', 'Сумки мужские', 3, 'https://it.coach.com/api/shop/uomo/borse/cartelle{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
-        ['Одежда мужская', 'Мужчины', 2],
-        ['Пальто и куртки мужские', 'Одежда мужская', 3, 'https://it.coach.com/api/shop/uomo/pret-a-porter/cappotti-e-giacche{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
+        ['Одежда мужская', 'Мужчины', 2],                 
+        ['Пальто и куртки мужские', 'Одежда мужская', 3, 'https://it.coach.com/api/get-shop/uomo/pret-a-porter/cappotti-e-giacche{}&__v__=OAvOQKnl2S87dAHUBXUSP&locale=it_IT'],
         ['Одежда (верх и низ) мужские', 'Одежда мужская', 3, 'https://it.coach.com/api/shop/uomo/pret-a-porter/pezzi-di-sopra-e-sotto{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
         ['Обувь мужская', 'Мужчины', 2],
         ['Сандалии мужские', 'Обувь мужская', 3, 'https://it.coach.com/api/shop/uomo/calzature/sandali{}&__v__=Y-sbL5i1aIu4e3dEx9wRm&locale=it_IT'],
@@ -1421,7 +1421,8 @@ async def get_coach():
         ]
     cat_name = 'COACH'
     for subcategory in subcategories:
-        
+        if subcategory[0] != 'Пальто и куртки мужские':
+            continue
         if not str(subcategory[-1]).startswith('http'):
             if len(subcategory) == 1:
                 crud.create_subcategory(name=subcategory[0], category=cat_name) if not crud.subcategory_exists(name=subcategory[0], category=cat_name) else 0
