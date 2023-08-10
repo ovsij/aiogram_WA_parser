@@ -5,6 +5,7 @@ import httplib2
 import pandas as pd
 import requests
 import os
+import logging
 
 from database.db import *
 from parser import *
