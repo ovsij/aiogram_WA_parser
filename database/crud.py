@@ -253,7 +253,7 @@ async def create_products(category : str, subcategory : str, items : list):
                         url=item[6]
                     )
                     commit()
-            #logging.info(f'{prod} {prod.sizes}')
+            logging.info(f'{prod} {prod.name}')
         except Exception as ex:
             logging.warning(f'{category} db - {ex}')
 
