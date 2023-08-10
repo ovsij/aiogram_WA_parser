@@ -1445,73 +1445,73 @@ async def get_coach():
             products = []
             euro_costs = euro_cost()
             for item in items:
-                #try:
-                await asyncio.sleep(2)
-                for color_item in item['colors']:
-                    item_url = 'https://it.coach.com/it_IT' + item['url']
-                    print(item_url)
-                    title = item['name'] + ' ' + color_item['text']
-                    print(title)
-                    color = color_item['text']
-                    #print(color)
-                    try:
-                        current_price = int((float(item['prices']['currentPrice']) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='COACH').margin}"))
-                    except:
-                        continue
-                    try:
-                        old_price = int((float(item['prices']['regularPrice']) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='COACH').margin}"))
-                        percent = int(100 - float(current_price)/(float(old_price)/100))
-                    except:
-                        old_price = None
-                    
-                    #print(price)
-                    async with session.get(f"https://it.coach.com/api/get-suggestions-products?ids={item['id'].replace(' ', '+')}%2CCF925+B4%2FWN%2CCE897+LJN++S%2CCG798+BLK++XL&locale=it_IT&__v__=0vd2xlsFnzxBsryah6o6X", ssl=False) as response:
-                        item_webpage = await response.json()
-                    #print(soup)
-                    description = ''
-                    #description = item_webpage['productsData'][0]['longDescription'].replace('<li>', '').replace('</li>', '').replace('<ul>', '').replace('</ul>', '')
-                    if old_price:
-                        description = description[:700] + f'\n\n<s>{old_price} руб.</s> -{percent}% {current_price} руб.'
-                    list_sizes = ''
-                    try:
-                        sizes = [size['value'] for size in item_webpage['productsData'][0]['variationGroup'][0]['variationAttributes'][1]['values'] if size['orderable']]
-                        list_sizes = ''
-                        for size in sizes:
-                            list_sizes += size + ', '
-                        list_sizes = list_sizes.strip(', ')
-
-                        description += '\n\nРазмеры:\n' + list_sizes
-                    except:
-                        pass
-                    #print(description)
-                    article = item['masterId'] + ' ' + color
-                    #print(article)
-                    image_links = [image['src'] for image in color_item['media']['full']]
-                    # изображения
-                    if not os.path.exists(f"database/images/{cat_name}"):
-                        os.mkdir(f"database/images/{cat_name}")
-
-                    if not os.path.exists(f"database/images/{cat_name}/{subcategory[0]}"):
-                        os.mkdir(f"database/images/{cat_name}/{subcategory[0]}")
-
-                    i = items.index(item) + 1
-                    images = ''
-                    
-                    for url in image_links[:10]:
+                try:
+                    await asyncio.sleep(2)
+                    for color_item in item['colors']:
+                        item_url = 'https://it.coach.com/it_IT' + item['url']
+                        print(item_url)
+                        title = item['name'] + ' ' + color_item['text']
+                        print(title)
+                        color = color_item['text']
+                        #print(color)
                         try:
-                            num = image_links.index(url) + 1
-                            img_path = f"database/images/{cat_name}/{subcategory[0]}/{i}_{title.replace(' ', '_').replace('/', '_')}_{num}.png"
-                            if not os.path.exists(img_path):
-                                async with session.get(url, ssl=False) as response:
-                                    f = await aiofiles.open(img_path, mode='wb')
-                                    await f.write(await response.read())
-                                    await f.close()
-                            images +=  img_path + '\n'
+                            current_price = int((float(item['prices']['currentPrice']) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='COACH').margin}"))
                         except:
                             continue
-                    products.append([title, description, current_price, images, list_sizes, article, item_url])
-                #except Exception as ex:
-                #    logging.warning(f'{cat_name} pr - {ex}')
+                        try:
+                            old_price = int((float(item['prices']['regularPrice']) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='COACH').margin}"))
+                            percent = int(100 - float(current_price)/(float(old_price)/100))
+                        except:
+                            old_price = None
+                        
+                        #print(price)
+                        async with session.get(f"https://it.coach.com/api/get-suggestions-products?ids={item['id'].replace(' ', '+')}%2CCF925+B4%2FWN%2CCE897+LJN++S%2CCG798+BLK++XL&locale=it_IT&__v__=0vd2xlsFnzxBsryah6o6X", ssl=False) as response:
+                            item_webpage = await response.json()
+                        #print(soup)
+                        description = ''
+                        #description = item_webpage['productsData'][0]['longDescription'].replace('<li>', '').replace('</li>', '').replace('<ul>', '').replace('</ul>', '')
+                        if old_price:
+                            description = description[:700] + f'\n\n<s>{old_price} руб.</s> -{percent}% {current_price} руб.'
+                        list_sizes = ''
+                        try:
+                            sizes = [size['value'] for size in item_webpage['productsData'][0]['variationGroup'][0]['variationAttributes'][1]['values'] if size['orderable']]
+                            list_sizes = ''
+                            for size in sizes:
+                                list_sizes += size + ', '
+                            list_sizes = list_sizes.strip(', ')
+
+                            description += '\n\nРазмеры:\n' + list_sizes
+                        except:
+                            pass
+                        #print(description)
+                        article = item['masterId'] + ' ' + color
+                        #print(article)
+                        image_links = [image['src'] for image in color_item['media']['full']]
+                        # изображения
+                        if not os.path.exists(f"database/images/{cat_name}"):
+                            os.mkdir(f"database/images/{cat_name}")
+
+                        if not os.path.exists(f"database/images/{cat_name}/{subcategory[0]}"):
+                            os.mkdir(f"database/images/{cat_name}/{subcategory[0]}")
+
+                        i = items.index(item) + 1
+                        images = ''
+                        
+                        for url in image_links[:10]:
+                            try:
+                                num = image_links.index(url) + 1
+                                img_path = f"database/images/{cat_name}/{subcategory[0]}/{i}_{title.replace(' ', '_').replace('/', '_')}_{num}.png"
+                                if not os.path.exists(img_path):
+                                    async with session.get(url, ssl=False) as response:
+                                        f = await aiofiles.open(img_path, mode='wb')
+                                        await f.write(await response.read())
+                                        await f.close()
+                                images +=  img_path + '\n'
+                            except:
+                                continue
+                        products.append([title, description, current_price, images, list_sizes, article, item_url])
+                except Exception as ex:
+                    logging.warning(f'{cat_name} pr - {ex}')
 
         if not crud.subcategory_exists(name=subcategory[0], category=cat_name):
             parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=crud.get_category(name=cat_name).id)
