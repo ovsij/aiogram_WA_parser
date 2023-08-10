@@ -1421,8 +1421,7 @@ async def get_coach():
         ]
     cat_name = 'COACH'
     for subcategory in subcategories:
-        if subcategory[0] != 'Пальто и куртки мужские':
-            continue
+        
         if not str(subcategory[-1]).startswith('http'):
             if len(subcategory) == 1:
                 crud.create_subcategory(name=subcategory[0], category=cat_name) if not crud.subcategory_exists(name=subcategory[0], category=cat_name) else 0
