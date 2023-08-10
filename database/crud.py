@@ -190,6 +190,7 @@ def create_product(
 
 @db_session()
 async def create_products(category : str, subcategory : str, items : list):
+    
     print('add')
     # удаляем старые товары
     all_articles = [item[5] for item in items]
@@ -227,7 +228,6 @@ async def create_products(category : str, subcategory : str, items : list):
     # создаем новые/обновляем товары
     all_articles = []
     for item in items:
-        print(item)
         try:
             if not crud.product_exists(article=item[5], subcategory_id=subcategory_.id):
                 prod = crud.create_product(

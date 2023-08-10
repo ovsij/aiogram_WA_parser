@@ -599,7 +599,7 @@ async def get_valentino():
             parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=crud.get_category(name='VALENTINO', metacategory=metacategory.id).id)
             crud.create_subcategory(name=subcategory[0], category='VALENTINO', parent_subcategory=parent_subcategory.id, level=subcategory[2])
         
-        crud.create_products(category='VALENTINO', subcategory=subcategory[0], items=items)
+        await crud.create_products(category='VALENTINO', subcategory=subcategory[0], items=items)
             
         logging.info(f'Canceled VALENTINO {subcategory[0]} added {len(items)} products') 
     await bot.send_message(227184505, f'VALENTINO закончил парсинг')
@@ -1142,7 +1142,7 @@ async def get_nike():
             parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=crud.get_category(name=cat_name).id)
             crud.create_subcategory(name=subcategory[0], category=cat_name, parent_subcategory=parent_subcategory.id, level=subcategory[2])
         
-        crud.create_products(category=cat_name, subcategory=subcategory[0], items=items)
+        await crud.create_products(category=cat_name, subcategory=subcategory[0], items=items)
         logging.info(f'Canceled {cat_name} {subcategory[0]} added {len(items)} products')
 
     await bot.send_message(227184505, f'{cat_name} закончил парсинг')
@@ -1511,7 +1511,6 @@ async def get_coach():
                             except:
                                 continue
                         products.append([title, description, current_price, images, list_sizes, article, item_url])
-                        print([title, description, current_price, images, list_sizes, article, item_url])
                 except Exception as ex:
                     logging.warning(f'{cat_name} pr - {ex}')
 
@@ -1519,7 +1518,7 @@ async def get_coach():
             parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=crud.get_category(name=cat_name).id)
             crud.create_subcategory(name=subcategory[0], category=cat_name, parent_subcategory=parent_subcategory.id, level=subcategory[2])
         
-        crud.create_products(category=cat_name, subcategory=subcategory[0], items=products)
+        await crud.create_products(category=cat_name, subcategory=subcategory[0], items=products)
 
         logging.info(f'Canceled {cat_name} {subcategory[0]} added {len(products)} products') 
     await bot.send_message(227184505, f'{cat_name} закончил парсинг')
@@ -1742,7 +1741,7 @@ async def get_asics():
             parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=crud.get_category(name=cat_name).id)
             crud.create_subcategory(name=subcategory[0], category=cat_name, parent_subcategory=parent_subcategory.id, level=subcategory[2])
         
-        crud.create_products(category=cat_name, subcategory=subcategory[0], items=items)
+        await crud.create_products(category=cat_name, subcategory=subcategory[0], items=items)
 
         logging.info(f'Canceled {cat_name} {subcategory[0]} added {len(items)} products')
     await bot.send_message(227184505, f'{cat_name} закончил парсинг')
@@ -1902,7 +1901,7 @@ async def get_newbalance():
             parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=crud.get_category(name=cat_name).id)
             crud.create_subcategory(name=subcategory[0], category=cat_name, parent_subcategory=parent_subcategory.id, level=subcategory[2])
         
-        crud.create_products(category=cat_name, subcategory=subcategory[0], items=items)
+        await crud.create_products(category=cat_name, subcategory=subcategory[0], items=items)
 
         logging.info(f'Canceled {cat_name} {subcategory[0]} added {len(items)} products') 
     await bot.send_message(227184505, f'{cat_name} закончил парсинг')
@@ -2034,7 +2033,7 @@ async def get_underarmour():
             parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=crud.get_category(name=cat_name).id)
             crud.create_subcategory(name=subcategory[0], category=cat_name, parent_subcategory=parent_subcategory.id, level=subcategory[2])
         
-        crud.create_products(category=cat_name, subcategory=subcategory[0], items=items)
+        await crud.create_products(category=cat_name, subcategory=subcategory[0], items=items)
 
         logging.info(f'Canceled {cat_name} {subcategory[0]} added {len(items)} products') 
     await bot.send_message(227184505, f'{cat_name} закончил парсинг')
@@ -2216,7 +2215,7 @@ async def get_pleinoutlet():
             parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=crud.get_category(name=cat_name).id)
             crud.create_subcategory(name=subcategory[0], category=cat_name, parent_subcategory=parent_subcategory.id, level=subcategory[2])
         
-        crud.create_products(category=cat_name, subcategory=subcategory[0], items=items)
+        await crud.create_products(category=cat_name, subcategory=subcategory[0], items=items)
 
         logging.info(f'Canceled {cat_name} {subcategory[0]} added {len(items)} products') 
     await bot.send_message(227184505, f'{cat_name} закончил парсинг')
@@ -2481,7 +2480,7 @@ async def get_monnalisa():
             parent_subcategory = crud.get_subcategory(name=subcategory[1], category_id=crud.get_category(name=cat_name).id)
             crud.create_subcategory(name=subcategory[0], category=cat_name, parent_subcategory=parent_subcategory.id, level=subcategory[2])
         
-        crud.create_products(category=cat_name, subcategory=subcategory[0], items=items)
+        await crud.create_products(category=cat_name, subcategory=subcategory[0], items=items)
 
         logging.info(f'Canceled {cat_name} {subcategory[0]} added {len(items)} products') 
     await bot.send_message(227184505, f'{cat_name} закончил парсинг')
