@@ -1511,6 +1511,7 @@ async def get_coach():
                             except:
                                 continue
                         products.append([title, description, current_price, images, list_sizes, article, item_url])
+                        print([title, description, current_price, images, list_sizes, article, item_url])
                 except Exception as ex:
                     logging.warning(f'{cat_name} pr - {ex}')
 
