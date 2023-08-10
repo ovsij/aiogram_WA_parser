@@ -1454,8 +1454,10 @@ async def get_coach():
                     print(title)
                     color = color_item['text']
                     #print(color)
-                    
-                    current_price = int((float(item['prices']['currentPrice']) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='COACH').margin}"))
+                    try:
+                        current_price = int((float(item['prices']['currentPrice']) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='COACH').margin}"))
+                    except:
+                        continue
                     try:
                         old_price = int((float(item['prices']['regularPrice']) * (euro_costs + 1)) * float(f"1.{crud.get_category(name='COACH').margin}"))
                         percent = int(100 - float(current_price)/(float(old_price)/100))
