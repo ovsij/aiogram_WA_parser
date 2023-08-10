@@ -190,6 +190,7 @@ def create_product(
 
 @db_session()
 async def create_products(category : str, subcategory : str, items : list):
+    print('add')
     # удаляем старые товары
     all_articles = [item[5] for item in items]
     category_ = Category.get(name=category)
